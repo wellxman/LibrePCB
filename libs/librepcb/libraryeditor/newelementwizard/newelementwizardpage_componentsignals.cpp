@@ -42,7 +42,8 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_ComponentSignals::NewElementWizardPage_ComponentSignals(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_ComponentSignals) {
@@ -74,9 +75,9 @@ int NewElementWizardPage_ComponentSignals::nextId() const noexcept {
  ******************************************************************************/
 
 QHash<Uuid, CircuitIdentifier>
-NewElementWizardPage_ComponentSignals::getPinNames(const Uuid&    symbol,
-                                                   const QString& suffix) const
-    noexcept {
+    NewElementWizardPage_ComponentSignals::getPinNames(
+        const Uuid& symbol,
+        const QString& suffix) const noexcept {
   QHash<Uuid, CircuitIdentifier> names;
   try {
     FilePath fp = mContext.getWorkspace().getLibraryDb().getLatestSymbol(
@@ -85,8 +86,9 @@ NewElementWizardPage_ComponentSignals::getPinNames(const Uuid&    symbol,
         std::unique_ptr<TransactionalDirectory>(new TransactionalDirectory(
             TransactionalFileSystem::openRO(fp))));  // can throw
     for (const SymbolPin& pin : sym.getPins()) {
-      names.insert(pin.getUuid(),
-                   CircuitIdentifier(suffix % pin.getName()));  // can throw
+      names.insert(
+          pin.getUuid(),
+          CircuitIdentifier(suffix % pin.getName()));  // can throw
     }
   } catch (const Exception& e) {
     // TODO: what could we do here?
@@ -108,15 +110,20 @@ void NewElementWizardPage_ComponentSignals::initializePage() noexcept {
         auto i = names.find(map.getPinUuid());
         if (i != names.end() && (i.key() == map.getPinUuid())) {
           mContext.mComponentSignals.append(std::make_shared<ComponentSignal>(
-              Uuid::createRandom(), i.value(), SignalRole::passive(), QString(),
-              false, false, false));
+              Uuid::createRandom(),
+              i.value(),
+              SignalRole::passive(),
+              QString(),
+              false,
+              false,
+              false));
         }
       }
     }
   }
 
-  mUi->signalListEditorWidget->setReferences(nullptr,
-                                             &mContext.mComponentSignals);
+  mUi->signalListEditorWidget->setReferences(
+      nullptr, &mContext.mComponentSignals);
 }
 
 void NewElementWizardPage_ComponentSignals::cleanupPage() noexcept {

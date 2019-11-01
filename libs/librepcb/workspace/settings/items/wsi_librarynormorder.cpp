@@ -67,14 +67,26 @@ WSI_LibraryNormOrder::WSI_LibraryNormOrder(const SExpression& node)
   mBtnDown->setArrowType(Qt::DownArrow);
   mBtnAdd->setIcon(QIcon(":/img/actions/plus_2.png"));
   mBtnRemove->setIcon(QIcon(":/img/actions/minus.png"));
-  connect(mBtnUp.data(), &QToolButton::clicked, this,
-          &WSI_LibraryNormOrder::btnUpClicked);
-  connect(mBtnDown.data(), &QToolButton::clicked, this,
-          &WSI_LibraryNormOrder::btnDownClicked);
-  connect(mBtnAdd.data(), &QToolButton::clicked, this,
-          &WSI_LibraryNormOrder::btnAddClicked);
-  connect(mBtnRemove.data(), &QToolButton::clicked, this,
-          &WSI_LibraryNormOrder::btnRemoveClicked);
+  connect(
+      mBtnUp.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryNormOrder::btnUpClicked);
+  connect(
+      mBtnDown.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryNormOrder::btnDownClicked);
+  connect(
+      mBtnAdd.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryNormOrder::btnAddClicked);
+  connect(
+      mBtnRemove.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryNormOrder::btnRemoveClicked);
 
   // create the QWidget
   mWidget.reset(new QWidget());

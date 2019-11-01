@@ -110,8 +110,8 @@ void PackagePadListModel::removePad(const QVariant& editData) noexcept {
   }
 
   try {
-    Uuid                        uuid = Uuid::fromString(editData.toString());
-    std::shared_ptr<PackagePad> pad  = mPadList->get(uuid);
+    Uuid uuid = Uuid::fromString(editData.toString());
+    std::shared_ptr<PackagePad> pad = mPadList->get(uuid);
     execCmd(new CmdPackagePadRemove(*mPadList, pad.get()));
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
@@ -144,8 +144,8 @@ QVariant PackagePadListModel::data(const QModelIndex& index, int role) const {
   std::shared_ptr<PackagePad> item = mPadList->value(index.row());
   switch (index.column()) {
     case COLUMN_NAME: {
-      QString name     = item ? *item->getName() : mNewName;
-      bool    showHint = (!item) && mNewName.isEmpty();
+      QString name = item ? *item->getName() : mNewName;
+      bool showHint = (!item) && mNewName.isEmpty();
       QString hint =
           tr("Pad name (may contain ranges like \"%1\")").arg("1..5");
       switch (role) {
@@ -182,9 +182,10 @@ QVariant PackagePadListModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-QVariant PackagePadListModel::headerData(int             section,
-                                         Qt::Orientation orientation,
-                                         int             role) const {
+QVariant PackagePadListModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -222,20 +223,22 @@ Qt::ItemFlags PackagePadListModel::flags(const QModelIndex& index) const {
   return f;
 }
 
-bool PackagePadListModel::setData(const QModelIndex& index,
-                                  const QVariant& value, int role) {
+bool PackagePadListModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mPadList) {
     return false;
   }
 
   try {
-    std::shared_ptr<PackagePad>       item = mPadList->value(index.row());
+    std::shared_ptr<PackagePad> item = mPadList->value(index.row());
     QScopedPointer<CmdPackagePadEdit> cmd;
     if (item) {
       cmd.reset(new CmdPackagePadEdit(*item));
     }
     if ((index.column() == COLUMN_NAME) && role == Qt::EditRole) {
-      QString name        = value.toString().trimmed();
+      QString name = value.toString().trimmed();
       QString cleanedName = cleanCircuitIdentifier(name);
       if (cmd) {
         if (cleanedName != item->getName()) {
@@ -269,9 +272,10 @@ bool PackagePadListModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void PackagePadListModel::padListEdited(
-    const PackagePadList& list, int index,
+    const PackagePadList& list,
+    int index,
     const std::shared_ptr<const PackagePad>& pad,
-    PackagePadList::Event                    event) noexcept {
+    PackagePadList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(pad);
   switch (event) {
@@ -305,7 +309,8 @@ CircuitIdentifier PackagePadListModel::validateNameOrThrow(
     const QString& name) const {
   if (mPadList && mPadList->contains(name)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a pad with the name \"%1\".")).arg(name));
   }
   return CircuitIdentifier(name);  // can throw

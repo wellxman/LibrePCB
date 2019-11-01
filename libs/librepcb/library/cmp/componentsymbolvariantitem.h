@@ -69,25 +69,28 @@ public:
     SuffixChanged,
     PinSignalMapEdited,
   };
-  Signal<ComponentSymbolVariantItem, Event>       onEdited;
+  Signal<ComponentSymbolVariantItem, Event> onEdited;
   typedef Slot<ComponentSymbolVariantItem, Event> OnEditedSlot;
 
   // Constructors / Destructor
   ComponentSymbolVariantItem() = delete;
   ComponentSymbolVariantItem(const ComponentSymbolVariantItem& other) noexcept;
   ComponentSymbolVariantItem(
-      const Uuid& uuid, const Uuid& symbolUuid, const Point& symbolPos,
-      const Angle& symbolRotation, bool isRequired,
+      const Uuid& uuid,
+      const Uuid& symbolUuid,
+      const Point& symbolPos,
+      const Angle& symbolRotation,
+      bool isRequired,
       const ComponentSymbolVariantItemSuffix& suffix) noexcept;
   explicit ComponentSymbolVariantItem(const SExpression& node);
   ~ComponentSymbolVariantItem() noexcept;
 
   // Getters: Attributes
-  const Uuid&  getUuid() const noexcept { return mUuid; }
-  const Uuid&  getSymbolUuid() const noexcept { return mSymbolUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
+  const Uuid& getSymbolUuid() const noexcept { return mSymbolUuid; }
   const Point& getSymbolPosition() const noexcept { return mSymbolPos; }
   const Angle& getSymbolRotation() const noexcept { return mSymbolRot; }
-  bool         isRequired() const noexcept { return mIsRequired; }
+  bool isRequired() const noexcept { return mIsRequired; }
   const ComponentSymbolVariantItemSuffix& getSuffix() const noexcept {
     return mSuffix;
   }
@@ -118,18 +121,19 @@ public:
 
 private:  // Methods
   void pinSignalMapEdited(
-      const ComponentPinSignalMap& map, int index,
+      const ComponentPinSignalMap& map,
+      int index,
       const std::shared_ptr<const ComponentPinSignalMapItem>& item,
-      ComponentPinSignalMap::Event                            event) noexcept;
+      ComponentPinSignalMap::Event event) noexcept;
 
 private:  // Data
-  Uuid                             mUuid;
-  Uuid                             mSymbolUuid;
-  Point                            mSymbolPos;
-  Angle                            mSymbolRot;
-  bool                             mIsRequired;
+  Uuid mUuid;
+  Uuid mSymbolUuid;
+  Point mSymbolPos;
+  Angle mSymbolRot;
+  bool mIsRequired;
   ComponentSymbolVariantItemSuffix mSuffix;
-  ComponentPinSignalMap            mPinSignalMap;
+  ComponentPinSignalMap mPinSignalMap;
 
   // Slots
   ComponentPinSignalMap::OnEditedSlot mOnPinSignalMapEditedSlot;
@@ -142,22 +146,22 @@ private:  // Data
 struct ComponentSymbolVariantItemListNameProvider {
   static constexpr const char* tagname = "gate";
 };
-using ComponentSymbolVariantItemList =
-    SerializableObjectList<ComponentSymbolVariantItem,
-                           ComponentSymbolVariantItemListNameProvider,
-                           ComponentSymbolVariantItem::Event>;
-using CmdComponentSymbolVariantItemInsert =
-    CmdListElementInsert<ComponentSymbolVariantItem,
-                         ComponentSymbolVariantItemListNameProvider,
-                         ComponentSymbolVariantItem::Event>;
-using CmdComponentSymbolVariantItemRemove =
-    CmdListElementRemove<ComponentSymbolVariantItem,
-                         ComponentSymbolVariantItemListNameProvider,
-                         ComponentSymbolVariantItem::Event>;
-using CmdComponentSymbolVariantItemsSwap =
-    CmdListElementsSwap<ComponentSymbolVariantItem,
-                        ComponentSymbolVariantItemListNameProvider,
-                        ComponentSymbolVariantItem::Event>;
+using ComponentSymbolVariantItemList = SerializableObjectList<
+    ComponentSymbolVariantItem,
+    ComponentSymbolVariantItemListNameProvider,
+    ComponentSymbolVariantItem::Event>;
+using CmdComponentSymbolVariantItemInsert = CmdListElementInsert<
+    ComponentSymbolVariantItem,
+    ComponentSymbolVariantItemListNameProvider,
+    ComponentSymbolVariantItem::Event>;
+using CmdComponentSymbolVariantItemRemove = CmdListElementRemove<
+    ComponentSymbolVariantItem,
+    ComponentSymbolVariantItemListNameProvider,
+    ComponentSymbolVariantItem::Event>;
+using CmdComponentSymbolVariantItemsSwap = CmdListElementsSwap<
+    ComponentSymbolVariantItem,
+    ComponentSymbolVariantItemListNameProvider,
+    ComponentSymbolVariantItem::Event>;
 
 /*******************************************************************************
  *  Class ComponentSymbolVariantItemListHelpers

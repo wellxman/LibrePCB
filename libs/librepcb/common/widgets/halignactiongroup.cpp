@@ -33,28 +33,31 @@ namespace librepcb {
 
 HAlignActionGroup::HAlignActionGroup(QWidget* parent) noexcept
   : QActionGroup(parent), mValue(HAlign::left()) {
-  QAction* left =
-      addAction(QIcon(":img/command_toolbars/align_horizontal_left.png"),
-                tr("Align left"));
+  QAction* left = addAction(
+      QIcon(":img/command_toolbars/align_horizontal_left.png"),
+      tr("Align left"));
   left->setCheckable(true);
   left->setData(QVariant::fromValue(HAlign::left()));
 
-  QAction* center =
-      addAction(QIcon(":img/command_toolbars/align_horizontal_center.png"),
-                tr("Align center"));
+  QAction* center = addAction(
+      QIcon(":img/command_toolbars/align_horizontal_center.png"),
+      tr("Align center"));
   center->setCheckable(true);
   center->setData(QVariant::fromValue(HAlign::center()));
 
-  QAction* right =
-      addAction(QIcon(":img/command_toolbars/align_horizontal_right.png"),
-                tr("Align right"));
+  QAction* right = addAction(
+      QIcon(":img/command_toolbars/align_horizontal_right.png"),
+      tr("Align right"));
   right->setCheckable(true);
   right->setData(QVariant::fromValue(HAlign::right()));
 
   updateSelection();
 
-  connect(this, &HAlignActionGroup::triggered, this,
-          &HAlignActionGroup::actionTriggered);
+  connect(
+      this,
+      &HAlignActionGroup::triggered,
+      this,
+      &HAlignActionGroup::actionTriggered);
 }
 
 HAlignActionGroup::~HAlignActionGroup() noexcept {

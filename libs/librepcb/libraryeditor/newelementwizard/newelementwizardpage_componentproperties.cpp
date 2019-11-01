@@ -42,8 +42,9 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_ComponentProperties::
-    NewElementWizardPage_ComponentProperties(NewElementWizardContext& context,
-                                             QWidget* parent) noexcept
+    NewElementWizardPage_ComponentProperties(
+        NewElementWizardContext& context,
+        QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_ComponentProperties) {

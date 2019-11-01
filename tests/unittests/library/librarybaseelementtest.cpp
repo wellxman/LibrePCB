@@ -40,15 +40,22 @@ namespace tests {
 
 class LibraryBaseElementTest : public ::testing::Test {
 protected:
-  FilePath                           mTempDir;
+  FilePath mTempDir;
   QScopedPointer<LibraryBaseElement> mNewElement;
 
   LibraryBaseElementTest() {
     mTempDir = FilePath::getRandomTempPath();
 
     mNewElement.reset(new LibraryBaseElement(
-        true, "sym", "symbol", Uuid::createRandom(), Version::fromString("1.0"),
-        "test", ElementName("Test"), "", ""));
+        true,
+        "sym",
+        "symbol",
+        Uuid::createRandom(),
+        Version::fromString("1.0"),
+        "test",
+        ElementName("Test"),
+        "",
+        ""));
   }
 
   virtual ~LibraryBaseElementTest() {

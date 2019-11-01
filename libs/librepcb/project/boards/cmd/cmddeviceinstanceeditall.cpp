@@ -60,14 +60,16 @@ CmdDeviceInstanceEditAll::~CmdDeviceInstanceEditAll() noexcept {
  *  General Methods
  ******************************************************************************/
 
-void CmdDeviceInstanceEditAll::setPosition(const Point& pos,
-                                           bool         immediate) noexcept {
+void CmdDeviceInstanceEditAll::setPosition(
+    const Point& pos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   translate(pos - mDevEditCmd->mNewPos, immediate);
 }
 
-void CmdDeviceInstanceEditAll::translate(const Point& deltaPos,
-                                         bool         immediate) noexcept {
+void CmdDeviceInstanceEditAll::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mDevEditCmd->translate(deltaPos, immediate);
   foreach (CmdStrokeTextEdit* cmd, mTextEditCmds) {
@@ -75,14 +77,17 @@ void CmdDeviceInstanceEditAll::translate(const Point& deltaPos,
   }
 }
 
-void CmdDeviceInstanceEditAll::setRotation(const Angle& angle,
-                                           bool         immediate) noexcept {
+void CmdDeviceInstanceEditAll::setRotation(
+    const Angle& angle,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   rotate(angle - mDevEditCmd->mNewRotation, mDevEditCmd->mNewPos, immediate);
 }
 
-void CmdDeviceInstanceEditAll::rotate(const Angle& angle, const Point& center,
-                                      bool immediate) noexcept {
+void CmdDeviceInstanceEditAll::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mDevEditCmd->rotate(angle, center, immediate);
   foreach (CmdStrokeTextEdit* cmd, mTextEditCmds) {
@@ -97,9 +102,10 @@ void CmdDeviceInstanceEditAll::setMirrored(bool mirrored, bool immediate) {
   }
 }
 
-void CmdDeviceInstanceEditAll::mirror(const Point&    center,
-                                      Qt::Orientation orientation,
-                                      bool            immediate) {
+void CmdDeviceInstanceEditAll::mirror(
+    const Point& center,
+    Qt::Orientation orientation,
+    bool immediate) {
   Q_ASSERT(!wasEverExecuted());
   mDevEditCmd->mirror(center, orientation, immediate);  // can throw
   foreach (CmdStrokeTextEdit* cmd, mTextEditCmds) {

@@ -90,7 +90,8 @@ Version Version::fromString(const QString& str) {
     return *version;
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(Version::tr("Invalid version number: \"%1\"")).arg(str));
   }
 }
@@ -101,7 +102,7 @@ tl::optional<Version> Version::tryFromString(const QString& str) noexcept {
   QStringList splitted =
       str.split('.', QString::KeepEmptyParts, Qt::CaseSensitive);
   foreach (const QString& numberStr, splitted) {
-    bool ok     = false;
+    bool ok = false;
     uint number = numberStr.toUInt(&ok);
     if ((!ok) || (number > 99999)) {
       return tl::nullopt;

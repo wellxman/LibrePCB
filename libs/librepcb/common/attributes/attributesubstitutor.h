@@ -61,10 +61,10 @@ public:
   using FilterFunction = std::function<QString(const QString&)>;
 
   // Constructors / Destructor / Operator Overloadings
-  AttributeSubstitutor()                                  = delete;
+  AttributeSubstitutor() = delete;
   AttributeSubstitutor(const AttributeSubstitutor& other) = delete;
   AttributeSubstitutor& operator=(const AttributeSubstitutor& rhs) = delete;
-  ~AttributeSubstitutor()                                          = delete;
+  ~AttributeSubstitutor() = delete;
 
   // General Methods
 
@@ -77,8 +77,10 @@ public:
    *
    * @return True if str was modified in some way, false if not
    */
-  static QString substitute(QString str, const AttributeProvider* ap = nullptr,
-                            FilterFunction filter = nullptr) noexcept;
+  static QString substitute(
+      QString str,
+      const AttributeProvider* ap = nullptr,
+      FilterFunction filter = nullptr) noexcept;
 
 private:  // Methods
   /**
@@ -97,14 +99,23 @@ private:  // Methods
    *
    * @return          true if a variable is found, false if not
    */
-  static bool searchVariablesInText(const QString& text, int startPos, int& pos,
-                                    int& length, QStringList& keys) noexcept;
+  static bool searchVariablesInText(
+      const QString& text,
+      int startPos,
+      int& pos,
+      int& length,
+      QStringList& keys) noexcept;
 
-  static void applyFilter(QString& str, int& start, int& end,
-                          FilterFunction filter) noexcept;
+  static void applyFilter(
+      QString& str,
+      int& start,
+      int& end,
+      FilterFunction filter) noexcept;
 
-  static bool getValueOfKey(const QString& key, QString& value,
-                            const AttributeProvider* ap) noexcept;
+  static bool getValueOfKey(
+      const QString& key,
+      QString& value,
+      const AttributeProvider* ap) noexcept;
 };
 
 /*******************************************************************************

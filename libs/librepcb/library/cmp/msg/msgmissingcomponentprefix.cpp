@@ -34,7 +34,8 @@ namespace library {
 
 MsgMissingComponentPrefix::MsgMissingComponentPrefix() noexcept
   : LibraryElementCheckMessage(
-        Severity::Warning, tr("No component prefix set"),
+        Severity::Warning,
+        tr("No component prefix set"),
         tr("Most components should have a prefix defined. The prefix is used "
            "to generate the component's name when adding it to a schematic. "
            "For example the prefix 'R' (resistor) leads to component names "

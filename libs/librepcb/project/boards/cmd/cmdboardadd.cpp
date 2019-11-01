@@ -46,8 +46,10 @@ CmdBoardAdd::CmdBoardAdd(Project& project, const ElementName& name) noexcept
     mPageIndex(-1) {
 }
 
-CmdBoardAdd::CmdBoardAdd(Project& project, const Board& boardToCopy,
-                         const ElementName& name) noexcept
+CmdBoardAdd::CmdBoardAdd(
+    Project& project,
+    const Board& boardToCopy,
+    const ElementName& name) noexcept
   : UndoCommand(tr("Copy board")),
     mProject(project),
     mBoardToCopy(&boardToCopy),

@@ -128,10 +128,10 @@ class FilePath final {
 public:  // Types
   enum CleanFileNameOption {
     // spaces
-    KeepSpaces    = 0,
+    KeepSpaces = 0,
     ReplaceSpaces = 1 << 1,
     // case
-    KeepCase    = 0,
+    KeepCase = 0,
     ToLowerCase = 1 << 2,
     ToUpperCase = 1 << 3,
     // default
@@ -356,8 +356,9 @@ public:  // Methods
    *
    * @see #toRelative()
    */
-  static FilePath fromRelative(const FilePath& base,
-                               const QString&  relative) noexcept;
+  static FilePath fromRelative(
+      const FilePath& base,
+      const QString& relative) noexcept;
 
   /**
    * @brief Get the path to the temporary directory (e.g. "/tmp" on Unix/Linux)
@@ -404,8 +405,9 @@ public:  // Methods
    *          can guarantee that all created files/directories are platform
    *          independent.
    */
-  static QString cleanFileName(const QString&       userInput,
-                               CleanFileNameOptions options) noexcept;
+  static QString cleanFileName(
+      const QString& userInput,
+      CleanFileNameOptions options) noexcept;
 
   // Operator Overloadings
 
@@ -468,8 +470,8 @@ private:
 
 // Non-Member Functions
 QDataStream& operator<<(QDataStream& stream, const FilePath& filepath);
-QDebug&      operator<<(QDebug& stream, const FilePath& filepath);
-inline uint  qHash(const FilePath& key, uint seed) noexcept {
+QDebug& operator<<(QDebug& stream, const FilePath& filepath);
+inline uint qHash(const FilePath& key, uint seed) noexcept {
   return qHash(key.toStr(), seed);
 }
 

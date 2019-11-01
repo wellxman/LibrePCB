@@ -43,7 +43,8 @@ using namespace library;
  ******************************************************************************/
 
 WorkspaceLibraryScanner::WorkspaceLibraryScanner(
-    Workspace& ws, const FilePath& dbFilePath) noexcept
+    Workspace& ws,
+    const FilePath& dbFilePath) noexcept
   : QThread(nullptr),
     mWorkspace(ws),
     mDbFilePath(dbFilePath),
@@ -121,8 +122,8 @@ void WorkspaceLibraryScanner::scan() noexcept {
     getLibrariesOfDirectory(fs, "local", libraries);
     getLibrariesOfDirectory(fs, "remote", libraries);
     QHash<QString, int> libIds = updateLibraries(db, libraries);  // can throw
-    emit                scanLibraryListUpdated(libIds.count());
-    emit                scanProgressUpdate(1);
+    emit scanLibraryListUpdated(libIds.count());
+    emit scanProgressUpdate(1);
     qDebug() << "Workspace libraries indexed:" << libIds.count()
              << "libraries in" << timer.elapsed() << "ms";
 
@@ -133,42 +134,72 @@ void WorkspaceLibraryScanner::scan() noexcept {
     clearAllTables(db);
 
     // scan all libraries
-    int   count   = 0;
+    int count = 0;
     qreal percent = 1;
     foreach (const QString& fp, libraries.keys()) {
       Q_ASSERT(libIds.contains(fp));
-      int                             libId = libIds[fp];
-      const std::shared_ptr<Library>& lib   = libraries[fp];
+      int libId = libIds[fp];
+      const std::shared_ptr<Library>& lib = libraries[fp];
       Q_ASSERT(lib);
       if (mAbort || (mSemaphore.available() > 0)) break;
       count += addCategoriesToDb<ComponentCategory>(
-          db, fs, fp, lib->searchForElements<ComponentCategory>(),
-          "component_categories", "cat_id", libId);
+          db,
+          fs,
+          fp,
+          lib->searchForElements<ComponentCategory>(),
+          "component_categories",
+          "cat_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
       if (mAbort || (mSemaphore.available() > 0)) break;
       count += addCategoriesToDb<PackageCategory>(
-          db, fs, fp, lib->searchForElements<PackageCategory>(),
-          "package_categories", "cat_id", libId);
+          db,
+          fs,
+          fp,
+          lib->searchForElements<PackageCategory>(),
+          "package_categories",
+          "cat_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
       if (mAbort || (mSemaphore.available() > 0)) break;
-      count +=
-          addElementsToDb<Symbol>(db, fs, fp, lib->searchForElements<Symbol>(),
-                                  "symbols", "symbol_id", libId);
+      count += addElementsToDb<Symbol>(
+          db,
+          fs,
+          fp,
+          lib->searchForElements<Symbol>(),
+          "symbols",
+          "symbol_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
       if (mAbort || (mSemaphore.available() > 0)) break;
-      count += addElementsToDb<Package>(db, fs, fp,
-                                        lib->searchForElements<Package>(),
-                                        "packages", "package_id", libId);
+      count += addElementsToDb<Package>(
+          db,
+          fs,
+          fp,
+          lib->searchForElements<Package>(),
+          "packages",
+          "package_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
       if (mAbort || (mSemaphore.available() > 0)) break;
-      count += addElementsToDb<Component>(db, fs, fp,
-                                          lib->searchForElements<Component>(),
-                                          "components", "component_id", libId);
+      count += addElementsToDb<Component>(
+          db,
+          fs,
+          fp,
+          lib->searchForElements<Component>(),
+          "components",
+          "component_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
       if (mAbort || (mSemaphore.available() > 0)) break;
-      count +=
-          addElementsToDb<Device>(db, fs, fp, lib->searchForElements<Device>(),
-                                  "devices", "device_id", libId);
+      count += addElementsToDb<Device>(
+          db,
+          fs,
+          fp,
+          lib->searchForElements<Device>(),
+          "devices",
+          "device_id",
+          libId);
       emit scanProgressUpdate(percent += qreal(98) / (libraries.count() * 6));
     }
 
@@ -191,10 +222,11 @@ void WorkspaceLibraryScanner::scan() noexcept {
 }
 
 void WorkspaceLibraryScanner::getLibrariesOfDirectory(
-    std::shared_ptr<TransactionalFileSystem> fs, const QString& root,
+    std::shared_ptr<TransactionalFileSystem> fs,
+    const QString& root,
     QHash<QString, std::shared_ptr<Library>>& libs) noexcept {
   foreach (const QString& name, fs->getDirs(root)) {
-    QString                                 dirpath = root % "/" % name;
+    QString dirpath = root % "/" % name;
     std::unique_ptr<TransactionalDirectory> dir(
         new TransactionalDirectory(fs, dirpath));
     if (Library::isValidElementDirectory<Library>(*dir, "")) {
@@ -213,7 +245,8 @@ void WorkspaceLibraryScanner::getLibrariesOfDirectory(
 }
 
 QHash<QString, int> WorkspaceLibraryScanner::updateLibraries(
-    SQLiteDatabase& db, const QHash<QString, std::shared_ptr<Library>>& libs) {
+    SQLiteDatabase& db,
+    const QHash<QString, std::shared_ptr<Library>>& libs) {
   SQLiteDatabase::TransactionScopeGuard transactionGuard(db);  // can throw
 
   // get IDs of libraries in DB
@@ -221,7 +254,7 @@ QHash<QString, int> WorkspaceLibraryScanner::updateLibraries(
   QSqlQuery query = db.prepareQuery("SELECT id, filepath FROM libraries");
   db.exec(query);
   while (query.next()) {
-    int     id = query.value(0).toInt();
+    int id = query.value(0).toInt();
     QString fp = query.value(1).toString();
     if (fp.isEmpty()) throw LogicError(__FILE__, __LINE__);
     dbLibIds[fp] = id;
@@ -285,12 +318,13 @@ QHash<QString, int> WorkspaceLibraryScanner::updateLibraries(
           "(:lib_id, :locale, :name, :description, :keywords)");
       query.bindValue(":lib_id", dbLibIds[fp]);
       query.bindValue(":locale", locale);
-      query.bindValue(":name",
-                      optionalToVariant(lib->getNames().tryGet(locale)));
-      query.bindValue(":description",
-                      optionalToVariant(lib->getDescriptions().tryGet(locale)));
-      query.bindValue(":keywords",
-                      optionalToVariant(lib->getKeywords().tryGet(locale)));
+      query.bindValue(
+          ":name", optionalToVariant(lib->getNames().tryGet(locale)));
+      query.bindValue(
+          ":description",
+          optionalToVariant(lib->getDescriptions().tryGet(locale)));
+      query.bindValue(
+          ":keywords", optionalToVariant(lib->getKeywords().tryGet(locale)));
       db.insert(query);
     }
   }
@@ -331,9 +365,13 @@ void WorkspaceLibraryScanner::clearAllTables(SQLiteDatabase& db) {
 
 template <typename ElementType>
 int WorkspaceLibraryScanner::addCategoriesToDb(
-    SQLiteDatabase& db, std::shared_ptr<TransactionalFileSystem> fs,
-    const QString& libPath, const QStringList& dirs, const QString& table,
-    const QString& idColumn, int libId) {
+    SQLiteDatabase& db,
+    std::shared_ptr<TransactionalFileSystem> fs,
+    const QString& libPath,
+    const QStringList& dirs,
+    const QString& table,
+    const QString& idColumn,
+    int libId) {
   int count = 0;
   foreach (const QString& dirpath, dirs) {
     if (mAbort || (mSemaphore.available() > 0)) break;
@@ -341,8 +379,8 @@ int WorkspaceLibraryScanner::addCategoriesToDb(
     try {
       std::unique_ptr<TransactionalDirectory> dir(
           new TransactionalDirectory(fs, fullPath));  // can throw
-      ElementType element(std::move(dir));            // can throw
-      QSqlQuery   query = db.prepareQuery(
+      ElementType element(std::move(dir));  // can throw
+      QSqlQuery query = db.prepareQuery(
           "INSERT INTO " % table %
           " "
           "(lib_id, filepath, uuid, version, parent_uuid) VALUES "
@@ -351,9 +389,10 @@ int WorkspaceLibraryScanner::addCategoriesToDb(
       query.bindValue(":filepath", fullPath);
       query.bindValue(":uuid", element.getUuid().toStr());
       query.bindValue(":version", element.getVersion().toStr());
-      query.bindValue(":parent_uuid", element.getParentUuid()
-                                          ? element.getParentUuid()->toStr()
-                                          : QVariant(QVariant::String));
+      query.bindValue(
+          ":parent_uuid",
+          element.getParentUuid() ? element.getParentUuid()->toStr()
+                                  : QVariant(QVariant::String));
       int id = db.insert(query);
       foreach (const QString& locale, element.getAllAvailableLocales()) {
         QSqlQuery query = db.prepareQuery(
@@ -365,13 +404,14 @@ int WorkspaceLibraryScanner::addCategoriesToDb(
             "(:element_id, :locale, :name, :description, :keywords)");
         query.bindValue(":element_id", id);
         query.bindValue(":locale", locale);
-        query.bindValue(":name",
-                        optionalToVariant(element.getNames().tryGet(locale)));
+        query.bindValue(
+            ":name", optionalToVariant(element.getNames().tryGet(locale)));
         query.bindValue(
             ":description",
             optionalToVariant(element.getDescriptions().tryGet(locale)));
-        query.bindValue(":keywords", optionalToVariant(
-                                         element.getKeywords().tryGet(locale)));
+        query.bindValue(
+            ":keywords",
+            optionalToVariant(element.getKeywords().tryGet(locale)));
         db.insert(query);
       }
       count++;
@@ -384,9 +424,13 @@ int WorkspaceLibraryScanner::addCategoriesToDb(
 
 template <typename ElementType>
 int WorkspaceLibraryScanner::addElementsToDb(
-    SQLiteDatabase& db, std::shared_ptr<TransactionalFileSystem> fs,
-    const QString& libPath, const QStringList& dirs, const QString& table,
-    const QString& idColumn, int libId) {
+    SQLiteDatabase& db,
+    std::shared_ptr<TransactionalFileSystem> fs,
+    const QString& libPath,
+    const QStringList& dirs,
+    const QString& table,
+    const QString& idColumn,
+    int libId) {
   int count = 0;
   foreach (const QString& dirpath, dirs) {
     if (mAbort || (mSemaphore.available() > 0)) break;
@@ -394,7 +438,7 @@ int WorkspaceLibraryScanner::addElementsToDb(
     try {
       std::unique_ptr<TransactionalDirectory> dir(
           new TransactionalDirectory(fs, fullPath));  // can throw
-      ElementType element(std::move(dir));            // can throw
+      ElementType element(std::move(dir));  // can throw
       addElementToDb(db, table, idColumn, libId, fullPath, element);
       count++;
     } catch (const Exception& e) {
@@ -405,34 +449,42 @@ int WorkspaceLibraryScanner::addElementsToDb(
 }
 
 template <typename ElementType>
-void WorkspaceLibraryScanner::addElementToDb(SQLiteDatabase& db,
-                                             const QString&  table,
-                                             const QString& idColumn, int libId,
-                                             const QString&     path,
-                                             const ElementType& element) {
-  QSqlQuery query = db.prepareQuery("INSERT INTO " % table %
-                                    " (lib_id, filepath, uuid, version) VALUES "
-                                    "(:lib_id, :filepath, :uuid, :version)");
+void WorkspaceLibraryScanner::addElementToDb(
+    SQLiteDatabase& db,
+    const QString& table,
+    const QString& idColumn,
+    int libId,
+    const QString& path,
+    const ElementType& element) {
+  QSqlQuery query = db.prepareQuery(
+      "INSERT INTO " % table %
+      " (lib_id, filepath, uuid, version) VALUES "
+      "(:lib_id, :filepath, :uuid, :version)");
   query.bindValue(":lib_id", libId);
   query.bindValue(":filepath", path);
   query.bindValue(":uuid", element.getUuid().toStr());
   query.bindValue(":version", element.getVersion().toStr());
   int id = db.insert(query);
   addElementTranslationsToDb(db, table % "_tr", idColumn, id, element);
-  addElementCategoriesToDb(db, table % "_cat", idColumn, id,
-                           element.getCategories());
+  addElementCategoriesToDb(
+      db, table % "_cat", idColumn, id, element.getCategories());
 }
 
 template <>
 void WorkspaceLibraryScanner::addElementToDb<Device>(
-    SQLiteDatabase& db, const QString& table, const QString& idColumn,
-    int libId, const QString& path, const Device& element) {
-  QSqlQuery query = db.prepareQuery("INSERT INTO " % table %
-                                    " "
-                                    "(lib_id, filepath, uuid, version, "
-                                    "component_uuid, package_uuid) VALUES "
-                                    "(:lib_id, :filepath, :uuid, :version, "
-                                    ":component_uuid, :package_uuid)");
+    SQLiteDatabase& db,
+    const QString& table,
+    const QString& idColumn,
+    int libId,
+    const QString& path,
+    const Device& element) {
+  QSqlQuery query = db.prepareQuery(
+      "INSERT INTO " % table %
+      " "
+      "(lib_id, filepath, uuid, version, "
+      "component_uuid, package_uuid) VALUES "
+      "(:lib_id, :filepath, :uuid, :version, "
+      ":component_uuid, :package_uuid)");
   query.bindValue(":lib_id", libId);
   query.bindValue(":filepath", path);
   query.bindValue(":uuid", element.getUuid().toStr());
@@ -441,13 +493,16 @@ void WorkspaceLibraryScanner::addElementToDb<Device>(
   query.bindValue(":package_uuid", element.getPackageUuid().toStr());
   int id = db.insert(query);
   addElementTranslationsToDb(db, table % "_tr", idColumn, id, element);
-  addElementCategoriesToDb(db, table % "_cat", idColumn, id,
-                           element.getCategories());
+  addElementCategoriesToDb(
+      db, table % "_cat", idColumn, id, element.getCategories());
 }
 
 template <typename ElementType>
 void WorkspaceLibraryScanner::addElementTranslationsToDb(
-    SQLiteDatabase& db, const QString& table, const QString& idColumn, int id,
+    SQLiteDatabase& db,
+    const QString& table,
+    const QString& idColumn,
+    int id,
     const ElementType& element) {
   foreach (const QString& locale, element.getAllAvailableLocales()) {
     QSqlQuery query = db.prepareQuery(
@@ -456,24 +511,28 @@ void WorkspaceLibraryScanner::addElementTranslationsToDb(
         "(:element_id, :locale, :name, :description, :keywords)");
     query.bindValue(":element_id", id);
     query.bindValue(":locale", locale);
-    query.bindValue(":name",
-                    optionalToVariant(element.getNames().tryGet(locale)));
+    query.bindValue(
+        ":name", optionalToVariant(element.getNames().tryGet(locale)));
     query.bindValue(
         ":description",
         optionalToVariant(element.getDescriptions().tryGet(locale)));
-    query.bindValue(":keywords",
-                    optionalToVariant(element.getKeywords().tryGet(locale)));
+    query.bindValue(
+        ":keywords", optionalToVariant(element.getKeywords().tryGet(locale)));
     db.insert(query);
   }
 }
 
 void WorkspaceLibraryScanner::addElementCategoriesToDb(
-    SQLiteDatabase& db, const QString& table, const QString& idColumn, int id,
+    SQLiteDatabase& db,
+    const QString& table,
+    const QString& idColumn,
+    int id,
     const QSet<Uuid>& categories) {
   foreach (const Uuid& categoryUuid, categories) {
-    QSqlQuery query = db.prepareQuery("INSERT INTO " % table % " (" % idColumn %
-                                      ", category_uuid) VALUES "
-                                      "(:element_id, :category_uuid)");
+    QSqlQuery query = db.prepareQuery(
+        "INSERT INTO " % table % " (" % idColumn %
+        ", category_uuid) VALUES "
+        "(:element_id, :category_uuid)");
     query.bindValue(":element_id", id);
     query.bindValue(":category_uuid", categoryUuid.toStr());
     db.insert(query);

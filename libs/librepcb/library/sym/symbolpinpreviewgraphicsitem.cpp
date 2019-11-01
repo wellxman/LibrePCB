@@ -43,8 +43,9 @@ namespace library {
  ******************************************************************************/
 
 SymbolPinPreviewGraphicsItem::SymbolPinPreviewGraphicsItem(
-    const IF_GraphicsLayerProvider& layerProvider, const SymbolPin& pin,
-    const ComponentSignal*      compSignal,
+    const IF_GraphicsLayerProvider& layerProvider,
+    const SymbolPin& pin,
+    const ComponentSignal* compSignal,
     const CmpSigPinDisplayType& displayType) noexcept
   : QGraphicsItem(),
     mPin(pin),
@@ -89,7 +90,7 @@ void SymbolPinPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
 
   // rotation
   Angle absAngle = mPin.getRotation() +
-                   Angle::fromDeg(parentItem() ? -parentItem()->rotation() : 0);
+      Angle::fromDeg(parentItem() ? -parentItem()->rotation() : 0);
   absAngle.mapTo180deg();
   mRotate180 = (absAngle <= -Angle::deg90() || absAngle > Angle::deg90());
 
@@ -101,8 +102,11 @@ void SymbolPinPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
   QRectF lineRect =
       QRectF(QPointF(0, 0), Point(*mPin.getLength(), 0).toPxQPointF())
           .normalized();
-  lineRect.adjust(-Length(79375).toPx(), -Length(79375).toPx(),
-                  Length(79375).toPx(), Length(79375).toPx());
+  lineRect.adjust(
+      -Length(79375).toPx(),
+      -Length(79375).toPx(),
+      Length(79375).toPx(),
+      Length(79375).toPx());
   mBoundingRect = mBoundingRect.united(lineRect).normalized();
 
   // text
@@ -113,8 +117,8 @@ void SymbolPinPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
   } else if (mDisplayType == CmpSigPinDisplayType::componentSignal()) {
     mStaticText.setText(mComponentSignal ? *mComponentSignal->getName() : "");
   } else if (mDisplayType == CmpSigPinDisplayType::netSignal()) {
-    mStaticText.setText(mComponentSignal ? mComponentSignal->getForcedNetName()
-                                         : "");
+    mStaticText.setText(
+        mComponentSignal ? mComponentSignal->getForcedNetName() : "");
   } else {
     Q_ASSERT(false);
     mStaticText.setText("???");
@@ -123,20 +127,25 @@ void SymbolPinPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
   mStaticText.prepare(QTransform(), mFont);
   mTextOrigin.setX(mRotate180 ? -x - mStaticText.size().width() : x);
   mTextOrigin.setY(-mStaticText.size().height() / 2);
-  mStaticText.prepare(QTransform()
-                          .rotate(mRotate180 ? 180 : 0)
-                          .translate(mTextOrigin.x(), mTextOrigin.y()),
-                      mFont);
+  mStaticText.prepare(
+      QTransform()
+          .rotate(mRotate180 ? 180 : 0)
+          .translate(mTextOrigin.x(), mTextOrigin.y()),
+      mFont);
   if (mRotate180)
-    mTextBoundingRect =
-        QRectF(-mTextOrigin.x(), -mTextOrigin.y(), -mStaticText.size().width(),
-               -mStaticText.size().height())
-            .normalized();
+    mTextBoundingRect = QRectF(
+                            -mTextOrigin.x(),
+                            -mTextOrigin.y(),
+                            -mStaticText.size().width(),
+                            -mStaticText.size().height())
+                            .normalized();
   else
-    mTextBoundingRect =
-        QRectF(mTextOrigin.x(), -mTextOrigin.y() - mStaticText.size().height(),
-               mStaticText.size().width(), mStaticText.size().height())
-            .normalized();
+    mTextBoundingRect = QRectF(
+                            mTextOrigin.x(),
+                            -mTextOrigin.y() - mStaticText.size().height(),
+                            mStaticText.size().width(),
+                            mStaticText.size().height())
+                            .normalized();
   mBoundingRect = mBoundingRect.united(mTextBoundingRect).normalized();
 
   update();
@@ -146,15 +155,19 @@ void SymbolPinPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SymbolPinPreviewGraphicsItem::paint(QPainter* painter,
-                                         const QStyleOptionGraphicsItem* option,
-                                         QWidget* widget) noexcept {
+void SymbolPinPreviewGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   const bool selected = option->state.testFlag(QStyle::State_Selected);
 
   // draw line
-  QPen pen(mLineLayer->getColor(selected), Length(158750).toPx(), Qt::SolidLine,
-           Qt::RoundCap);
+  QPen pen(
+      mLineLayer->getColor(selected),
+      Length(158750).toPx(),
+      Qt::SolidLine,
+      Qt::RoundCap);
   painter->setPen(pen);
   painter->drawLine(QPointF(0, 0), Point(*mPin.getLength(), 0).toPxQPointF());
 

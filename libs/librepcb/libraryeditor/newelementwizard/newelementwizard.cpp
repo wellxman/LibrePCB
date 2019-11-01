@@ -44,33 +44,44 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-NewElementWizard::NewElementWizard(const workspace::Workspace& ws, Library& lib,
-                                   const IF_GraphicsLayerProvider& lp,
-                                   QWidget* parent) noexcept
+NewElementWizard::NewElementWizard(
+    const workspace::Workspace& ws,
+    Library& lib,
+    const IF_GraphicsLayerProvider& lp,
+    QWidget* parent) noexcept
   : QWizard(parent), mUi(new Ui::NewElementWizard) {
   mUi->setupUi(this);
   setPixmap(WizardPixmap::LogoPixmap, QPixmap(":/img/logo/48x48.png"));
   mContext.reset(new NewElementWizardContext(ws, lib, lp));
 
   // add pages
-  insertPage(NewElementWizardContext::ID_ChooseType,
-             new NewElementWizardPage_ChooseType(*mContext, this));
-  insertPage(NewElementWizardContext::ID_CopyFrom,
-             new NewElementWizardPage_CopyFrom(*mContext, this));
-  insertPage(NewElementWizardContext::ID_EnterMetadata,
-             new NewElementWizardPage_EnterMetadata(*mContext, this));
-  insertPage(NewElementWizardContext::ID_PackagePads,
-             new NewElementWizardPage_PackagePads(*mContext, this));
-  insertPage(NewElementWizardContext::ID_ComponentProperties,
-             new NewElementWizardPage_ComponentProperties(*mContext, this));
-  insertPage(NewElementWizardContext::ID_ComponentSymbols,
-             new NewElementWizardPage_ComponentSymbols(*mContext, this));
-  insertPage(NewElementWizardContext::ID_ComponentSignals,
-             new NewElementWizardPage_ComponentSignals(*mContext, this));
-  insertPage(NewElementWizardContext::ID_ComponentPinSignalMap,
-             new NewElementWizardPage_ComponentPinSignalMap(*mContext, this));
-  insertPage(NewElementWizardContext::ID_DeviceProperties,
-             new NewElementWizardPage_DeviceProperties(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_ChooseType,
+      new NewElementWizardPage_ChooseType(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_CopyFrom,
+      new NewElementWizardPage_CopyFrom(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_EnterMetadata,
+      new NewElementWizardPage_EnterMetadata(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_PackagePads,
+      new NewElementWizardPage_PackagePads(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_ComponentProperties,
+      new NewElementWizardPage_ComponentProperties(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_ComponentSymbols,
+      new NewElementWizardPage_ComponentSymbols(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_ComponentSignals,
+      new NewElementWizardPage_ComponentSignals(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_ComponentPinSignalMap,
+      new NewElementWizardPage_ComponentPinSignalMap(*mContext, this));
+  insertPage(
+      NewElementWizardContext::ID_DeviceProperties,
+      new NewElementWizardPage_DeviceProperties(*mContext, this));
 
   setStartId(NewElementWizardContext::ID_ChooseType);
 }
@@ -92,7 +103,8 @@ void NewElementWizard::setNewElementType(
 }
 
 void NewElementWizard::setElementToCopy(
-    NewElementWizardContext::ElementType type, const FilePath& fp) noexcept {
+    NewElementWizardContext::ElementType type,
+    const FilePath& fp) noexcept {
   try {
     mContext->reset(type);
     mContext->copyElement(type, fp);  // can throw

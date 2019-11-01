@@ -42,9 +42,10 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SymbolPinGraphicsItem::SymbolPinGraphicsItem(SymbolPin& pin,
-                                             const IF_GraphicsLayerProvider& lp,
-                                             QGraphicsItem* parent) noexcept
+SymbolPinGraphicsItem::SymbolPinGraphicsItem(
+    SymbolPin& pin,
+    const IF_GraphicsLayerProvider& lp,
+    QGraphicsItem* parent) noexcept
   : QGraphicsItem(parent),
     mPin(pin),
     mCircleGraphicsItem(new PrimitiveCircleGraphicsItem(this)),
@@ -124,9 +125,10 @@ QPainterPath SymbolPinGraphicsItem::shape() const noexcept {
   return p;
 }
 
-void SymbolPinGraphicsItem::paint(QPainter*                       painter,
-                                  const QStyleOptionGraphicsItem* option,
-                                  QWidget* widget) noexcept {
+void SymbolPinGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(painter);
   Q_UNUSED(option);
   Q_UNUSED(widget);

@@ -69,25 +69,48 @@ WorkspaceLibraryDb::WorkspaceLibraryDb(Workspace& ws)
     mDb.reset();
     QFile(mFilePath.toStr()).remove();
     mDb.reset(new SQLiteDatabase(mFilePath));  // can throw
-    createAllTables();                         // can throw
-    setDbVersion(sCurrentDbVersion);           // can throw
+    createAllTables();  // can throw
+    setDbVersion(sCurrentDbVersion);  // can throw
   }
 
   // create library scanner object
   mLibraryScanner.reset(new WorkspaceLibraryScanner(mWorkspace, mFilePath));
-  connect(mLibraryScanner.data(), &WorkspaceLibraryScanner::scanStarted, this,
-          &WorkspaceLibraryDb::scanStarted, Qt::QueuedConnection);
-  connect(mLibraryScanner.data(),
-          &WorkspaceLibraryScanner::scanLibraryListUpdated, this,
-          &WorkspaceLibraryDb::scanLibraryListUpdated, Qt::QueuedConnection);
-  connect(mLibraryScanner.data(), &WorkspaceLibraryScanner::scanProgressUpdate,
-          this, &WorkspaceLibraryDb::scanProgressUpdate, Qt::QueuedConnection);
-  connect(mLibraryScanner.data(), &WorkspaceLibraryScanner::scanSucceeded, this,
-          &WorkspaceLibraryDb::scanSucceeded, Qt::QueuedConnection);
-  connect(mLibraryScanner.data(), &WorkspaceLibraryScanner::scanFailed, this,
-          &WorkspaceLibraryDb::scanFailed, Qt::QueuedConnection);
-  connect(mLibraryScanner.data(), &WorkspaceLibraryScanner::scanFinished, this,
-          &WorkspaceLibraryDb::scanFinished, Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanStarted,
+      this,
+      &WorkspaceLibraryDb::scanStarted,
+      Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanLibraryListUpdated,
+      this,
+      &WorkspaceLibraryDb::scanLibraryListUpdated,
+      Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanProgressUpdate,
+      this,
+      &WorkspaceLibraryDb::scanProgressUpdate,
+      Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanSucceeded,
+      this,
+      &WorkspaceLibraryDb::scanSucceeded,
+      Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanFailed,
+      this,
+      &WorkspaceLibraryDb::scanFailed,
+      Qt::QueuedConnection);
+  connect(
+      mLibraryScanner.data(),
+      &WorkspaceLibraryScanner::scanFinished,
+      this,
+      &WorkspaceLibraryDb::scanFinished,
+      Qt::QueuedConnection);
 
   qDebug("Workspace library database successfully loaded!");
 }
@@ -108,8 +131,8 @@ QMultiMap<Version, FilePath> WorkspaceLibraryDb::getLibraries() const {
   while (query.next()) {
     Version version =
         Version::fromString(query.value(0).toString());  // can throw
-    FilePath filepath(FilePath::fromRelative(mWorkspace.getLibrariesPath(),
-                                             query.value(1).toString()));
+    FilePath filepath(FilePath::fromRelative(
+        mWorkspace.getLibrariesPath(), query.value(1).toString()));
     if (filepath.isValid()) {
       libraries.insert(version, filepath);
     } else {
@@ -283,113 +306,156 @@ QList<FilePath> WorkspaceLibraryDb::getLibraryElements<Device>(
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<Library>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("libraries", "lib_id", elemDir, localeOrder, name,
-                         desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "libraries", "lib_id", elemDir, localeOrder, name, desc, keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<ComponentCategory>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("component_categories", "cat_id", elemDir, localeOrder,
-                         name, desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "component_categories",
+      "cat_id",
+      elemDir,
+      localeOrder,
+      name,
+      desc,
+      keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<PackageCategory>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("package_categories", "cat_id", elemDir, localeOrder,
-                         name, desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "package_categories",
+      "cat_id",
+      elemDir,
+      localeOrder,
+      name,
+      desc,
+      keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<Symbol>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("symbols", "symbol_id", elemDir, localeOrder, name,
-                         desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "symbols", "symbol_id", elemDir, localeOrder, name, desc, keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<Package>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("packages", "package_id", elemDir, localeOrder, name,
-                         desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "packages", "package_id", elemDir, localeOrder, name, desc, keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<Component>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("components", "component_id", elemDir, localeOrder,
-                         name, desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "components", "component_id", elemDir, localeOrder, name, desc, keywords);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementTranslations<Device>(
-    const FilePath& elemDir, const QStringList& localeOrder, QString* name,
-    QString* desc, QString* keywords) const {
-  getElementTranslations("devices", "device_id", elemDir, localeOrder, name,
-                         desc, keywords);
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
+  getElementTranslations(
+      "devices", "device_id", elemDir, localeOrder, name, desc, keywords);
 }
 
 template <>
-void WorkspaceLibraryDb::getElementMetadata<Library>(const FilePath elemDir,
-                                                     Uuid*          uuid,
-                                                     Version* version) const {
+void WorkspaceLibraryDb::getElementMetadata<Library>(
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("libraries", elemDir, uuid, version);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementMetadata<ComponentCategory>(
-    const FilePath elemDir, Uuid* uuid, Version* version) const {
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("component_categories", elemDir, uuid, version);
 }
 
 template <>
 void WorkspaceLibraryDb::getElementMetadata<PackageCategory>(
-    const FilePath elemDir, Uuid* uuid, Version* version) const {
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("package_categories", elemDir, uuid, version);
 }
 
 template <>
-void WorkspaceLibraryDb::getElementMetadata<Symbol>(const FilePath elemDir,
-                                                    Uuid*          uuid,
-                                                    Version* version) const {
+void WorkspaceLibraryDb::getElementMetadata<Symbol>(
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("symbols", elemDir, uuid, version);
 }
 
 template <>
-void WorkspaceLibraryDb::getElementMetadata<Package>(const FilePath elemDir,
-                                                     Uuid*          uuid,
-                                                     Version* version) const {
+void WorkspaceLibraryDb::getElementMetadata<Package>(
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("packages", elemDir, uuid, version);
 }
 
 template <>
-void WorkspaceLibraryDb::getElementMetadata<Component>(const FilePath elemDir,
-                                                       Uuid*          uuid,
-                                                       Version* version) const {
+void WorkspaceLibraryDb::getElementMetadata<Component>(
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("components", elemDir, uuid, version);
 }
 
 template <>
-void WorkspaceLibraryDb::getElementMetadata<Device>(const FilePath elemDir,
-                                                    Uuid*          uuid,
-                                                    Version* version) const {
+void WorkspaceLibraryDb::getElementMetadata<Device>(
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
   return getElementMetadata("devices", elemDir, uuid, version);
 }
 
-void WorkspaceLibraryDb::getLibraryMetadata(const FilePath libDir,
-                                            QPixmap*       icon) const {
+void WorkspaceLibraryDb::getLibraryMetadata(
+    const FilePath libDir,
+    QPixmap* icon) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT icon_png FROM libraries WHERE filepath = :filepath");
-  query.bindValue(":filepath",
-                  libDir.toRelative(mWorkspace.getLibrariesPath()));
+  query.bindValue(
+      ":filepath", libDir.toRelative(mWorkspace.getLibrariesPath()));
   mDb->exec(query);
 
   if (query.first()) {
@@ -397,19 +463,22 @@ void WorkspaceLibraryDb::getLibraryMetadata(const FilePath libDir,
     if (icon) icon->loadFromData(blob, "png");
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Library not found in workspace library: \"%1\""))
             .arg(libDir.toNative()));
   }
 }
 
-void WorkspaceLibraryDb::getDeviceMetadata(const FilePath& devDir,
-                                           Uuid* pkgUuid, Uuid* cmpUuid) const {
+void WorkspaceLibraryDb::getDeviceMetadata(
+    const FilePath& devDir,
+    Uuid* pkgUuid,
+    Uuid* cmpUuid) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT package_uuid, component_uuid "
       "FROM devices WHERE filepath = :filepath");
-  query.bindValue(":filepath",
-                  devDir.toRelative(mWorkspace.getLibrariesPath()));
+  query.bindValue(
+      ":filepath", devDir.toRelative(mWorkspace.getLibrariesPath()));
   mDb->exec(query);
 
   if (query.first()) {
@@ -419,7 +488,8 @@ void WorkspaceLibraryDb::getDeviceMetadata(const FilePath& devDir,
     if (cmpUuid) *cmpUuid = uuid;
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Device not found in workspace library: \"%1\""))
             .arg(devDir.toNative()));
   }
@@ -450,8 +520,11 @@ QList<Uuid> WorkspaceLibraryDb::getPackageCategoryParents(
 }
 
 void WorkspaceLibraryDb::getComponentCategoryElementCount(
-    const tl::optional<Uuid>& category, int* categories, int* symbols,
-    int* components, int* devices) const {
+    const tl::optional<Uuid>& category,
+    int* categories,
+    int* symbols,
+    int* components,
+    int* devices) const {
   if (categories) {
     *categories = getCategoryChildCount("component_categories", category);
   }
@@ -468,7 +541,9 @@ void WorkspaceLibraryDb::getComponentCategoryElementCount(
 }
 
 void WorkspaceLibraryDb::getPackageCategoryElementCount(
-    const tl::optional<Uuid>& category, int* categories, int* packages) const {
+    const tl::optional<Uuid>& category,
+    int* categories,
+    int* packages) const {
   if (categories) {
     *categories = getCategoryChildCount("package_categories", category);
   }
@@ -523,12 +598,14 @@ void WorkspaceLibraryDb::startLibraryRescan() noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void WorkspaceLibraryDb::getElementTranslations(const QString&     table,
-                                                const QString&     idRow,
-                                                const FilePath&    elemDir,
-                                                const QStringList& localeOrder,
-                                                QString* name, QString* desc,
-                                                QString* keywords) const {
+void WorkspaceLibraryDb::getElementTranslations(
+    const QString& table,
+    const QString& idRow,
+    const FilePath& elemDir,
+    const QStringList& localeOrder,
+    QString* name,
+    QString* desc,
+    QString* keywords) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT locale, name, description, keywords FROM " % table %
       "_tr "
@@ -537,18 +614,18 @@ void WorkspaceLibraryDb::getElementTranslations(const QString&     table,
       " "
       "WHERE " %
       table % ".filepath = :filepath");
-  query.bindValue(":filepath",
-                  elemDir.toRelative(mWorkspace.getLibrariesPath()));
+  query.bindValue(
+      ":filepath", elemDir.toRelative(mWorkspace.getLibrariesPath()));
   mDb->exec(query);
 
-  LocalizedNameMap        nameMap(ElementName("unknown"));
+  LocalizedNameMap nameMap(ElementName("unknown"));
   LocalizedDescriptionMap descriptionMap("unknown");
-  LocalizedKeywordsMap    keywordsMap("unknown");
+  LocalizedKeywordsMap keywordsMap("unknown");
   while (query.next()) {
-    QString locale      = query.value(0).toString();
-    QString name        = query.value(1).toString();
+    QString locale = query.value(0).toString();
+    QString name = query.value(1).toString();
     QString description = query.value(2).toString();
-    QString keywords    = query.value(3).toString();
+    QString keywords = query.value(3).toString();
     if (!name.isNull()) nameMap.insert(locale, ElementName(name));  // can throw
     if (!description.isNull()) descriptionMap.insert(locale, description);
     if (!keywords.isNull()) keywordsMap.insert(locale, keywords);
@@ -559,27 +636,30 @@ void WorkspaceLibraryDb::getElementTranslations(const QString&     table,
   if (keywords) *keywords = keywordsMap.value(localeOrder);
 }
 
-void WorkspaceLibraryDb::getElementMetadata(const QString& table,
-                                            const FilePath elemDir, Uuid* uuid,
-                                            Version* version) const {
-  QSqlQuery query = mDb->prepareQuery("SELECT uuid, version FROM " % table %
-                                      " WHERE filepath = :filepath");
-  query.bindValue(":filepath",
-                  elemDir.toRelative(mWorkspace.getLibrariesPath()));
+void WorkspaceLibraryDb::getElementMetadata(
+    const QString& table,
+    const FilePath elemDir,
+    Uuid* uuid,
+    Version* version) const {
+  QSqlQuery query = mDb->prepareQuery(
+      "SELECT uuid, version FROM " % table % " WHERE filepath = :filepath");
+  query.bindValue(
+      ":filepath", elemDir.toRelative(mWorkspace.getLibrariesPath()));
   mDb->exec(query);
 
   while (query.next()) {
-    QString uuidStr    = query.value(0).toString();
+    QString uuidStr = query.value(0).toString();
     QString versionStr = query.value(1).toString();
-    if (uuid) *uuid = Uuid::fromString(uuidStr);              // can throw
+    if (uuid) *uuid = Uuid::fromString(uuidStr);  // can throw
     if (version) *version = Version::fromString(versionStr);  // can throw
   }
 }
 
 QMultiMap<Version, FilePath> WorkspaceLibraryDb::getElementFilePathsFromDb(
-    const QString& tablename, const Uuid& uuid) const {
-  QSqlQuery query = mDb->prepareQuery("SELECT version, filepath FROM " %
-                                      tablename % " WHERE uuid = :uuid");
+    const QString& tablename,
+    const Uuid& uuid) const {
+  QSqlQuery query = mDb->prepareQuery(
+      "SELECT version, filepath FROM " % tablename % " WHERE uuid = :uuid");
   query.bindValue(":uuid", uuid.toStr());
   mDb->exec(query);
 
@@ -587,8 +667,8 @@ QMultiMap<Version, FilePath> WorkspaceLibraryDb::getElementFilePathsFromDb(
   while (query.next()) {
     Version version =
         Version::fromString(query.value(0).toString());  // can throw
-    FilePath filepath(FilePath::fromRelative(mWorkspace.getLibrariesPath(),
-                                             query.value(1).toString()));
+    FilePath filepath(FilePath::fromRelative(
+        mWorkspace.getLibrariesPath(), query.value(1).toString()));
     if (filepath.isValid()) {
       elements.insert(version, filepath);
     } else {
@@ -607,7 +687,8 @@ FilePath WorkspaceLibraryDb::getLatestVersionFilePath(
 }
 
 QSet<Uuid> WorkspaceLibraryDb::getCategoryChilds(
-    const QString& tablename, const tl::optional<Uuid>& categoryUuid) const {
+    const QString& tablename,
+    const tl::optional<Uuid>& categoryUuid) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT uuid FROM " % tablename % " WHERE parent_uuid " %
       (categoryUuid ? "= '" % categoryUuid->toStr() % "'"
@@ -621,16 +702,19 @@ QSet<Uuid> WorkspaceLibraryDb::getCategoryChilds(
   return elements;
 }
 
-QList<Uuid> WorkspaceLibraryDb::getCategoryParents(const QString& tablename,
-                                                   const Uuid& category) const {
+QList<Uuid> WorkspaceLibraryDb::getCategoryParents(
+    const QString& tablename,
+    const Uuid& category) const {
   tl::optional<Uuid> optCategory = category;
-  QList<Uuid>        parentUuids;
+  QList<Uuid> parentUuids;
   while ((optCategory = getCategoryParent(tablename, *optCategory))) {
     if (parentUuids.contains(*optCategory)) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("Endless loop "
-                                    "in category parentship detected (%1)."))
-                             .arg(optCategory->toStr()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("Endless loop "
+                     "in category parentship detected (%1)."))
+              .arg(optCategory->toStr()));
     } else {
       parentUuids.append(*optCategory);
     }
@@ -639,7 +723,8 @@ QList<Uuid> WorkspaceLibraryDb::getCategoryParents(const QString& tablename,
 }
 
 tl::optional<Uuid> WorkspaceLibraryDb::getCategoryParent(
-    const QString& tablename, const Uuid& category) const {
+    const QString& tablename,
+    const Uuid& category) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT parent_uuid FROM " % tablename % " WHERE uuid = '" %
       category.toStr() % "'" % " ORDER BY version DESC" % " LIMIT 1");
@@ -654,7 +739,8 @@ tl::optional<Uuid> WorkspaceLibraryDb::getCategoryParent(
     }
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The category "
                    "\"%1\" does not exist in the library database."))
             .arg(category.toStr()));
@@ -662,7 +748,8 @@ tl::optional<Uuid> WorkspaceLibraryDb::getCategoryParent(
 }
 
 int WorkspaceLibraryDb::getCategoryChildCount(
-    const QString& tablename, const tl::optional<Uuid>& category) const {
+    const QString& tablename,
+    const tl::optional<Uuid>& category) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT COUNT(*) FROM " % tablename % " WHERE parent_uuid " %
       (category ? "= '" % category->toStr() % "'" : QString("IS NULL")));
@@ -670,7 +757,8 @@ int WorkspaceLibraryDb::getCategoryChildCount(
 }
 
 int WorkspaceLibraryDb::getCategoryElementCount(
-    const QString& tablename, const QString& idrowname,
+    const QString& tablename,
+    const QString& idrowname,
     const tl::optional<Uuid>& category) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT COUNT(*) FROM " % tablename % " LEFT JOIN " % tablename % "_cat" %
@@ -681,7 +769,8 @@ int WorkspaceLibraryDb::getCategoryElementCount(
 }
 
 QSet<Uuid> WorkspaceLibraryDb::getElementsByCategory(
-    const QString& tablename, const QString& idrowname,
+    const QString& tablename,
+    const QString& idrowname,
     const tl::optional<Uuid>& categoryUuid) const {
   QSqlQuery query = mDb->prepareQuery(
       "SELECT uuid FROM " % tablename % " LEFT JOIN " % tablename %
@@ -702,7 +791,8 @@ QSet<Uuid> WorkspaceLibraryDb::getElementsByCategory(
 }
 
 QList<Uuid> WorkspaceLibraryDb::getElementsBySearchKeyword(
-    const QString& tablename, const QString& idrowname,
+    const QString& tablename,
+    const QString& idrowname,
     const QString& keyword) const {
   QSqlQuery query = mDb->prepareQuery(QString("SELECT %1.uuid FROM %1, %1_tr "
                                               "ON %1.id=%1_tr.%2 "
@@ -722,8 +812,8 @@ QList<Uuid> WorkspaceLibraryDb::getElementsBySearchKeyword(
 }
 
 int WorkspaceLibraryDb::getLibraryId(const FilePath& lib) const {
-  QString   relativeLibraryPath = lib.toRelative(mWorkspace.getLibrariesPath());
-  QSqlQuery query               = mDb->prepareQuery(
+  QString relativeLibraryPath = lib.toRelative(mWorkspace.getLibrariesPath());
+  QSqlQuery query = mDb->prepareQuery(
       "SELECT id FROM libraries "
       "WHERE filepath = '" %
       relativeLibraryPath %
@@ -733,12 +823,13 @@ int WorkspaceLibraryDb::getLibraryId(const FilePath& lib) const {
 
   if (query.next()) {
     bool ok = false;
-    int  id = query.value(0).toInt(&ok);
+    int id = query.value(0).toInt(&ok);
     if (!ok) throw LogicError(__FILE__, __LINE__);
     return id;
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The library "
                    "\"%1\" does not exist in the library database."))
             .arg(relativeLibraryPath));
@@ -746,16 +837,17 @@ int WorkspaceLibraryDb::getLibraryId(const FilePath& lib) const {
 }
 
 QList<FilePath> WorkspaceLibraryDb::getLibraryElements(
-    const FilePath& lib, const QString& tablename) const {
-  QSqlQuery query = mDb->prepareQuery("SELECT filepath FROM " % tablename %
-                                      " WHERE lib_id = :lib_id");
+    const FilePath& lib,
+    const QString& tablename) const {
+  QSqlQuery query = mDb->prepareQuery(
+      "SELECT filepath FROM " % tablename % " WHERE lib_id = :lib_id");
   query.bindValue(":lib_id", getLibraryId(lib));
   mDb->exec(query);
 
   QList<FilePath> elements;
   while (query.next()) {
-    FilePath filepath(FilePath::fromRelative(mWorkspace.getLibrariesPath(),
-                                             query.value(0).toString()));
+    FilePath filepath(FilePath::fromRelative(
+        mWorkspace.getLibrariesPath(), query.value(0).toString()));
     if (filepath.isValid()) {
       elements.append(filepath);
     } else {
@@ -965,7 +1057,7 @@ void WorkspaceLibraryDb::createAllTables() {
   // execute queries
   foreach (const QString& string, queries) {
     QSqlQuery query = mDb->prepareQuery(string);  // can throw
-    mDb->exec(query);                             // can throw
+    mDb->exec(query);  // can throw
   }
 }
 
@@ -975,8 +1067,8 @@ int WorkspaceLibraryDb::getDbVersion() const noexcept {
         "SELECT value_int FROM internal WHERE key = 'version'");
     mDb->exec(query);
     if (query.next()) {
-      bool ok      = false;
-      int  version = query.value(0).toInt(&ok);
+      bool ok = false;
+      int version = query.value(0).toInt(&ok);
       if (!ok) throw LogicError(__FILE__, __LINE__);
       return version;
     } else {

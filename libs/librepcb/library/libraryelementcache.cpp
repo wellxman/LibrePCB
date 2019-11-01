@@ -52,39 +52,41 @@ LibraryElementCache::~LibraryElementCache() noexcept {
  ******************************************************************************/
 
 std::shared_ptr<const ComponentCategory>
-LibraryElementCache::getComponentCategory(const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestComponentCategory,
-                    mCmpCat, uuid);
+    LibraryElementCache::getComponentCategory(const Uuid& uuid) const noexcept {
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestComponentCategory,
+      mCmpCat,
+      uuid);
 }
 
 std::shared_ptr<const PackageCategory> LibraryElementCache::getPackageCategory(
     const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestPackageCategory,
-                    mPkgCat, uuid);
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestPackageCategory, mPkgCat, uuid);
 }
 
 std::shared_ptr<const Symbol> LibraryElementCache::getSymbol(
     const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestSymbol, mSym,
-                    uuid);
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestSymbol, mSym, uuid);
 }
 
 std::shared_ptr<const Package> LibraryElementCache::getPackage(
     const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestPackage, mPkg,
-                    uuid);
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestPackage, mPkg, uuid);
 }
 
 std::shared_ptr<const Component> LibraryElementCache::getComponent(
     const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestComponent, mCmp,
-                    uuid);
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestComponent, mCmp, uuid);
 }
 
 std::shared_ptr<const Device> LibraryElementCache::getDevice(
     const Uuid& uuid) const noexcept {
-  return getElement(&workspace::WorkspaceLibraryDb::getLatestDevice, mDev,
-                    uuid);
+  return getElement(
+      &workspace::WorkspaceLibraryDb::getLatestDevice, mDev, uuid);
 }
 
 /*******************************************************************************
@@ -94,13 +96,13 @@ std::shared_ptr<const Device> LibraryElementCache::getDevice(
 template <typename T>
 std::shared_ptr<const T> LibraryElementCache::getElement(
     FilePath (workspace::WorkspaceLibraryDb::*getter)(const Uuid&) const,
-    QHash<Uuid, std::shared_ptr<const T>>& container, const Uuid& uuid) const
-    noexcept {
+    QHash<Uuid, std::shared_ptr<const T>>& container,
+    const Uuid& uuid) const noexcept {
   std::shared_ptr<const T> element = container.value(uuid);
   if ((!element) && mDb) {
     try {
       FilePath fp = (mDb->*getter)(uuid);
-      element     = std::make_shared<T>(std::unique_ptr<TransactionalDirectory>(
+      element = std::make_shared<T>(std::unique_ptr<TransactionalDirectory>(
           new TransactionalDirectory(TransactionalFileSystem::openRO(fp))));
       container.insert(uuid, element);
     } catch (const Exception& e) {

@@ -47,7 +47,7 @@ class FileUtils final {
 
 public:
   // Constructors / Destructor
-  FileUtils()                       = delete;
+  FileUtils() = delete;
   FileUtils(const FileUtils& other) = delete;
 
   // Static methods
@@ -144,7 +144,8 @@ public:
    * @return A list of filepaths to files in the specified directory
    */
   static QList<FilePath> getFilesInDirectory(
-      const FilePath& dir, const QStringList& filters = QStringList());
+      const FilePath& dir,
+      const QStringList& filters = QStringList());
 
   // Operator Overloadings
   FileUtils& operator=(const FileUtils& rhs) = delete;

@@ -36,8 +36,11 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_AirWire::BI_AirWire(Board& board, const NetSignal& netsignal,
-                       const Point& p1, const Point& p2)
+BI_AirWire::BI_AirWire(
+    Board& board,
+    const NetSignal& netsignal,
+    const Point& p1,
+    const Point& p2)
   : BI_Base(board), mNetSignal(netsignal), mP1(p1), mP2(p2) {
   mGraphicsItem.reset(new BGI_AirWire(*this));
 }
@@ -54,8 +57,9 @@ void BI_AirWire::addToBoard() {
     throw LogicError(__FILE__, __LINE__);
   }
   mHighlightChangedConnection =
-      connect(&mNetSignal, &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+      connect(&mNetSignal, &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   BI_Base::addToBoard(mGraphicsItem.data());
 }
 

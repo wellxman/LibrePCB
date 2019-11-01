@@ -56,9 +56,10 @@ struct ElementNameVerifier {
       typename std::decay<Value>::type {
     return p(val) ? std::forward<Value>(val)
                   : (throw RuntimeError(
-                         __FILE__, __LINE__,
-                         QString(QApplication::translate("ElementName",
-                                                         "Invalid name: '%1'"))
+                         __FILE__,
+                         __LINE__,
+                         QString(QApplication::translate(
+                                     "ElementName", "Invalid name: '%1'"))
                              .arg(val)),
                      std::forward<Value>(val));
   }
@@ -88,8 +89,8 @@ struct ElementNameConstraint {
  * The constructor throws an exception if constructed from a QString which is
  * not a valid element name according these rules.
  */
-using ElementName = type_safe::constrained_type<QString, ElementNameConstraint,
-                                                ElementNameVerifier>;
+using ElementName = type_safe::
+    constrained_type<QString, ElementNameConstraint, ElementNameVerifier>;
 
 inline bool operator==(const ElementName& lhs, const QString& rhs) noexcept {
   return (*lhs) == rhs;
@@ -109,8 +110,9 @@ inline QString operator%(const ElementName& lhs, const QString& rhs) noexcept {
 inline QString operator%(const QString& lhs, const ElementName& rhs) noexcept {
   return lhs % (*rhs);
 }
-inline ElementName operator%(const ElementName& lhs,
-                             const ElementName& rhs) noexcept {
+inline ElementName operator%(
+    const ElementName& lhs,
+    const ElementName& rhs) noexcept {
   return ElementName((*lhs) % (*rhs));  // always safe, will not throw
 }
 
@@ -120,8 +122,9 @@ inline SExpression serializeToSExpression(const ElementName& obj) {
 }
 
 template <>
-inline ElementName deserializeFromSExpression(const SExpression& sexpr,
-                                              bool               throwIfEmpty) {
+inline ElementName deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   return ElementName(sexpr.getStringOrToken(throwIfEmpty));  // can throw
 }
 

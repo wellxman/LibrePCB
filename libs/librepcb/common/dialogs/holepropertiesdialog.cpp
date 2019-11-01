@@ -35,16 +35,21 @@
  ******************************************************************************/
 namespace librepcb {
 
-HolePropertiesDialog::HolePropertiesDialog(Hole& hole, UndoStack& undoStack,
-                                           QWidget* parent) noexcept
+HolePropertiesDialog::HolePropertiesDialog(
+    Hole& hole,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mHole(hole),
     mUndoStack(undoStack),
     mUi(new Ui::HolePropertiesDialog) {
   mUi->setupUi(this);
   mUi->edtDiameter->setSingleStep(0.1);  // [mm]
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &HolePropertiesDialog::on_buttonBox_clicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &HolePropertiesDialog::on_buttonBox_clicked);
 
   // load text attributes
   mUi->edtDiameter->setValue(mHole.getDiameter());
@@ -82,8 +87,8 @@ bool HolePropertiesDialog::applyChanges() noexcept {
   try {
     QScopedPointer<CmdHoleEdit> cmd(new CmdHoleEdit(mHole));
     cmd->setDiameter(mUi->edtDiameter->getValue(), false);
-    cmd->setPosition(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                     false);
+    cmd->setPosition(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     mUndoStack.execCmd(cmd.take());
     return true;
   } catch (const Exception& e) {

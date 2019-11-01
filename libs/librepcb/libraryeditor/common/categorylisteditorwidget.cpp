@@ -44,16 +44,23 @@ namespace editor {
  ******************************************************************************/
 
 CategoryListEditorWidgetBase::CategoryListEditorWidgetBase(
-    const workspace::Workspace& ws, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : QWidget(parent),
     mWorkspace(ws),
     mUi(new Ui::CategoryListEditorWidget),
     mRequiresMinimumOneEntry(false) {
   mUi->setupUi(this);
-  connect(mUi->btnAdd, &QPushButton::clicked, this,
-          &CategoryListEditorWidgetBase::btnAddClicked);
-  connect(mUi->btnRemove, &QPushButton::clicked, this,
-          &CategoryListEditorWidgetBase::btnRemoveClicked);
+  connect(
+      mUi->btnAdd,
+      &QPushButton::clicked,
+      this,
+      &CategoryListEditorWidgetBase::btnAddClicked);
+  connect(
+      mUi->btnRemove,
+      &QPushButton::clicked,
+      this,
+      &CategoryListEditorWidgetBase::btnRemoveClicked);
 }
 
 CategoryListEditorWidgetBase::~CategoryListEditorWidgetBase() noexcept {
@@ -89,10 +96,10 @@ void CategoryListEditorWidgetBase::btnAddClicked() noexcept {
 }
 
 void CategoryListEditorWidgetBase::btnRemoveClicked() noexcept {
-  QListWidgetItem*   item = mUi->listWidget->currentItem();
-  tl::optional<Uuid> uuid =
-      item ? Uuid::tryFromString(item->data(Qt::UserRole).toString())
-           : tl::nullopt;
+  QListWidgetItem* item = mUi->listWidget->currentItem();
+  tl::optional<Uuid> uuid = item
+      ? Uuid::tryFromString(item->data(Qt::UserRole).toString())
+      : tl::nullopt;
   if (item && uuid) {
     mUuids.remove(*uuid);
     delete item;
@@ -113,7 +120,7 @@ void CategoryListEditorWidgetBase::addItem(
       parents.prepend(*category);
       foreach (const Uuid& parent, parents) {
         FilePath filepath = getLatestCategory(parent);  // can throw
-        lines.prepend(getCategoryName(filepath));       // can throw
+        lines.prepend(getCategoryName(filepath));  // can throw
       }
     }
     lines.prepend(tr("Root category"));
@@ -124,8 +131,9 @@ void CategoryListEditorWidgetBase::addItem(
   }
 }
 
-void CategoryListEditorWidgetBase::addItem(const tl::optional<Uuid>& category,
-                                           const QStringList& lines) noexcept {
+void CategoryListEditorWidgetBase::addItem(
+    const tl::optional<Uuid>& category,
+    const QStringList& lines) noexcept {
   QString text;
   for (int i = 0; i < lines.count(); ++i) {
     QString line = lines.value(i);
@@ -138,8 +146,9 @@ void CategoryListEditorWidgetBase::addItem(const tl::optional<Uuid>& category,
   addItem(category, text);
 }
 
-void CategoryListEditorWidgetBase::addItem(const tl::optional<Uuid>& category,
-                                           const QString& text) noexcept {
+void CategoryListEditorWidgetBase::addItem(
+    const tl::optional<Uuid>& category,
+    const QString& text) noexcept {
   QListWidgetItem* item = new QListWidgetItem(text, mUi->listWidget);
   item->setData(Qt::UserRole, category ? category->toStr() : QString());
   updateColor();
@@ -159,7 +168,8 @@ void CategoryListEditorWidgetBase::updateColor() noexcept {
 
 template <typename ElementType>
 CategoryListEditorWidget<ElementType>::CategoryListEditorWidget(
-    const workspace::Workspace& ws, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : CategoryListEditorWidgetBase(ws, parent) {
 }
 
@@ -169,7 +179,7 @@ CategoryListEditorWidget<ElementType>::~CategoryListEditorWidget() noexcept {
 
 template <typename ElementType>
 tl::optional<Uuid>
-CategoryListEditorWidget<ElementType>::chooseCategoryWithDialog() noexcept {
+    CategoryListEditorWidget<ElementType>::chooseCategoryWithDialog() noexcept {
   CategoryChooserDialog<ElementType> dialog(mWorkspace, this);
   if (dialog.exec() == QDialog::Accepted) {
     return dialog.getSelectedCategoryUuid();
@@ -207,7 +217,8 @@ QString CategoryListEditorWidget<ElementType>::getCategoryName(
     const FilePath& fp) const {
   QString name;
   mWorkspace.getLibraryDb().template getElementTranslations<ElementType>(
-      fp, mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
+      fp,
+      mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
       &name);  // can throw
   return name;
 }

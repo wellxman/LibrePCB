@@ -45,7 +45,8 @@ namespace manager {
  ******************************************************************************/
 
 RepositoryLibraryListWidgetItem::RepositoryLibraryListWidgetItem(
-    workspace::Workspace& ws, const QJsonObject& obj) noexcept
+    workspace::Workspace& ws,
+    const QJsonObject& obj) noexcept
   : QWidget(nullptr),
     mWorkspace(ws),
     mJsonObject(obj),
@@ -53,20 +54,23 @@ RepositoryLibraryListWidgetItem::RepositoryLibraryListWidgetItem(
   mUi->setupUi(this);
   mUi->lblIcon->setText("");
   mUi->prgProgress->setVisible(false);
-  connect(mUi->cbxDownload, &QCheckBox::toggled, this,
-          &RepositoryLibraryListWidgetItem::checkedChanged);
+  connect(
+      mUi->cbxDownload,
+      &QCheckBox::toggled,
+      this,
+      &RepositoryLibraryListWidgetItem::checkedChanged);
 
-  mUuid    = Uuid::tryFromString(mJsonObject.value("uuid").toString());
+  mUuid = Uuid::tryFromString(mJsonObject.value("uuid").toString());
   mVersion = Version::tryFromString(mJsonObject.value("version").toString());
   mIsRecommended = mJsonObject.value("recommended").toBool();
   QString name =
       mJsonObject.value("name").toObject().value("default").toString();
   QString desc =
       mJsonObject.value("description").toObject().value("default").toString();
-  QString author  = mJsonObject.value("author").toString();
-  QUrl    iconUrl = QUrl(mJsonObject.value("icon_url").toString());
-  foreach (const QJsonValue& value,
-           mJsonObject.value("dependencies").toArray()) {
+  QString author = mJsonObject.value("author").toString();
+  QUrl iconUrl = QUrl(mJsonObject.value("icon_url").toString());
+  foreach (
+      const QJsonValue& value, mJsonObject.value("dependencies").toArray()) {
     tl::optional<Uuid> uuid = Uuid::tryFromString(value.toString());
     if (uuid) {
       mDependencies.insert(*uuid);
@@ -81,15 +85,21 @@ RepositoryLibraryListWidgetItem::RepositoryLibraryListWidgetItem(
   mUi->lblAuthor->setText(QString("Author: %1").arg(author));
 
   NetworkRequest* request = new NetworkRequest(iconUrl);
-  connect(request, &NetworkRequest::dataReceived, this,
-          &RepositoryLibraryListWidgetItem::iconReceived, Qt::QueuedConnection);
+  connect(
+      request,
+      &NetworkRequest::dataReceived,
+      this,
+      &RepositoryLibraryListWidgetItem::iconReceived,
+      Qt::QueuedConnection);
   request->start();
 
   // check if this library is already installed
   updateInstalledStatus();
-  connect(&mWorkspace.getLibraryDb(),
-          &workspace::WorkspaceLibraryDb::scanLibraryListUpdated, this,
-          &RepositoryLibraryListWidgetItem::updateInstalledStatus);
+  connect(
+      &mWorkspace.getLibraryDb(),
+      &workspace::WorkspaceLibraryDb::scanLibraryListUpdated,
+      this,
+      &RepositoryLibraryListWidgetItem::updateInstalledStatus);
 }
 
 RepositoryLibraryListWidgetItem::~RepositoryLibraryListWidgetItem() noexcept {
@@ -122,13 +132,13 @@ void RepositoryLibraryListWidgetItem::startDownloadIfSelected() noexcept {
     mUi->prgProgress->setVisible(true);
 
     // read ZIP metadata from JSON
-    QUrl       url     = QUrl(mJsonObject.value("download_url").toString());
-    qint64     zipSize = mJsonObject.value("download_size").toInt(-1);
+    QUrl url = QUrl(mJsonObject.value("download_url").toString());
+    qint64 zipSize = mJsonObject.value("download_size").toInt(-1);
     QByteArray zipSha256 =
         mJsonObject.value("download_sha256").toString().toUtf8();
 
     // determine destination directory
-    QString  libDirName = mUuid->toStr() % ".lplib";
+    QString libDirName = mUuid->toStr() % ".lplib";
     FilePath destDir =
         mWorkspace.getLibrariesPath().getPathTo("remote/" % libDirName);
 
@@ -138,14 +148,21 @@ void RepositoryLibraryListWidgetItem::startDownloadIfSelected() noexcept {
       mLibraryDownload->setExpectedZipFileSize(zipSize);
     }
     if (!zipSha256.isEmpty()) {
-      mLibraryDownload->setExpectedChecksum(QCryptographicHash::Sha256,
-                                            QByteArray::fromHex(zipSha256));
+      mLibraryDownload->setExpectedChecksum(
+          QCryptographicHash::Sha256, QByteArray::fromHex(zipSha256));
     }
-    connect(mLibraryDownload.data(), &LibraryDownload::progressPercent,
-            mUi->prgProgress, &QProgressBar::setValue, Qt::QueuedConnection);
-    connect(mLibraryDownload.data(), &LibraryDownload::finished, this,
-            &RepositoryLibraryListWidgetItem::downloadFinished,
-            Qt::QueuedConnection);
+    connect(
+        mLibraryDownload.data(),
+        &LibraryDownload::progressPercent,
+        mUi->prgProgress,
+        &QProgressBar::setValue,
+        Qt::QueuedConnection);
+    connect(
+        mLibraryDownload.data(),
+        &LibraryDownload::finished,
+        this,
+        &RepositoryLibraryListWidgetItem::downloadFinished,
+        Qt::QueuedConnection);
     mLibraryDownload->start();
   }
 }
@@ -155,7 +172,8 @@ void RepositoryLibraryListWidgetItem::startDownloadIfSelected() noexcept {
  ******************************************************************************/
 
 void RepositoryLibraryListWidgetItem::downloadFinished(
-    bool success, const QString& errMsg) noexcept {
+    bool success,
+    const QString& errMsg) noexcept {
   Q_ASSERT(mLibraryDownload);
 
   if ((!success) && (!errMsg.isEmpty())) {
@@ -196,8 +214,10 @@ void RepositoryLibraryListWidgetItem::updateInstalledStatus() noexcept {
           mWorkspace.getLibraryDb().getLatestLibrary(*mUuid);  // can throw
       if (fp.isValid()) {
         Version v = Version::fromString("0.1");  // only for initialization
-        mWorkspace.getLibraryDb().getElementMetadata<Library>(fp, nullptr,
-                                                              &v);  // can throw
+        mWorkspace.getLibraryDb().getElementMetadata<Library>(
+            fp,
+            nullptr,
+            &v);  // can throw
         installedVersion = v;
       }
     } catch (const Exception& e) {

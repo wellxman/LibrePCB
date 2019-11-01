@@ -43,7 +43,9 @@ namespace editor {
  ******************************************************************************/
 
 ProjectPropertiesEditorDialog::ProjectPropertiesEditorDialog(
-    ProjectMetadata& metadata, UndoStack& undoStack, QWidget* parent) noexcept
+    ProjectMetadata& metadata,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mMetadata(metadata),
     mUndoStack(undoStack),

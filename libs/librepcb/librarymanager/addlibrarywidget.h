@@ -85,14 +85,15 @@ private:  // Methods
   void repoLibraryDownloadCheckedChanged(bool checked) noexcept;
   void downloadLibrariesFromRepositoryButtonClicked() noexcept;
 
-  static QString getTextOrPlaceholderFromQLineEdit(QLineEdit* edit,
-                                                   bool isFilename) noexcept;
+  static QString getTextOrPlaceholderFromQLineEdit(
+      QLineEdit* edit,
+      bool isFilename) noexcept;
 
 private:  // Data
-  workspace::Workspace&                mWorkspace;
+  workspace::Workspace& mWorkspace;
   QScopedPointer<Ui::AddLibraryWidget> mUi;
-  QScopedPointer<LibraryDownload>      mManualLibraryDownload;
-  QList<QMetaObject::Connection>       mLibraryDownloadConnections;
+  QScopedPointer<LibraryDownload> mManualLibraryDownload;
+  QList<QMetaObject::Connection> mLibraryDownloadConnections;
 };
 
 /*******************************************************************************

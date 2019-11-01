@@ -83,13 +83,16 @@ public:
 signals:
 
   void unplacedComponentsCountChanged(int count);
-  void addDeviceTriggered(ComponentInstance& cmp, const Uuid& deviceUuid,
-                          Uuid footprintUuid);
+  void addDeviceTriggered(
+      ComponentInstance& cmp,
+      const Uuid& deviceUuid,
+      Uuid footprintUuid);
 
 private slots:
 
-  void on_lstUnplacedComponents_currentItemChanged(QListWidgetItem* current,
-                                                   QListWidgetItem* previous);
+  void on_lstUnplacedComponents_currentItemChanged(
+      QListWidgetItem* current,
+      QListWidgetItem* previous);
   void on_cbxSelectedDevice_currentIndexChanged(int index);
   void on_cbxSelectedFootprint_currentIndexChanged(int index);
   void on_btnAdd_clicked();
@@ -105,38 +108,42 @@ private:
   // Private Methods
   void updateComponentsList() noexcept;
   void setSelectedComponentInstance(ComponentInstance* cmp) noexcept;
-  void setSelectedDeviceAndPackage(const library::Device*  device,
-                                   const library::Package* package) noexcept;
+  void setSelectedDeviceAndPackage(
+      const library::Device* device,
+      const library::Package* package) noexcept;
   void setSelectedFootprintUuid(const tl::optional<Uuid>& uuid) noexcept;
   void beginUndoCmdGroup() noexcept;
   void addNextDeviceToCmdGroup(
-      ComponentInstance& cmp, const Uuid& deviceUuid,
+      ComponentInstance& cmp,
+      const Uuid& deviceUuid,
       const tl::optional<Uuid>& footprintUuid) noexcept;
   void commitUndoCmdGroup() noexcept;
-  void addDeviceManually(ComponentInstance& cmp, const Uuid& deviceUuid,
-                         Uuid footprintUuid) noexcept;
+  void addDeviceManually(
+      ComponentInstance& cmp,
+      const Uuid& deviceUuid,
+      Uuid footprintUuid) noexcept;
 
   // General
-  ProjectEditor&                               mProjectEditor;
-  Project&                                     mProject;
-  Board*                                       mBoard;
-  Ui::UnplacedComponentsDock*                  mUi;
+  ProjectEditor& mProjectEditor;
+  Project& mProject;
+  Board* mBoard;
+  Ui::UnplacedComponentsDock* mUi;
   QScopedPointer<DefaultGraphicsLayerProvider> mGraphicsLayerProvider;
-  GraphicsScene*                               mFootprintPreviewGraphicsScene;
-  library::FootprintPreviewGraphicsItem*       mFootprintPreviewGraphicsItem;
-  ComponentInstance*                           mSelectedComponent;
-  const library::Device*                       mSelectedDevice;
-  const library::Package*                      mSelectedPackage;
-  tl::optional<Uuid>                           mSelectedFootprintUuid;
-  QMetaObject::Connection                      mCircuitConnection1;
-  QMetaObject::Connection                      mCircuitConnection2;
-  QMetaObject::Connection                      mBoardConnection1;
-  QMetaObject::Connection                      mBoardConnection2;
-  Point                                        mNextPosition;
-  bool                                         mDisableListUpdate;
-  QHash<Uuid, Uuid>                            mLastDeviceOfComponent;
-  QHash<Uuid, tl::optional<Uuid>>              mLastFootprintOfDevice;
-  QScopedPointer<UndoCommandGroup>             mCurrentUndoCmdGroup;
+  GraphicsScene* mFootprintPreviewGraphicsScene;
+  library::FootprintPreviewGraphicsItem* mFootprintPreviewGraphicsItem;
+  ComponentInstance* mSelectedComponent;
+  const library::Device* mSelectedDevice;
+  const library::Package* mSelectedPackage;
+  tl::optional<Uuid> mSelectedFootprintUuid;
+  QMetaObject::Connection mCircuitConnection1;
+  QMetaObject::Connection mCircuitConnection2;
+  QMetaObject::Connection mBoardConnection1;
+  QMetaObject::Connection mBoardConnection2;
+  Point mNextPosition;
+  bool mDisableListUpdate;
+  QHash<Uuid, Uuid> mLastDeviceOfComponent;
+  QHash<Uuid, tl::optional<Uuid>> mLastFootprintOfDevice;
+  QScopedPointer<UndoCommandGroup> mCurrentUndoCmdGroup;
 };
 
 /*******************************************************************************

@@ -55,10 +55,12 @@ class SymbolPinPropertiesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  SymbolPinPropertiesDialog()                                       = delete;
+  SymbolPinPropertiesDialog() = delete;
   SymbolPinPropertiesDialog(const SymbolPinPropertiesDialog& other) = delete;
-  SymbolPinPropertiesDialog(SymbolPin& pin, UndoStack& undoStack,
-                            QWidget* parent = nullptr) noexcept;
+  SymbolPinPropertiesDialog(
+      SymbolPin& pin,
+      UndoStack& undoStack,
+      QWidget* parent = nullptr) noexcept;
   ~SymbolPinPropertiesDialog() noexcept;
 
   // Operator Overloadings
@@ -70,8 +72,8 @@ private:  // Methods
   bool applyChanges() noexcept;
 
 private:  // Data
-  SymbolPin&                                    mSymbolPin;
-  UndoStack&                                    mUndoStack;
+  SymbolPin& mSymbolPin;
+  UndoStack& mUndoStack;
   QScopedPointer<Ui::SymbolPinPropertiesDialog> mUi;
 };
 

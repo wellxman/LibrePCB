@@ -67,7 +67,8 @@ bool FirstRunWizardPage_WorkspacePath::validatePage() noexcept {
     FilePath path(field("CreateWorkspacePath").toString());
     if ((!path.isValid()) || (path.isExistingDir() && (!path.isEmptyDir()))) {
       QMessageBox::critical(
-          this, tr("Invalid Directory"),
+          this,
+          tr("Invalid Directory"),
           tr("The selected directory is invalid or not empty."));
       return false;
     } else
@@ -76,7 +77,8 @@ bool FirstRunWizardPage_WorkspacePath::validatePage() noexcept {
     FilePath path(field("OpenWorkspacePath").toString());
     if (!workspace::Workspace::isValidWorkspacePath(path)) {
       QMessageBox::critical(
-          this, tr("Invalid Directory"),
+          this,
+          tr("Invalid Directory"),
           tr("The selected directory is not a valid workspace."));
       return false;
     } else

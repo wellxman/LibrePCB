@@ -37,7 +37,8 @@ namespace project {
  ******************************************************************************/
 
 CmdFootprintStrokeTextAdd::CmdFootprintStrokeTextAdd(
-    BI_Footprint& footprint, BI_StrokeText& text) noexcept
+    BI_Footprint& footprint,
+    BI_StrokeText& text) noexcept
   : UndoCommand(tr("Add footprint text")), mFootprint(footprint), mText(text) {
 }
 

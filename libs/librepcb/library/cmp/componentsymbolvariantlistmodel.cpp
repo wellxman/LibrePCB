@@ -46,8 +46,9 @@ ComponentSymbolVariantListModel::ComponentSymbolVariantListModel(
     mNewName(),
     mNewDescription(),
     mNewNorm(),
-    mOnEditedSlot(*this,
-                  &ComponentSymbolVariantListModel::symbolVariantListEdited) {
+    mOnEditedSlot(
+        *this,
+        &ComponentSymbolVariantListModel::symbolVariantListEdited) {
 }
 
 ComponentSymbolVariantListModel::~ComponentSymbolVariantListModel() noexcept {
@@ -91,13 +92,15 @@ void ComponentSymbolVariantListModel::addSymbolVariant(
 
   try {
     std::shared_ptr<ComponentSymbolVariant> sv =
-        std::make_shared<ComponentSymbolVariant>(Uuid::createRandom(), mNewNorm,
-                                                 validateNameOrThrow(mNewName),
-                                                 mNewDescription);
+        std::make_shared<ComponentSymbolVariant>(
+            Uuid::createRandom(),
+            mNewNorm,
+            validateNameOrThrow(mNewName),
+            mNewDescription);
     execCmd(new CmdComponentSymbolVariantInsert(*mSymbolVariantList, sv));
-    mNewName        = QString();
+    mNewName = QString();
     mNewDescription = QString();
-    mNewNorm        = QString();
+    mNewNorm = QString();
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
   }
@@ -125,11 +128,11 @@ void ComponentSymbolVariantListModel::moveSymbolVariantUp(
   }
 
   try {
-    Uuid uuid  = Uuid::fromString(editData.toString());
-    int  index = mSymbolVariantList->indexOf(uuid);
+    Uuid uuid = Uuid::fromString(editData.toString());
+    int index = mSymbolVariantList->indexOf(uuid);
     if ((index >= 1) && (index < mSymbolVariantList->count())) {
-      execCmd(new CmdComponentSymbolVariantsSwap(*mSymbolVariantList, index,
-                                                 index - 1));
+      execCmd(new CmdComponentSymbolVariantsSwap(
+          *mSymbolVariantList, index, index - 1));
     }
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
@@ -143,11 +146,11 @@ void ComponentSymbolVariantListModel::moveSymbolVariantDown(
   }
 
   try {
-    Uuid uuid  = Uuid::fromString(editData.toString());
-    int  index = mSymbolVariantList->indexOf(uuid);
+    Uuid uuid = Uuid::fromString(editData.toString());
+    int index = mSymbolVariantList->indexOf(uuid);
     if ((index >= 0) && (index < mSymbolVariantList->count() - 1)) {
-      execCmd(new CmdComponentSymbolVariantsSwap(*mSymbolVariantList, index,
-                                                 index + 1));
+      execCmd(new CmdComponentSymbolVariantsSwap(
+          *mSymbolVariantList, index, index + 1));
     }
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
@@ -173,8 +176,9 @@ int ComponentSymbolVariantListModel::columnCount(
   return 0;
 }
 
-QVariant ComponentSymbolVariantListModel::data(const QModelIndex& index,
-                                               int                role) const {
+QVariant ComponentSymbolVariantListModel::data(
+    const QModelIndex& index,
+    int role) const {
   if (!index.isValid() || !mSymbolVariantList) {
     return QVariant();
   }
@@ -183,9 +187,9 @@ QVariant ComponentSymbolVariantListModel::data(const QModelIndex& index,
       mSymbolVariantList->value(index.row());
   switch (index.column()) {
     case COLUMN_NAME: {
-      QString name     = item ? *item->getNames().getDefaultValue() : mNewName;
-      bool    showHint = (!item) && mNewName.isEmpty();
-      QString hint     = tr("Symbol variant name");
+      QString name = item ? *item->getNames().getDefaultValue() : mNewName;
+      bool showHint = (!item) && mNewName.isEmpty();
+      QString hint = tr("Symbol variant name");
       switch (role) {
         case Qt::DisplayRole:
           if (item && (index.row() == 0) && (mSymbolVariantList->count() > 1)) {
@@ -254,7 +258,9 @@ QVariant ComponentSymbolVariantListModel::data(const QModelIndex& index,
 }
 
 QVariant ComponentSymbolVariantListModel::headerData(
-    int section, Qt::Orientation orientation, int role) const {
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -302,8 +308,10 @@ Qt::ItemFlags ComponentSymbolVariantListModel::flags(
   return f;
 }
 
-bool ComponentSymbolVariantListModel::setData(const QModelIndex& index,
-                                              const QVariant& value, int role) {
+bool ComponentSymbolVariantListModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mSymbolVariantList) {
     return false;
   }
@@ -316,7 +324,7 @@ bool ComponentSymbolVariantListModel::setData(const QModelIndex& index,
       cmd.reset(new CmdComponentSymbolVariantEdit(*item));
     }
     if ((index.column() == COLUMN_NAME) && role == Qt::EditRole) {
-      QString name        = value.toString().trimmed();
+      QString name = value.toString().trimmed();
       QString cleanedName = cleanElementName(name);
       if (cmd) {
         LocalizedNameMap names = item->getNames();
@@ -363,9 +371,10 @@ bool ComponentSymbolVariantListModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void ComponentSymbolVariantListModel::symbolVariantListEdited(
-    const ComponentSymbolVariantList& list, int index,
+    const ComponentSymbolVariantList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariant>& variant,
-    ComponentSymbolVariantList::Event                    event) noexcept {
+    ComponentSymbolVariantList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(variant);
   switch (event) {
@@ -401,7 +410,8 @@ ElementName ComponentSymbolVariantListModel::validateNameOrThrow(
     const QString& name) const {
   if (mSymbolVariantList && mSymbolVariantList->contains(name)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a symbol variant with the name \"%1\"."))
             .arg(name));
   }

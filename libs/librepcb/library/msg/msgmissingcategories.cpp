@@ -34,7 +34,8 @@ namespace library {
 
 MsgMissingCategories::MsgMissingCategories() noexcept
   : LibraryElementCheckMessage(
-        Severity::Error, tr("No categories set"),
+        Severity::Error,
+        tr("No categories set"),
         tr("It's very important to assign every library element to at least "
            "one category. Otherwise it will be very hard to find the element "
            "in the workspace library, so it's highly recommended to fix "

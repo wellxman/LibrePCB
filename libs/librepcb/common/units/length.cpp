@@ -135,8 +135,9 @@ void Length::setLengthFromFloat(qreal nanometers) {
  *  Private Static Methods
  ******************************************************************************/
 
-LengthBase_t Length::mapNmToGrid(LengthBase_t  nanometers,
-                                 const Length& gridInterval) noexcept {
+LengthBase_t Length::mapNmToGrid(
+    LengthBase_t nanometers,
+    const Length& gridInterval) noexcept {
   using LengthBaseU_t = std::make_unsigned<LengthBase_t>::type;
 
   LengthBaseU_t grid_interval =

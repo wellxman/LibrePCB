@@ -53,9 +53,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdCombineNetSignals::CmdCombineNetSignals(Circuit&   circuit,
-                                           NetSignal& toBeRemoved,
-                                           NetSignal& result) noexcept
+CmdCombineNetSignals::CmdCombineNetSignals(
+    Circuit& circuit,
+    NetSignal& toBeRemoved,
+    NetSignal& result) noexcept
   : UndoCommandGroup(tr("Combine Net Signals")),
     mCircuit(circuit),
     mNetSignalToRemove(toBeRemoved),
@@ -96,8 +97,9 @@ bool CmdCombineNetSignals::performExecute() {
   }
 
   // change netsignal of all component signal instances
-  foreach (ComponentSignalInstance* signal,
-           mNetSignalToRemove.getComponentSignals()) {
+  foreach (
+      ComponentSignalInstance* signal,
+      mNetSignalToRemove.getComponentSignals()) {
     execNewChildCmd(new CmdCompSigInstSetNetSignal(
         *signal, &mResultingNetSignal));  // can throw
   }
@@ -106,7 +108,7 @@ bool CmdCombineNetSignals::performExecute() {
   foreach (BI_NetSegment* netsegment, boardNetSegments) {
     CmdBoardNetSegmentEdit* cmd = new CmdBoardNetSegmentEdit(*netsegment);
     cmd->setNetSignal(mResultingNetSignal);
-    execNewChildCmd(cmd);                                     // can throw
+    execNewChildCmd(cmd);  // can throw
     execNewChildCmd(new CmdBoardNetSegmentAdd(*netsegment));  // can throw
   }
 
@@ -114,7 +116,7 @@ bool CmdCombineNetSignals::performExecute() {
   foreach (BI_Plane* plane, boardPlanes) {
     CmdBoardPlaneEdit* cmd = new CmdBoardPlaneEdit(*plane, false);
     cmd->setNetSignal(mResultingNetSignal);
-    execNewChildCmd(cmd);                           // can throw
+    execNewChildCmd(cmd);  // can throw
     execNewChildCmd(new CmdBoardPlaneAdd(*plane));  // can throw
   }
 

@@ -60,38 +60,41 @@ public:
   ComponentCategoryEditorWidget() = delete;
   ComponentCategoryEditorWidget(const ComponentCategoryEditorWidget& other) =
       delete;
-  ComponentCategoryEditorWidget(const Context& context, const FilePath& fp,
-                                QWidget* parent = nullptr);
+  ComponentCategoryEditorWidget(
+      const Context& context,
+      const FilePath& fp,
+      QWidget* parent = nullptr);
   ~ComponentCategoryEditorWidget() noexcept;
 
   // Operator Overloadings
-  ComponentCategoryEditorWidget& operator       =(
+  ComponentCategoryEditorWidget& operator=(
       const ComponentCategoryEditorWidget& rhs) = delete;
 
 public slots:
   bool save() noexcept override;
 
 private:  // Methods
-  void    updateMetadata() noexcept;
+  void updateMetadata() noexcept;
   QString commitMetadata() noexcept;
-  bool    isInterfaceBroken() const noexcept override { return false; }
-  bool    runChecks(LibraryElementCheckMessageList& msgs) const override;
+  bool isInterfaceBroken() const noexcept override { return false; }
+  bool runChecks(LibraryElementCheckMessageList& msgs) const override;
   template <typename MessageType>
   void fixMsg(const MessageType& msg);
   template <typename MessageType>
-  bool fixMsgHelper(std::shared_ptr<const LibraryElementCheckMessage> msg,
-                    bool                                              applyFix);
+  bool fixMsgHelper(
+      std::shared_ptr<const LibraryElementCheckMessage> msg,
+      bool applyFix);
   bool processCheckMessage(
       std::shared_ptr<const LibraryElementCheckMessage> msg,
-      bool                                              applyFix) override;
+      bool applyFix) override;
   void btnChooseParentCategoryClicked() noexcept;
   void btnResetParentCategoryClicked() noexcept;
   void updateCategoryLabel() noexcept;
 
 private:  // Data
   QScopedPointer<Ui::ComponentCategoryEditorWidget> mUi;
-  QScopedPointer<ComponentCategory>                 mCategory;
-  tl::optional<Uuid>                                mParentUuid;
+  QScopedPointer<ComponentCategory> mCategory;
+  tl::optional<Uuid> mParentUuid;
 };
 
 /*******************************************************************************

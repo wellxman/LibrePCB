@@ -50,18 +50,36 @@ FootprintListEditorWidget::FootprintListEditorWidget(QWidget* parent) noexcept
       FootprintListModel::COLUMN_NAME, QHeaderView::Stretch);
   mView->horizontalHeader()->setSectionResizeMode(
       FootprintListModel::COLUMN_ACTIONS, QHeaderView::ResizeToContents);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &FootprintListModel::addFootprint);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &FootprintListModel::removeFootprint);
-  connect(mView.data(), &EditableTableWidget::btnCopyClicked, mModel.data(),
-          &FootprintListModel::copyFootprint);
-  connect(mView.data(), &EditableTableWidget::btnMoveUpClicked, mModel.data(),
-          &FootprintListModel::moveFootprintUp);
-  connect(mView.data(), &EditableTableWidget::btnMoveDownClicked, mModel.data(),
-          &FootprintListModel::moveFootprintDown);
-  connect(mView.data(), &EditableTableWidget::currentRowChanged, this,
-          &FootprintListEditorWidget::currentFootprintChanged);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &FootprintListModel::addFootprint);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &FootprintListModel::removeFootprint);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnCopyClicked,
+      mModel.data(),
+      &FootprintListModel::copyFootprint);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveUpClicked,
+      mModel.data(),
+      &FootprintListModel::moveFootprintUp);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveDownClicked,
+      mModel.data(),
+      &FootprintListModel::moveFootprintDown);
+  connect(
+      mView.data(),
+      &EditableTableWidget::currentRowChanged,
+      this,
+      &FootprintListEditorWidget::currentFootprintChanged);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -75,8 +93,9 @@ FootprintListEditorWidget::~FootprintListEditorWidget() noexcept {
  *  Setters
  ******************************************************************************/
 
-void FootprintListEditorWidget::setReferences(FootprintList& list,
-                                              UndoStack&     stack) noexcept {
+void FootprintListEditorWidget::setReferences(
+    FootprintList& list,
+    UndoStack& stack) noexcept {
   mModel->setFootprintList(&list);
   mModel->setUndoStack(&stack);
 }

@@ -45,10 +45,11 @@ namespace library {
 class CmdLibraryBaseElementEdit : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdLibraryBaseElementEdit()                                       = delete;
+  CmdLibraryBaseElementEdit() = delete;
   CmdLibraryBaseElementEdit(const CmdLibraryBaseElementEdit& other) = delete;
-  explicit CmdLibraryBaseElementEdit(LibraryBaseElement& element,
-                                     const QString&      text) noexcept;
+  explicit CmdLibraryBaseElementEdit(
+      LibraryBaseElement& element,
+      const QString& text) noexcept;
   virtual ~CmdLibraryBaseElementEdit() noexcept;
 
   // Setters
@@ -79,18 +80,18 @@ protected:  // Methods
 private:  // Data
   LibraryBaseElement& mElement;
 
-  LocalizedNameMap        mOldNames;
-  LocalizedNameMap        mNewNames;
+  LocalizedNameMap mOldNames;
+  LocalizedNameMap mNewNames;
   LocalizedDescriptionMap mOldDescriptions;
   LocalizedDescriptionMap mNewDescriptions;
-  LocalizedKeywordsMap    mOldKeywords;
-  LocalizedKeywordsMap    mNewKeywords;
-  Version                 mOldVersion;
-  Version                 mNewVersion;
-  QString                 mOldAuthor;
-  QString                 mNewAuthor;
-  bool                    mOldDeprecated;
-  bool                    mNewDeprecated;
+  LocalizedKeywordsMap mOldKeywords;
+  LocalizedKeywordsMap mNewKeywords;
+  Version mOldVersion;
+  Version mNewVersion;
+  QString mOldAuthor;
+  QString mNewAuthor;
+  bool mOldDeprecated;
+  bool mNewDeprecated;
 };
 
 /*******************************************************************************

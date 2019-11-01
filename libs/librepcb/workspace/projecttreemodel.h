@@ -44,18 +44,19 @@ class Workspace;
 class ProjectTreeModel : public QFileSystemModel {
 public:
   // Constructors / Destructor
-  ProjectTreeModel()                              = delete;
+  ProjectTreeModel() = delete;
   ProjectTreeModel(const ProjectTreeModel& other) = delete;
-  explicit ProjectTreeModel(const Workspace& workspace,
-                            QObject*         parent = nullptr) noexcept;
+  explicit ProjectTreeModel(
+      const Workspace& workspace,
+      QObject* parent = nullptr) noexcept;
   ~ProjectTreeModel() noexcept;
 
   // General methods
   QModelIndexList getPersistentIndexList() const {
     return persistentIndexList();
   }
-  QVariant headerData(int section, Qt::Orientation orientation,
-                      int role) const override;
+  QVariant headerData(int section, Qt::Orientation orientation, int role)
+      const override;
 
   // Operator Overloadings
   ProjectTreeModel& operator=(const ProjectTreeModel& rhs) = delete;

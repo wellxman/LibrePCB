@@ -55,8 +55,10 @@ public:
   void setRotation(const Angle& angle, bool immediate) noexcept;
   void rotate(const Angle& angle, const Point& center, bool immediate) noexcept;
   void setMirrored(bool mirrored, bool immediate) noexcept;
-  void mirror(const Point& center, Qt::Orientation orientation,
-              bool immediate) noexcept;
+  void mirror(
+      const Point& center,
+      Qt::Orientation orientation,
+      bool immediate) noexcept;
 
 private:
   // Private Methods
@@ -80,8 +82,8 @@ private:
   Point mNewPos;
   Angle mOldRotation;
   Angle mNewRotation;
-  bool  mOldMirrored;
-  bool  mNewMirrored;
+  bool mOldMirrored;
+  bool mNewMirrored;
 };
 
 /*******************************************************************************

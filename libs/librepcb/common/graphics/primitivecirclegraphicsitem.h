@@ -63,16 +63,19 @@ public:
     return mBoundingRect;
   }
   virtual QPainterPath shape() const noexcept override { return mShape; }
-  virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-                     QWidget* widget = 0) noexcept override;
+  virtual void paint(
+      QPainter* painter,
+      const QStyleOptionGraphicsItem* option,
+      QWidget* widget = 0) noexcept override;
 
   // Operator Overloadings
-  PrimitiveCircleGraphicsItem& operator       =(
+  PrimitiveCircleGraphicsItem& operator=(
       const PrimitiveCircleGraphicsItem& rhs) = delete;
 
 private:  // Methods
-  void layerEdited(const GraphicsLayer& layer,
-                   GraphicsLayer::Event event) noexcept;
+  void layerEdited(
+      const GraphicsLayer& layer,
+      GraphicsLayer::Event event) noexcept;
   void updateColors() noexcept;
   void updateBoundingRectAndShape() noexcept;
   void updateVisibility() noexcept;
@@ -80,13 +83,13 @@ private:  // Methods
 private:  // Data
   const GraphicsLayer* mLineLayer;
   const GraphicsLayer* mFillLayer;
-  QPen                 mPen;
-  QPen                 mPenHighlighted;
-  QBrush               mBrush;
-  QBrush               mBrushHighlighted;
-  QRectF               mCircleRect;
-  QRectF               mBoundingRect;
-  QPainterPath         mShape;
+  QPen mPen;
+  QPen mPenHighlighted;
+  QBrush mBrush;
+  QBrush mBrushHighlighted;
+  QRectF mCircleRect;
+  QRectF mBoundingRect;
+  QPainterPath mShape;
 
   // Slots
   GraphicsLayer::OnEditedSlot mOnLayerEditedSlot;

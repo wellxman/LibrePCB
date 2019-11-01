@@ -43,14 +43,19 @@ namespace editor {
 
 template <typename ElementType>
 CategoryChooserDialog<ElementType>::CategoryChooserDialog(
-    const workspace::Workspace& ws, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : QDialog(parent), mUi(new Ui::CategoryChooserDialog) {
   mUi->setupUi(this);
-  connect(mUi->treeView, &QTreeView::doubleClicked, this,
-          &CategoryChooserDialog<ElementType>::accept);
+  connect(
+      mUi->treeView,
+      &QTreeView::doubleClicked,
+      this,
+      &CategoryChooserDialog<ElementType>::accept);
 
   mModel.reset(new workspace::CategoryTreeModel<ElementType>(
-      ws.getLibraryDb(), ws.getSettings().getLibLocaleOrder().getLocaleOrder(),
+      ws.getLibraryDb(),
+      ws.getSettings().getLibLocaleOrder().getLocaleOrder(),
       workspace::CategoryTreeFilter::ALL));
   mUi->treeView->setModel(mModel.data());
   mUi->treeView->setRootIndex(QModelIndex());

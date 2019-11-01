@@ -56,8 +56,12 @@ namespace editor {
  ******************************************************************************/
 
 SymbolInstancePropertiesDialog::SymbolInstancePropertiesDialog(
-    workspace::Workspace& ws, Project& project, ComponentInstance& cmp,
-    SI_Symbol& symbol, UndoStack& undoStack, QWidget* parent) noexcept
+    workspace::Workspace& ws,
+    Project& project,
+    ComponentInstance& cmp,
+    SI_Symbol& symbol,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mProject(project),
@@ -131,7 +135,7 @@ SymbolInstancePropertiesDialog::SymbolInstancePropertiesDialog(
     // Then add remaining devices from workspace library (lower priority)
     QSet<Uuid> wsLibDevices = mWorkspace.getLibraryDb().getDevicesOfComponent(
         mComponentInstance.getLibComponent().getUuid());  // can throw
-    wsLibDevices -= prjLibDevices.keys().toSet();         // avoid duplicates
+    wsLibDevices -= prjLibDevices.keys().toSet();  // avoid duplicates
     foreach (const Uuid& deviceUuid, wsLibDevices) {
       FilePath devFp =
           mWorkspace.getLibraryDb().getLatestDevice(deviceUuid);  // can throw
@@ -198,8 +202,8 @@ bool SymbolInstancePropertiesDialog::applyChanges() noexcept {
 
     // Component Instance
     QScopedPointer<CmdComponentInstanceEdit> cmdCmp(
-        new CmdComponentInstanceEdit(mProject.getCircuit(),
-                                     mComponentInstance));
+        new CmdComponentInstanceEdit(
+            mProject.getCircuit(), mComponentInstance));
     cmdCmp->setName(CircuitIdentifier(
         mUi->edtCompInstName->text().trimmed()));  // can throw
     cmdCmp->setValue(mUi->edtCompInstValue->toPlainText());
@@ -214,9 +218,10 @@ bool SymbolInstancePropertiesDialog::applyChanges() noexcept {
     bool mirrored = mUi->cbxMirror->isChecked();
     QScopedPointer<CmdSymbolInstanceEdit> cmdSym(
         new CmdSymbolInstanceEdit(mSymbol));
-    cmdSym->setPosition(Point(mUi->edtSymbInstPosX->getValue(),
-                              mUi->edtSymbInstPosY->getValue()),
-                        false);
+    cmdSym->setPosition(
+        Point(
+            mUi->edtSymbInstPosX->getValue(), mUi->edtSymbInstPosY->getValue()),
+        false);
     cmdSym->setRotation(mUi->edtSymbInstRotation->getValue(), false);
     cmdSym->setMirrored(mirrored, false);
     transaction.append(cmdSym.take());

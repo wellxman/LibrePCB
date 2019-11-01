@@ -58,8 +58,9 @@ public:
   // Constructors / Destructor
   explicit FootprintPreviewGraphicsItem(
       const IF_GraphicsLayerProvider& layerProvider,
-      const QStringList& localeOrder, const Footprint& footprint,
-      const Package*   package   = nullptr, /*const Device* device = nullptr,*/
+      const QStringList& localeOrder,
+      const Footprint& footprint,
+      const Package* package = nullptr, /*const Device* device = nullptr,*/
       const Component* component = nullptr,
       const AttributeProvider* attrProvider = nullptr) noexcept;
   ~FootprintPreviewGraphicsItem() noexcept;
@@ -71,10 +72,12 @@ public:
   void updateCacheAndRepaint() noexcept;
 
   // Inherited from QGraphicsItem
-  QRectF       boundingRect() const noexcept override { return mBoundingRect; }
+  QRectF boundingRect() const noexcept override { return mBoundingRect; }
   QPainterPath shape() const noexcept override { return mShape; }
-  void         paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-                     QWidget* widget = 0) noexcept override;
+  void paint(
+      QPainter* painter,
+      const QStyleOptionGraphicsItem* option,
+      QWidget* widget = 0) noexcept override;
 
 signals:
 
@@ -86,7 +89,7 @@ private:
   FootprintPreviewGraphicsItem() = delete;
   FootprintPreviewGraphicsItem(const FootprintPreviewGraphicsItem& other) =
       delete;
-  FootprintPreviewGraphicsItem& operator       =(
+  FootprintPreviewGraphicsItem& operator=(
       const FootprintPreviewGraphicsItem& rhs) = delete;
 
   // Inherited from AttributeProvider
@@ -95,17 +98,17 @@ private:
 
   // General Attributes
   const IF_GraphicsLayerProvider& mLayerProvider;
-  const Footprint&                mFootprint;
-  const Package*                  mPackage;
+  const Footprint& mFootprint;
+  const Package* mPackage;
   // const Device* mDevice;
-  const Component*         mComponent;
+  const Component* mComponent;
   const AttributeProvider* mAttributeProvider;
-  bool                     mDrawBoundingRect;
-  QStringList              mLocaleOrder;
-  StrokeTextList           mStrokeTexts;
+  bool mDrawBoundingRect;
+  QStringList mLocaleOrder;
+  StrokeTextList mStrokeTexts;
 
   // Cached Attributes
-  QRectF       mBoundingRect;
+  QRectF mBoundingRect;
   QPainterPath mShape;
 };
 

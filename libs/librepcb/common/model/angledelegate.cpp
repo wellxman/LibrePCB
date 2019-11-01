@@ -48,14 +48,15 @@ AngleDelegate::~AngleDelegate() noexcept {
  *  Inherited from QStyledItemDelegate
  ******************************************************************************/
 
-QString AngleDelegate::displayText(const QVariant& value,
-                                   const QLocale&  locale) const {
+QString AngleDelegate::displayText(const QVariant& value, const QLocale& locale)
+    const {
   return Toolbox::floatToString(value.value<Angle>().toDeg(), 10, locale) % "°";
 }
 
-QWidget* AngleDelegate::createEditor(QWidget*                    parent,
-                                     const QStyleOptionViewItem& option,
-                                     const QModelIndex&          index) const {
+QWidget* AngleDelegate::createEditor(
+    QWidget* parent,
+    const QStyleOptionViewItem& option,
+    const QModelIndex& index) const {
   Q_UNUSED(option);
   AngleEdit* edt = new AngleEdit(parent);
   edt->setFrame(false);
@@ -64,21 +65,24 @@ QWidget* AngleDelegate::createEditor(QWidget*                    parent,
   return edt;
 }
 
-void AngleDelegate::setEditorData(QWidget*           editor,
-                                  const QModelIndex& index) const {
+void AngleDelegate::setEditorData(QWidget* editor, const QModelIndex& index)
+    const {
   AngleEdit* edt = static_cast<AngleEdit*>(editor);
   edt->setValue(index.data(Qt::EditRole).value<Angle>());
 }
 
-void AngleDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
-                                 const QModelIndex& index) const {
+void AngleDelegate::setModelData(
+    QWidget* editor,
+    QAbstractItemModel* model,
+    const QModelIndex& index) const {
   AngleEdit* edt = static_cast<AngleEdit*>(editor);
   model->setData(index, QVariant::fromValue(edt->getValue()), Qt::EditRole);
 }
 
-void AngleDelegate::updateEditorGeometry(QWidget*                    editor,
-                                         const QStyleOptionViewItem& option,
-                                         const QModelIndex& index) const {
+void AngleDelegate::updateEditorGeometry(
+    QWidget* editor,
+    const QStyleOptionViewItem& option,
+    const QModelIndex& index) const {
   Q_UNUSED(index);
   editor->setGeometry(option.rect);
 }

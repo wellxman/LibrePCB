@@ -69,7 +69,7 @@ public:
   void rotate(const Angle& angle) noexcept;
 
   // Operator Overloadings
-  CmdDragSelectedFootprintItems& operator       =(
+  CmdDragSelectedFootprintItems& operator=(
       const CmdDragSelectedFootprintItems& rhs) = delete;
 
 private:
@@ -82,16 +82,16 @@ private:
 
   // Private Member Variables
   const PackageEditorState::Context& mContext;
-  Point                              mCenterPos;
-  Point                              mDeltaPos;
-  Angle                              mDeltaRot;
+  Point mCenterPos;
+  Point mDeltaPos;
+  Angle mDeltaRot;
 
   // Move commands
   QList<CmdFootprintPadEdit*> mPadEditCmds;
-  QList<CmdCircleEdit*>       mCircleEditCmds;
-  QList<CmdPolygonEdit*>      mPolygonEditCmds;
-  QList<CmdStrokeTextEdit*>   mTextEditCmds;
-  QList<CmdHoleEdit*>         mHoleEditCmds;
+  QList<CmdCircleEdit*> mCircleEditCmds;
+  QList<CmdPolygonEdit*> mPolygonEditCmds;
+  QList<CmdStrokeTextEdit*> mTextEditCmds;
+  QList<CmdHoleEdit*> mHoleEditCmds;
 };
 
 /*******************************************************************************

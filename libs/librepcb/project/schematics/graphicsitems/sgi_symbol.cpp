@@ -80,7 +80,7 @@ void SGI_Symbol::updateCacheAndRepaint() noexcept {
   for (const Polygon& polygon : mLibSymbol.getPolygons()) {
     // query polygon path and line width
     QPainterPath polygonPath = polygon.getPath().toQPainterPathPx();
-    qreal        w           = polygon.getLineWidth()->toPx() / 2;
+    qreal w = polygon.getLineWidth()->toPx() / 2;
 
     // update bounding rectangle
     mBoundingRect =
@@ -107,7 +107,7 @@ void SGI_Symbol::updateCacheAndRepaint() noexcept {
 
     // get the bounding rectangle for the circle
     QPointF center = circle.getCenter().toPxQPointF();
-    QRectF  boundingRect =
+    QRectF boundingRect =
         QRectF(QPointF(center.x() - r, center.y() - r), QSizeF(r * 2, r * 2));
 
     // update bounding rectangle
@@ -133,11 +133,11 @@ void SGI_Symbol::updateCacheAndRepaint() noexcept {
     mFont.setPixelSize(props.fontPixelSize);
     QFontMetricsF metrics(mFont);
     props.scaleFactor = text.getHeight()->toPx() / metrics.height();
-    props.textRect    = metrics.boundingRect(
+    props.textRect = metrics.boundingRect(
         QRectF(), text.getAlign().toQtAlign() | Qt::TextDontClip, props.text);
-    QRectF scaledTextRect =
-        QRectF(props.textRect.topLeft() * props.scaleFactor,
-               props.textRect.bottomRight() * props.scaleFactor);
+    QRectF scaledTextRect = QRectF(
+        props.textRect.topLeft() * props.scaleFactor,
+        props.textRect.bottomRight() * props.scaleFactor);
 
     // check rotation
     Angle absAngle = text.getRotation() + mSymbol.getRotation();
@@ -160,12 +160,16 @@ void SGI_Symbol::updateCacheAndRepaint() noexcept {
       props.flags = text.getAlign().toQtAlign();
 
     // calculate text bounding rect
-    mBoundingRect  = mBoundingRect.united(scaledTextRect);
-    props.textRect = QRectF(scaledTextRect.topLeft() / props.scaleFactor,
-                            scaledTextRect.bottomRight() / props.scaleFactor);
+    mBoundingRect = mBoundingRect.united(scaledTextRect);
+    props.textRect = QRectF(
+        scaledTextRect.topLeft() / props.scaleFactor,
+        scaledTextRect.bottomRight() / props.scaleFactor);
     if (props.rotate180) {
-      props.textRect = QRectF(-props.textRect.x(), -props.textRect.y(),
-                              -props.textRect.width(), -props.textRect.height())
+      props.textRect = QRectF(
+                           -props.textRect.x(),
+                           -props.textRect.y(),
+                           -props.textRect.width(),
+                           -props.textRect.height())
                            .normalized();
     }
 
@@ -180,14 +184,15 @@ void SGI_Symbol::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SGI_Symbol::paint(QPainter*                       painter,
-                       const QStyleOptionGraphicsItem* option,
-                       QWidget*                        widget) {
+void SGI_Symbol::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(widget);
 
-  const GraphicsLayer* layer    = 0;
-  const bool           selected = mSymbol.isSelected();
-  const bool           deviceIsPrinter =
+  const GraphicsLayer* layer = 0;
+  const bool selected = mSymbol.isSelected();
+  const bool deviceIsPrinter =
       (dynamic_cast<QPrinter*>(painter->device()) != 0);
   const qreal lod =
       option->levelOfDetailFromTransform(painter->worldTransform());
@@ -200,9 +205,12 @@ void SGI_Symbol::paint(QPainter*                       painter,
       if (!layer->isVisible()) layer = nullptr;
     }
     if (layer)
-      painter->setPen(QPen(layer->getColor(selected),
-                           polygon.getLineWidth()->toPx(), Qt::SolidLine,
-                           Qt::RoundCap, Qt::RoundJoin));
+      painter->setPen(QPen(
+          layer->getColor(selected),
+          polygon.getLineWidth()->toPx(),
+          Qt::SolidLine,
+          Qt::RoundCap,
+          Qt::RoundJoin));
     else
       painter->setPen(Qt::NoPen);
     if (polygon.isFilled() && polygon.getPath().isClosed())
@@ -214,9 +222,9 @@ void SGI_Symbol::paint(QPainter*                       painter,
     if (layer) {
       if (!layer->isVisible()) layer = nullptr;
     }
-    painter->setBrush(layer
-                          ? QBrush(layer->getColor(selected), Qt::SolidPattern)
-                          : Qt::NoBrush);
+    painter->setBrush(
+        layer ? QBrush(layer->getColor(selected), Qt::SolidPattern)
+              : Qt::NoBrush);
 
     // draw polygon
     painter->drawPath(polygon.getPath().toQPainterPathPx());
@@ -230,9 +238,12 @@ void SGI_Symbol::paint(QPainter*                       painter,
       if (!layer->isVisible()) layer = nullptr;
     }
     if (layer)
-      painter->setPen(QPen(layer->getColor(selected),
-                           circle.getLineWidth()->toPx(), Qt::SolidLine,
-                           Qt::RoundCap, Qt::RoundJoin));
+      painter->setPen(QPen(
+          layer->getColor(selected),
+          circle.getLineWidth()->toPx(),
+          Qt::SolidLine,
+          Qt::RoundCap,
+          Qt::RoundJoin));
     else
       painter->setPen(Qt::NoPen);
     if (circle.isFilled())
@@ -244,14 +255,15 @@ void SGI_Symbol::paint(QPainter*                       painter,
     if (layer) {
       if (!layer->isVisible()) layer = nullptr;
     }
-    painter->setBrush(layer
-                          ? QBrush(layer->getColor(selected), Qt::SolidPattern)
-                          : Qt::NoBrush);
+    painter->setBrush(
+        layer ? QBrush(layer->getColor(selected), Qt::SolidPattern)
+              : Qt::NoBrush);
 
     // draw circle
-    painter->drawEllipse(circle.getCenter().toPxQPointF(),
-                         circle.getDiameter()->toPx() / 2,
-                         circle.getDiameter()->toPx() / 2);
+    painter->drawEllipse(
+        circle.getCenter().toPxQPointF(),
+        circle.getDiameter()->toPx() / 2,
+        circle.getDiameter()->toPx() / 2);
     // TODO: rotation
   }
 
@@ -287,8 +299,8 @@ void SGI_Symbol::paint(QPainter*                       painter,
       painter->drawText(props.textRect, props.flags, props.text);
     } else {
       // fill rect
-      painter->fillRect(props.textRect,
-                        QBrush(layer->getColor(selected), Qt::Dense5Pattern));
+      painter->fillRect(
+          props.textRect, QBrush(layer->getColor(selected), Qt::Dense5Pattern));
     }
 #ifdef QT_DEBUG
     layer = getLayer(GraphicsLayer::sDebugGraphicsItemsTextsBoundingRects);
@@ -320,7 +332,7 @@ void SGI_Symbol::paint(QPainter*                       painter,
   Q_ASSERT(layer);
   if (layer->isVisible()) {
     // show symbols count of the component
-    int count    = mSymbol.getComponentInstance().getPlacedSymbolsCount();
+    int count = mSymbol.getComponentInstance().getPlacedSymbolsCount();
     int maxCount = mSymbol.getComponentInstance()
                        .getSymbolVariant()
                        .getSymbolItems()
@@ -329,10 +341,11 @@ void SGI_Symbol::paint(QPainter*                       painter,
     painter->setFont(mFont);
     painter->setPen(
         QPen(layer->getColor(selected), 0, Qt::SolidLine, Qt::RoundCap));
-    painter->drawText(QRectF(),
-                      Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextSingleLine |
-                          Qt::TextDontClip,
-                      QString("[%1/%2]").arg(count).arg(maxCount));
+    painter->drawText(
+        QRectF(),
+        Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextSingleLine |
+            Qt::TextDontClip,
+        QString("[%1/%2]").arg(count).arg(maxCount));
   }
   layer = getLayer(GraphicsLayer::sDebugGraphicsItemsBoundingRects);
   Q_ASSERT(layer);

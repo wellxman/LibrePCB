@@ -52,8 +52,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_AddVia::BES_AddVia(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                       GraphicsView& editorGraphicsView, UndoStack& undoStack)
+BES_AddVia::BES_AddVia(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mUndoCmdActive(false),
     mCurrentVia(nullptr),
@@ -105,12 +108,14 @@ bool BES_AddVia::entry(BEE_Base* event) noexcept {
   if (!addVia(*board)) return false;
 
   // Add shape actions to the "command" toolbar
-  mShapeActions.insert(static_cast<int>(BI_Via::Shape::Round),
-                       mEditorUi.commandToolbar->addAction(
-                           QIcon(":/img/command_toolbars/via_round.png"), ""));
-  mShapeActions.insert(static_cast<int>(BI_Via::Shape::Square),
-                       mEditorUi.commandToolbar->addAction(
-                           QIcon(":/img/command_toolbars/via_square.png"), ""));
+  mShapeActions.insert(
+      static_cast<int>(BI_Via::Shape::Round),
+      mEditorUi.commandToolbar->addAction(
+          QIcon(":/img/command_toolbars/via_round.png"), ""));
+  mShapeActions.insert(
+      static_cast<int>(BI_Via::Shape::Square),
+      mEditorUi.commandToolbar->addAction(
+          QIcon(":/img/command_toolbars/via_square.png"), ""));
   mShapeActions.insert(
       static_cast<int>(BI_Via::Shape::Octagon),
       mEditorUi.commandToolbar->addAction(
@@ -136,8 +141,11 @@ bool BES_AddVia::entry(BEE_Base* event) noexcept {
   mSizeEdit->setValue(mCurrentViaSize);
   mSizeEdit->setSingleStep(0.1);  // [mm]
   mEditorUi.commandToolbar->addWidget(mSizeEdit);
-  connect(mSizeEdit, &PositiveLengthEdit::valueChanged, this,
-          &BES_AddVia::sizeEditValueChanged);
+  connect(
+      mSizeEdit,
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &BES_AddVia::sizeEditValueChanged);
 
   // add the "Drill:" label to the toolbar
   mDrillLabel = new QLabel(tr("Drill:"));
@@ -149,8 +157,11 @@ bool BES_AddVia::entry(BEE_Base* event) noexcept {
   mDrillEdit->setValue(mCurrentViaDrillDiameter);
   mDrillEdit->setSingleStep(0.1);  // [mm]
   mEditorUi.commandToolbar->addWidget(mDrillEdit);
-  connect(mDrillEdit, &PositiveLengthEdit::valueChanged, this,
-          &BES_AddVia::drillDiameterEditValueChanged);
+  connect(
+      mDrillEdit,
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &BES_AddVia::drillDiameterEditValueChanged);
 
   // add the "Signal:" label to the toolbar
   mNetSignalLabel = new QLabel(tr("Signal:"));
@@ -162,19 +173,21 @@ bool BES_AddVia::entry(BEE_Base* event) noexcept {
   mNetSignalComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
   mNetSignalComboBox->setInsertPolicy(QComboBox::NoInsert);
   mNetSignalComboBox->setEditable(false);
-  foreach (NetSignal* netsignal,
-           mEditor.getProject().getCircuit().getNetSignals())
-    mNetSignalComboBox->addItem(*netsignal->getName(),
-                                netsignal->getUuid().toStr());
+  foreach (
+      NetSignal* netsignal, mEditor.getProject().getCircuit().getNetSignals())
+    mNetSignalComboBox->addItem(
+        *netsignal->getName(), netsignal->getUuid().toStr());
   mNetSignalComboBox->model()->sort(0);
   mNetSignalComboBox->setCurrentText(
       mCurrentViaNetSignal ? *mCurrentViaNetSignal->getName() : "");
   mEditorUi.commandToolbar->addWidget(mNetSignalComboBox);
-  connect(mNetSignalComboBox, &QComboBox::currentTextChanged,
-          [this](const QString& value) {
-            setNetSignal(
-                mEditor.getProject().getCircuit().getNetSignalByName(value));
-          });
+  connect(
+      mNetSignalComboBox,
+      &QComboBox::currentTextChanged,
+      [this](const QString& value) {
+        setNetSignal(
+            mEditor.getProject().getCircuit().getNetSignalByName(value));
+      });
 
   return true;
 }
@@ -298,8 +311,11 @@ bool BES_AddVia::addVia(Board& board) noexcept {
     Q_ASSERT(netsegment);
     CmdBoardNetSegmentAddElements* cmdAddVia =
         new CmdBoardNetSegmentAddElements(*netsegment);
-    mCurrentVia = cmdAddVia->addVia(Point(0, 0), mCurrentViaShape,
-                                    mCurrentViaSize, mCurrentViaDrillDiameter);
+    mCurrentVia = cmdAddVia->addVia(
+        Point(0, 0),
+        mCurrentViaShape,
+        mCurrentViaSize,
+        mCurrentViaDrillDiameter);
     Q_ASSERT(mCurrentVia);
     mUndoStack.appendToCmdGroup(cmdAddVia);
     mViaEditCmd.reset(new CmdBoardViaEdit(*mCurrentVia));
@@ -356,10 +372,10 @@ bool BES_AddVia::fixVia(const Point& pos) noexcept {
 
 void BES_AddVia::updateShapeActionsCheckedState() noexcept {
   foreach (int key, mShapeActions.keys()) {
-    mShapeActions.value(key)->setCheckable(key ==
-                                           static_cast<int>(mCurrentViaShape));
-    mShapeActions.value(key)->setChecked(key ==
-                                         static_cast<int>(mCurrentViaShape));
+    mShapeActions.value(key)->setCheckable(
+        key == static_cast<int>(mCurrentViaShape));
+    mShapeActions.value(key)->setChecked(
+        key == static_cast<int>(mCurrentViaShape));
   }
 }
 

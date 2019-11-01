@@ -44,7 +44,7 @@ namespace library {
  ******************************************************************************/
 
 struct NormDependentPrefixMapPolicy {
-  typedef ComponentPrefix      ValueType;
+  typedef ComponentPrefix ValueType;
   static constexpr const char* tagname = "prefix";
   static constexpr const char* keyname = "norm";
 };
@@ -75,11 +75,15 @@ class Component final : public LibraryElement {
 
 public:
   // Constructors / Destructor
-  Component()                       = delete;
+  Component() = delete;
   Component(const Component& other) = delete;
-  Component(const Uuid& uuid, const Version& version, const QString& author,
-            const ElementName& name_en_US, const QString& description_en_US,
-            const QString& keywords_en_US);
+  Component(
+      const Uuid& uuid,
+      const Version& version,
+      const QString& author,
+      const ElementName& name_en_US,
+      const QString& description_en_US,
+      const QString& keywords_en_US);
   explicit Component(std::unique_ptr<TransactionalDirectory> directory);
   ~Component() noexcept;
 
@@ -90,7 +94,7 @@ public:
   }
 
   // Attribute Methods
-  AttributeList&       getAttributes() noexcept { return mAttributes; }
+  AttributeList& getAttributes() noexcept { return mAttributes; }
   const AttributeList& getAttributes() const noexcept { return mAttributes; }
 
   // Default Value Methods
@@ -106,7 +110,7 @@ public:
   }
 
   // Signal Methods
-  ComponentSignalList&       getSignals() noexcept { return mSignals; }
+  ComponentSignalList& getSignals() noexcept { return mSignals; }
   const ComponentSignalList& getSignals() const noexcept { return mSignals; }
 
   // Symbol Variant Methods
@@ -118,17 +122,19 @@ public:
   }
 
   // Convenience Methods
-  std::shared_ptr<ComponentSignal>       getSignalOfPin(const Uuid& symbVar,
-                                                        const Uuid& item,
-                                                        const Uuid& pin);
-  std::shared_ptr<const ComponentSignal> getSignalOfPin(const Uuid& symbVar,
-                                                        const Uuid& item,
-                                                        const Uuid& pin) const;
+  std::shared_ptr<ComponentSignal>
+      getSignalOfPin(const Uuid& symbVar, const Uuid& item, const Uuid& pin);
+  std::shared_ptr<const ComponentSignal> getSignalOfPin(
+      const Uuid& symbVar,
+      const Uuid& item,
+      const Uuid& pin) const;
   int getSymbolVariantIndexByNorm(const QStringList& normOrder) const noexcept;
   std::shared_ptr<ComponentSymbolVariantItem> getSymbVarItem(
-      const Uuid& symbVar, const Uuid& item);
+      const Uuid& symbVar,
+      const Uuid& item);
   std::shared_ptr<const ComponentSymbolVariantItem> getSymbVarItem(
-      const Uuid& symbVar, const Uuid& item) const;
+      const Uuid& symbVar,
+      const Uuid& item) const;
 
   // General Methods
   virtual LibraryElementCheckMessageList runChecks() const override;
@@ -150,13 +156,13 @@ private:  // Methods
 
   static QString cleanNorm(QString norm) noexcept;
 
-private:                // Data
+private:  // Data
   bool mSchematicOnly;  ///< if true, this component is schematic-only (no
                         ///< package)
-  QString                mDefaultValue;
+  QString mDefaultValue;
   NormDependentPrefixMap mPrefixes;
-  AttributeList          mAttributes;  ///< all attributes in a specific order
-  ComponentSignalList    mSignals;
+  AttributeList mAttributes;  ///< all attributes in a specific order
+  ComponentSignalList mSignals;
   ComponentSymbolVariantList mSymbolVariants;
 };
 

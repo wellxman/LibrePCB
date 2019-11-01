@@ -48,9 +48,14 @@ Text::Text(const Uuid& uuid, const Text& other) noexcept : Text(other) {
   mUuid = uuid;
 }
 
-Text::Text(const Uuid& uuid, const GraphicsLayerName& layerName,
-           const QString& text, const Point& pos, const Angle& rotation,
-           const PositiveLength& height, const Alignment& align) noexcept
+Text::Text(
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    const QString& text,
+    const Point& pos,
+    const Angle& rotation,
+    const PositiveLength& height,
+    const Alignment& align) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mLayerName(layerName),

@@ -63,11 +63,12 @@ public:
 
   // Setters
   void setReferences(
-      UndoStack* undoStack, ComponentSymbolVariantList* list,
+      UndoStack* undoStack,
+      ComponentSymbolVariantList* list,
       IF_ComponentSymbolVariantEditorProvider* editorProvider) noexcept;
 
   // Operator Overloadings
-  ComponentSymbolVariantListWidget& operator       =(
+  ComponentSymbolVariantListWidget& operator=(
       const ComponentSymbolVariantListWidget& rhs) = delete;
 
 private:  // Methods
@@ -77,10 +78,10 @@ private:  // Methods
 
 private:  // Data
   QScopedPointer<ComponentSymbolVariantListModel> mModel;
-  QScopedPointer<EditableTableWidget>             mView;
-  ComponentSymbolVariantList*                     mSymbolVariantList;
-  UndoStack*                                      mUndoStack;
-  IF_ComponentSymbolVariantEditorProvider*        mEditorProvider;
+  QScopedPointer<EditableTableWidget> mView;
+  ComponentSymbolVariantList* mSymbolVariantList;
+  UndoStack* mUndoStack;
+  IF_ComponentSymbolVariantEditorProvider* mEditorProvider;
 };
 
 /*******************************************************************************

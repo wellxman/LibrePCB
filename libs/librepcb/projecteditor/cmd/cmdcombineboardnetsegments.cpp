@@ -44,8 +44,10 @@ namespace editor {
  ******************************************************************************/
 
 CmdCombineBoardNetSegments::CmdCombineBoardNetSegments(
-    BI_NetSegment& toBeRemoved, BI_NetLineAnchor& oldAnchor,
-    BI_NetSegment& result, BI_NetLineAnchor& newAnchor) noexcept
+    BI_NetSegment& toBeRemoved,
+    BI_NetLineAnchor& oldAnchor,
+    BI_NetSegment& result,
+    BI_NetLineAnchor& newAnchor) noexcept
   : UndoCommandGroup(tr("Combine Board Net Segments")),
     mOldSegment(toBeRemoved),
     mNewSegment(result),
@@ -79,8 +81,11 @@ bool CmdCombineBoardNetSegments::performExecute() {
     if (via == &mOldAnchor) {
       anchorMap.insert(via, &mNewAnchor);
     } else {
-      BI_Via* newVia = cmdAdd->addVia(via->getPosition(), via->getShape(),
-                                      via->getSize(), via->getDrillDiameter());
+      BI_Via* newVia = cmdAdd->addVia(
+          via->getPosition(),
+          via->getShape(),
+          via->getSize(),
+          via->getDrillDiameter());
       anchorMap.insert(via, newVia);
     }
   }
@@ -105,7 +110,7 @@ bool CmdCombineBoardNetSegments::performExecute() {
     Q_ASSERT(newNetLine);
   }
   execNewChildCmd(new CmdBoardNetSegmentRemove(mOldSegment));  // can throw
-  execNewChildCmd(cmdAdd.take());                              // can throw
+  execNewChildCmd(cmdAdd.take());  // can throw
 
   undoScopeGuard.dismiss();  // no undo required
   return true;

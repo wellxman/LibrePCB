@@ -41,7 +41,8 @@ namespace librepcb {
  ******************************************************************************/
 
 StrokeTextGraphicsItem::StrokeTextGraphicsItem(
-    StrokeText& text, const IF_GraphicsLayerProvider& lp,
+    StrokeText& text,
+    const IF_GraphicsLayerProvider& lp,
     QGraphicsItem* parent) noexcept
   : PrimitivePathGraphicsItem(parent),
     mText(text),
@@ -80,7 +81,8 @@ QPainterPath StrokeTextGraphicsItem::shape() const noexcept {
  ******************************************************************************/
 
 void StrokeTextGraphicsItem::strokeTextEdited(
-    const StrokeText& text, StrokeText::Event event) noexcept {
+    const StrokeText& text,
+    StrokeText::Event event) noexcept {
   switch (event) {
     case StrokeText::Event::LayerNameChanged:
       updateLayer(text.getLayerName());
@@ -130,8 +132,9 @@ void StrokeTextGraphicsItem::updateTransform() noexcept {
   setTransform(t);
 }
 
-QVariant StrokeTextGraphicsItem::itemChange(GraphicsItemChange change,
-                                            const QVariant&    value) noexcept {
+QVariant StrokeTextGraphicsItem::itemChange(
+    GraphicsItemChange change,
+    const QVariant& value) noexcept {
   if (change == ItemSelectedChange && mOriginCrossGraphicsItem) {
     mOriginCrossGraphicsItem->setSelected(value.toBool());
   }

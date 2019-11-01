@@ -91,7 +91,7 @@ void BoardPlaneFragmentsBuilder::addPlaneOutline() {
 
 void BoardPlaneFragmentsBuilder::clipToBoardOutline() {
   // determine board area
-  ClipperLib::Paths   boardArea;
+  ClipperLib::Paths boardArea;
   ClipperLib::Clipper boardAreaClipper;
   foreach (const BI_Polygon* polygon, mPlane.getBoard().getPolygons()) {
     if (polygon->getPolygon().getLayerName() == GraphicsLayer::sBoardOutlines) {
@@ -114,12 +114,17 @@ void BoardPlaneFragmentsBuilder::clipToBoardOutline() {
       }
     }
   }
-  boardAreaClipper.Execute(ClipperLib::ctXor, boardArea, ClipperLib::pftEvenOdd,
-                           ClipperLib::pftEvenOdd);
+  boardAreaClipper.Execute(
+      ClipperLib::ctXor,
+      boardArea,
+      ClipperLib::pftEvenOdd,
+      ClipperLib::pftEvenOdd);
 
   // perform clearance offset
-  ClipperHelpers::offset(boardArea, -mPlane.getMinClearance(),
-                         maxArcTolerance());  // can throw
+  ClipperHelpers::offset(
+      boardArea,
+      -mPlane.getMinClearance(),
+      maxArcTolerance());  // can throw
 
   // if we have no board area, abort here
   if (boardArea.empty()) return;
@@ -128,8 +133,11 @@ void BoardPlaneFragmentsBuilder::clipToBoardOutline() {
   ClipperLib::Clipper clip;
   clip.AddPaths(mResult, ClipperLib::ptSubject, true);
   clip.AddPaths(boardArea, ClipperLib::ptClip, true);
-  clip.Execute(ClipperLib::ctIntersection, mResult, ClipperLib::pftNonZero,
-               ClipperLib::pftNonZero);
+  clip.Execute(
+      ClipperLib::ctIntersection,
+      mResult,
+      ClipperLib::pftNonZero,
+      ClipperLib::pftNonZero);
 }
 
 void BoardPlaneFragmentsBuilder::subtractOtherObjects() {
@@ -144,8 +152,10 @@ void BoardPlaneFragmentsBuilder::subtractOtherObjects() {
     if (&plane->getNetSignal() == &mPlane.getNetSignal()) continue;
     ClipperLib::Paths paths =
         ClipperHelpers::convert(plane->getFragments(), maxArcTolerance());
-    ClipperHelpers::offset(paths, *mPlane.getMinClearance(),
-                           maxArcTolerance());  // can throw
+    ClipperHelpers::offset(
+        paths,
+        *mPlane.getMinClearance(),
+        maxArcTolerance());  // can throw
     c.AddPaths(paths, ClipperLib::ptClip, true);
   }
 
@@ -155,9 +165,11 @@ void BoardPlaneFragmentsBuilder::subtractOtherObjects() {
          device->getFootprint().getLibFootprint().getHoles()) {
       Point pos = device->getFootprint().mapToScene(hole.getPosition());
       PositiveLength dia(hole.getDiameter() + mPlane.getMinClearance() * 2);
-      Path           path = Path::circle(dia).translated(pos);
-      c.AddPath(ClipperHelpers::convert(path, maxArcTolerance()),
-                ClipperLib::ptClip, true);
+      Path path = Path::circle(dia).translated(pos);
+      c.AddPath(
+          ClipperHelpers::convert(path, maxArcTolerance()),
+          ClipperLib::ptClip,
+          true);
     }
     foreach (const BI_FootprintPad* pad, device->getFootprint().getPads()) {
       if (!pad->isOnLayer(*mPlane.getLayerName())) continue;
@@ -172,16 +184,18 @@ void BoardPlaneFragmentsBuilder::subtractOtherObjects() {
 
   // subtract board holes
   for (const BI_Hole* hole : mPlane.getBoard().getHoles()) {
-    PositiveLength dia(hole->getHole().getDiameter() +
-                       mPlane.getMinClearance() * 2);
+    PositiveLength dia(
+        hole->getHole().getDiameter() + mPlane.getMinClearance() * 2);
     Path path = Path::circle(dia).translated(hole->getHole().getPosition());
-    c.AddPath(ClipperHelpers::convert(path, maxArcTolerance()),
-              ClipperLib::ptClip, true);
+    c.AddPath(
+        ClipperHelpers::convert(path, maxArcTolerance()),
+        ClipperLib::ptClip,
+        true);
   }
 
   // subtract net segment items
-  foreach (const BI_NetSegment* netsegment,
-           mPlane.getBoard().getNetSegments()) {
+  foreach (
+      const BI_NetSegment* netsegment, mPlane.getBoard().getNetSegments()) {
     // subtract vias
     foreach (const BI_Via* via, netsegment->getVias()) {
       if (&netsegment->getNetSignal() == &mPlane.getNetSignal()) {
@@ -208,42 +222,49 @@ void BoardPlaneFragmentsBuilder::subtractOtherObjects() {
     }
   }
 
-  c.Execute(ClipperLib::ctDifference, mResult, ClipperLib::pftEvenOdd,
-            ClipperLib::pftNonZero);
+  c.Execute(
+      ClipperLib::ctDifference,
+      mResult,
+      ClipperLib::pftEvenOdd,
+      ClipperLib::pftNonZero);
 }
 
 void BoardPlaneFragmentsBuilder::ensureMinimumWidth() {
   Length delta = mPlane.getMinWidth() / 2;
   ClipperHelpers::offset(mResult, -delta, maxArcTolerance());  // can throw
-  ClipperHelpers::offset(mResult, delta, maxArcTolerance());   // can throw
+  ClipperHelpers::offset(mResult, delta, maxArcTolerance());  // can throw
 }
 
 void BoardPlaneFragmentsBuilder::flattenResult() {
   // convert paths to tree
   ClipperLib::PolyTree tree;
-  ClipperLib::Clipper  c;
+  ClipperLib::Clipper c;
   c.AddPaths(mResult, ClipperLib::ptSubject, true);
-  c.Execute(ClipperLib::ctXor, tree, ClipperLib::pftEvenOdd,
-            ClipperLib::pftEvenOdd);
+  c.Execute(
+      ClipperLib::ctXor, tree, ClipperLib::pftEvenOdd, ClipperLib::pftEvenOdd);
 
   // convert tree to simple paths with cut-ins
   mResult = ClipperHelpers::flattenTree(tree);  // can throw
 }
 
 void BoardPlaneFragmentsBuilder::removeOrphans() {
-  mResult.erase(std::remove_if(
-                    mResult.begin(), mResult.end(),
-                    [this](const ClipperLib::Path& p) {
-                      ClipperLib::Paths   intersections;
-                      ClipperLib::Clipper c;
-                      c.AddPaths(mConnectedNetSignalAreas,
-                                 ClipperLib::ptSubject, true);
-                      c.AddPath(p, ClipperLib::ptClip, true);
-                      c.Execute(ClipperLib::ctIntersection, intersections,
-                                ClipperLib::pftNonZero, ClipperLib::pftNonZero);
-                      return intersections.empty();
-                    }),
-                mResult.end());
+  mResult.erase(
+      std::remove_if(
+          mResult.begin(),
+          mResult.end(),
+          [this](const ClipperLib::Path& p) {
+            ClipperLib::Paths intersections;
+            ClipperLib::Clipper c;
+            c.AddPaths(mConnectedNetSignalAreas, ClipperLib::ptSubject, true);
+            c.AddPath(p, ClipperLib::ptClip, true);
+            c.Execute(
+                ClipperLib::ctIntersection,
+                intersections,
+                ClipperLib::pftNonZero,
+                ClipperLib::pftNonZero);
+            return intersections.empty();
+          }),
+      mResult.end());
 }
 
 /*******************************************************************************

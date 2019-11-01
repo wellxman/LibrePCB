@@ -49,9 +49,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_DrawPolygon::BES_DrawPolygon(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                                 GraphicsView& editorGraphicsView,
-                                 UndoStack&    undoStack)
+BES_DrawPolygon::BES_DrawPolygon(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mSubState(SubState::Idle),
     mCurrentLayerName(GraphicsLayer::sBoardOutlines),
@@ -107,8 +109,11 @@ bool BES_DrawPolygon::entry(BEE_Base* event) noexcept {
   }
   mLayerComboBox->setCurrentLayer(mCurrentLayerName);
   mEditorUi.commandToolbar->addWidget(mLayerComboBox);
-  connect(mLayerComboBox, &GraphicsLayerComboBox::currentLayerChanged, this,
-          &BES_DrawPolygon::layerComboBoxLayerChanged);
+  connect(
+      mLayerComboBox,
+      &GraphicsLayerComboBox::currentLayerChanged,
+      this,
+      &BES_DrawPolygon::layerComboBoxLayerChanged);
 
   // add the "Width:" label to the toolbar
   mWidthLabel = new QLabel(tr("Width:"));
@@ -120,8 +125,11 @@ bool BES_DrawPolygon::entry(BEE_Base* event) noexcept {
   mWidthEdit->setValue(mCurrentWidth);
   mWidthEdit->setSingleStep(0.1);  // [mm]
   mEditorUi.commandToolbar->addWidget(mWidthEdit);
-  connect(mWidthEdit, &UnsignedLengthEdit::valueChanged, this,
-          &BES_DrawPolygon::widthEditValueChanged);
+  connect(
+      mWidthEdit,
+      &UnsignedLengthEdit::valueChanged,
+      this,
+      &BES_DrawPolygon::widthEditValueChanged);
 
   // add the "Filled:" label to the toolbar
   mFillLabel = new QLabel(tr("Filled:"));
@@ -132,8 +140,11 @@ bool BES_DrawPolygon::entry(BEE_Base* event) noexcept {
   mFillCheckBox = new QCheckBox();
   mFillCheckBox->setChecked(mCurrentIsFilled);
   mEditorUi.commandToolbar->addWidget(mFillCheckBox);
-  connect(mFillCheckBox, &QCheckBox::toggled, this,
-          &BES_DrawPolygon::filledCheckBoxCheckedChanged);
+  connect(
+      mFillCheckBox,
+      &QCheckBox::toggled,
+      this,
+      &BES_DrawPolygon::filledCheckBoxCheckedChanged);
 
   // change the cursor
   mEditorGraphicsView.setCursor(Qt::CrossCursor);
@@ -281,14 +292,19 @@ bool BES_DrawPolygon::start(Board& board, const Point& pos) noexcept {
 
     // add polygon with three vertices
     Path path({Vertex(pos), Vertex(pos), Vertex(pos)});
-    mCurrentPolygon =
-        new BI_Polygon(board, Uuid::createRandom(), mCurrentLayerName,
-                       mCurrentWidth, mCurrentIsFilled, mCurrentIsFilled, path);
+    mCurrentPolygon = new BI_Polygon(
+        board,
+        Uuid::createRandom(),
+        mCurrentLayerName,
+        mCurrentWidth,
+        mCurrentIsFilled,
+        mCurrentIsFilled,
+        path);
     mUndoStack.appendToCmdGroup(new CmdBoardPolygonAdd(*mCurrentPolygon));
 
     // start undo command
     mCmdEditCurrentPolygon = new CmdPolygonEdit(mCurrentPolygon->getPolygon());
-    mLastSegmentPos        = pos;
+    mLastSegmentPos = pos;
     makeSelectedLayerVisible();
     return true;
   } catch (const Exception& e) {
@@ -340,7 +356,7 @@ bool BES_DrawPolygon::abort(bool showErrMsgBox) noexcept {
   try {
     delete mCmdEditCurrentPolygon;
     mCmdEditCurrentPolygon = nullptr;
-    mCurrentPolygon        = nullptr;
+    mCurrentPolygon = nullptr;
     mUndoStack.abortCmdGroup();  // can throw
     mSubState = SubState::Idle;
     return true;
@@ -385,7 +401,7 @@ void BES_DrawPolygon::filledCheckBoxCheckedChanged(bool checked) noexcept {
 
 void BES_DrawPolygon::makeSelectedLayerVisible() noexcept {
   if (mCurrentPolygon) {
-    Board&         board = mCurrentPolygon->getBoard();
+    Board& board = mCurrentPolygon->getBoard();
     GraphicsLayer* layer = board.getLayerStack().getLayer(*mCurrentLayerName);
     if (layer && layer->isEnabled()) layer->setVisible(true);
   }

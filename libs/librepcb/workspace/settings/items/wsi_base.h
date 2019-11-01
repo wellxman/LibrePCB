@@ -56,8 +56,8 @@ public:
 
   // General Methods
   virtual void restoreDefault() noexcept = 0;
-  virtual void apply() noexcept          = 0;
-  virtual void revert() noexcept         = 0;
+  virtual void apply() noexcept = 0;
+  virtual void revert() noexcept = 0;
 
   // Operator Overloadings
   WSI_Base& operator=(const WSI_Base& rhs) = delete;

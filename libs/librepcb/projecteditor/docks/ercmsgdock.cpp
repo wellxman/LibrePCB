@@ -51,26 +51,33 @@ ErcMsgDock::ErcMsgDock(Project& project)
   mUi->setupUi(this);
 
   // add top-level items
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::CircuitError),
-                        new QTreeWidgetItem(mUi->treeWidget));
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::CircuitWarning),
-                        new QTreeWidgetItem(mUi->treeWidget));
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::SchematicError),
-                        new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::CircuitError),
+      new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::CircuitWarning),
+      new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::SchematicError),
+      new QTreeWidgetItem(mUi->treeWidget));
   mTopLevelItems.insert(
       static_cast<int>(ErcMsg::ErcMsgType_t::SchematicWarning),
       new QTreeWidgetItem(mUi->treeWidget));
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::BoardError),
-                        new QTreeWidgetItem(mUi->treeWidget));
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::BoardWarning),
-                        new QTreeWidgetItem(mUi->treeWidget));
-  mTopLevelItems.insert(static_cast<int>(ErcMsg::ErcMsgType_t::_Count),
-                        new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::BoardError),
+      new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::BoardWarning),
+      new QTreeWidgetItem(mUi->treeWidget));
+  mTopLevelItems.insert(
+      static_cast<int>(ErcMsg::ErcMsgType_t::_Count),
+      new QTreeWidgetItem(mUi->treeWidget));
 
   // check if there is a top level item for each existing ERC message type + one
   // for ignored items
-  Q_ASSERT(mTopLevelItems.count() ==
-           static_cast<int>(ErcMsg::ErcMsgType_t::_Count) + 1);
+  Q_ASSERT(
+      mTopLevelItems.count() ==
+      static_cast<int>(ErcMsg::ErcMsgType_t::_Count) + 1);
 
   // set icons
   mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::CircuitError)]->setIcon(
@@ -115,19 +122,29 @@ ErcMsgDock::ErcMsgDock(Project& project)
     QTreeWidgetItem* child =
         new QTreeWidgetItem(parent, QStringList(ercMsg->getMsg()));
     child->setData(
-        0, Qt::UserRole,
+        0,
+        Qt::UserRole,
         QVariant::fromValue(reinterpret_cast<void*>(ercMsg)));  // ugly...
     child->setToolTip(0, ercMsg->getMsg());
     mErcMsgItems.insert(ercMsg, child);
   }
 
   // connect to ErcMsgList signals
-  connect(&mProject.getErcMsgList(), &ErcMsgList::ercMsgAdded, this,
-          &ErcMsgDock::ercMsgAdded);
-  connect(&mProject.getErcMsgList(), &ErcMsgList::ercMsgRemoved, this,
-          &ErcMsgDock::ercMsgRemoved);
-  connect(&mProject.getErcMsgList(), &ErcMsgList::ercMsgChanged, this,
-          &ErcMsgDock::ercMsgChanged);
+  connect(
+      &mProject.getErcMsgList(),
+      &ErcMsgList::ercMsgAdded,
+      this,
+      &ErcMsgDock::ercMsgAdded);
+  connect(
+      &mProject.getErcMsgList(),
+      &ErcMsgList::ercMsgRemoved,
+      this,
+      &ErcMsgDock::ercMsgRemoved);
+  connect(
+      &mProject.getErcMsgList(),
+      &ErcMsgList::ercMsgChanged,
+      this,
+      &ErcMsgDock::ercMsgChanged);
 
   updateTopLevelItemTexts();
 }
@@ -178,13 +195,13 @@ void ErcMsgDock::ercMsgChanged(ErcMsg* ercMsg) noexcept {
 
 void ErcMsgDock::on_treeWidget_itemSelectionChanged() {
   bool allDisplayed = true;
-  bool allIgnored   = true;
+  bool allIgnored = true;
 
   foreach (QTreeWidgetItem* item, mUi->treeWidget->selectedItems()) {
     ErcMsg* ercMsg = mErcMsgItems.key(item, nullptr);
     if (!ercMsg) {
       allDisplayed = false;
-      allIgnored   = false;
+      allIgnored = false;
       break;
     }
     if (ercMsg->isIgnored())
@@ -211,23 +228,23 @@ void ErcMsgDock::on_btnIgnore_clicked(bool checked) {
  ******************************************************************************/
 
 void ErcMsgDock::updateTopLevelItemTexts() noexcept {
-  int              countOfNonIgnoredErcMessages = 0;
+  int countOfNonIgnoredErcMessages = 0;
   QTreeWidgetItem* item;
   item = mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::CircuitError)];
   item->setText(0, QString(tr("Circuit Errors (%1)")).arg(item->childCount()));
   countOfNonIgnoredErcMessages += item->childCount();
   item = mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::CircuitWarning)];
-  item->setText(0,
-                QString(tr("Circuit Warnings (%1)")).arg(item->childCount()));
+  item->setText(
+      0, QString(tr("Circuit Warnings (%1)")).arg(item->childCount()));
   countOfNonIgnoredErcMessages += item->childCount();
   item = mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::SchematicError)];
-  item->setText(0,
-                QString(tr("Schematic Errors (%1)")).arg(item->childCount()));
+  item->setText(
+      0, QString(tr("Schematic Errors (%1)")).arg(item->childCount()));
   countOfNonIgnoredErcMessages += item->childCount();
   item =
       mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::SchematicWarning)];
-  item->setText(0,
-                QString(tr("Schematic Warnings (%1)")).arg(item->childCount()));
+  item->setText(
+      0, QString(tr("Schematic Warnings (%1)")).arg(item->childCount()));
   countOfNonIgnoredErcMessages += item->childCount();
   item = mTopLevelItems[static_cast<int>(ErcMsg::ErcMsgType_t::BoardError)];
   item->setText(0, QString(tr("Board Errors (%1)")).arg(item->childCount()));

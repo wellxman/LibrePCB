@@ -49,8 +49,10 @@ class SI_NetSegment;
 class CmdSchematicNetLabelAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdSchematicNetLabelAdd(SI_NetSegment& segment, const Point& position,
-                          const Angle& rotation) noexcept;
+  CmdSchematicNetLabelAdd(
+      SI_NetSegment& segment,
+      const Point& position,
+      const Angle& rotation) noexcept;
   ~CmdSchematicNetLabelAdd() noexcept;
 
   // Getters
@@ -71,9 +73,9 @@ private:
   // Private Member Variables
 
   SI_NetSegment& mNetSegment;
-  Point          mPosition;
-  Angle          mRotation;
-  SI_NetLabel*   mNetLabel;
+  Point mPosition;
+  Angle mRotation;
+  SI_NetLabel* mNetLabel;
 };
 
 /*******************************************************************************

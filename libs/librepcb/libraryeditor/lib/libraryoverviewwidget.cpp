@@ -49,35 +49,57 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-LibraryOverviewWidget::LibraryOverviewWidget(const Context&  context,
-                                             const FilePath& fp,
-                                             QWidget*        parent) noexcept
+LibraryOverviewWidget::LibraryOverviewWidget(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent) noexcept
   : EditorWidgetBase(context, fp, parent), mUi(new Ui::LibraryOverviewWidget) {
   mUi->setupUi(this);
   mUi->lstMessages->setHandler(this);
-  connect(mUi->btnIcon, &QPushButton::clicked, this,
-          &LibraryOverviewWidget::btnIconClicked);
-  connect(mUi->lstCmpCat, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
-  connect(mUi->lstPkgCat, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
-  connect(mUi->lstSym, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
-  connect(mUi->lstPkg, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
-  connect(mUi->lstCmp, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
-  connect(mUi->lstDev, &QListWidget::doubleClicked, this,
-          &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->btnIcon,
+      &QPushButton::clicked,
+      this,
+      &LibraryOverviewWidget::btnIconClicked);
+  connect(
+      mUi->lstCmpCat,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->lstPkgCat,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->lstSym,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->lstPkg,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->lstCmp,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
+  connect(
+      mUi->lstDev,
+      &QListWidget::doubleClicked,
+      this,
+      &LibraryOverviewWidget::lstDoubleClicked);
 
   // Insert dependencies editor widget.
   mDependenciesEditorWidget.reset(
       new LibraryListEditorWidget(mContext.workspace, this));
-  int                   row;
+  int row;
   QFormLayout::ItemRole role;
   mUi->formLayout->getWidgetPosition(mUi->lblDependencies, &row, &role);
-  mUi->formLayout->setWidget(row, QFormLayout::FieldRole,
-                             mDependenciesEditorWidget.data());
+  mUi->formLayout->setWidget(
+      row, QFormLayout::FieldRole, mDependenciesEditorWidget.data());
 
   // Load library.
   mLibrary.reset(new Library(std::unique_ptr<TransactionalDirectory>(
@@ -85,46 +107,93 @@ LibraryOverviewWidget::LibraryOverviewWidget(const Context&  context,
   updateMetadata();
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &LibraryOverviewWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &LibraryOverviewWidget::updateMetadata);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mUi->edtUrl, &QLineEdit::editingFinished, this,
-          &LibraryOverviewWidget::commitMetadata);
-  connect(mDependenciesEditorWidget.data(), &LibraryListEditorWidget::edited,
-          this, &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mUi->edtUrl,
+      &QLineEdit::editingFinished,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
+  connect(
+      mDependenciesEditorWidget.data(),
+      &LibraryListEditorWidget::edited,
+      this,
+      &LibraryOverviewWidget::commitMetadata);
 
   // Set up context menu triggers
-  connect(mUi->lstCmpCat, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
-  connect(mUi->lstSym, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
-  connect(mUi->lstCmp, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
-  connect(mUi->lstPkgCat, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
-  connect(mUi->lstPkg, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
-  connect(mUi->lstDev, &QListWidget::customContextMenuRequested, this,
-          &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstCmpCat,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstSym,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstCmp,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstPkgCat,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstPkg,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
+  connect(
+      mUi->lstDev,
+      &QListWidget::customContextMenuRequested,
+      this,
+      &LibraryOverviewWidget::openContextMenuAtPos);
 
   // Load all library elements.
   updateElementLists();
-  connect(&mContext.workspace.getLibraryDb(),
-          &workspace::WorkspaceLibraryDb::scanFinished, this,
-          &LibraryOverviewWidget::updateElementLists);
+  connect(
+      &mContext.workspace.getLibraryDb(),
+      &workspace::WorkspaceLibraryDb::scanFinished,
+      this,
+      &LibraryOverviewWidget::updateElementLists);
 }
 
 LibraryOverviewWidget::~LibraryOverviewWidget() noexcept {
@@ -144,7 +213,7 @@ bool LibraryOverviewWidget::save() noexcept {
 
   // Save element.
   try {
-    mLibrary->save();     // can throw
+    mLibrary->save();  // can throw
     mFileSystem->save();  // can throw
     return EditorWidgetBase::save();
   } catch (const Exception& e) {
@@ -243,7 +312,8 @@ void LibraryOverviewWidget::fixMsg(const MsgMissingAuthor& msg) {
 
 template <typename MessageType>
 bool LibraryOverviewWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -254,27 +324,29 @@ bool LibraryOverviewWidget::fixMsgHelper(
 }
 
 bool LibraryOverviewWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   return false;
 }
 
 void LibraryOverviewWidget::updateElementLists() noexcept {
-  updateElementList<ComponentCategory>(*mUi->lstCmpCat,
-                                       QIcon(":/img/places/folder.png"));
-  updateElementList<PackageCategory>(*mUi->lstPkgCat,
-                                     QIcon(":/img/places/folder_green.png"));
+  updateElementList<ComponentCategory>(
+      *mUi->lstCmpCat, QIcon(":/img/places/folder.png"));
+  updateElementList<PackageCategory>(
+      *mUi->lstPkgCat, QIcon(":/img/places/folder_green.png"));
   updateElementList<Symbol>(*mUi->lstSym, QIcon(":/img/library/symbol.png"));
   updateElementList<Package>(*mUi->lstPkg, QIcon(":/img/library/package.png"));
-  updateElementList<Component>(*mUi->lstCmp,
-                               QIcon(":/img/library/component.png"));
+  updateElementList<Component>(
+      *mUi->lstCmp, QIcon(":/img/library/component.png"));
   updateElementList<Device>(*mUi->lstDev, QIcon(":/img/library/device.png"));
 }
 
 template <typename ElementType>
-void LibraryOverviewWidget::updateElementList(QListWidget& listWidget,
-                                              const QIcon& icon) noexcept {
+void LibraryOverviewWidget::updateElementList(
+    QListWidget& listWidget,
+    const QIcon& icon) noexcept {
   QHash<FilePath, QString> elementNames;
 
   try {
@@ -313,7 +385,7 @@ void LibraryOverviewWidget::updateElementList(QListWidget& listWidget,
 
   // add new list widget items
   foreach (const FilePath& fp, elementNames.keys()) {
-    QString          name = elementNames.value(fp);
+    QString name = elementNames.value(fp);
     QListWidgetItem* item = new QListWidgetItem(&listWidget);
     item->setText(name);
     item->setToolTip(name);
@@ -323,8 +395,8 @@ void LibraryOverviewWidget::updateElementList(QListWidget& listWidget,
 }
 
 QHash<QListWidgetItem*, FilePath>
-LibraryOverviewWidget::getElementListItemFilePaths(
-    const QList<QListWidgetItem*>& items) const noexcept {
+    LibraryOverviewWidget::getElementListItemFilePaths(
+        const QList<QListWidgetItem*>& items) const noexcept {
   QHash<QListWidgetItem*, FilePath> itemPaths;
   foreach (QListWidgetItem* item, items) {
     FilePath fp = FilePath(item->data(Qt::UserRole).toString());
@@ -347,7 +419,7 @@ void LibraryOverviewWidget::openContextMenuAtPos(const QPoint& pos) noexcept {
       getElementListItemFilePaths(list->selectedItems());
 
   // Build the context menu
-  QMenu    menu;
+  QMenu menu;
   QAction* aEdit = menu.addAction(QIcon(":/img/actions/edit.png"), tr("Edit"));
   aEdit->setVisible(!selectedItemPaths.isEmpty());
   QAction* aDuplicate =
@@ -400,8 +472,9 @@ void LibraryOverviewWidget::newItem(QListWidget* list) noexcept {
   }
 }
 
-void LibraryOverviewWidget::duplicateItem(QListWidget*    list,
-                                          const FilePath& fp) noexcept {
+void LibraryOverviewWidget::duplicateItem(
+    QListWidget* list,
+    const FilePath& fp) noexcept {
   if (list == mUi->lstCmpCat) {
     emit duplicateComponentCategoryTriggered(fp);
   } else if (list == mUi->lstPkgCat) {
@@ -419,8 +492,9 @@ void LibraryOverviewWidget::duplicateItem(QListWidget*    list,
   }
 }
 
-void LibraryOverviewWidget::editItem(QListWidget*    list,
-                                     const FilePath& fp) noexcept {
+void LibraryOverviewWidget::editItem(
+    QListWidget* list,
+    const FilePath& fp) noexcept {
   if (list == mUi->lstCmpCat) {
     emit editComponentCategoryTriggered(fp);
   } else if (list == mUi->lstPkgCat) {
@@ -447,7 +521,7 @@ void LibraryOverviewWidget::removeItems(
                    "this one! They should be just marked as deprecated "
                    "instead.\n\nAre you still sure to delete the following "
                    "library elements?") %
-                "\n\n";
+      "\n\n";
   QList<QListWidgetItem*> listedItems = selectedItemPaths.keys().mid(0, 10);
   foreach (QListWidgetItem* item, listedItems) {
     msg.append(" - " % item->text() % "\n");
@@ -459,8 +533,11 @@ void LibraryOverviewWidget::removeItems(
 
   // Show message box
   int ret = QMessageBox::warning(
-      this, tr("Remove %1 elements").arg(selectedItemPaths.count()), msg,
-      QMessageBox::Yes, QMessageBox::Cancel);
+      this,
+      tr("Remove %1 elements").arg(selectedItemPaths.count()),
+      msg,
+      QMessageBox::Yes,
+      QMessageBox::Cancel);
   if (ret == QMessageBox::Yes) {
     foreach (QListWidgetItem* item, selectedItemPaths.keys()) {
       FilePath itemPath = selectedItemPaths.value(item);
@@ -484,7 +561,8 @@ void LibraryOverviewWidget::removeItems(
 
 void LibraryOverviewWidget::btnIconClicked() noexcept {
   QString fp = FileDialog::getOpenFileName(
-      this, tr("Choose library icon"),
+      this,
+      tr("Choose library icon"),
       mLibrary->getDirectory().getAbsPath().toNative(),
       tr("Portable Network Graphics (*.png)"));
   if (!fp.isEmpty()) {
@@ -503,7 +581,7 @@ void LibraryOverviewWidget::lstDoubleClicked(
   QListWidget* list = dynamic_cast<QListWidget*>(sender());
   Q_ASSERT(list);
   QListWidgetItem* item = list->item(index.row());
-  FilePath         fp =
+  FilePath fp =
       item ? FilePath(item->data(Qt::UserRole).toString()) : FilePath();
   if (fp.isValid()) {
     editItem(list, fp);

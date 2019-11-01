@@ -48,8 +48,10 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_NetSegment::BI_NetSegment(Board& board, const BI_NetSegment& other,
-                             const QHash<const BI_Device*, BI_Device*>& devMap)
+BI_NetSegment::BI_NetSegment(
+    Board& board,
+    const BI_NetSegment& other,
+    const QHash<const BI_Device*, BI_Device*>& devMap)
   : BI_Base(board),
     mUuid(Uuid::createRandom()),
     mNetSignal(&other.getNetSignal()) {
@@ -96,9 +98,11 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
     mNetSignal =
         mBoard.getProject().getCircuit().getNetSignalByUuid(netSignalUuid);
     if (!mNetSignal) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("Invalid net signal UUID: \"%1\""))
-                             .arg(netSignalUuid.toStr()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("Invalid net signal UUID: \"%1\""))
+              .arg(netSignalUuid.toStr()));
     }
 
     // Load all vias
@@ -106,7 +110,8 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
       BI_Via* via = new BI_Via(*this, node);
       if (getViaByUuid(via->getUuid())) {
         throw RuntimeError(
-            __FILE__, __LINE__,
+            __FILE__,
+            __LINE__,
             QString(tr("There is already a via with the UUID \"%1\"!"))
                 .arg(via->getUuid().toStr()));
       }
@@ -118,7 +123,8 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
       BI_NetPoint* netpoint = new BI_NetPoint(*this, child);
       if (getNetPointByUuid(netpoint->getUuid())) {
         throw RuntimeError(
-            __FILE__, __LINE__,
+            __FILE__,
+            __LINE__,
             QString(tr("There is already a netpoint with the UUID \"%1\"!"))
                 .arg(netpoint->getUuid().toStr()));
       }
@@ -126,12 +132,14 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
     }
 
     // Load all netlines
-    foreach (const SExpression& node,
-             node.getChildren("netline") + node.getChildren("trace")) {
+    foreach (
+        const SExpression& node,
+        node.getChildren("netline") + node.getChildren("trace")) {
       BI_NetLine* netline = new BI_NetLine(*this, node);
       if (getNetLineByUuid(netline->getUuid())) {
         throw RuntimeError(
-            __FILE__, __LINE__,
+            __FILE__,
+            __LINE__,
             QString(tr("There is already a netline with the UUID \"%1\"!"))
                 .arg(netline->getUuid().toStr()));
       }
@@ -140,7 +148,8 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
 
     if (!areAllNetPointsConnectedTogether()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("The netsegment with the UUID \"%1\" is not cohesive!"))
               .arg(mUuid.toStr()));
     }
@@ -177,12 +186,12 @@ BI_NetSegment::~BI_NetSegment() noexcept {
  ******************************************************************************/
 
 bool BI_NetSegment::isUsed() const noexcept {
-  return ((!mVias.isEmpty()) || (!mNetPoints.isEmpty()) ||
-          (!mNetLines.isEmpty()));
+  return (
+      (!mVias.isEmpty()) || (!mNetPoints.isEmpty()) || (!mNetLines.isEmpty()));
 }
 
-int BI_NetSegment::getViasAtScenePos(const Point&    pos,
-                                     QList<BI_Via*>& vias) const noexcept {
+int BI_NetSegment::getViasAtScenePos(const Point& pos, QList<BI_Via*>& vias)
+    const noexcept {
   int count = 0;
   foreach (BI_Via* via, mVias) {
     if (via->isSelectable() &&
@@ -194,10 +203,10 @@ int BI_NetSegment::getViasAtScenePos(const Point&    pos,
   return count;
 }
 
-int BI_NetSegment::getNetPointsAtScenePos(const Point&         pos,
-                                          const GraphicsLayer* layer,
-                                          QList<BI_NetPoint*>& points) const
-    noexcept {
+int BI_NetSegment::getNetPointsAtScenePos(
+    const Point& pos,
+    const GraphicsLayer* layer,
+    QList<BI_NetPoint*>& points) const noexcept {
   int count = 0;
   foreach (BI_NetPoint* netpoint, mNetPoints) {
     if (netpoint->isSelectable() &&
@@ -210,10 +219,10 @@ int BI_NetSegment::getNetPointsAtScenePos(const Point&         pos,
   return count;
 }
 
-int BI_NetSegment::getNetLinesAtScenePos(const Point&         pos,
-                                         const GraphicsLayer* layer,
-                                         QList<BI_NetLine*>&  lines) const
-    noexcept {
+int BI_NetSegment::getNetLinesAtScenePos(
+    const Point& pos,
+    const GraphicsLayer* layer,
+    QList<BI_NetLine*>& lines) const noexcept {
   int count = 0;
   foreach (BI_NetLine* netline, mNetLines) {
     if (netline->isSelectable() &&
@@ -284,9 +293,10 @@ BI_NetLine* BI_NetSegment::getNetLineByUuid(const Uuid& uuid) const noexcept {
  *  NetPoint+NetLine Methods
  ******************************************************************************/
 
-void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
-                                const QList<BI_NetPoint*>& netpoints,
-                                const QList<BI_NetLine*>&  netlines) {
+void BI_NetSegment::addElements(
+    const QList<BI_Via*>& vias,
+    const QList<BI_NetPoint*>& netpoints,
+    const QList<BI_NetLine*>& netlines) {
   if (!isAddedToBoard()) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -299,7 +309,8 @@ void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
     // check if there is no via with the same uuid in the list
     if (getViaByUuid(via->getUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("There is already a via with the UUID \"%1\"!"))
               .arg(via->getUuid().toStr()));
     }
@@ -319,7 +330,8 @@ void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
     // check if there is no netpoint with the same uuid in the list
     if (getNetPointByUuid(netpoint->getUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("There is already a netpoint with the UUID \"%1\"!"))
               .arg(netpoint->getUuid().toStr()));
     }
@@ -338,7 +350,8 @@ void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
     // check if there is no netline with the same uuid in the list
     if (getNetLineByUuid(netline->getUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("There is already a netline with the UUID \"%1\"!"))
               .arg(netline->getUuid().toStr()));
     }
@@ -353,7 +366,8 @@ void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
 
   if (!areAllNetPointsConnectedTogether()) {
     throw LogicError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The netsegment with the UUID \"%1\" is not cohesive!"))
             .arg(mUuid.toStr()));
   }
@@ -361,9 +375,10 @@ void BI_NetSegment::addElements(const QList<BI_Via*>&      vias,
   sgl.dismiss();
 }
 
-void BI_NetSegment::removeElements(const QList<BI_Via*>&      vias,
-                                   const QList<BI_NetPoint*>& netpoints,
-                                   const QList<BI_NetLine*>&  netlines) {
+void BI_NetSegment::removeElements(
+    const QList<BI_Via*>& vias,
+    const QList<BI_NetPoint*>& netpoints,
+    const QList<BI_NetLine*>& netlines) {
   if (!isAddedToBoard()) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -408,7 +423,8 @@ void BI_NetSegment::removeElements(const QList<BI_Via*>&      vias,
 
   if (!areAllNetPointsConnectedTogether()) {
     throw LogicError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The netsegment with the UUID \"%1\" is not cohesive!"))
             .arg(mUuid.toStr()));
   }
@@ -472,14 +488,16 @@ void BI_NetSegment::removeFromBoard() {
 
 void BI_NetSegment::setSelectionRect(const QRectF rectPx) noexcept {
   foreach (BI_Via* via, mVias)
-    via->setSelected(via->isSelectable() &&
-                     via->getGrabAreaScenePx().intersects(rectPx));
+    via->setSelected(
+        via->isSelectable() && via->getGrabAreaScenePx().intersects(rectPx));
   foreach (BI_NetPoint* netpoint, mNetPoints)
-    netpoint->setSelected(netpoint->isSelectable() &&
-                          netpoint->getGrabAreaScenePx().intersects(rectPx));
+    netpoint->setSelected(
+        netpoint->isSelectable() &&
+        netpoint->getGrabAreaScenePx().intersects(rectPx));
   foreach (BI_NetLine* netline, mNetLines)
-    netline->setSelected(netline->isSelectable() &&
-                         netline->getGrabAreaScenePx().intersects(rectPx));
+    netline->setSelected(
+        netline->isSelectable() &&
+        netline->getGrabAreaScenePx().intersects(rectPx));
 }
 
 void BI_NetSegment::clearSelection() const noexcept {
@@ -548,18 +566,19 @@ bool BI_NetSegment::areAllNetPointsConnectedTogether() const noexcept {
                   // together" :)
   }
   Q_ASSERT(p);
-  QSet<const BI_Via*>          vias;
-  QSet<const BI_NetPoint*>     points;
+  QSet<const BI_Via*> vias;
+  QSet<const BI_NetPoint*> points;
   QSet<const BI_FootprintPad*> pads;
   findAllConnectedNetPoints(*p, vias, pads, points);
   return (vias.count() == mVias.count()) &&
-         (points.count() == mNetPoints.count());
+      (points.count() == mNetPoints.count());
 }
 
 void BI_NetSegment::findAllConnectedNetPoints(
-    const BI_NetLineAnchor& p, QSet<const BI_Via*>& vias,
-    QSet<const BI_FootprintPad*>& pads, QSet<const BI_NetPoint*>& points) const
-    noexcept {
+    const BI_NetLineAnchor& p,
+    QSet<const BI_Via*>& vias,
+    QSet<const BI_FootprintPad*>& pads,
+    QSet<const BI_NetPoint*>& points) const noexcept {
   if (const BI_Via* via = dynamic_cast<const BI_Via*>(&p)) {
     if (vias.contains(via)) return;
     vias.insert(via);
@@ -571,8 +590,8 @@ void BI_NetSegment::findAllConnectedNetPoints(
         findAllConnectedNetPoints(netline->getStartPoint(), vias, pads, points);
       }
     }
-  } else if (const BI_FootprintPad* pad =
-                 dynamic_cast<const BI_FootprintPad*>(&p)) {
+  } else if (
+      const BI_FootprintPad* pad = dynamic_cast<const BI_FootprintPad*>(&p)) {
     if (pads.contains(pad)) return;
     pads.insert(pad);
     foreach (const BI_NetLine* netline, mNetLines) {

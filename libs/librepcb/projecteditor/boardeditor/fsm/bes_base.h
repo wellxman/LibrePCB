@@ -63,19 +63,22 @@ class BES_Base : public QObject {
 public:
   /// process() return values
   enum ProcRetVal {
-    ForceStayInState,   ///< event handled, stay in the current state
-    ForceLeaveState,    ///< event handled, leave the current state
+    ForceStayInState,  ///< event handled, stay in the current state
+    ForceLeaveState,  ///< event handled, leave the current state
     PassToParentState,  ///< event unhandled, pass it to the parent
   };
 
   // Constructors / Destructor
-  explicit BES_Base(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                    GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit BES_Base(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   virtual ~BES_Base();
 
   // General Methods
   virtual ProcRetVal process(BEE_Base* event) noexcept = 0;
-  virtual bool       entry(BEE_Base* event) noexcept {
+  virtual bool entry(BEE_Base* event) noexcept {
     Q_UNUSED(event);
     return true;
   }
@@ -87,12 +90,12 @@ public:
 protected:
   // General Attributes which are needed by some state objects
   workspace::Workspace& mWorkspace;
-  Project&              mProject;
-  Circuit&              mCircuit;
-  BoardEditor&          mEditor;
-  Ui::BoardEditor&      mEditorUi;  ///< allows access to BoardEditor UI
+  Project& mProject;
+  Circuit& mCircuit;
+  BoardEditor& mEditor;
+  Ui::BoardEditor& mEditorUi;  ///< allows access to BoardEditor UI
   GraphicsView&
-             mEditorGraphicsView;  ///< allows access to the board editor graphics view
+      mEditorGraphicsView;  ///< allows access to the board editor graphics view
   UndoStack& mUndoStack;
 };
 

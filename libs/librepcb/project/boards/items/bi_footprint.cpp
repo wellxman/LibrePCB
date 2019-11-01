@@ -84,30 +84,43 @@ void BI_Footprint::init() {
         new BI_FootprintPad(*this, libPad.getPackagePadUuid());
     if (mPads.contains(libPad.getPackagePadUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(
               tr("The footprint pad UUID \"%1\" is defined multiple times."))
               .arg(libPad.getPackagePadUuid().toStr()));
     }
     if (!libDev.getPadSignalMap().contains(libPad.getPackagePadUuid())) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("Footprint pad \"%1\" not found in "
-                                    "pad-signal-map of device \"%2\"."))
-                             .arg(libPad.getPackagePadUuid().toStr(),
-                                  libDev.getUuid().toStr()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("Footprint pad \"%1\" not found in "
+                     "pad-signal-map of device \"%2\"."))
+              .arg(
+                  libPad.getPackagePadUuid().toStr(),
+                  libDev.getUuid().toStr()));
     }
     mPads.insert(libPad.getPackagePadUuid(), pad);
   }
 
   // connect to the "attributes changed" signal of device instance
-  connect(&mDevice, &BI_Device::attributesChanged, this,
-          &BI_Footprint::deviceInstanceAttributesChanged);
-  connect(&mDevice, &BI_Device::moved, this,
-          &BI_Footprint::deviceInstanceMoved);
-  connect(&mDevice, &BI_Device::rotated, this,
-          &BI_Footprint::deviceInstanceRotated);
-  connect(&mDevice, &BI_Device::mirrored, this,
-          &BI_Footprint::deviceInstanceMirrored);
+  connect(
+      &mDevice,
+      &BI_Device::attributesChanged,
+      this,
+      &BI_Footprint::deviceInstanceAttributesChanged);
+  connect(
+      &mDevice, &BI_Device::moved, this, &BI_Footprint::deviceInstanceMoved);
+  connect(
+      &mDevice,
+      &BI_Device::rotated,
+      this,
+      &BI_Footprint::deviceInstanceRotated);
+  connect(
+      &mDevice,
+      &BI_Device::mirrored,
+      this,
+      &BI_Footprint::deviceInstanceMirrored);
 }
 
 BI_Footprint::~BI_Footprint() noexcept {

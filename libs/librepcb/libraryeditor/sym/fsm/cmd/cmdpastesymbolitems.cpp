@@ -48,8 +48,10 @@ namespace editor {
  ******************************************************************************/
 
 CmdPasteSymbolItems::CmdPasteSymbolItems(
-    Symbol& symbol, SymbolGraphicsItem& graphicsItem,
-    std::unique_ptr<SymbolClipboardData> data, const Point& posOffset) noexcept
+    Symbol& symbol,
+    SymbolGraphicsItem& graphicsItem,
+    std::unique_ptr<SymbolClipboardData> data,
+    const Point& posOffset) noexcept
   : UndoCommandGroup(tr("Paste Symbol Elements")),
     mSymbol(symbol),
     mGraphicsItem(graphicsItem),
@@ -90,9 +92,12 @@ bool CmdPasteSymbolItems::performExecute() {
       name = CircuitIdentifier(
           Toolbox::incrementNumberInString(*name));  // can throw
     }
-    std::shared_ptr<SymbolPin> copy =
-        std::make_shared<SymbolPin>(uuid, name, pin.getPosition() + mPosOffset,
-                                    pin.getLength(), pin.getRotation());
+    std::shared_ptr<SymbolPin> copy = std::make_shared<SymbolPin>(
+        uuid,
+        name,
+        pin.getPosition() + mPosOffset,
+        pin.getLength(),
+        pin.getRotation());
     execNewChildCmd(new CmdSymbolPinInsert(mSymbol.getPins(), copy));
     SymbolPinGraphicsItem* item = mGraphicsItem.getPinGraphicsItem(uuid);
     Q_ASSERT(item);
@@ -106,8 +111,12 @@ bool CmdPasteSymbolItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<Circle> copy = std::make_shared<Circle>(
-        uuid, circle.getLayerName(), circle.getLineWidth(), circle.isFilled(),
-        circle.isGrabArea(), circle.getCenter() + mPosOffset,
+        uuid,
+        circle.getLayerName(),
+        circle.getLineWidth(),
+        circle.isFilled(),
+        circle.isGrabArea(),
+        circle.getCenter() + mPosOffset,
         circle.getDiameter());
     execNewChildCmd(new CmdCircleInsert(mSymbol.getCircles(), copy));
     CircleGraphicsItem* item = mGraphicsItem.getCircleGraphicsItem(*copy);
@@ -122,8 +131,11 @@ bool CmdPasteSymbolItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<Polygon> copy = std::make_shared<Polygon>(
-        uuid, polygon.getLayerName(), polygon.getLineWidth(),
-        polygon.isFilled(), polygon.isGrabArea(),
+        uuid,
+        polygon.getLayerName(),
+        polygon.getLineWidth(),
+        polygon.isFilled(),
+        polygon.isGrabArea(),
         polygon.getPath().translated(mPosOffset));
     execNewChildCmd(new CmdPolygonInsert(mSymbol.getPolygons(), copy));
     PolygonGraphicsItem* item = mGraphicsItem.getPolygonGraphicsItem(*copy);
@@ -138,8 +150,12 @@ bool CmdPasteSymbolItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<Text> copy = std::make_shared<Text>(
-        uuid, text.getLayerName(), text.getText(),
-        text.getPosition() + mPosOffset, text.getRotation(), text.getHeight(),
+        uuid,
+        text.getLayerName(),
+        text.getText(),
+        text.getPosition() + mPosOffset,
+        text.getRotation(),
+        text.getHeight(),
         text.getAlign());
     execNewChildCmd(new CmdTextInsert(mSymbol.getTexts(), copy));
     TextGraphicsItem* item = mGraphicsItem.getTextGraphicsItem(*copy);

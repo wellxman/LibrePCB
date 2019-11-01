@@ -45,11 +45,14 @@ ComponentSignal::ComponentSignal(const ComponentSignal& other) noexcept
     mIsClock(other.mIsClock) {
 }
 
-ComponentSignal::ComponentSignal(const Uuid&              uuid,
-                                 const CircuitIdentifier& name,
-                                 const SignalRole&        role,
-                                 const QString& forcedNetName, bool isRequired,
-                                 bool isNegated, bool isClock) noexcept
+ComponentSignal::ComponentSignal(
+    const Uuid& uuid,
+    const CircuitIdentifier& name,
+    const SignalRole& role,
+    const QString& forcedNetName,
+    bool isRequired,
+    bool isNegated,
+    bool isClock) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mName(name),

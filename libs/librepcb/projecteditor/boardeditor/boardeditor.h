@@ -75,8 +75,8 @@ public:
 
   // Getters
   ProjectEditor& getProjectEditor() const noexcept { return mProjectEditor; }
-  Project&       getProject() const noexcept { return mProject; }
-  Board*         getActiveBoard() const noexcept { return mActiveBoard.data(); }
+  Project& getProject() const noexcept { return mProject; }
+  Board* getActiveBoard() const noexcept { return mActiveBoard.data(); }
 
   // Setters
   void setActiveBoardIndex(int index) noexcept;
@@ -116,7 +116,7 @@ private slots:
 
 private:
   // make some methods inaccessible...
-  BoardEditor()                         = delete;
+  BoardEditor() = delete;
   BoardEditor(const BoardEditor& other) = delete;
   BoardEditor& operator=(const BoardEditor& rhs) = delete;
 
@@ -126,22 +126,22 @@ private:
   void unplacedComponentsCountChanged(int count) noexcept;
 
   // General Attributes
-  ProjectEditor&                       mProjectEditor;
-  Project&                             mProject;
-  Ui::BoardEditor*                     mUi;
-  GraphicsView*                        mGraphicsView;
+  ProjectEditor& mProjectEditor;
+  Project& mProject;
+  Ui::BoardEditor* mUi;
+  GraphicsView* mGraphicsView;
   QScopedPointer<UndoStackActionGroup> mUndoStackActionGroup;
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
 
   // Misc
   QPointer<Board> mActiveBoard;
   QList<QAction*> mBoardListActions;
-  QActionGroup    mBoardListActionGroup;
+  QActionGroup mBoardListActionGroup;
 
   // Docks
-  ErcMsgDock*             mErcMsgDock;
+  ErcMsgDock* mErcMsgDock;
   UnplacedComponentsDock* mUnplacedComponentsDock;
-  BoardLayersDock*        mBoardLayersDock;
+  BoardLayersDock* mBoardLayersDock;
 
   // Finite State Machine
   BES_FSM* mFsm;

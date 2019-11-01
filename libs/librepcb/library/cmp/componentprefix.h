@@ -42,14 +42,15 @@ struct ComponentPrefixVerifier {
   template <typename Value, typename Predicate>
   static constexpr auto verify(Value&& val, const Predicate& p) ->
       typename std::decay<Value>::type {
-    return p(val) ? std::forward<Value>(val)
-                  : (throw RuntimeError(
-                         __FILE__, __LINE__,
-                         QString(QApplication::translate(
-                                     "ComponentPrefix",
-                                     "Invalid component prefix: '%1'"))
-                             .arg(val)),
-                     std::forward<Value>(val));
+    return p(val)
+        ? std::forward<Value>(val)
+        : (throw RuntimeError(
+               __FILE__,
+               __LINE__,
+               QString(QApplication::translate(
+                           "ComponentPrefix", "Invalid component prefix: '%1'"))
+                   .arg(val)),
+           std::forward<Value>(val));
   }
 };
 
@@ -72,34 +73,41 @@ struct ComponentPrefixConstraint {
  * The constructor throws an exception if constructed from a QString which is
  * not a valid component prefix according these rules.
  */
-using ComponentPrefix =
-    type_safe::constrained_type<QString, ComponentPrefixConstraint,
-                                ComponentPrefixVerifier>;
+using ComponentPrefix = type_safe::constrained_type<
+    QString,
+    ComponentPrefixConstraint,
+    ComponentPrefixVerifier>;
 
 }  // namespace library
 
-inline bool operator==(const library::ComponentPrefix& lhs,
-                       const QString&                  rhs) noexcept {
+inline bool operator==(
+    const library::ComponentPrefix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) == rhs;
 }
-inline bool operator==(const QString&                  lhs,
-                       const library::ComponentPrefix& rhs) noexcept {
+inline bool operator==(
+    const QString& lhs,
+    const library::ComponentPrefix& rhs) noexcept {
   return lhs == (*rhs);
 }
-inline bool operator!=(const library::ComponentPrefix& lhs,
-                       const QString&                  rhs) noexcept {
+inline bool operator!=(
+    const library::ComponentPrefix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) != rhs;
 }
-inline bool operator!=(const QString&                  lhs,
-                       const library::ComponentPrefix& rhs) noexcept {
+inline bool operator!=(
+    const QString& lhs,
+    const library::ComponentPrefix& rhs) noexcept {
   return lhs != (*rhs);
 }
-inline QString operator%(const library::ComponentPrefix& lhs,
-                         const QString&                  rhs) noexcept {
+inline QString operator%(
+    const library::ComponentPrefix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) % rhs;
 }
-inline QString operator%(const QString&                  lhs,
-                         const library::ComponentPrefix& rhs) noexcept {
+inline QString operator%(
+    const QString& lhs,
+    const library::ComponentPrefix& rhs) noexcept {
   return lhs % (*rhs);
 }
 
@@ -110,13 +118,15 @@ inline SExpression serializeToSExpression(const library::ComponentPrefix& obj) {
 
 template <>
 inline library::ComponentPrefix deserializeFromSExpression(
-    const SExpression& sexpr, bool throwIfEmpty) {
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   return library::ComponentPrefix(str);  // can throw
 }
 
-inline QDataStream& operator<<(QDataStream&                    stream,
-                               const library::ComponentPrefix& obj) {
+inline QDataStream& operator<<(
+    QDataStream& stream,
+    const library::ComponentPrefix& obj) {
   stream << *obj;
   return stream;
 }

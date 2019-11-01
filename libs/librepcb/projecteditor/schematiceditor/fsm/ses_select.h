@@ -55,14 +55,17 @@ class SES_Select final : public SES_Base {
 
 public:
   // Constructors / Destructor
-  explicit SES_Select(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                      GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit SES_Select(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~SES_Select();
 
   // General Methods
   ProcRetVal process(SEE_Base* event) noexcept override;
-  bool       entry(SEE_Base* event) noexcept override;
-  bool       exit(SEE_Base* event) noexcept override;
+  bool entry(SEE_Base* event) noexcept override;
+  bool exit(SEE_Base* event) noexcept override;
 
 private:
   // Private Methods
@@ -70,24 +73,28 @@ private:
   ProcRetVal processSubStateIdleSceneEvent(SEE_Base* event) noexcept;
   ProcRetVal processSubStateMoving(SEE_Base* event) noexcept;
   ProcRetVal processSubStateMovingSceneEvent(SEE_Base* event) noexcept;
-  ProcRetVal proccessIdleSceneLeftClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                        Schematic& schematic) noexcept;
+  ProcRetVal proccessIdleSceneLeftClick(
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Schematic& schematic) noexcept;
   ProcRetVal proccessIdleSceneRightMouseButtonReleased(
-      QGraphicsSceneMouseEvent* mouseEvent, Schematic* schematic) noexcept;
-  ProcRetVal proccessIdleSceneDoubleClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                          Schematic* schematic) noexcept;
-  bool       startMovingSelectedItems(Schematic&   schematic,
-                                      const Point& startPos) noexcept;
-  bool       rotateSelectedItems(const Angle& angle) noexcept;
-  bool       mirrorSelectedItems() noexcept;
-  bool       removeSelectedItems() noexcept;
-  void       openSymbolPropertiesDialog(SI_Symbol& symbol) noexcept;
-  void       openNetLabelPropertiesDialog(SI_NetLabel& netlabel) noexcept;
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Schematic* schematic) noexcept;
+  ProcRetVal proccessIdleSceneDoubleClick(
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Schematic* schematic) noexcept;
+  bool startMovingSelectedItems(
+      Schematic& schematic,
+      const Point& startPos) noexcept;
+  bool rotateSelectedItems(const Angle& angle) noexcept;
+  bool mirrorSelectedItems() noexcept;
+  bool removeSelectedItems() noexcept;
+  void openSymbolPropertiesDialog(SI_Symbol& symbol) noexcept;
+  void openNetLabelPropertiesDialog(SI_NetLabel& netlabel) noexcept;
 
   // Types
   /// enum for all possible substates
   enum SubState {
-    SubState_Idle,   ///< left mouse button is not pressed (default state)
+    SubState_Idle,  ///< left mouse button is not pressed (default state)
     SubState_Moving  ///< left mouse button is pressed
   };
 

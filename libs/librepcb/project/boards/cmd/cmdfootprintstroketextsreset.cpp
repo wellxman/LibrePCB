@@ -72,8 +72,8 @@ bool CmdFootprintStrokeTextsReset::performExecute() {
     if (mFootprint.getIsMirrored()) {
       cmd.mirror(Point(0, 0), Qt::Horizontal, true);
     }
-    cmd.setPosition(newText->getText().getPosition() + mFootprint.getPosition(),
-                    true);
+    cmd.setPosition(
+        newText->getText().getPosition() + mFootprint.getPosition(), true);
     cmd.execute();  // can throw
     appendChild(new CmdFootprintStrokeTextAdd(mFootprint, *newText.take()));
   }

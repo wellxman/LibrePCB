@@ -43,7 +43,7 @@ class WSI_Appearance final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_Appearance()                            = delete;
+  WSI_Appearance() = delete;
   WSI_Appearance(const WSI_Appearance& other) = delete;
   explicit WSI_Appearance(const SExpression& node);
   ~WSI_Appearance() noexcept;
@@ -74,7 +74,7 @@ private:  // Data
   bool mUseOpenGl;
 
   // Widgets
-  QScopedPointer<QWidget>   mUseOpenGlWidget;
+  QScopedPointer<QWidget> mUseOpenGlWidget;
   QScopedPointer<QCheckBox> mUseOpenGlCheckBox;
 };
 

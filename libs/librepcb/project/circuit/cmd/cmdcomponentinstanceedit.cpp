@@ -38,7 +38,8 @@ namespace project {
  ******************************************************************************/
 
 CmdComponentInstanceEdit::CmdComponentInstanceEdit(
-    Circuit& circuit, ComponentInstance& cmp) noexcept
+    Circuit& circuit,
+    ComponentInstance& cmp) noexcept
   : UndoCommand(tr("Edit Component")),
     mCircuit(circuit),
     mComponentInstance(cmp),

@@ -63,7 +63,12 @@ SignalRole& SignalRole::operator=(const SignalRole& rhs) noexcept {
 
 const QList<SignalRole>& SignalRole::getAllRoles() noexcept {
   static QList<SignalRole> list{
-      passive(), power(), input(), output(), inout(), opendrain(),
+      passive(),
+      power(),
+      input(),
+      output(),
+      inout(),
+      opendrain(),
   };
   return list;
 }

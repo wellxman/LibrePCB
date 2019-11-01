@@ -46,33 +46,38 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardPlanePropertiesDialog::BoardPlanePropertiesDialog(Project&   project,
-                                                       BI_Plane&  plane,
-                                                       UndoStack& undoStack,
-                                                       QWidget* parent) noexcept
+BoardPlanePropertiesDialog::BoardPlanePropertiesDialog(
+    Project& project,
+    BI_Plane& plane,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
     mPlane(plane),
     mUi(new Ui::BoardPlanePropertiesDialog),
     mUndoStack(undoStack) {
   mUi->setupUi(this);
-  mUi->edtMinWidth->setSingleStep(0.1);      // [mm]
+  mUi->edtMinWidth->setSingleStep(0.1);  // [mm]
   mUi->edtMinClearance->setSingleStep(0.1);  // [mm]
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &BoardPlanePropertiesDialog::buttonBoxClicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &BoardPlanePropertiesDialog::buttonBoxClicked);
 
   // net signal combobox
   foreach (NetSignal* netsignal, mPlane.getCircuit().getNetSignals()) {
-    mUi->cbxNetSignal->addItem(*netsignal->getName(),
-                               netsignal->getUuid().toStr());
+    mUi->cbxNetSignal->addItem(
+        *netsignal->getName(), netsignal->getUuid().toStr());
   }
   mUi->cbxNetSignal->model()->sort(0);
   mUi->cbxNetSignal->setCurrentIndex(
       mUi->cbxNetSignal->findData(mPlane.getNetSignal().getUuid().toStr()));
 
   // layer combobox
-  foreach (const GraphicsLayer* layer,
-           mPlane.getBoard().getLayerStack().getAllLayers()) {
+  foreach (
+      const GraphicsLayer* layer,
+      mPlane.getBoard().getLayerStack().getAllLayers()) {
     if (layer->isCopperLayer() && layer->isEnabled()) {
       mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());
     }
@@ -85,8 +90,8 @@ BoardPlanePropertiesDialog::BoardPlanePropertiesDialog(Project&   project,
   mUi->edtMinClearance->setValue(mPlane.getMinClearance());
 
   // connect style combobox
-  mUi->cbxConnectStyle->addItem(tr("None"),
-                                static_cast<int>(BI_Plane::ConnectStyle::None));
+  mUi->cbxConnectStyle->addItem(
+      tr("None"), static_cast<int>(BI_Plane::ConnectStyle::None));
   mUi->cbxConnectStyle->addItem(
       tr("Solid"), static_cast<int>(BI_Plane::ConnectStyle::Solid));
   // mUi->cbxConnectStyle->addItem(tr("Thermals"),

@@ -59,27 +59,32 @@ public:
     HeightChanged,
     AlignChanged,
   };
-  Signal<Text, Event>       onEdited;
+  Signal<Text, Event> onEdited;
   typedef Slot<Text, Event> OnEditedSlot;
 
   // Constructors / Destructor
   Text() = delete;
   Text(const Text& other) noexcept;
   Text(const Uuid& uuid, const Text& other) noexcept;
-  Text(const Uuid& uuid, const GraphicsLayerName& layerName,
-       const QString& text, const Point& pos, const Angle& rotation,
-       const PositiveLength& height, const Alignment& align) noexcept;
+  Text(
+      const Uuid& uuid,
+      const GraphicsLayerName& layerName,
+      const QString& text,
+      const Point& pos,
+      const Angle& rotation,
+      const PositiveLength& height,
+      const Alignment& align) noexcept;
   explicit Text(const SExpression& node);
   ~Text() noexcept;
 
   // Getters
-  const Uuid&              getUuid() const noexcept { return mUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
   const GraphicsLayerName& getLayerName() const noexcept { return mLayerName; }
-  const Point&             getPosition() const noexcept { return mPosition; }
-  const Angle&             getRotation() const noexcept { return mRotation; }
-  const PositiveLength&    getHeight() const noexcept { return mHeight; }
-  const Alignment&         getAlign() const noexcept { return mAlign; }
-  const QString&           getText() const noexcept { return mText; }
+  const Point& getPosition() const noexcept { return mPosition; }
+  const Angle& getRotation() const noexcept { return mRotation; }
+  const PositiveLength& getHeight() const noexcept { return mHeight; }
+  const Alignment& getAlign() const noexcept { return mAlign; }
+  const QString& getText() const noexcept { return mText; }
 
   // Setters
   bool setLayerName(const GraphicsLayerName& name) noexcept;
@@ -93,18 +98,18 @@ public:
   void serialize(SExpression& root) const override;
 
   // Operator Overloadings
-  bool  operator==(const Text& rhs) const noexcept;
-  bool  operator!=(const Text& rhs) const noexcept { return !(*this == rhs); }
+  bool operator==(const Text& rhs) const noexcept;
+  bool operator!=(const Text& rhs) const noexcept { return !(*this == rhs); }
   Text& operator=(const Text& rhs) noexcept;
 
 private:  // Data
-  Uuid              mUuid;
+  Uuid mUuid;
   GraphicsLayerName mLayerName;
-  QString           mText;
-  Point             mPosition;
-  Angle             mRotation;
-  PositiveLength    mHeight;
-  Alignment         mAlign;
+  QString mText;
+  Point mPosition;
+  Angle mRotation;
+  PositiveLength mHeight;
+  Alignment mAlign;
 };
 
 /*******************************************************************************

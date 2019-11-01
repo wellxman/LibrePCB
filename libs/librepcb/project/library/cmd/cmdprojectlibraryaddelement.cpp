@@ -40,7 +40,8 @@ namespace project {
 
 template <typename ElementType>
 CmdProjectLibraryAddElement<ElementType>::CmdProjectLibraryAddElement(
-    ProjectLibrary& library, ElementType& element) noexcept
+    ProjectLibrary& library,
+    ElementType& element) noexcept
   : UndoCommand(tr("Add element to library")),
     mLibrary(library),
     mElement(element) {

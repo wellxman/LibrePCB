@@ -57,25 +57,27 @@ class BES_DrawPolygon final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_DrawPolygon(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                           GraphicsView& editorGraphicsView,
-                           UndoStack&    undoStack);
+  explicit BES_DrawPolygon(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_DrawPolygon() noexcept;
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:  // Methods
   ProcRetVal processSubStateIdle(BEE_Base* event) noexcept;
   ProcRetVal processSubStatePositioning(BEE_Base* event) noexcept;
   ProcRetVal processIdleSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processPositioningSceneEvent(BEE_Base* event) noexcept;
-  bool       start(Board& board, const Point& pos) noexcept;
-  bool       addSegment(Board& board, const Point& pos) noexcept;
-  bool       abort(bool showErrMsgBox) noexcept;
-  void       updateSegmentPosition(const Point& cursorPos) noexcept;
+  bool start(Board& board, const Point& pos) noexcept;
+  bool addSegment(Board& board, const Point& pos) noexcept;
+  bool abort(bool showErrMsgBox) noexcept;
+  void updateSegmentPosition(const Point& cursorPos) noexcept;
   void layerComboBoxLayerChanged(const GraphicsLayerName& layerName) noexcept;
   void widthEditValueChanged(const UnsignedLength& value) noexcept;
   void filledCheckBoxCheckedChanged(bool checked) noexcept;
@@ -90,22 +92,22 @@ private:  // Types
 
 private:  // Data
   // State
-  SubState          mSubState;
+  SubState mSubState;
   GraphicsLayerName mCurrentLayerName;
-  UnsignedLength    mCurrentWidth;
-  bool              mCurrentIsFilled;
-  BI_Polygon*       mCurrentPolygon;
-  CmdPolygonEdit*   mCmdEditCurrentPolygon;
-  Point             mLastSegmentPos;
+  UnsignedLength mCurrentWidth;
+  bool mCurrentIsFilled;
+  BI_Polygon* mCurrentPolygon;
+  CmdPolygonEdit* mCmdEditCurrentPolygon;
+  Point mLastSegmentPos;
 
   // Widgets for the command toolbar
-  QList<QAction*>        mActionSeparators;
-  QLabel*                mLayerLabel;
+  QList<QAction*> mActionSeparators;
+  QLabel* mLayerLabel;
   GraphicsLayerComboBox* mLayerComboBox;
-  QLabel*                mWidthLabel;
-  UnsignedLengthEdit*    mWidthEdit;
-  QLabel*                mFillLabel;
-  QCheckBox*             mFillCheckBox;
+  QLabel* mWidthLabel;
+  UnsignedLengthEdit* mWidthEdit;
+  QLabel* mFillLabel;
+  QCheckBox* mFillCheckBox;
 };
 
 /*******************************************************************************

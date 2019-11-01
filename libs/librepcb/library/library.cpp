@@ -46,34 +46,46 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Library::Library(const Uuid& uuid, const Version& version,
-                 const QString& author, const ElementName& name_en_US,
-                 const QString& description_en_US,
-                 const QString& keywords_en_US)
-  : LibraryBaseElement(false, getShortElementName(), getLongElementName(), uuid,
-                       version, author, name_en_US, description_en_US,
-                       keywords_en_US) {
+Library::Library(
+    const Uuid& uuid,
+    const Version& version,
+    const QString& author,
+    const ElementName& name_en_US,
+    const QString& description_en_US,
+    const QString& keywords_en_US)
+  : LibraryBaseElement(
+        false,
+        getShortElementName(),
+        getLongElementName(),
+        uuid,
+        version,
+        author,
+        name_en_US,
+        description_en_US,
+        keywords_en_US) {
 }
 
 Library::Library(std::unique_ptr<TransactionalDirectory> directory)
   : LibraryBaseElement(std::move(directory), false, "lib", "library") {
   // check directory suffix
   if (mDirectory->getAbsPath().getSuffix() != "lplib") {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The library directory does not have the "
-                                  "suffix '.lplib':\n\n%1"))
-                           .arg(mDirectory->getAbsPath().toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The library directory does not have the "
+                   "suffix '.lplib':\n\n%1"))
+            .arg(mDirectory->getAbsPath().toNative()));
   }
 
   // read properties
   // Note: Don't use SExpression::getValueByPath<QUrl>() because it would throw
   // an exception if the URL is empty, which is actually legal in this case.
-  mUrl = QUrl(mLoadingFileDocument.getValueByPath<QString>("url"),
-              QUrl::StrictMode);
+  mUrl = QUrl(
+      mLoadingFileDocument.getValueByPath<QString>("url"), QUrl::StrictMode);
 
   // read dependency UUIDs
-  foreach (const SExpression& node,
-           mLoadingFileDocument.getChildren("dependency")) {
+  foreach (
+      const SExpression& node, mLoadingFileDocument.getChildren("dependency")) {
     mDependencies.insert(node.getValueOfFirstChild<Uuid>());
   }
 
@@ -133,7 +145,8 @@ void Library::moveTo(TransactionalDirectory& dest) {
   if (dest.getAbsPath().getSuffix() != "lplib") {
     qDebug() << dest.getAbsPath().toNative();
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("A library directory name must have the suffix '.lplib'.")));
   }
 
@@ -144,7 +157,7 @@ void Library::moveTo(TransactionalDirectory& dest) {
 template <typename ElementType>
 QStringList Library::searchForElements() const noexcept {
   QStringList list;
-  QString     subdir = getElementsDirectoryName<ElementType>();
+  QString subdir = getElementsDirectoryName<ElementType>();
   foreach (const QString& dirname, mDirectory->getDirs(subdir)) {
     QString dirPath = subdir % "/" % dirname;
     if (isValidElementDirectory<ElementType>(*mDirectory, dirPath)) {

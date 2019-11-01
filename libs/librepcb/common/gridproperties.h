@@ -50,15 +50,17 @@ public:
   // Constructors / Destructor
   GridProperties() noexcept;
   explicit GridProperties(const SExpression& node);
-  GridProperties(Type_t type, const PositiveLength& interval,
-                 const LengthUnit& unit) noexcept;
+  GridProperties(
+      Type_t type,
+      const PositiveLength& interval,
+      const LengthUnit& unit) noexcept;
   GridProperties(const GridProperties& other) noexcept;
   ~GridProperties() noexcept;
 
   // Getters
-  Type_t                getType() const noexcept { return mType; }
+  Type_t getType() const noexcept { return mType; }
   const PositiveLength& getInterval() const noexcept { return mInterval; }
-  const LengthUnit&     getUnit() const noexcept { return mUnit; }
+  const LengthUnit& getUnit() const noexcept { return mUnit; }
 
   // Setters
   void setType(Type_t type) noexcept { mType = type; }
@@ -76,9 +78,9 @@ public:
   GridProperties& operator=(const GridProperties& rhs) noexcept;
 
 private:  // Data
-  Type_t         mType;
+  Type_t mType;
   PositiveLength mInterval;
-  LengthUnit     mUnit;
+  LengthUnit mUnit;
 };
 
 /*******************************************************************************
@@ -101,7 +103,8 @@ inline SExpression serializeToSExpression(const GridProperties::Type_t& obj) {
 
 template <>
 inline GridProperties::Type_t deserializeFromSExpression(
-    const SExpression& sexpr, bool throwIfEmpty) {
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   if (str == "off")
     return GridProperties::Type_t::Off;
@@ -111,7 +114,8 @@ inline GridProperties::Type_t deserializeFromSExpression(
     return GridProperties::Type_t::Dots;
   else
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(GridProperties::tr("Unknown grid type: \"%1\"")).arg(str));
 }
 

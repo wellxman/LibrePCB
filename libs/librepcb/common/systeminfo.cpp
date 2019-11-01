@@ -104,7 +104,7 @@ const QString& SystemInfo::getFullUsername() noexcept {
                         .remove('\n')
                         .remove('\r')
                         .trimmed();
-#elif defined(Q_OS_UNIX)                          // UNIX/Linux
+#elif defined(Q_OS_UNIX)  // UNIX/Linux
     passwd* userinfo = getpwuid(getuid());
     if (userinfo == NULL) {
       qWarning() << "Could not fetch user info via getpwuid!";
@@ -114,7 +114,7 @@ const QString& SystemInfo::getFullUsername() noexcept {
           gecosString.section(',', 0, 0).remove('\n').remove('\r').trimmed();
     }
 #elif defined(Q_OS_WIN32) || defined(Q_OS_WIN64)  // Windows
-    QString  command("net user %USERNAME%");
+    QString command("net user %USERNAME%");
     QProcess process;
     process.start("cmd", QStringList() << "/c" << command);
     process.waitForFinished(500);
@@ -159,17 +159,18 @@ bool SystemInfo::isProcessRunning(qint64 pid) {
 #if defined(Q_OS_UNIX)  // Mac OS X / Linux / UNIX
   // From:
   // http://code.qt.io/cgit/qt/qtbase.git/tree/src/corelib/io/qlockfile_unix.cpp
-  errno   = 0;
+  errno = 0;
   int ret = ::kill(pid, 0);
   if (ret == 0) {
     return true;
-  } else if ((ret == -1) &&
-             (errno == static_cast<int>(std::errc::no_such_process))) {
+  } else if (
+      (ret == -1) && (errno == static_cast<int>(std::errc::no_such_process))) {
     return false;
   } else {
     qDebug() << "errno:" << errno;
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("Could not determine if another process is running."));
   }
 #elif defined(Q_OS_WIN32) || defined(Q_OS_WIN64)  // Windows
@@ -187,7 +188,8 @@ bool SystemInfo::isProcessRunning(qint64 pid) {
     } else {
       qDebug() << "GetLastError():" << GetLastError();
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           tr("Could not determine if another process is running."));
     }
   } else if (GetLastError() == ERROR_INVALID_PARAMETER) {
@@ -195,7 +197,8 @@ bool SystemInfo::isProcessRunning(qint64 pid) {
   } else {
     qDebug() << "GetLastError():" << GetLastError();
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("Could not determine if another process is running."));
   }
 #else
@@ -208,17 +211,19 @@ QString SystemInfo::getProcessNameByPid(qint64 pid) {
 #if defined(Q_OS_OSX)  // Mac OS X
   // From:
   // http://code.qt.io/cgit/qt/qtbase.git/tree/src/corelib/io/qlockfile_unix.cpp
-  errno           = 0;
+  errno = 0;
   char name[1024] = {0};
-  int  retval     = proc_name(pid, name, sizeof(name) / sizeof(char));
+  int retval = proc_name(pid, name, sizeof(name) / sizeof(char));
   if (retval > 0) {
     processName = QFile::decodeName(name);
-  } else if ((retval == 0) &&
-             (errno == static_cast<int>(std::errc::no_such_process))) {
+  } else if (
+      (retval == 0) &&
+      (errno == static_cast<int>(std::errc::no_such_process))) {
     return QString();  // process not running
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("proc_name() failed with error %1.")).arg(errno));
   }
 #elif defined(Q_OS_FREEBSD)
@@ -236,8 +241,8 @@ QString SystemInfo::getProcessNameByPid(qint64 pid) {
   // From:
   // http://code.qt.io/cgit/qt/qtbase.git/tree/src/corelib/io/qlockfile_unix.cpp
   if (!FilePath("/proc/version").isExistingFile()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("Could not find the file \"/proc/version\"."));
+    throw RuntimeError(
+        __FILE__, __LINE__, tr("Could not find the file \"/proc/version\"."));
   }
   char exePath[64];
   char buf[PATH_MAX + 1];
@@ -266,21 +271,23 @@ QString SystemInfo::getProcessNameByPid(qint64 pid) {
     return QString();  // process not running
   } else if (!hProcess) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("OpenProcess() failed with error %1.")).arg(GetLastError()));
   }
   wchar_t buf[MAX_PATH];
-  DWORD   length  = MAX_PATH;
-  BOOL    success = QueryFullProcessImageNameW(hProcess, 0, buf, &length);
+  DWORD length = MAX_PATH;
+  BOOL success = QueryFullProcessImageNameW(hProcess, 0, buf, &length);
   CloseHandle(hProcess);
   if ((!success) || (!length)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("QueryFullProcessImageNameW() failed with error %1."))
             .arg(GetLastError()));
   }
   processName = QString::fromWCharArray(buf, length);
-  int i       = processName.lastIndexOf(QLatin1Char('\\'));
+  int i = processName.lastIndexOf(QLatin1Char('\\'));
   if (i >= 0) processName.remove(0, i + 1);
   i = processName.lastIndexOf(QLatin1Char('.'));
   if (i >= 0) processName.truncate(i);
@@ -291,7 +298,8 @@ QString SystemInfo::getProcessNameByPid(qint64 pid) {
   // check if the process name is not empty
   if (processName.isEmpty()) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("Could not determine the process name of another process."));
   }
 

@@ -107,8 +107,9 @@ void WorkspaceSettings::showSettingsDialog() noexcept {
  ******************************************************************************/
 
 template <typename T>
-void WorkspaceSettings::loadSettingsItem(QScopedPointer<T>& member,
-                                         SExpression&       root) {
+void WorkspaceSettings::loadSettingsItem(
+    QScopedPointer<T>& member,
+    SExpression& root) {
   member.reset(new T(root));  // can throw
   mItems.append(member.data());
 }

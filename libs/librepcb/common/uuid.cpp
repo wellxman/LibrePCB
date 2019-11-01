@@ -65,7 +65,8 @@ Uuid Uuid::fromString(const QString& str) {
     return Uuid(str);
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("String is not a valid UUID: \"%1\"")).arg(str));
   }
 }

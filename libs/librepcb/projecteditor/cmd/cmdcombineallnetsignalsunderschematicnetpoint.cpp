@@ -94,7 +94,7 @@ bool CmdCombineAllNetSignalsUnderSchematicNetPoint::performExecute() {
 
   // get all other netsignals of the items under the netpoint
   QList<NetSignal*> netSignalsUnderCursor;
-  QStringList       forcedNetNames;
+  QStringList forcedNetNames;
   foreach (SI_NetPoint* netpoint, netpointsUnderCursor) {
     if (!netSignalsUnderCursor.contains(&netpoint->getNetSignal())) {
       netSignalsUnderCursor.append(&netpoint->getNetSignal());
@@ -107,7 +107,7 @@ bool CmdCombineAllNetSignalsUnderSchematicNetPoint::performExecute() {
   }
   foreach (SI_SymbolPin* pin, pinsUnderCursor) {
     ComponentSignalInstance* cmpSig = pin->getComponentSignalInstance();
-    NetSignal*               signal = pin->getCompSigInstNetSignal();
+    NetSignal* signal = pin->getCompSigInstNetSignal();
     if ((signal) && (!netSignalsUnderCursor.contains(signal))) {
       netSignalsUnderCursor.append(signal);
     }
@@ -132,9 +132,11 @@ bool CmdCombineAllNetSignalsUnderSchematicNetPoint::performExecute() {
     nameOfResultingNetSignal = forcedNetNames.first();
   } else if (forcedNetNames.count() > 1) {
     // TODO: what should we do here?
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("There are multiple different nets with forced names "
-                          "at this position."));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        tr("There are multiple different nets with forced names "
+           "at this position."));
   }
 
   // determine resulting netsignal
@@ -153,9 +155,10 @@ bool CmdCombineAllNetSignalsUnderSchematicNetPoint::performExecute() {
   // combine all netsignals togehter
   foreach (NetSignal* netsignal, netSignalsUnderCursor) {
     if (netsignal != resultingNetSignal) {
-      execNewChildCmd(
-          new CmdCombineNetSignals(mCircuit, *netsignal,
-                                   *resultingNetSignal));  // can throw
+      execNewChildCmd(new CmdCombineNetSignals(
+          mCircuit,
+          *netsignal,
+          *resultingNetSignal));  // can throw
       mHasCombinedSomeItems = true;
     }
   }
@@ -195,8 +198,8 @@ bool CmdCombineAllNetSignalsUnderSchematicNetPoint::performExecute() {
         }
         mHasCombinedSomeItems = true;
       } else {
-        throw RuntimeError(__FILE__, __LINE__,
-                           tr("Sorry, not yet implemented..."));
+        throw RuntimeError(
+            __FILE__, __LINE__, tr("Sorry, not yet implemented..."));
       }
     }
   } else if (pinsUnderCursor.count() > 1) {

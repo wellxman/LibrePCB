@@ -89,21 +89,22 @@ static void setApplicationMetadata() noexcept {
 static void installTranslations() noexcept {
   // Install Qt translations
   QTranslator* qtTranslator = new QTranslator(qApp);
-  qtTranslator->load("qt_" % QLocale::system().name(),
-                     QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+  qtTranslator->load(
+      "qt_" % QLocale::system().name(),
+      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   qApp->installTranslator(qtTranslator);
 
   // Install system language translations (all system languages defined in the
   // system settings, in the defined order)
-  const QString dir              = qApp->getResourcesFilePath("i18n").toStr();
-  QTranslator*  systemTranslator = new QTranslator(qApp);
+  const QString dir = qApp->getResourcesFilePath("i18n").toStr();
+  QTranslator* systemTranslator = new QTranslator(qApp);
   systemTranslator->load(QLocale::system(), "librepcb", "_", dir);
   qApp->installTranslator(systemTranslator);
 
   // Install language translations (like "de" for German)
   QTranslator* appTranslator1 = new QTranslator(qApp);
-  appTranslator1->load("librepcb_" % QLocale::system().name().split("_").at(0),
-                       dir);
+  appTranslator1->load(
+      "librepcb_" % QLocale::system().name().split("_").at(0), dir);
   qApp->installTranslator(appTranslator1);
 
   // Install language/country translations (like "de_ch" for German/Switzerland)

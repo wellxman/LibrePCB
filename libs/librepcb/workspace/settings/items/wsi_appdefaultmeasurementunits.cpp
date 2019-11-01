@@ -42,7 +42,7 @@ WSI_AppDefaultMeasurementUnits::WSI_AppDefaultMeasurementUnits(
     mLengthUnitTmp(mLengthUnit) {
   if (const SExpression* child =
           node.tryGetChildByPath("default_length_unit")) {
-    mLengthUnit    = child->getValueOfFirstChild<LengthUnit>();
+    mLengthUnit = child->getValueOfFirstChild<LengthUnit>();
     mLengthUnitTmp = mLengthUnit;
   }
 
@@ -55,7 +55,8 @@ WSI_AppDefaultMeasurementUnits::WSI_AppDefaultMeasurementUnits(
   connect(
       mLengthUnitComboBox.data(),
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &WSI_AppDefaultMeasurementUnits::lengthUnitComboBoxIndexChanged);
+      this,
+      &WSI_AppDefaultMeasurementUnits::lengthUnitComboBoxIndexChanged);
 }
 
 WSI_AppDefaultMeasurementUnits::~WSI_AppDefaultMeasurementUnits() noexcept {

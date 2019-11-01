@@ -55,27 +55,28 @@ public:
   NewElementWizardPage_ComponentSignals(
       const NewElementWizardPage_ComponentSignals& other) = delete;
   explicit NewElementWizardPage_ComponentSignals(
-      NewElementWizardContext& context, QWidget* parent = 0) noexcept;
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_ComponentSignals() noexcept;
 
   // Getters
   bool validatePage() noexcept override;
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_ComponentSignals& operator       =(
+  NewElementWizardPage_ComponentSignals& operator=(
       const NewElementWizardPage_ComponentSignals& rhs) = delete;
 
 private:  // Methods
-  QHash<Uuid, CircuitIdentifier> getPinNames(const Uuid&    symbol,
-                                             const QString& suffix) const
-      noexcept;
+  QHash<Uuid, CircuitIdentifier> getPinNames(
+      const Uuid& symbol,
+      const QString& suffix) const noexcept;
   void initializePage() noexcept override;
   void cleanupPage() noexcept override;
 
 private:  // Data
-  NewElementWizardContext&                                  mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_ComponentSignals> mUi;
 };
 

@@ -56,18 +56,18 @@ namespace editor {
 PackageEditorFsm::PackageEditorFsm(const Context& context) noexcept
   : QObject(nullptr), mContext(context), mCurrentState(State::IDLE) {
   mStates.insert(State::SELECT, new PackageEditorState_Select(mContext));
-  mStates.insert(State::ADD_THT_PADS,
-                 new PackageEditorState_AddPadsTht(mContext));
-  mStates.insert(State::ADD_SMT_PADS,
-                 new PackageEditorState_AddPadsSmt(mContext));
+  mStates.insert(
+      State::ADD_THT_PADS, new PackageEditorState_AddPadsTht(mContext));
+  mStates.insert(
+      State::ADD_SMT_PADS, new PackageEditorState_AddPadsSmt(mContext));
   mStates.insert(State::ADD_NAMES, new PackageEditorState_AddNames(mContext));
   mStates.insert(State::ADD_VALUES, new PackageEditorState_AddValues(mContext));
   mStates.insert(State::DRAW_LINE, new PackageEditorState_DrawLine(mContext));
   mStates.insert(State::DRAW_RECT, new PackageEditorState_DrawRect(mContext));
-  mStates.insert(State::DRAW_POLYGON,
-                 new PackageEditorState_DrawPolygon(mContext));
-  mStates.insert(State::DRAW_CIRCLE,
-                 new PackageEditorState_DrawCircle(mContext));
+  mStates.insert(
+      State::DRAW_POLYGON, new PackageEditorState_DrawPolygon(mContext));
+  mStates.insert(
+      State::DRAW_CIRCLE, new PackageEditorState_DrawCircle(mContext));
   mStates.insert(State::DRAW_TEXT, new PackageEditorState_DrawText(mContext));
   mStates.insert(State::ADD_HOLES, new PackageEditorState_AddHoles(mContext));
   enterNextState(State::SELECT);

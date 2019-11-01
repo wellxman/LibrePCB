@@ -61,12 +61,13 @@ public:
   SortFilterProxyModel& operator=(const SortFilterProxyModel& rhs) noexcept;
 
 protected:
-  virtual bool lessThan(const QModelIndex& source_left,
-                        const QModelIndex& source_right) const override;
+  virtual bool lessThan(
+      const QModelIndex& source_left,
+      const QModelIndex& source_right) const override;
 
 private:
   QCollator mCollator;
-  bool      mKeepLastRowAtBottom;
+  bool mKeepLastRowAtBottom;
 };
 
 /*******************************************************************************

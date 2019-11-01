@@ -42,14 +42,20 @@ protected:
   ComponentSymbolVariantItem mObj2;
 
   ComponentSymbolVariantItemTest()
-    : mObj1(Uuid::fromString("c53e0493-d446-4c97-a302-95d62840c762"),
-            Uuid::fromString("d2f47222-2c1c-4097-8611-9559c3198fdf"),
-            Point(12, 34), Angle(42), true,
-            ComponentSymbolVariantItemSuffix("A")),
-      mObj2(Uuid::fromString("0e97ed2c-b7c8-40e5-aa9e-194cde326c3e"),
-            Uuid::fromString("a2b53202-e2a8-488e-9847-a742d093e4be"),
-            Point(56, 78), Angle(24), false,
-            ComponentSymbolVariantItemSuffix("B")) {}
+    : mObj1(
+          Uuid::fromString("c53e0493-d446-4c97-a302-95d62840c762"),
+          Uuid::fromString("d2f47222-2c1c-4097-8611-9559c3198fdf"),
+          Point(12, 34),
+          Angle(42),
+          true,
+          ComponentSymbolVariantItemSuffix("A")),
+      mObj2(
+          Uuid::fromString("0e97ed2c-b7c8-40e5-aa9e-194cde326c3e"),
+          Uuid::fromString("a2b53202-e2a8-488e-9847-a742d093e4be"),
+          Point(56, 78),
+          Angle(24),
+          false,
+          ComponentSymbolVariantItemSuffix("B")) {}
 };
 
 /*******************************************************************************
@@ -68,56 +74,84 @@ TEST_F(ComponentSymbolVariantItemTest, testOperatorAssignment) {
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqual) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj1.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj1.isRequired(), mObj1.getSuffix());
+      mObj1.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj1.getSuffix());
   EXPECT_TRUE(obj == mObj1);
   EXPECT_FALSE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentUuid) {
   ComponentSymbolVariantItem obj(
-      mObj2.getUuid(), mObj1.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj1.isRequired(), mObj1.getSuffix());
+      mObj2.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj1.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentSymbol) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj2.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj1.isRequired(), mObj1.getSuffix());
+      mObj1.getUuid(),
+      mObj2.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj1.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentPos) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj1.getSymbolUuid(), mObj2.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj1.isRequired(), mObj1.getSuffix());
+      mObj1.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj2.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj1.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentRot) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj1.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj2.getSymbolRotation(), mObj1.isRequired(), mObj1.getSuffix());
+      mObj1.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj2.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj1.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentRequired) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj1.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj2.isRequired(), mObj1.getSuffix());
+      mObj1.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj2.isRequired(),
+      mObj1.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }
 
 TEST_F(ComponentSymbolVariantItemTest, testOperatorEqualOnDifferentSuffix) {
   ComponentSymbolVariantItem obj(
-      mObj1.getUuid(), mObj1.getSymbolUuid(), mObj1.getSymbolPosition(),
-      mObj1.getSymbolRotation(), mObj1.isRequired(), mObj2.getSuffix());
+      mObj1.getUuid(),
+      mObj1.getSymbolUuid(),
+      mObj1.getSymbolPosition(),
+      mObj1.getSymbolRotation(),
+      mObj1.isRequired(),
+      mObj2.getSuffix());
   EXPECT_FALSE(obj == mObj1);
   EXPECT_TRUE(obj != mObj1);
 }

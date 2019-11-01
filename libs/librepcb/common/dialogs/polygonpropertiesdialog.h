@@ -54,11 +54,13 @@ class PolygonPropertiesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  PolygonPropertiesDialog()                                     = delete;
+  PolygonPropertiesDialog() = delete;
   PolygonPropertiesDialog(const PolygonPropertiesDialog& other) = delete;
-  PolygonPropertiesDialog(Polygon& polygon, UndoStack& undoStack,
-                          QList<GraphicsLayer*> layers,
-                          QWidget*              parent = nullptr) noexcept;
+  PolygonPropertiesDialog(
+      Polygon& polygon,
+      UndoStack& undoStack,
+      QList<GraphicsLayer*> layers,
+      QWidget* parent = nullptr) noexcept;
   ~PolygonPropertiesDialog() noexcept;
 
   // Operator Overloadings
@@ -73,8 +75,8 @@ private:  // Methods
   void selectLayerNameInCombobox(const QString& name) noexcept;
 
 private:  // Data
-  Polygon&                                    mPolygon;
-  UndoStack&                                  mUndoStack;
+  Polygon& mPolygon;
+  UndoStack& mUndoStack;
   QScopedPointer<Ui::PolygonPropertiesDialog> mUi;
 };
 

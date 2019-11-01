@@ -56,44 +56,47 @@ class BES_AddVia final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_AddVia(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                      GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit BES_AddVia(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_AddVia();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
-  bool       addVia(Board& board) noexcept;
-  bool       updateVia(Board& board, const Point& pos) noexcept;
-  bool       fixVia(const Point& pos) noexcept;
-  void       updateShapeActionsCheckedState() noexcept;
-  void       sizeEditValueChanged(const PositiveLength& value) noexcept;
+  bool addVia(Board& board) noexcept;
+  bool updateVia(Board& board, const Point& pos) noexcept;
+  bool fixVia(const Point& pos) noexcept;
+  void updateShapeActionsCheckedState() noexcept;
+  void sizeEditValueChanged(const PositiveLength& value) noexcept;
   void drillDiameterEditValueChanged(const PositiveLength& value) noexcept;
   void setNetSignal(NetSignal* netsignal) noexcept;
 
   // General Attributes
-  bool                            mUndoCmdActive;
-  BI_Via*                         mCurrentVia;
-  BI_Via::Shape                   mCurrentViaShape;
-  PositiveLength                  mCurrentViaSize;
-  PositiveLength                  mCurrentViaDrillDiameter;
-  NetSignal*                      mCurrentViaNetSignal;
+  bool mUndoCmdActive;
+  BI_Via* mCurrentVia;
+  BI_Via::Shape mCurrentViaShape;
+  PositiveLength mCurrentViaSize;
+  PositiveLength mCurrentViaDrillDiameter;
+  NetSignal* mCurrentViaNetSignal;
   QScopedPointer<CmdBoardViaEdit> mViaEditCmd;
 
   // Widgets for the command toolbar
   QHash<int, QAction*> mShapeActions;
-  QList<QAction*>      mActionSeparators;
-  QLabel*              mSizeLabel;
-  PositiveLengthEdit*  mSizeEdit;
-  QLabel*              mDrillLabel;
-  PositiveLengthEdit*  mDrillEdit;
-  QLabel*              mNetSignalLabel;
-  QComboBox*           mNetSignalComboBox;
+  QList<QAction*> mActionSeparators;
+  QLabel* mSizeLabel;
+  PositiveLengthEdit* mSizeEdit;
+  QLabel* mDrillLabel;
+  PositiveLengthEdit* mDrillEdit;
+  QLabel* mNetSignalLabel;
+  QComboBox* mNetSignalComboBox;
 };
 
 /*******************************************************************************

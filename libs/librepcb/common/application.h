@@ -59,7 +59,7 @@ class Application final : public QApplication {
 
 public:
   // Constructors / Destructor
-  Application()                         = delete;
+  Application() = delete;
   Application(const Application& other) = delete;
   Application(int& argc, char** argv) noexcept;
   ~Application() noexcept;
@@ -69,15 +69,15 @@ public:
   const QString& getAppVersionLabel() const noexcept {
     return mAppVersionLabel;
   }
-  const QString&   getGitRevision() const noexcept { return mGitRevision; }
+  const QString& getGitRevision() const noexcept { return mGitRevision; }
   const QDateTime& getBuildDate() const noexcept { return mBuildDate; }
-  const Version&   getFileFormatVersion() const noexcept {
+  const Version& getFileFormatVersion() const noexcept {
     return mFileFormatVersion;
   }
   bool isFileFormatStable() const noexcept { return mIsFileFormatStable; }
   const FilePath& getResourcesDir() const noexcept { return mResourcesDir; }
-  FilePath        getResourcesFilePath(const QString& filepath) const noexcept;
-  const QFont&    getDefaultSansSerifFont() const noexcept {
+  FilePath getResourcesFilePath(const QString& filepath) const noexcept;
+  const QFont& getDefaultSansSerifFont() const noexcept {
     return mSansSerifFont;
   }
   const QFont& getDefaultMonospaceFont() const noexcept {
@@ -102,15 +102,15 @@ public slots:
   static void about() noexcept;
 
 private:  // Data
-  Version   mAppVersion;
-  QString   mAppVersionLabel;
-  QString   mGitRevision;
+  Version mAppVersion;
+  QString mAppVersionLabel;
+  QString mGitRevision;
   QDateTime mBuildDate;
-  Version   mFileFormatVersion;
-  bool      mIsFileFormatStable;
-  FilePath  mResourcesDir;
+  Version mFileFormatVersion;
+  bool mIsFileFormatStable;
+  FilePath mResourcesDir;
   QScopedPointer<StrokeFontPool>
-        mStrokeFontPool;  ///< all application stroke fonts
+      mStrokeFontPool;  ///< all application stroke fonts
   QFont mSansSerifFont;
   QFont mMonospaceFont;
 };

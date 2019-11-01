@@ -34,7 +34,8 @@ namespace library {
 
 MsgMissingAuthor::MsgMissingAuthor() noexcept
   : LibraryElementCheckMessage(
-        Severity::Warning, tr("Author not set"),
+        Severity::Warning,
+        tr("Author not set"),
         tr("It is recommended to set an author (e.g. full name or nickname), "
            "although it's not required.")) {
 }

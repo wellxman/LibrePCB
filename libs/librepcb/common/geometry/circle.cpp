@@ -48,9 +48,14 @@ Circle::Circle(const Uuid& uuid, const Circle& other) noexcept : Circle(other) {
   mUuid = uuid;
 }
 
-Circle::Circle(const Uuid& uuid, const GraphicsLayerName& layerName,
-               const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
-               const Point& center, const PositiveLength& diameter) noexcept
+Circle::Circle(
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    const UnsignedLength& lineWidth,
+    bool fill,
+    bool isGrabArea,
+    const Point& center,
+    const PositiveLength& diameter) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mLayerName(layerName),

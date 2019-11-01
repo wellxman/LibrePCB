@@ -37,7 +37,7 @@ namespace tests {
  ******************************************************************************/
 
 typedef struct {
-  bool    valid;
+  bool valid;
   QString uuid;
 } UuidTestData;
 
@@ -169,7 +169,7 @@ TEST_P(UuidTest, testFromString) {
 
 TEST_P(UuidTest, testTryFromString) {
   const UuidTestData& data = GetParam();
-  tl::optional<Uuid>  uuid = Uuid::tryFromString(data.uuid);
+  tl::optional<Uuid> uuid = Uuid::tryFromString(data.uuid);
   if (data.valid) {
     EXPECT_TRUE(uuid);
     EXPECT_EQ(data.uuid, uuid->toStr());
@@ -191,18 +191,19 @@ TEST_P(UuidTest, testSerializeToSExpression) {
 }
 
 TEST_P(UuidTest, testDeserializeFromSExpression) {
-  const UuidTestData& data  = GetParam();
-  SExpression         sexpr = SExpression::createToken(data.uuid);
+  const UuidTestData& data = GetParam();
+  SExpression sexpr = SExpression::createToken(data.uuid);
   if (data.valid) {
-    EXPECT_EQ(data.uuid,
-              deserializeFromSExpression<Uuid>(sexpr, false).toStr());
+    EXPECT_EQ(
+        data.uuid, deserializeFromSExpression<Uuid>(sexpr, false).toStr());
     EXPECT_EQ(
         data.uuid,
         deserializeFromSExpression<tl::optional<Uuid>>(sexpr, false)->toStr());
   } else {
     EXPECT_THROW(deserializeFromSExpression<Uuid>(sexpr, false), Exception);
-    EXPECT_THROW(deserializeFromSExpression<tl::optional<Uuid>>(sexpr, false),
-                 Exception);
+    EXPECT_THROW(
+        deserializeFromSExpression<tl::optional<Uuid>>(sexpr, false),
+        Exception);
   }
 }
 
@@ -213,8 +214,9 @@ TEST(UuidTest, testSerializeOptionalToSExpression) {
 
 TEST(UuidTest, testDeserializeOptionalFromSExpression) {
   SExpression sexpr = SExpression::createToken("none");
-  EXPECT_EQ(tl::nullopt,
-            deserializeFromSExpression<tl::optional<Uuid>>(sexpr, false));
+  EXPECT_EQ(
+      tl::nullopt,
+      deserializeFromSExpression<tl::optional<Uuid>>(sexpr, false));
 }
 
 /*******************************************************************************

@@ -38,7 +38,8 @@ namespace project {
  ******************************************************************************/
 
 CmdNetSignalAdd::CmdNetSignalAdd(
-    Circuit& circuit, NetClass& netclass,
+    Circuit& circuit,
+    NetClass& netclass,
     const tl::optional<CircuitIdentifier>& name) noexcept
   : UndoCommand(tr("Add netsignal")),
     mCircuit(circuit),

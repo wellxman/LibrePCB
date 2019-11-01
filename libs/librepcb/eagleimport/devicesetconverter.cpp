@@ -39,8 +39,9 @@ namespace eagleimport {
  *  Constructors / Destructor
  ******************************************************************************/
 
-DeviceSetConverter::DeviceSetConverter(const parseagle::DeviceSet& deviceSet,
-                                       ConverterDb&                db) noexcept
+DeviceSetConverter::DeviceSetConverter(
+    const parseagle::DeviceSet& deviceSet,
+    ConverterDb& db) noexcept
   : mDeviceSet(deviceSet), mDb(db) {
 }
 
@@ -54,8 +55,11 @@ DeviceSetConverter::~DeviceSetConverter() noexcept {
 std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
   // create  component
   std::unique_ptr<library::Component> component(new library::Component(
-      mDb.getComponentUuid(mDeviceSet.getName()), Version::fromString("0.1"),
-      "LibrePCB", ElementName(mDeviceSet.getName()), createDescription(),
+      mDb.getComponentUuid(mDeviceSet.getName()),
+      Version::fromString("0.1"),
+      "LibrePCB",
+      ElementName(mDeviceSet.getName()),
+      createDescription(),
       ""));  // can throw
 
   // properties
@@ -65,8 +69,10 @@ std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
   // symbol variant
   std::shared_ptr<library::ComponentSymbolVariant> symbolVariant(
       new library::ComponentSymbolVariant(
-          mDb.getSymbolVariantUuid(component->getUuid()), "",
-          ElementName("default"), ""));  // can throw
+          mDb.getSymbolVariantUuid(component->getUuid()),
+          "",
+          ElementName("default"),
+          ""));  // can throw
   component->getSymbolVariants().append(symbolVariant);
 
   // signals
@@ -74,10 +80,10 @@ std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
     throw Exception(__FILE__, __LINE__, "Empty device set");
   }
   const parseagle::Device firstDevice = mDeviceSet.getDevices().first();
-  foreach (const parseagle::Connection& connection,
-           firstDevice.getConnections()) {
+  foreach (
+      const parseagle::Connection& connection, firstDevice.getConnections()) {
     QString gateName = connection.getGate();
-    QString pinName  = connection.getPin();
+    QString pinName = connection.getPin();
     if (pinName.contains("@")) pinName.truncate(pinName.indexOf("@"));
     if (pinName.contains("#")) pinName.truncate(pinName.indexOf("#"));
     Uuid signalUuid =
@@ -86,16 +92,21 @@ std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
     if (!component->getSignals().contains(signalUuid)) {
       // create signal
       component->getSignals().append(std::make_shared<library::ComponentSignal>(
-          signalUuid, signalName, SignalRole::passive(), QString(), false,
-          false, false));
+          signalUuid,
+          signalName,
+          SignalRole::passive(),
+          QString(),
+          false,
+          false,
+          false));
     }
   }
 
   // symbol variant items
   foreach (const parseagle::Gate& gate, mDeviceSet.getGates()) {
-    QString gateName   = gate.getName();
+    QString gateName = gate.getName();
     QString symbolName = gate.getSymbol();
-    Uuid    symbolUuid = mDb.getSymbolUuid(symbolName);
+    Uuid symbolUuid = mDb.getSymbolUuid(symbolName);
     library::ComponentSymbolVariantItemSuffix suffix(
         (gateName == "G$1") ? "" : gateName);  // can throw
 
@@ -103,11 +114,15 @@ std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
     std::shared_ptr<library::ComponentSymbolVariantItem> item(
         new library::ComponentSymbolVariantItem(
             mDb.getSymbolVariantItemUuid(component->getUuid(), gateName),
-            symbolUuid, Point(0, 0), Angle(0), true, suffix));
+            symbolUuid,
+            Point(0, 0),
+            Angle(0),
+            true,
+            suffix));
 
     // connect pins
-    foreach (const parseagle::Connection& connection,
-             firstDevice.getConnections()) {
+    foreach (
+        const parseagle::Connection& connection, firstDevice.getConnections()) {
       if (connection.getGate() == gateName) {
         QString pinName = connection.getPin();
         if (pinName.contains("@")) pinName.truncate(pinName.indexOf("@"));
@@ -115,8 +130,8 @@ std::unique_ptr<library::Component> DeviceSetConverter::generate() const {
         item->getPinSignalMap().append(
             std::make_shared<library::ComponentPinSignalMapItem>(
                 mDb.getSymbolPinUuid(symbolUuid, pinName),
-                mDb.getComponentSignalUuid(component->getUuid(), gateName,
-                                           pinName),
+                mDb.getComponentSignalUuid(
+                    component->getUuid(), gateName, pinName),
                 library::CmpSigPinDisplayType::componentSignal()));
       }
     }

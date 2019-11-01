@@ -364,8 +364,8 @@ public:
    *
    * @see Point#mirror()
    */
-  Point mirrored(Qt::Orientation orientation,
-                 const Point&    center = Point(0, 0)) const noexcept;
+  Point mirrored(Qt::Orientation orientation, const Point& center = Point(0, 0))
+      const noexcept;
 
   /**
    * @brief Mirror the point horizontally or vertically around a specific center
@@ -378,8 +378,9 @@ public:
    *
    * @see Point#mirrored()
    */
-  Point& mirror(Qt::Orientation orientation,
-                const Point&    center = Point(0, 0)) noexcept;
+  Point& mirror(
+      Qt::Orientation orientation,
+      const Point& center = Point(0, 0)) noexcept;
 
   /// @copydoc librepcb::SerializableObject::serialize()
   void serialize(SExpression& root) const override;
@@ -453,7 +454,7 @@ public:
   Point operator/(const Length& rhs) const { return Point(mX / rhs, mY / rhs); }
   Point operator/(LengthBase_t rhs) const { return Point(mX / rhs, mY / rhs); }
   Point operator%(const Length& rhs) const { return Point(mX % rhs, mY % rhs); }
-  bool  operator==(const Point& rhs) const {
+  bool operator==(const Point& rhs) const {
     return (mX == rhs.mX) && (mY == rhs.mY);
   }
   bool operator!=(const Point& rhs) const {
@@ -470,7 +471,7 @@ private:
  ******************************************************************************/
 
 QDataStream& operator<<(QDataStream& stream, const Point& point);
-QDebug       operator<<(QDebug stream, const Point& point);
+QDebug operator<<(QDebug stream, const Point& point);
 
 inline uint qHash(const Point& key, uint seed = 0) noexcept {
   return ::qHash(qMakePair(key.getX(), key.getY()), seed);

@@ -98,9 +98,9 @@ bool SymbolEditorState_Select::processGraphicsSceneLeftMouseButtonPressed(
       mStartPos = Point::fromPx(e.scenePos());
       // get items under cursor
       QList<QSharedPointer<SymbolPinGraphicsItem>> pins;
-      QList<QSharedPointer<CircleGraphicsItem>>    circles;
-      QList<QSharedPointer<PolygonGraphicsItem>>   polygons;
-      QList<QSharedPointer<TextGraphicsItem>>      texts;
+      QList<QSharedPointer<CircleGraphicsItem>> circles;
+      QList<QSharedPointer<PolygonGraphicsItem>> polygons;
+      QList<QSharedPointer<TextGraphicsItem>> texts;
       int count = mContext.symbolGraphicsItem.getItemsAtPosition(
           mStartPos, &pins, &circles, &polygons, &texts);
       if (count == 0) {
@@ -181,8 +181,8 @@ bool SymbolEditorState_Select::processGraphicsSceneLeftMouseButtonReleased(
         try {
           mContext.undoStack.execCmd(mCmdDragSelectedItems.take());
         } catch (const Exception& e) {
-          QMessageBox::critical(&mContext.editorWidget, tr("Error"),
-                                e.getMsg());
+          QMessageBox::critical(
+              &mContext.editorWidget, tr("Error"), e.getMsg());
         }
       }
       mState = SubState::IDLE;
@@ -320,7 +320,7 @@ bool SymbolEditorState_Select::processAbortCommand() noexcept {
 
 bool SymbolEditorState_Select::openContextMenuAtPos(const Point& pos) noexcept {
   // build the context menu
-  QMenu    menu;
+  QMenu menu;
   QAction* aRotateCCW =
       menu.addAction(QIcon(":/img/actions/rotate_left.png"), tr("Rotate"));
   QAction* aRemove =
@@ -344,18 +344,18 @@ bool SymbolEditorState_Select::openContextMenuAtPos(const Point& pos) noexcept {
 bool SymbolEditorState_Select::openPropertiesDialogOfItemAtPos(
     const Point& pos) noexcept {
   QList<QSharedPointer<SymbolPinGraphicsItem>> pins;
-  QList<QSharedPointer<CircleGraphicsItem>>    circles;
-  QList<QSharedPointer<PolygonGraphicsItem>>   polygons;
-  QList<QSharedPointer<TextGraphicsItem>>      texts;
-  mContext.symbolGraphicsItem.getItemsAtPosition(pos, &pins, &circles,
-                                                 &polygons, &texts);
+  QList<QSharedPointer<CircleGraphicsItem>> circles;
+  QList<QSharedPointer<PolygonGraphicsItem>> polygons;
+  QList<QSharedPointer<TextGraphicsItem>> texts;
+  mContext.symbolGraphicsItem.getItemsAtPosition(
+      pos, &pins, &circles, &polygons, &texts);
 
   if (pins.count() > 0) {
     SymbolPinGraphicsItem* item =
         dynamic_cast<SymbolPinGraphicsItem*>(pins.first().data());
     Q_ASSERT(item);
-    SymbolPinPropertiesDialog dialog(item->getPin(), mContext.undoStack,
-                                     &mContext.editorWidget);
+    SymbolPinPropertiesDialog dialog(
+        item->getPin(), mContext.undoStack, &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (texts.count() > 0) {
@@ -363,7 +363,8 @@ bool SymbolEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<TextGraphicsItem*>(texts.first().data());
     Q_ASSERT(item);
     TextPropertiesDialog dialog(
-        item->getText(), mContext.undoStack,
+        item->getText(),
+        mContext.undoStack,
         mContext.layerProvider.getSchematicGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -373,7 +374,8 @@ bool SymbolEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<PolygonGraphicsItem*>(polygons.first().data());
     Q_ASSERT(item);
     PolygonPropertiesDialog dialog(
-        item->getPolygon(), mContext.undoStack,
+        item->getPolygon(),
+        mContext.undoStack,
         mContext.layerProvider.getSchematicGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -383,7 +385,8 @@ bool SymbolEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<CircleGraphicsItem*>(circles.first().data());
     Q_ASSERT(item);
     CirclePropertiesDialog dialog(
-        item->getCircle(), mContext.undoStack,
+        item->getCircle(),
+        mContext.undoStack,
         mContext.layerProvider.getSchematicGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -398,24 +401,28 @@ bool SymbolEditorState_Select::copySelectedItemsToClipboard() noexcept {
     Point cursorPos = mContext.graphicsView.mapGlobalPosToScenePos(
         QCursor::pos(), true, false);
     SymbolClipboardData data(mContext.symbol.getUuid(), cursorPos);
-    foreach (const QSharedPointer<SymbolPinGraphicsItem>& pin,
-             mContext.symbolGraphicsItem.getSelectedPins()) {
+    foreach (
+        const QSharedPointer<SymbolPinGraphicsItem>& pin,
+        mContext.symbolGraphicsItem.getSelectedPins()) {
       Q_ASSERT(pin);
       data.getPins().append(std::make_shared<SymbolPin>(pin->getPin()));
     }
-    foreach (const QSharedPointer<CircleGraphicsItem>& circle,
-             mContext.symbolGraphicsItem.getSelectedCircles()) {
+    foreach (
+        const QSharedPointer<CircleGraphicsItem>& circle,
+        mContext.symbolGraphicsItem.getSelectedCircles()) {
       Q_ASSERT(circle);
       data.getCircles().append(std::make_shared<Circle>(circle->getCircle()));
     }
-    foreach (const QSharedPointer<PolygonGraphicsItem>& polygon,
-             mContext.symbolGraphicsItem.getSelectedPolygons()) {
+    foreach (
+        const QSharedPointer<PolygonGraphicsItem>& polygon,
+        mContext.symbolGraphicsItem.getSelectedPolygons()) {
       Q_ASSERT(polygon);
       data.getPolygons().append(
           std::make_shared<Polygon>(polygon->getPolygon()));
     }
-    foreach (const QSharedPointer<TextGraphicsItem>& text,
-             mContext.symbolGraphicsItem.getSelectedTexts()) {
+    foreach (
+        const QSharedPointer<TextGraphicsItem>& text,
+        mContext.symbolGraphicsItem.getSelectedTexts()) {
       Q_ASSERT(text);
       data.getTexts().append(std::make_shared<Text>(text->getText()));
     }
@@ -432,8 +439,8 @@ bool SymbolEditorState_Select::copySelectedItemsToClipboard() noexcept {
 bool SymbolEditorState_Select::pasteFromClipboard() noexcept {
   try {
     // update cursor position
-    mStartPos = mContext.graphicsView.mapGlobalPosToScenePos(QCursor::pos(),
-                                                             true, false);
+    mStartPos = mContext.graphicsView.mapGlobalPosToScenePos(
+        QCursor::pos(), true, false);
 
     // get symbol items and abort if there are no items
     std::unique_ptr<SymbolClipboardData> data =
@@ -490,8 +497,9 @@ bool SymbolEditorState_Select::removeSelectedItems() noexcept {
   return true;  // TODO: return false if no items were selected
 }
 
-void SymbolEditorState_Select::setSelectionRect(const Point& p1,
-                                                const Point& p2) noexcept {
+void SymbolEditorState_Select::setSelectionRect(
+    const Point& p1,
+    const Point& p2) noexcept {
   mContext.graphicsScene.setSelectionRect(p1, p2);
   mContext.symbolGraphicsItem.setSelectionRect(
       QRectF(p1.toPxQPointF(), p2.toPxQPointF()));

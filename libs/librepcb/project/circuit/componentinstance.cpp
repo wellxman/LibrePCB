@@ -59,11 +59,12 @@ ComponentInstance::ComponentInstance(Circuit& circuit, const SExpression& node)
     mCompSymbVar(nullptr),
     mAttributes() {
   // read general attributes
-  Uuid cmpUuid  = node.getValueByPath<Uuid>("lib_component");
+  Uuid cmpUuid = node.getValueByPath<Uuid>("lib_component");
   mLibComponent = mCircuit.getProject().getLibrary().getComponent(cmpUuid);
   if (!mLibComponent) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The component with the UUID \"%1\" does not exist in the "
                    "project's library!"))
             .arg(cmpUuid.toStr()));
@@ -76,13 +77,15 @@ ComponentInstance::ComponentInstance(Circuit& circuit, const SExpression& node)
   mAttributes.reset(new AttributeList(node));  // can throw
 
   // load all signal instances
-  foreach (const SExpression& node,
-           node.getChildren("sig") + node.getChildren("signal")) {
+  foreach (
+      const SExpression& node,
+      node.getChildren("sig") + node.getChildren("signal")) {
     ComponentSignalInstance* signal =
         new ComponentSignalInstance(mCircuit, *this, node);
     if (mSignals.contains(signal->getCompSignal().getUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(
               tr("The signal with the UUID \"%1\" is defined multiple times."))
               .arg(signal->getCompSignal().getUuid().toStr()));
@@ -92,7 +95,8 @@ ComponentInstance::ComponentInstance(Circuit& circuit, const SExpression& node)
   if (mSignals.count() != mLibComponent->getSignals().count()) {
     qDebug() << mSignals.count() << "!=" << mLibComponent->getSignals().count();
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The signal count of the component instance \"%1\" does "
                    "not match with the signal count of the component \"%2\"."))
             .arg(mUuid.toStr())
@@ -102,11 +106,12 @@ ComponentInstance::ComponentInstance(Circuit& circuit, const SExpression& node)
   init();
 }
 
-ComponentInstance::ComponentInstance(Circuit&                  circuit,
-                                     const library::Component& cmp,
-                                     const Uuid&               symbVar,
-                                     const CircuitIdentifier&  name,
-                                     const tl::optional<Uuid>& defaultDevice)
+ComponentInstance::ComponentInstance(
+    Circuit& circuit,
+    const library::Component& cmp,
+    const Uuid& symbVar,
+    const CircuitIdentifier& name,
+    const tl::optional<Uuid>& defaultDevice)
   : QObject(&circuit),
     mCircuit(circuit),
     mIsAddedToCircuit(false),
@@ -136,16 +141,25 @@ ComponentInstance::ComponentInstance(Circuit&                  circuit,
 void ComponentInstance::init() {
   // create ERC messages
   mErcMsgUnplacedRequiredSymbols.reset(new ErcMsg(
-      mCircuit.getProject(), *this, mUuid.toStr(), "UnplacedRequiredSymbols",
+      mCircuit.getProject(),
+      *this,
+      mUuid.toStr(),
+      "UnplacedRequiredSymbols",
       ErcMsg::ErcMsgType_t::SchematicError));
   mErcMsgUnplacedOptionalSymbols.reset(new ErcMsg(
-      mCircuit.getProject(), *this, mUuid.toStr(), "UnplacedOptionalSymbols",
+      mCircuit.getProject(),
+      *this,
+      mUuid.toStr(),
+      "UnplacedOptionalSymbols",
       ErcMsg::ErcMsgType_t::SchematicWarning));
   updateErcMessages();
 
   // emit the "attributesChanged" signal when the project has emited it
-  connect(&mCircuit.getProject(), &Project::attributesChanged, this,
-          &ComponentInstance::attributesChanged);
+  connect(
+      &mCircuit.getProject(),
+      &Project::attributesChanged,
+      this,
+      &ComponentInstance::attributesChanged);
 
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
 }
@@ -274,10 +288,12 @@ void ComponentInstance::removeFromCircuit() {
     throw LogicError(__FILE__, __LINE__);
   }
   if (isUsed()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The component \"%1\" cannot be removed "
-                                  "because it is still in use!"))
-                           .arg(*mName));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The component \"%1\" cannot be removed "
+                   "because it is still in use!"))
+            .arg(*mName));
   }
   ScopeGuardList sgl(mSignals.count());
   foreach (ComponentSignalInstance* signal, mSignals) {
@@ -295,13 +311,16 @@ void ComponentInstance::registerSymbol(SI_Symbol& symbol) {
   }
   Uuid itemUuid = symbol.getCompSymbVarItem().getUuid();
   if (!mCompSymbVar->getSymbolItems().find(itemUuid)) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Invalid symbol item in circuit: \"%1\"."))
-                           .arg(itemUuid.toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Invalid symbol item in circuit: \"%1\"."))
+            .arg(itemUuid.toStr()));
   }
   if (mRegisteredSymbols.contains(itemUuid)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Symbol item UUID already exists in circuit: \"%1\"."))
             .arg(itemUuid.toStr()));
   }
@@ -313,9 +332,11 @@ void ComponentInstance::registerSymbol(SI_Symbol& symbol) {
       // possible due to the concept of hierarchical sheets, sub-circuits or
       // something like that. To make the later project upgrade process (as
       // simple as) possible, we introduce this restriction already from now on.
-      throw RuntimeError(__FILE__, __LINE__,
-                         tr("All symbols of a component must be placed in the "
-                            "same schematic."));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          tr("All symbols of a component must be placed in the "
+             "same schematic."));
     }
   }
   mRegisteredSymbols.insert(itemUuid, &symbol);
@@ -392,7 +413,7 @@ QString ComponentInstance::getBuiltInAttributeValue(const QString& key) const
 }
 
 QVector<const AttributeProvider*>
-ComponentInstance::getAttributeProviderParents() const noexcept {
+    ComponentInstance::getAttributeProviderParents() const noexcept {
   // TODO: add support for multiple boards!
   const BI_Device* dev =
       (mRegisteredDevices.count() == 1) ? mRegisteredDevices.first() : nullptr;
@@ -420,10 +441,10 @@ void ComponentInstance::updateErcMessages() noexcept {
       QString(tr("Unplaced optional symbols of component \"%1\": %2"))
           .arg(*mName)
           .arg(optional));
-  mErcMsgUnplacedRequiredSymbols->setVisible((mIsAddedToCircuit) &&
-                                             (required > 0));
-  mErcMsgUnplacedOptionalSymbols->setVisible((mIsAddedToCircuit) &&
-                                             (optional > 0));
+  mErcMsgUnplacedRequiredSymbols->setVisible(
+      (mIsAddedToCircuit) && (required > 0));
+  mErcMsgUnplacedOptionalSymbols->setVisible(
+      (mIsAddedToCircuit) && (optional > 0));
 }
 
 const QStringList& ComponentInstance::getLocaleOrder() const noexcept {

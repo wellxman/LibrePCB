@@ -45,16 +45,16 @@ using namespace librepcb::application;
  *  Function Prototypes
  ******************************************************************************/
 
-static void     setApplicationMetadata() noexcept;
-static void     configureApplicationSettings() noexcept;
-static void     writeLogHeader() noexcept;
-static void     installTranslations() noexcept;
-static void     init3rdPartyLibs() noexcept;
-static void     cleanup3rdPartyLibs() noexcept;
-static bool     isFileFormatStableOrAcceptUnstable() noexcept;
+static void setApplicationMetadata() noexcept;
+static void configureApplicationSettings() noexcept;
+static void writeLogHeader() noexcept;
+static void installTranslations() noexcept;
+static void init3rdPartyLibs() noexcept;
+static void cleanup3rdPartyLibs() noexcept;
+static bool isFileFormatStableOrAcceptUnstable() noexcept;
 static FilePath determineWorkspacePath() noexcept;
-static int      openWorkspace(const FilePath& path) noexcept;
-static int      appExec() noexcept;
+static int openWorkspace(const FilePath& path) noexcept;
+static int appExec() noexcept;
 
 /*******************************************************************************
  *  main()
@@ -155,8 +155,8 @@ static void configureApplicationSettings() noexcept {
   // "LIBREPCB_CONFIG_DIR" (useful for functional testing)
   QString customConfigDir = qgetenv("LIBREPCB_CONFIG_DIR");
   if (!customConfigDir.isEmpty()) {
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
-                       customConfigDir);
+    QSettings::setPath(
+        QSettings::IniFormat, QSettings::UserScope, customConfigDir);
   }
 }
 
@@ -189,21 +189,22 @@ static void writeLogHeader() noexcept {
 static void installTranslations() noexcept {
   // Install Qt translations
   QTranslator* qtTranslator = new QTranslator(qApp);
-  qtTranslator->load("qt_" % QLocale::system().name(),
-                     QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+  qtTranslator->load(
+      "qt_" % QLocale::system().name(),
+      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   qApp->installTranslator(qtTranslator);
 
   // Install system language translations (all system languages defined in the
   // system settings, in the defined order)
-  const QString dir              = qApp->getResourcesFilePath("i18n").toStr();
-  QTranslator*  systemTranslator = new QTranslator(qApp);
+  const QString dir = qApp->getResourcesFilePath("i18n").toStr();
+  QTranslator* systemTranslator = new QTranslator(qApp);
   systemTranslator->load(QLocale::system(), "librepcb", "_", dir);
   qApp->installTranslator(systemTranslator);
 
   // Install language translations (like "de" for German)
   QTranslator* appTranslator1 = new QTranslator(qApp);
-  appTranslator1->load("librepcb_" % QLocale::system().name().split("_").at(0),
-                       dir);
+  appTranslator1->load(
+      "librepcb_" % QLocale::system().name().split("_").at(0), dir);
   qApp->installTranslator(appTranslator1);
 
   // Install language/country translations (like "de_ch" for German/Switzerland)
@@ -236,7 +237,8 @@ static bool isFileFormatStableOrAcceptUnstable() noexcept {
     return true;
   } else {
     QMessageBox::StandardButton btn = QMessageBox::critical(
-        nullptr, QCoreApplication::translate("main", "Unstable file format!"),
+        nullptr,
+        QCoreApplication::translate("main", "Unstable file format!"),
         QCoreApplication::translate(
             "main",
             "<p><b>ATTENTION: This application version is UNSTABLE!</b></p>"
@@ -247,7 +249,8 @@ static bool isFileFormatStableOrAcceptUnstable() noexcept {
             "stable release instead.</p>"
             "<p>Are you really sure to continue with the risk of breaking your "
             "files?!</p>"),
-        QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+        QMessageBox::Yes | QMessageBox::Cancel,
+        QMessageBox::Cancel);
     return (btn == QMessageBox::Yes);
   }
 }
@@ -272,8 +275,8 @@ static FilePath determineWorkspacePath() noexcept {
           ws.getSettings().getUser().setName(wizard.getNewWorkspaceUserName());
           ws.getSettings().applyAll();  // can throw
         } catch (const Exception& e) {
-          QMessageBox::critical(0, Application::translate("Workspace", "Error"),
-                                e.getMsg());
+          QMessageBox::critical(
+              0, Application::translate("Workspace", "Error"), e.getMsg());
           return FilePath();  // TODO: Show the wizard again instead of closing
                               // the application
         }
@@ -292,7 +295,7 @@ static FilePath determineWorkspacePath() noexcept {
 
 static int openWorkspace(const FilePath& path) noexcept {
   try {
-    Workspace    ws(path);  // The Workspace constructor can throw an exception
+    Workspace ws(path);  // The Workspace constructor can throw an exception
     ControlPanel p(ws);
     p.show();
 
@@ -301,7 +304,8 @@ static int openWorkspace(const FilePath& path) noexcept {
     return 0;
   } catch (Exception& e) {
     QMessageBox::critical(
-        0, Application::translate("Workspace", "Cannot open the workspace"),
+        0,
+        Application::translate("Workspace", "Cannot open the workspace"),
         QString(Application::translate(
                     "Workspace", "The workspace \"%1\" cannot be opened: %2"))
             .arg(path.toNative(), e.getMsg()));

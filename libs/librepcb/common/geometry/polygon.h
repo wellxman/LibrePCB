@@ -59,26 +59,30 @@ public:
     IsGrabAreaChanged,
     PathChanged,
   };
-  Signal<Polygon, Event>       onEdited;
+  Signal<Polygon, Event> onEdited;
   typedef Slot<Polygon, Event> OnEditedSlot;
 
   // Constructors / Destructor
   Polygon() = delete;
   Polygon(const Polygon& other) noexcept;
   Polygon(const Uuid& uuid, const Polygon& other) noexcept;
-  Polygon(const Uuid& uuid, const GraphicsLayerName& layerName,
-          const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
-          const Path& path) noexcept;
+  Polygon(
+      const Uuid& uuid,
+      const GraphicsLayerName& layerName,
+      const UnsignedLength& lineWidth,
+      bool fill,
+      bool isGrabArea,
+      const Path& path) noexcept;
   explicit Polygon(const SExpression& node);
   ~Polygon() noexcept;
 
   // Getters
-  const Uuid&              getUuid() const noexcept { return mUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
   const GraphicsLayerName& getLayerName() const noexcept { return mLayerName; }
-  const UnsignedLength&    getLineWidth() const noexcept { return mLineWidth; }
-  bool                     isFilled() const noexcept { return mIsFilled; }
-  bool                     isGrabArea() const noexcept { return mIsGrabArea; }
-  const Path&              getPath() const noexcept { return mPath; }
+  const UnsignedLength& getLineWidth() const noexcept { return mLineWidth; }
+  bool isFilled() const noexcept { return mIsFilled; }
+  bool isGrabArea() const noexcept { return mIsGrabArea; }
+  const Path& getPath() const noexcept { return mPath; }
 
   // Setters
   bool setLayerName(const GraphicsLayerName& name) noexcept;
@@ -96,12 +100,12 @@ public:
   Polygon& operator=(const Polygon& rhs) noexcept;
 
 private:  // Data
-  Uuid              mUuid;
+  Uuid mUuid;
   GraphicsLayerName mLayerName;
-  UnsignedLength    mLineWidth;
-  bool              mIsFilled;
-  bool              mIsGrabArea;
-  Path              mPath;
+  UnsignedLength mLineWidth;
+  bool mIsFilled;
+  bool mIsGrabArea;
+  Path mPath;
 };
 
 /*******************************************************************************

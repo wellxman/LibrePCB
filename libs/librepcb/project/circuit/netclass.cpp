@@ -90,10 +90,12 @@ void NetClass::removeFromCircuit() {
     throw LogicError(__FILE__, __LINE__);
   }
   if (isUsed()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The net class \"%1\" cannot be removed "
-                                  "because it is still in use!"))
-                           .arg(*mName));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The net class \"%1\" cannot be removed "
+                   "because it is still in use!"))
+            .arg(*mName));
   }
   mIsAddedToCircuit = false;
   updateErcMessages();
@@ -130,9 +132,12 @@ void NetClass::serialize(SExpression& root) const {
 void NetClass::updateErcMessages() noexcept {
   if (mIsAddedToCircuit && (!isUsed())) {
     if (!mErcMsgUnusedNetClass) {
-      mErcMsgUnusedNetClass.reset(
-          new ErcMsg(mCircuit.getProject(), *this, mUuid.toStr(), "Unused",
-                     ErcMsg::ErcMsgType_t::CircuitWarning));
+      mErcMsgUnusedNetClass.reset(new ErcMsg(
+          mCircuit.getProject(),
+          *this,
+          mUuid.toStr(),
+          "Unused",
+          ErcMsg::ErcMsgType_t::CircuitWarning));
     }
     mErcMsgUnusedNetClass->setMsg(
         QString(tr("Unused net class: \"%1\"")).arg(*mName));

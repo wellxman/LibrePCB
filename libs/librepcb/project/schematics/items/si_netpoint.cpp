@@ -60,12 +60,15 @@ void SI_NetPoint::init() {
   mGraphicsItem->setPos(mPosition.toPxQPointF());
 
   // create ERC messages
-  mErcMsgDeadNetPoint.reset(
-      new ErcMsg(mSchematic.getProject(), *this, mUuid.toStr(), "Dead",
-                 ErcMsg::ErcMsgType_t::SchematicError,
-                 QString(tr("Dead net point in schematic page \"%1\": %2"))
-                     .arg(*mSchematic.getName())
-                     .arg(mUuid.toStr())));
+  mErcMsgDeadNetPoint.reset(new ErcMsg(
+      mSchematic.getProject(),
+      *this,
+      mUuid.toStr(),
+      "Dead",
+      ErcMsg::ErcMsgType_t::SchematicError,
+      QString(tr("Dead net point in schematic page \"%1\": %2"))
+          .arg(*mSchematic.getName())
+          .arg(mUuid.toStr())));
 }
 
 SI_NetPoint::~SI_NetPoint() noexcept {
@@ -108,9 +111,10 @@ void SI_NetPoint::addToSchematic() {
   if (isAddedToSchematic() || isUsed()) {
     throw LogicError(__FILE__, __LINE__);
   }
-  mHighlightChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+  mHighlightChangedConnection = connect(
+      &getNetSignalOfNetSegment(), &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   mErcMsgDeadNetPoint->setVisible(true);
   SI_Base::addToSchematic(mGraphicsItem.data());
 }

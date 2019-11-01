@@ -61,31 +61,34 @@ public:
   ~Path() noexcept {}
 
   // Getters
-  bool             isClosed() const noexcept;
+  bool isClosed() const noexcept;
   QVector<Vertex>& getVertices() noexcept {
     invalidatePainterPath();
     return mVertices;
   }
   const QVector<Vertex>& getVertices() const noexcept { return mVertices; }
-  const QPainterPath&    toQPainterPathPx(bool close = false) const noexcept;
+  const QPainterPath& toQPainterPathPx(bool close = false) const noexcept;
 
   // Transformations
   Path& translate(const Point& offset) noexcept;
-  Path  translated(const Point& offset) const noexcept;
+  Path translated(const Point& offset) const noexcept;
   Path& rotate(const Angle& angle, const Point& center = Point(0, 0)) noexcept;
-  Path  rotated(const Angle& angle, const Point& center = Point(0, 0)) const
+  Path rotated(const Angle& angle, const Point& center = Point(0, 0)) const
       noexcept;
-  Path& mirror(Qt::Orientation orientation,
-               const Point&    center = Point(0, 0)) noexcept;
-  Path  mirrored(Qt::Orientation orientation,
-                 const Point&    center = Point(0, 0)) const noexcept;
+  Path& mirror(
+      Qt::Orientation orientation,
+      const Point& center = Point(0, 0)) noexcept;
+  Path mirrored(Qt::Orientation orientation, const Point& center = Point(0, 0))
+      const noexcept;
 
   // General Methods
   void addVertex(const Vertex& vertex) noexcept;
   void addVertex(const Point& pos, const Angle& angle = Angle::deg0()) noexcept;
   void insertVertex(int index, const Vertex& vertex) noexcept;
-  void insertVertex(int index, const Point& pos,
-                    const Angle& angle = Angle::deg0()) noexcept;
+  void insertVertex(
+      int index,
+      const Point& pos,
+      const Angle& angle = Angle::deg0()) noexcept;
   bool close() noexcept;
 
   /// @copydoc librepcb::SerializableObject::serialize()
@@ -95,24 +98,34 @@ public:
   bool operator==(const Path& rhs) const noexcept {
     return mVertices == rhs.mVertices;
   }
-  bool  operator!=(const Path& rhs) const noexcept { return !(*this == rhs); }
+  bool operator!=(const Path& rhs) const noexcept { return !(*this == rhs); }
   Path& operator=(const Path& rhs) noexcept;
 
   // Static Methods
-  static Path line(const Point& p1, const Point& p2,
-                   const Angle& angle = Angle::deg0()) noexcept;
+  static Path line(
+      const Point& p1,
+      const Point& p2,
+      const Angle& angle = Angle::deg0()) noexcept;
   static Path circle(const PositiveLength& diameter) noexcept;
-  static Path obround(const PositiveLength& width,
-                      const PositiveLength& height) noexcept;
-  static Path obround(const Point& p1, const Point& p2,
-                      const PositiveLength& width) noexcept;
+  static Path obround(
+      const PositiveLength& width,
+      const PositiveLength& height) noexcept;
+  static Path obround(
+      const Point& p1,
+      const Point& p2,
+      const PositiveLength& width) noexcept;
   static Path rect(const Point& p1, const Point& p2) noexcept;
-  static Path centeredRect(const PositiveLength& width,
-                           const PositiveLength& height) noexcept;
-  static Path octagon(const PositiveLength& width,
-                      const PositiveLength& height) noexcept;
-  static Path flatArc(const Point& p1, const Point& p2, const Angle& angle,
-                      const PositiveLength& maxTolerance) noexcept;
+  static Path centeredRect(
+      const PositiveLength& width,
+      const PositiveLength& height) noexcept;
+  static Path octagon(
+      const PositiveLength& width,
+      const PositiveLength& height) noexcept;
+  static Path flatArc(
+      const Point& p1,
+      const Point& p2,
+      const Angle& angle,
+      const PositiveLength& maxTolerance) noexcept;
   static QPainterPath toQPainterPathPx(const QVector<Path>& paths) noexcept;
 
 private:  // Methods
@@ -121,7 +134,7 @@ private:  // Methods
   }
 
 private:  // Data
-  QVector<Vertex>      mVertices;
+  QVector<Vertex> mVertices;
   mutable QPainterPath mPainterPathPx;  // cached path for #toQPainterPathPx()
 };
 

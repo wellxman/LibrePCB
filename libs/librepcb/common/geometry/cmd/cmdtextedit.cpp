@@ -60,8 +60,9 @@ CmdTextEdit::~CmdTextEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdTextEdit::setLayerName(const GraphicsLayerName& name,
-                               bool                     immediate) noexcept {
+void CmdTextEdit::setLayerName(
+    const GraphicsLayerName& name,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLayerName = name;
   if (immediate) mText.setLayerName(mNewLayerName);
@@ -73,15 +74,17 @@ void CmdTextEdit::setText(const QString& text, bool immediate) noexcept {
   if (immediate) mText.setText(mNewText);
 }
 
-void CmdTextEdit::setHeight(const PositiveLength& height,
-                            bool                  immediate) noexcept {
+void CmdTextEdit::setHeight(
+    const PositiveLength& height,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewHeight = height;
   if (immediate) mText.setHeight(mNewHeight);
 }
 
-void CmdTextEdit::setAlignment(const Alignment& align,
-                               bool             immediate) noexcept {
+void CmdTextEdit::setAlignment(
+    const Alignment& align,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewAlign = align;
   if (immediate) mText.setAlign(mNewAlign);
@@ -105,8 +108,10 @@ void CmdTextEdit::setRotation(const Angle& angle, bool immediate) noexcept {
   if (immediate) mText.setRotation(mNewRotation);
 }
 
-void CmdTextEdit::rotate(const Angle& angle, const Point& center,
-                         bool immediate) noexcept {
+void CmdTextEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPosition.rotate(angle, center);
   mNewRotation += angle;

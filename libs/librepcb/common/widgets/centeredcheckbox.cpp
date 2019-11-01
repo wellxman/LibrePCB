@@ -38,8 +38,9 @@ CenteredCheckBox::CenteredCheckBox(QWidget* parent) noexcept
   : CenteredCheckBox(QString(), parent) {
 }
 
-CenteredCheckBox::CenteredCheckBox(const QString& text,
-                                   QWidget*       parent) noexcept
+CenteredCheckBox::CenteredCheckBox(
+    const QString& text,
+    QWidget* parent) noexcept
   : QWidget(parent), mCheckBox(nullptr) {
   QHBoxLayout* layout = new QHBoxLayout(this);
   layout->setAlignment(Qt::AlignCenter);
@@ -48,8 +49,11 @@ CenteredCheckBox::CenteredCheckBox(const QString& text,
   layout->addWidget(mCheckBox);
   connect(mCheckBox, &QCheckBox::toggled, this, &CenteredCheckBox::toggled);
   connect(mCheckBox, &QCheckBox::clicked, this, &CenteredCheckBox::clicked);
-  connect(mCheckBox, &QCheckBox::stateChanged, this,
-          &CenteredCheckBox::stateChanged);
+  connect(
+      mCheckBox,
+      &QCheckBox::stateChanged,
+      this,
+      &CenteredCheckBox::stateChanged);
 }
 
 CenteredCheckBox::~CenteredCheckBox() noexcept {

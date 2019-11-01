@@ -52,7 +52,8 @@ PolygonSimplifier<LibElemType>::~PolygonSimplifier() {
 
 template <typename LibElemType>
 void PolygonSimplifier<LibElemType>::convertLineRectsToPolygonRects(
-    bool fillArea, bool isGrabArea) noexcept {
+    bool fillArea,
+    bool isGrabArea) noexcept {
   QList<Polygon*> lines;
   while (findLineRectangle(lines)) {
     QSet<LengthBase_t> xValues, yValues;
@@ -75,11 +76,15 @@ void PolygonSimplifier<LibElemType>::convertLineRectsToPolygonRects(
 
     // create the new polygon
     GraphicsLayerName layerName = lines.first()->getLayerName();
-    UnsignedLength    lineWidth = lines.first()->getLineWidth();
+    UnsignedLength lineWidth = lines.first()->getLineWidth();
     Path rectPath({Vertex(p1), Vertex(p2), Vertex(p3), Vertex(p4), Vertex(p1)});
-    mLibraryElement.getPolygons().append(
-        std::make_shared<Polygon>(Uuid::createRandom(), layerName, lineWidth,
-                                  fillArea, isGrabArea, rectPath));
+    mLibraryElement.getPolygons().append(std::make_shared<Polygon>(
+        Uuid::createRandom(),
+        layerName,
+        lineWidth,
+        fillArea,
+        isGrabArea,
+        rectPath));
 
     // remove all lines
     foreach (Polygon* line, lines)
@@ -102,7 +107,7 @@ bool PolygonSimplifier<LibElemType>::findLineRectangle(
   }
 
   // find rectangle
-  Polygon*       line;
+  Polygon* line;
   UnsignedLength width(0);
   for (int i = 0; i < linePolygons.count(); i++) {
     lines.clear();
@@ -128,9 +133,11 @@ bool PolygonSimplifier<LibElemType>::findLineRectangle(
 }
 
 template <typename LibElemType>
-bool PolygonSimplifier<LibElemType>::findHLine(const QList<Polygon*>& lines,
-                                               Point& p, UnsignedLength* width,
-                                               Polygon** line) noexcept {
+bool PolygonSimplifier<LibElemType>::findHLine(
+    const QList<Polygon*>& lines,
+    Point& p,
+    UnsignedLength* width,
+    Polygon** line) noexcept {
   foreach (Polygon* polygon, lines) {
     if (width) {
       if (polygon->getLineWidth() != *width) continue;
@@ -139,11 +146,11 @@ bool PolygonSimplifier<LibElemType>::findHLine(const QList<Polygon*>& lines,
     Point p2 = polygon->getPath().getVertices().at(1).getPos();
     if ((p1 == p) && (p2.getY() == p.getY())) {
       *line = polygon;
-      p     = p2;
+      p = p2;
       return true;
     } else if ((p2 == p) && (p1.getY() == p.getY())) {
       *line = polygon;
-      p     = p1;
+      p = p1;
       return true;
     }
   }
@@ -151,9 +158,11 @@ bool PolygonSimplifier<LibElemType>::findHLine(const QList<Polygon*>& lines,
 }
 
 template <typename LibElemType>
-bool PolygonSimplifier<LibElemType>::findVLine(const QList<Polygon*>& lines,
-                                               Point& p, UnsignedLength* width,
-                                               Polygon** line) noexcept {
+bool PolygonSimplifier<LibElemType>::findVLine(
+    const QList<Polygon*>& lines,
+    Point& p,
+    UnsignedLength* width,
+    Polygon** line) noexcept {
   foreach (Polygon* polygon, lines) {
     if (width) {
       if (polygon->getLineWidth() != *width) continue;
@@ -162,11 +171,11 @@ bool PolygonSimplifier<LibElemType>::findVLine(const QList<Polygon*>& lines,
     Point p2 = polygon->getPath().getVertices().at(1).getPos();
     if ((p1 == p) && (p2.getX() == p.getX())) {
       *line = polygon;
-      p     = p2;
+      p = p2;
       return true;
     } else if ((p2 == p) && (p1.getX() == p.getX())) {
       *line = polygon;
-      p     = p1;
+      p = p1;
       return true;
     }
   }

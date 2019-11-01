@@ -60,13 +60,16 @@ public:
   FootprintPadPropertiesDialog() = delete;
   FootprintPadPropertiesDialog(const FootprintPadPropertiesDialog& other) =
       delete;
-  FootprintPadPropertiesDialog(const Package& pkg, const Footprint& fpt,
-                               FootprintPad& pad, UndoStack& undoStack,
-                               QWidget* parent = nullptr) noexcept;
+  FootprintPadPropertiesDialog(
+      const Package& pkg,
+      const Footprint& fpt,
+      FootprintPad& pad,
+      UndoStack& undoStack,
+      QWidget* parent = nullptr) noexcept;
   ~FootprintPadPropertiesDialog() noexcept;
 
   // Operator Overloadings
-  FootprintPadPropertiesDialog& operator       =(
+  FootprintPadPropertiesDialog& operator=(
       const FootprintPadPropertiesDialog& rhs) = delete;
 
 private:  // Methods
@@ -74,8 +77,8 @@ private:  // Methods
   bool applyChanges() noexcept;
 
 private:  // Data
-  FootprintPad&                                    mPad;
-  UndoStack&                                       mUndoStack;
+  FootprintPad& mPad;
+  UndoStack& mUndoStack;
   QScopedPointer<Ui::FootprintPadPropertiesDialog> mUi;
 };
 

@@ -51,8 +51,10 @@ namespace editor {
  ******************************************************************************/
 
 CmdReplaceDevice::CmdReplaceDevice(
-    workspace::Workspace& workspace, Board& board, BI_Device& device,
-    const Uuid&               newDeviceUuid,
+    workspace::Workspace& workspace,
+    Board& board,
+    BI_Device& device,
+    const Uuid& newDeviceUuid,
     const tl::optional<Uuid>& newFootprintUuid) noexcept
   : UndoCommandGroup(tr("Change Device")),
     mWorkspace(workspace),
@@ -84,9 +86,14 @@ bool CmdReplaceDevice::performExecute() {
   // replace the device instance
   execNewChildCmd(new CmdDeviceInstanceRemove(mDeviceInstance));  // can throw
   CmdAddDeviceToBoard* cmd = new CmdAddDeviceToBoard(
-      mWorkspace, mBoard, mDeviceInstance.getComponentInstance(),
-      mNewDeviceUuid, mNewFootprintUuid, mDeviceInstance.getPosition(),
-      mDeviceInstance.getRotation(), mDeviceInstance.getIsMirrored());
+      mWorkspace,
+      mBoard,
+      mDeviceInstance.getComponentInstance(),
+      mNewDeviceUuid,
+      mNewFootprintUuid,
+      mDeviceInstance.getPosition(),
+      mDeviceInstance.getRotation(),
+      mDeviceInstance.getIsMirrored());
   execNewChildCmd(cmd);  // can throw
   BI_Device* newDevice = cmd->getDeviceInstance();
   Q_ASSERT(newDevice);

@@ -51,7 +51,8 @@ void NetworkRequest::prepareRequest() {
 void NetworkRequest::finalizeRequest() {
   if (mReceivedData.size() > 100 * 1000 * 1000) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("The received content exceeds the 100MB size limit."));
   }
 }

@@ -50,16 +50,31 @@ FabricationOutputDialog::FabricationOutputDialog(Board& board, QWidget* parent)
     mBoard(board),
     mUi(new Ui::FabricationOutputDialog) {
   mUi->setupUi(this);
-  connect(mUi->cbxDrillsMerge, &QCheckBox::toggled, mUi->edtSuffixDrills,
-          &QLineEdit::setEnabled);
-  connect(mUi->cbxDrillsMerge, &QCheckBox::toggled, mUi->edtSuffixDrillsNpth,
-          &QLineEdit::setDisabled);
-  connect(mUi->cbxDrillsMerge, &QCheckBox::toggled, mUi->edtSuffixDrillsPth,
-          &QLineEdit::setDisabled);
-  connect(mUi->cbxSolderPasteTop, &QCheckBox::toggled,
-          mUi->edtSuffixSolderPasteTop, &QLineEdit::setEnabled);
-  connect(mUi->cbxSolderPasteBot, &QCheckBox::toggled,
-          mUi->edtSuffixSolderPasteBot, &QLineEdit::setEnabled);
+  connect(
+      mUi->cbxDrillsMerge,
+      &QCheckBox::toggled,
+      mUi->edtSuffixDrills,
+      &QLineEdit::setEnabled);
+  connect(
+      mUi->cbxDrillsMerge,
+      &QCheckBox::toggled,
+      mUi->edtSuffixDrillsNpth,
+      &QLineEdit::setDisabled);
+  connect(
+      mUi->cbxDrillsMerge,
+      &QCheckBox::toggled,
+      mUi->edtSuffixDrillsPth,
+      &QLineEdit::setDisabled);
+  connect(
+      mUi->cbxSolderPasteTop,
+      &QCheckBox::toggled,
+      mUi->edtSuffixSolderPasteTop,
+      &QLineEdit::setEnabled);
+  connect(
+      mUi->cbxSolderPasteBot,
+      &QCheckBox::toggled,
+      mUi->edtSuffixSolderPasteBot,
+      &QLineEdit::setEnabled);
 
   BoardFabricationOutputSettings s = mBoard.getFabricationOutputSettings();
   mUi->edtBasePath->setText(s.getOutputBasePath());
@@ -180,7 +195,7 @@ void FabricationOutputDialog::on_btnGenerate_clicked() {
 
 void FabricationOutputDialog::on_btnBrowseOutputDir_clicked() {
   BoardGerberExport grbExport(mBoard, mBoard.getFabricationOutputSettings());
-  FilePath          dir = grbExport.getOutputDirectory();
+  FilePath dir = grbExport.getOutputDirectory();
   if (dir.isExistingDir()) {
     QDesktopServices::openUrl(QUrl::fromLocalFile(dir.toStr()));
   } else {

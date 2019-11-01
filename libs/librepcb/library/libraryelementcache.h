@@ -60,7 +60,7 @@ class LibraryElementCache final {
 
 public:
   // Constructors / Destructor
-  LibraryElementCache()                                 = delete;
+  LibraryElementCache() = delete;
   LibraryElementCache(const LibraryElementCache& other) = delete;
   explicit LibraryElementCache(
       const workspace::WorkspaceLibraryDb& db) noexcept;
@@ -71,8 +71,8 @@ public:
       const Uuid& uuid) const noexcept;
   std::shared_ptr<const PackageCategory> getPackageCategory(
       const Uuid& uuid) const noexcept;
-  std::shared_ptr<const Symbol>    getSymbol(const Uuid& uuid) const noexcept;
-  std::shared_ptr<const Package>   getPackage(const Uuid& uuid) const noexcept;
+  std::shared_ptr<const Symbol> getSymbol(const Uuid& uuid) const noexcept;
+  std::shared_ptr<const Package> getPackage(const Uuid& uuid) const noexcept;
   std::shared_ptr<const Component> getComponent(const Uuid& uuid) const
       noexcept;
   std::shared_ptr<const Device> getDevice(const Uuid& uuid) const noexcept;
@@ -84,17 +84,17 @@ private:  // Methods
   template <typename T>
   std::shared_ptr<const T> getElement(
       FilePath (workspace::WorkspaceLibraryDb::*getter)(const Uuid&) const,
-      QHash<Uuid, std::shared_ptr<const T>>& container, const Uuid& uuid) const
-      noexcept;
+      QHash<Uuid, std::shared_ptr<const T>>& container,
+      const Uuid& uuid) const noexcept;
 
 private:  // Data
-  QPointer<const workspace::WorkspaceLibraryDb>                 mDb;
+  QPointer<const workspace::WorkspaceLibraryDb> mDb;
   mutable QHash<Uuid, std::shared_ptr<const ComponentCategory>> mCmpCat;
-  mutable QHash<Uuid, std::shared_ptr<const PackageCategory>>   mPkgCat;
-  mutable QHash<Uuid, std::shared_ptr<const Symbol>>            mSym;
-  mutable QHash<Uuid, std::shared_ptr<const Package>>           mPkg;
-  mutable QHash<Uuid, std::shared_ptr<const Component>>         mCmp;
-  mutable QHash<Uuid, std::shared_ptr<const Device>>            mDev;
+  mutable QHash<Uuid, std::shared_ptr<const PackageCategory>> mPkgCat;
+  mutable QHash<Uuid, std::shared_ptr<const Symbol>> mSym;
+  mutable QHash<Uuid, std::shared_ptr<const Package>> mPkg;
+  mutable QHash<Uuid, std::shared_ptr<const Component>> mCmp;
+  mutable QHash<Uuid, std::shared_ptr<const Device>> mDev;
 };
 
 /*******************************************************************************

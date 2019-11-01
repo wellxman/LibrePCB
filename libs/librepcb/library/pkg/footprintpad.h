@@ -68,16 +68,21 @@ public:
     DrillDiameterChanged,
     BoardSideChanged,
   };
-  Signal<FootprintPad, Event>       onEdited;
+  Signal<FootprintPad, Event> onEdited;
   typedef Slot<FootprintPad, Event> OnEditedSlot;
 
   // Constructors / Destructor
   FootprintPad() = delete;
   FootprintPad(const FootprintPad& other) noexcept;
-  FootprintPad(const Uuid& padUuid, const Point& pos, const Angle& rot,
-               Shape shape, const PositiveLength& width,
-               const PositiveLength& height,
-               const UnsignedLength& drillDiameter, BoardSide side) noexcept;
+  FootprintPad(
+      const Uuid& padUuid,
+      const Point& pos,
+      const Angle& rot,
+      Shape shape,
+      const PositiveLength& width,
+      const PositiveLength& height,
+      const UnsignedLength& drillDiameter,
+      BoardSide side) noexcept;
   explicit FootprintPad(const SExpression& node);
   ~FootprintPad() noexcept;
 
@@ -85,19 +90,19 @@ public:
   const Uuid& getUuid() const noexcept {
     return getPackagePadUuid();
   }  // for SerializableObjectList
-  const Uuid&  getPackagePadUuid() const noexcept { return mPackagePadUuid; }
+  const Uuid& getPackagePadUuid() const noexcept { return mPackagePadUuid; }
   const Point& getPosition() const noexcept { return mPosition; }
   const Angle& getRotation() const noexcept { return mRotation; }
-  Shape        getShape() const noexcept { return mShape; }
+  Shape getShape() const noexcept { return mShape; }
   const PositiveLength& getWidth() const noexcept { return mWidth; }
   const PositiveLength& getHeight() const noexcept { return mHeight; }
   const UnsignedLength& getDrillDiameter() const noexcept {
     return mDrillDiameter;
   }
-  BoardSide    getBoardSide() const noexcept { return mBoardSide; }
-  QString      getLayerName() const noexcept;
-  bool         isOnLayer(const QString& name) const noexcept;
-  Path         getOutline(const Length& expansion = Length(0)) const noexcept;
+  BoardSide getBoardSide() const noexcept { return mBoardSide; }
+  QString getLayerName() const noexcept;
+  bool isOnLayer(const QString& name) const noexcept;
+  Path getOutline(const Length& expansion = Length(0)) const noexcept;
   QPainterPath toQPainterPathPx(const Length& expansion = Length(0)) const
       noexcept;
 
@@ -126,14 +131,14 @@ public:
   FootprintPad& operator=(const FootprintPad& rhs) noexcept;
 
 protected:  // Data
-  Uuid                      mPackagePadUuid;
-  Point                     mPosition;
-  Angle                     mRotation;
-  Shape                     mShape;
-  PositiveLength            mWidth;
-  PositiveLength            mHeight;
-  UnsignedLength            mDrillDiameter;  // no effect if BoardSide != THT!
-  BoardSide                 mBoardSide;
+  Uuid mPackagePadUuid;
+  Point mPosition;
+  Angle mRotation;
+  Shape mShape;
+  PositiveLength mWidth;
+  PositiveLength mHeight;
+  UnsignedLength mDrillDiameter;  // no effect if BoardSide != THT!
+  BoardSide mBoardSide;
   FootprintPadGraphicsItem* mRegisteredGraphicsItem;
 };
 
@@ -144,18 +149,22 @@ protected:  // Data
 struct FootprintPadListNameProvider {
   static constexpr const char* tagname = "pad";
 };
-using FootprintPadList =
-    SerializableObjectList<FootprintPad, FootprintPadListNameProvider,
-                           FootprintPad::Event>;
-using CmdFootprintPadInsert =
-    CmdListElementInsert<FootprintPad, FootprintPadListNameProvider,
-                         FootprintPad::Event>;
-using CmdFootprintPadRemove =
-    CmdListElementRemove<FootprintPad, FootprintPadListNameProvider,
-                         FootprintPad::Event>;
-using CmdFootprintPadsSwap =
-    CmdListElementsSwap<FootprintPad, FootprintPadListNameProvider,
-                        FootprintPad::Event>;
+using FootprintPadList = SerializableObjectList<
+    FootprintPad,
+    FootprintPadListNameProvider,
+    FootprintPad::Event>;
+using CmdFootprintPadInsert = CmdListElementInsert<
+    FootprintPad,
+    FootprintPadListNameProvider,
+    FootprintPad::Event>;
+using CmdFootprintPadRemove = CmdListElementRemove<
+    FootprintPad,
+    FootprintPadListNameProvider,
+    FootprintPad::Event>;
+using CmdFootprintPadsSwap = CmdListElementsSwap<
+    FootprintPad,
+    FootprintPadListNameProvider,
+    FootprintPad::Event>;
 
 /*******************************************************************************
  *  Non-Member Functions
@@ -180,7 +189,8 @@ inline SExpression serializeToSExpression(
 
 template <>
 inline library::FootprintPad::BoardSide deserializeFromSExpression(
-    const SExpression& sexpr, bool throwIfEmpty) {
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   if (str == QLatin1String("top"))
     return library::FootprintPad::BoardSide::TOP;
@@ -209,7 +219,8 @@ inline SExpression serializeToSExpression(
 
 template <>
 inline library::FootprintPad::Shape deserializeFromSExpression(
-    const SExpression& sexpr, bool throwIfEmpty) {
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   if (str == QLatin1String("round"))
     return library::FootprintPad::Shape::ROUND;

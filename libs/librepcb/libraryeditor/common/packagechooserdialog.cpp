@@ -48,8 +48,9 @@ namespace editor {
  ******************************************************************************/
 
 PackageChooserDialog::PackageChooserDialog(
-    const workspace::Workspace&     ws,
-    const IF_GraphicsLayerProvider* layerProvider, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    const IF_GraphicsLayerProvider* layerProvider,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mLayerProvider(layerProvider),
@@ -61,18 +62,30 @@ PackageChooserDialog::PackageChooserDialog(
   mUi->graphicsView->setScene(mGraphicsScene.data());
 
   mCategoryTreeModel.reset(new workspace::PackageCategoryTreeModel(
-      mWorkspace.getLibraryDb(), localeOrder(),
+      mWorkspace.getLibraryDb(),
+      localeOrder(),
       workspace::CategoryTreeFilter::PACKAGES));
   mUi->treeCategories->setModel(mCategoryTreeModel.data());
-  connect(mUi->treeCategories->selectionModel(),
-          &QItemSelectionModel::currentChanged, this,
-          &PackageChooserDialog::treeCategories_currentItemChanged);
-  connect(mUi->listPackages, &QListWidget::currentItemChanged, this,
-          &PackageChooserDialog::listPackages_currentItemChanged);
-  connect(mUi->listPackages, &QListWidget::itemDoubleClicked, this,
-          &PackageChooserDialog::listPackages_itemDoubleClicked);
-  connect(mUi->edtSearch, &QLineEdit::textChanged, this,
-          &PackageChooserDialog::searchEditTextChanged);
+  connect(
+      mUi->treeCategories->selectionModel(),
+      &QItemSelectionModel::currentChanged,
+      this,
+      &PackageChooserDialog::treeCategories_currentItemChanged);
+  connect(
+      mUi->listPackages,
+      &QListWidget::currentItemChanged,
+      this,
+      &PackageChooserDialog::listPackages_currentItemChanged);
+  connect(
+      mUi->listPackages,
+      &QListWidget::itemDoubleClicked,
+      this,
+      &PackageChooserDialog::listPackages_itemDoubleClicked);
+  connect(
+      mUi->edtSearch,
+      &QLineEdit::textChanged,
+      this,
+      &PackageChooserDialog::searchEditTextChanged);
 
   setSelectedPackage(tl::nullopt);
 }
@@ -100,14 +113,16 @@ void PackageChooserDialog::searchEditTextChanged(const QString& text) noexcept {
 }
 
 void PackageChooserDialog::treeCategories_currentItemChanged(
-    const QModelIndex& current, const QModelIndex& previous) noexcept {
+    const QModelIndex& current,
+    const QModelIndex& previous) noexcept {
   Q_UNUSED(previous);
   setSelectedCategory(
       Uuid::tryFromString(current.data(Qt::UserRole).toString()));
 }
 
 void PackageChooserDialog::listPackages_currentItemChanged(
-    QListWidgetItem* current, QListWidgetItem* previous) noexcept {
+    QListWidgetItem* current,
+    QListWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
   if (current) {
     setSelectedPackage(
@@ -138,7 +153,8 @@ void PackageChooserDialog::searchPackages(const QString& input) {
           mWorkspace.getLibraryDb().getLatestPackage(uuid);  // can throw
       QString name;
       mWorkspace.getLibraryDb().getElementTranslations<Package>(
-          fp, localeOrder(),
+          fp,
+          localeOrder(),
           &name);  // can throw
       QListWidgetItem* item = new QListWidgetItem(name);
       item->setData(Qt::UserRole, uuid.toStr());
@@ -165,7 +181,8 @@ void PackageChooserDialog::setSelectedCategory(
             mWorkspace.getLibraryDb().getLatestPackage(pkgUuid);  // can throw
         QString name;
         mWorkspace.getLibraryDb().getElementTranslations<Package>(
-            fp, localeOrder(),
+            fp,
+            localeOrder(),
             &name);  // can throw
         QListWidgetItem* item = new QListWidgetItem(name);
         item->setData(Qt::UserRole, pkgUuid.toStr());
@@ -182,8 +199,8 @@ void PackageChooserDialog::setSelectedCategory(
 void PackageChooserDialog::setSelectedPackage(
     const tl::optional<Uuid>& uuid) noexcept {
   FilePath fp;
-  QString  name = tr("No package selected");
-  QString  desc;
+  QString name = tr("No package selected");
+  QString desc;
   mSelectedPackageUuid = uuid;
 
   if (uuid) {
@@ -192,8 +209,8 @@ void PackageChooserDialog::setSelectedPackage(
       mWorkspace.getLibraryDb().getElementTranslations<Package>(
           fp, localeOrder(), &name, &desc);  // can throw
     } catch (const Exception& e) {
-      QMessageBox::critical(this, tr("Could not load package metadata"),
-                            e.getMsg());
+      QMessageBox::critical(
+          this, tr("Could not load package metadata"), e.getMsg());
     }
   }
 
@@ -213,7 +230,9 @@ void PackageChooserDialog::updatePreview(const FilePath& fp) noexcept {
               TransactionalFileSystem::openRO(fp)))));  // can throw
       if (mPackage->getFootprints().count() > 0) {
         mGraphicsItem.reset(new FootprintPreviewGraphicsItem(
-            *mLayerProvider, QStringList(), *mPackage->getFootprints().first(),
+            *mLayerProvider,
+            QStringList(),
+            *mPackage->getFootprints().first(),
             mPackage.data()));
         mGraphicsScene->addItem(*mGraphicsItem);
         mUi->graphicsView->zoomAll();
@@ -226,8 +245,8 @@ void PackageChooserDialog::updatePreview(const FilePath& fp) noexcept {
 
 void PackageChooserDialog::accept() noexcept {
   if (!mSelectedPackageUuid) {
-    QMessageBox::information(this, tr("Invalid Selection"),
-                             tr("Please select a package."));
+    QMessageBox::information(
+        this, tr("Invalid Selection"), tr("Please select a package."));
     return;
   }
   QDialog::accept();

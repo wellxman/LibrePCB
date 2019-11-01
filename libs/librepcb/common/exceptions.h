@@ -108,8 +108,10 @@ public:
    * @param msg       An error message in the user's language (use
    * QObject::tr()). This message can be used in message boxes.
    */
-  Exception(const char* file, int line,
-            const QString& msg = QString("Exception")) noexcept;
+  Exception(
+      const char* file,
+      int line,
+      const QString& msg = QString("Exception")) noexcept;
 
   /**
    * @brief The destructor
@@ -153,14 +155,14 @@ public:
   const char* what() const noexcept override;
 
   // Inherited from QException (see QException documentation for more details)
-  virtual void       raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual Exception* clone() const override { return new Exception(*this); }
 
 private:
   // Attributes
-  QString mMsg;   ///< the error message (translated)
+  QString mMsg;  ///< the error message (translated)
   QString mFile;  ///< the source filename where the exception was thrown
-  int     mLine;  ///< the line number where the exception was thrown
+  int mLine;  ///< the line number where the exception was thrown
 
   // Cached Attributes
   mutable QByteArray mMsgUtf8;  ///< the message as an UTF8 byte array
@@ -189,8 +191,10 @@ public:
   /**
    * @copydoc Exception::Exception
    */
-  LogicError(const char* file, int line,
-             const QString& msg = QString("Logic Error")) noexcept;
+  LogicError(
+      const char* file,
+      int line,
+      const QString& msg = QString("Logic Error")) noexcept;
 
   /**
    * @brief The copy constructor (needed for #clone())
@@ -198,7 +202,7 @@ public:
   LogicError(const LogicError& other) noexcept;
 
   // Inherited from Exception
-  virtual void        raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual LogicError* clone() const override { return new LogicError(*this); }
 };
 
@@ -226,8 +230,10 @@ public:
   /**
    * @copydoc Exception::Exception
    */
-  RuntimeError(const char* file, int line,
-               const QString& msg = QString("Runtime Error")) noexcept;
+  RuntimeError(
+      const char* file,
+      int line,
+      const QString& msg = QString("Runtime Error")) noexcept;
 
   /**
    * @brief The copy constructor (needed for #clone())
@@ -240,7 +246,7 @@ public:
   virtual ~RuntimeError() noexcept {}
 
   // Inherited from Exception
-  virtual void          raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual RuntimeError* clone() const override {
     return new RuntimeError(*this);
   }
@@ -267,8 +273,10 @@ public:
   /**
    * @copydoc Exception::Exception
    */
-  RangeError(const char* file, int line,
-             const QString& msg = QString("Range Error")) noexcept;
+  RangeError(
+      const char* file,
+      int line,
+      const QString& msg = QString("Range Error")) noexcept;
 
   /**
    * Constructor which produces a message like "42 not in range [13..37]"
@@ -280,13 +288,19 @@ public:
    * @param max                   The upper value limit
    */
   template <typename Tval, typename Tmin, typename Tmax>
-  RangeError(const char* file, int line, const Tval& value, const Tmin& min,
-             const Tmax& max) noexcept
-    : RangeError(file, line,
-                 QString("Range error: %1 not in [%2..%3]")
-                     .arg(value)
-                     .arg(min)
-                     .arg(max)) {}
+  RangeError(
+      const char* file,
+      int line,
+      const Tval& value,
+      const Tmin& min,
+      const Tmax& max) noexcept
+    : RangeError(
+          file,
+          line,
+          QString("Range error: %1 not in [%2..%3]")
+              .arg(value)
+              .arg(min)
+              .arg(max)) {}
 
   /**
    * @brief The copy constructor (needed for #clone())
@@ -294,7 +308,7 @@ public:
   RangeError(const RangeError& other) noexcept;
 
   // Inherited from RuntimeError
-  virtual void        raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual RangeError* clone() const override { return new RangeError(*this); }
 };
 
@@ -329,10 +343,14 @@ public:
    * @param invalidFileContent    The parsed string which is invalid (optional)
    * @param msg                   See Exception#Exception()
    */
-  FileParseError(const char* file, int line, const FilePath& filePath,
-                 int fileLine = -1, int fileColumn = -1,
-                 const QString& invalidFileContent = QString(),
-                 const QString& msg = QString("File Parse Error")) noexcept;
+  FileParseError(
+      const char* file,
+      int line,
+      const FilePath& filePath,
+      int fileLine = -1,
+      int fileColumn = -1,
+      const QString& invalidFileContent = QString(),
+      const QString& msg = QString("File Parse Error")) noexcept;
 
   /**
    * @brief The copy constructor (needed for #clone())
@@ -340,7 +358,7 @@ public:
   FileParseError(const FileParseError& other) noexcept;
 
   // Inherited from RuntimeError
-  virtual void            raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual FileParseError* clone() const override {
     return new FileParseError(*this);
   }
@@ -383,8 +401,10 @@ public:
   /**
    * @copydoc Exception::Exception
    */
-  UserCanceled(const char* file, int line,
-               const QString& msg = QString("User Canceled")) noexcept;
+  UserCanceled(
+      const char* file,
+      int line,
+      const QString& msg = QString("User Canceled")) noexcept;
 
   /**
    * @brief The copy constructor (needed for #clone())
@@ -392,7 +412,7 @@ public:
   UserCanceled(const UserCanceled& other) noexcept;
 
   // Inherited from Exception
-  virtual void          raise() const override { throw *this; }
+  virtual void raise() const override { throw *this; }
   virtual UserCanceled* clone() const override {
     return new UserCanceled(*this);
   }

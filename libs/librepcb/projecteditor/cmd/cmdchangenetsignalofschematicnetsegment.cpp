@@ -50,8 +50,9 @@ namespace editor {
  ******************************************************************************/
 
 CmdChangeNetSignalOfSchematicNetSegment::
-    CmdChangeNetSignalOfSchematicNetSegment(SI_NetSegment& seg,
-                                            NetSignal&     newSig) noexcept
+    CmdChangeNetSignalOfSchematicNetSegment(
+        SI_NetSegment& seg,
+        NetSignal& newSig) noexcept
   : UndoCommandGroup(tr("Change netsignal of netsegment")),
     mNetSegment(seg),
     mNewNetSignal(newSig) {
@@ -73,13 +74,13 @@ bool CmdChangeNetSignalOfSchematicNetSegment::performExecute() {
     // nothing to do, the netsignal is already correct
     undoScopeGuard.dismiss();
     return false;
-  } else if (mNetSegment.getNetSignal().getSchematicNetSegments().count() ==
-             1) {
+  } else if (
+      mNetSegment.getNetSignal().getSchematicNetSegments().count() == 1) {
     // this netsegment is the only one in its netsignal,
     // we just need to combine both netsignals
-    Circuit&   circuit     = mNetSegment.getCircuit();
+    Circuit& circuit = mNetSegment.getCircuit();
     NetSignal& toBeRemoved = mNetSegment.getNetSignal();
-    NetSignal& result      = mNewNetSignal;
+    NetSignal& result = mNewNetSignal;
     execNewChildCmd(
         new CmdCombineNetSignals(circuit, toBeRemoved, result));  // can throw
   } else {
@@ -127,7 +128,8 @@ void CmdChangeNetSignalOfSchematicNetSegment::updateCompSigInstNetSignal(
     boardNetLinesToRemove[&pad->getBoard()] += pad->getNetLines();
   }
   for (auto it = boardNetLinesToRemove.constBegin();
-       it != boardNetLinesToRemove.constEnd(); ++it) {
+       it != boardNetLinesToRemove.constEnd();
+       ++it) {
     QScopedPointer<CmdRemoveBoardItems> cmd(new CmdRemoveBoardItems(*it.key()));
     cmd->removeNetLines(it.value());
     execNewChildCmd(cmd.take());  // can throw

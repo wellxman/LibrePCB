@@ -49,9 +49,11 @@ namespace project {
 
 BoardSelectionQuery::BoardSelectionQuery(
     const QMap<Uuid, BI_Device*>& deviceInstances,
-    const QList<BI_NetSegment*>& netsegments, const QList<BI_Plane*>& planes,
-    const QList<BI_Polygon*>&    polygons,
-    const QList<BI_StrokeText*>& strokeTexts, const QList<BI_Hole*>& holes,
+    const QList<BI_NetSegment*>& netsegments,
+    const QList<BI_Plane*>& planes,
+    const QList<BI_Polygon*>& polygons,
+    const QList<BI_StrokeText*>& strokeTexts,
+    const QList<BI_Hole*>& holes,
     QObject* parent)
   : QObject(parent),
     mDevices(deviceInstances),
@@ -71,9 +73,9 @@ BoardSelectionQuery::~BoardSelectionQuery() noexcept {
 
 int BoardSelectionQuery::getResultCount() const noexcept {
   return mResultDeviceInstances.count() + mResultNetPoints.count() +
-         mResultNetLines.count() + mResultVias.count() + mResultPlanes.count() +
-         mResultPolygons.count() + mResultStrokeTexts.count() +
-         mResultHoles.count();
+      mResultNetLines.count() + mResultVias.count() + mResultPlanes.count() +
+      mResultPolygons.count() + mResultStrokeTexts.count() +
+      mResultHoles.count();
 }
 
 /*******************************************************************************

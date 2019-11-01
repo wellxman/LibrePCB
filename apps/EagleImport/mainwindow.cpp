@@ -50,8 +50,8 @@ MainWindow::~MainWindow() {
   s.setValue("mainwindow/geometry", saveGeometry());
   s.setValue("mainwindow/state", saveState());
   s.setValue("mainwindow/last_input_directory", mlastInputDirectory);
-  s.setValue("mainwindow/last_library_directory",
-             ui->edtDuplicateFolders->text());
+  s.setValue(
+      "mainwindow/last_library_directory", ui->edtDuplicateFolders->text());
   s.setValue("mainwindow/input", QVariant::fromValue(inputList));
   s.setValue("mainwindow/output", ui->output->text());
   s.setValue("mainwindow/uuid_list", ui->uuidList->text());
@@ -60,8 +60,8 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::reset() {
-  mAbortConversion        = false;
-  mReadedElementsCount    = 0;
+  mAbortConversion = false;
+  mReadedElementsCount = 0;
   mConvertedElementsCount = 0;
 
   ui->errors->clear();
@@ -72,8 +72,10 @@ void MainWindow::reset() {
   ui->lblConvertedElements->setText("0 of 0");
 }
 
-void MainWindow::addError(const QString& msg, const FilePath& inputFile,
-                          int inputLine) {
+void MainWindow::addError(
+    const QString& msg,
+    const FilePath& inputFile,
+    int inputLine) {
   ui->errors->addItem(
       QString("%1 (%2:%3)").arg(msg).arg(inputFile.toNative()).arg(inputLine));
 }
@@ -105,9 +107,10 @@ void MainWindow::convertAllFiles(ConvertFileType_t type) {
   }
 }
 
-void MainWindow::convertFile(ConvertFileType_t         type,
-                             eagleimport::ConverterDb& db,
-                             const FilePath&           filepath) {
+void MainWindow::convertFile(
+    ConvertFileType_t type,
+    eagleimport::ConverterDb& db,
+    const FilePath& filepath) {
   try {
     parseagle::Library library(filepath.toStr());
     db.setCurrentLibraryFilePath(filepath);
@@ -142,8 +145,8 @@ void MainWindow::convertFile(ConvertFileType_t         type,
       case ConvertFileType_t::Devices_to_Components:
         ui->pbarElements->setValue(0);
         ui->pbarElements->setMaximum(library.getDeviceSets().count());
-        foreach (const parseagle::DeviceSet& deviceSet,
-                 library.getDeviceSets()) {
+        foreach (
+            const parseagle::DeviceSet& deviceSet, library.getDeviceSets()) {
           bool success = convertDevice(db, deviceSet);
           mReadedElementsCount++;
           if (success) mConvertedElementsCount++;
@@ -162,12 +165,13 @@ void MainWindow::convertFile(ConvertFileType_t         type,
   }
 }
 
-bool MainWindow::convertSymbol(eagleimport::ConverterDb& db,
-                               const parseagle::Symbol&  symbol) {
+bool MainWindow::convertSymbol(
+    eagleimport::ConverterDb& db,
+    const parseagle::Symbol& symbol) {
   try {
     // create symbol
     eagleimport::SymbolConverter converter(symbol, db);
-    std::unique_ptr<Symbol>      newSymbol = converter.generate();
+    std::unique_ptr<Symbol> newSymbol = converter.generate();
 
     // convert line rects to polygon rects
     PolygonSimplifier<Symbol> polygonSimplifier(*newSymbol);
@@ -188,12 +192,13 @@ bool MainWindow::convertSymbol(eagleimport::ConverterDb& db,
   return true;
 }
 
-bool MainWindow::convertPackage(eagleimport::ConverterDb& db,
-                                const parseagle::Package& package) {
+bool MainWindow::convertPackage(
+    eagleimport::ConverterDb& db,
+    const parseagle::Package& package) {
   try {
     // create package
     eagleimport::PackageConverter converter(package, db);
-    std::unique_ptr<Package>      newPackage = converter.generate();
+    std::unique_ptr<Package> newPackage = converter.generate();
 
     // convert line rects to polygon rects
     Q_ASSERT(newPackage->getFootprints().count() == 1);
@@ -216,8 +221,9 @@ bool MainWindow::convertPackage(eagleimport::ConverterDb& db,
   return true;
 }
 
-bool MainWindow::convertDevice(eagleimport::ConverterDb&   db,
-                               const parseagle::DeviceSet& deviceSet) {
+bool MainWindow::convertDevice(
+    eagleimport::ConverterDb& db,
+    const parseagle::DeviceSet& deviceSet) {
   try {
     // abort if device name ends with "-US" or "-US_"
     if (deviceSet.getName().endsWith("-US")) return false;
@@ -225,14 +231,14 @@ bool MainWindow::convertDevice(eagleimport::ConverterDb&   db,
 
     // create component
     eagleimport::DeviceSetConverter converter(deviceSet, db);
-    std::unique_ptr<Component>      newComponent = converter.generate();
+    std::unique_ptr<Component> newComponent = converter.generate();
 
     // create devices
     foreach (const parseagle::Device& device, deviceSet.getDevices()) {
       if (device.getPackage().isNull()) continue;
 
       eagleimport::DeviceConverter devConverter(deviceSet, device, db);
-      std::unique_ptr<Device>      newDevice = devConverter.generate();
+      std::unique_ptr<Device> newDevice = devConverter.generate();
 
       // save device
       std::shared_ptr<TransactionalFileSystem> fs =
@@ -333,16 +339,19 @@ void MainWindow::on_toolButton_4_clicked() {
 
   uint count = 0;
 
-  foreach (const QString& subdir1,
-           libDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+  foreach (
+      const QString& subdir1,
+      libDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
     if (subdir1 == "EagleImport") continue;
     if (subdir1 == "Staging_Area") continue;
     QDir repoDir = libDir.absoluteFilePath(subdir1);
-    foreach (const QString& subdir2,
-             repoDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+    foreach (
+        const QString& subdir2,
+        repoDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
       QDir repoSubDir = repoDir.absoluteFilePath(subdir2);
-      foreach (const QString& elementDir,
-               repoSubDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+      foreach (
+          const QString& elementDir,
+          repoSubDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         tl::optional<Uuid> elementUuid = Uuid::tryFromString(elementDir);
         if (!elementUuid) continue;
 
@@ -359,13 +368,13 @@ void MainWindow::on_toolButton_4_clicked() {
     }
   }
 
-  QMessageBox::information(this, "Duplicates Removed",
-                           QString("%1 duplicates removed.").arg(count));
+  QMessageBox::information(
+      this, "Duplicates Removed", QString("%1 duplicates removed.").arg(count));
 }
 
 void MainWindow::on_uuidListBtn_clicked() {
-  QString file = QFileDialog::getSaveFileName(this, "Select UUID List File",
-                                              ui->uuidList->text(), "*.ini");
+  QString file = QFileDialog::getSaveFileName(
+      this, "Select UUID List File", ui->uuidList->text(), "*.ini");
   if (file.isEmpty()) return;
   ui->uuidList->setText(file);
 }

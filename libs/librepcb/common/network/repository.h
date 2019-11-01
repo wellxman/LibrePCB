@@ -51,7 +51,7 @@ public:
   ~Repository() noexcept;
 
   // Getters
-  bool        isValid() const noexcept { return mUrl.isValid(); }
+  bool isValid() const noexcept { return mUrl.isValid(); }
   const QUrl& getUrl() const noexcept { return mUrl; }
 
   // Setters

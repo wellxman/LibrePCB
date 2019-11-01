@@ -59,7 +59,7 @@ ProjectEditor::ProjectEditor(workspace::Workspace& workspace, Project& project)
 
     // create the whole schematic/board editor GUI inclusive FSM and so on
     mSchematicEditor = new SchematicEditor(*this, mProject);
-    mBoardEditor     = new BoardEditor(*this, mProject);
+    mBoardEditor = new BoardEditor(*this, mProject);
   } catch (...) {
     // free the allocated memory in the reverse order of their allocation...
     delete mBoardEditor;
@@ -76,8 +76,11 @@ ProjectEditor::ProjectEditor(workspace::Workspace& workspace, Project& project)
       mWorkspace.getSettings().getProjectAutosaveInterval().getInterval();
   if ((intervalSecs > 0) && project.getDirectory().isWritable()) {
     // autosaving is enabled --> start the timer
-    connect(&mAutoSaveTimer, &QTimer::timeout, this,
-            &ProjectEditor::autosaveProject);
+    connect(
+        &mAutoSaveTimer,
+        &QTimer::timeout,
+        this,
+        &ProjectEditor::autosaveProject);
     mAutoSaveTimer.start(1000 * intervalSecs);
   }
 }
@@ -178,7 +181,7 @@ void ProjectEditor::execLppzExportDialog(QWidget* parent) noexcept {
     if (!filename.endsWith(".lppz")) filename.append(".lppz");
     FilePath fp(filename);
     qDebug() << "Export project to *.lppz:" << fp.toNative();
-    mProject.save();                                           // can throw
+    mProject.save();  // can throw
     mProject.getDirectory().getFileSystem()->exportToZip(fp);  // can throw
     qDebug() << "Project successfully exported.";
   } catch (const Exception& e) {
@@ -189,7 +192,7 @@ void ProjectEditor::execLppzExportDialog(QWidget* parent) noexcept {
 bool ProjectEditor::saveProject() noexcept {
   try {
     qDebug() << "Save project...";
-    mProject.save();                                  // can throw
+    mProject.save();  // can throw
     mProject.getDirectory().getFileSystem()->save();  // can throw
 
     // saving was successful --> clean the undo stack
@@ -197,8 +200,8 @@ bool ProjectEditor::saveProject() noexcept {
     qDebug() << "Project successfully saved";
     return true;
   } catch (Exception& exc) {
-    QMessageBox::critical(0, tr("Error while saving the project"),
-                          exc.getMsg());
+    QMessageBox::critical(
+        0, tr("Error while saving the project"), exc.getMsg());
     return false;
   }
 }
@@ -220,7 +223,7 @@ bool ProjectEditor::autosaveProject() noexcept {
 
   try {
     qDebug() << "Autosave project...";
-    mProject.save();                                      // can throw
+    mProject.save();  // can throw
     mProject.getDirectory().getFileSystem()->autosave();  // can throw
     qDebug() << "Project successfully autosaved";
     return true;
@@ -229,8 +232,9 @@ bool ProjectEditor::autosaveProject() noexcept {
   }
 }
 
-bool ProjectEditor::closeAndDestroy(bool     askForSave,
-                                    QWidget* msgBoxParent) noexcept {
+bool ProjectEditor::closeAndDestroy(
+    bool askForSave,
+    QWidget* msgBoxParent) noexcept {
   if (mUndoStack->isClean() || (!mProject.getDirectory().isWritable()) ||
       (!askForSave)) {
     // no unsaved changes or opened in read-only mode or don't save --> close
@@ -241,7 +245,8 @@ bool ProjectEditor::closeAndDestroy(bool     askForSave,
   }
 
   QMessageBox::StandardButton choice = QMessageBox::question(
-      msgBoxParent, tr("Save Project?"),
+      msgBoxParent,
+      tr("Save Project?"),
       tr("You have unsaved changes in the project.\n"
          "Do you want to save them before closing the project?"),
       QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,

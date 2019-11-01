@@ -49,9 +49,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_FSM::BES_FSM(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                 GraphicsView& editorGraphicsView,
-                 UndoStack&    undoStack) noexcept
+BES_FSM::BES_FSM(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack) noexcept
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mCurrentState(State_NoState),
     mPreviousState(State_NoState) {
@@ -65,9 +67,10 @@ BES_FSM::BES_FSM(BoardEditor& editor, Ui::BoardEditor& editorUi,
   mSubStates.insert(
       State_DrawPolygon,
       new BES_DrawPolygon(mEditor, mEditorUi, mEditorGraphicsView, mUndoStack));
-  mSubStates.insert(State_AddStrokeText,
-                    new BES_AddStrokeText(mEditor, mEditorUi,
-                                          mEditorGraphicsView, mUndoStack));
+  mSubStates.insert(
+      State_AddStrokeText,
+      new BES_AddStrokeText(
+          mEditor, mEditorUi, mEditorGraphicsView, mUndoStack));
   mSubStates.insert(
       State_AddVia,
       new BES_AddVia(mEditor, mEditorUi, mEditorGraphicsView, mUndoStack));
@@ -114,8 +117,8 @@ bool BES_FSM::processEvent(BEE_Base* event, bool deleteEvent) noexcept {
 }
 
 BES_Base::ProcRetVal BES_FSM::process(BEE_Base* event) noexcept {
-  State      nextState = mCurrentState;
-  ProcRetVal retval    = PassToParentState;
+  State nextState = mCurrentState;
+  ProcRetVal retval = PassToParentState;
 
   // let the current state process the event
   if (mCurrentState != State_NoState)
@@ -145,7 +148,7 @@ BES_Base::ProcRetVal BES_FSM::process(BEE_Base* event) noexcept {
       // leave the current state
       if (mSubStates[mCurrentState]->exit(event)) {
         mPreviousState = mCurrentState;
-        mCurrentState  = State_NoState;
+        mCurrentState = State_NoState;
         emit stateChanged(mCurrentState);
       }
     }

@@ -53,8 +53,8 @@ SymbolEditorFsm::SymbolEditorFsm(const Context& context) noexcept
   mStates.insert(State::ADD_VALUES, new SymbolEditorState_AddValues(context));
   mStates.insert(State::DRAW_LINE, new SymbolEditorState_DrawLine(context));
   mStates.insert(State::DRAW_RECT, new SymbolEditorState_DrawRect(context));
-  mStates.insert(State::DRAW_POLYGON,
-                 new SymbolEditorState_DrawPolygon(context));
+  mStates.insert(
+      State::DRAW_POLYGON, new SymbolEditorState_DrawPolygon(context));
   mStates.insert(State::DRAW_CIRCLE, new SymbolEditorState_DrawCircle(context));
   mStates.insert(State::DRAW_TEXT, new SymbolEditorState_DrawText(context));
   enterNextState(State::SELECT);

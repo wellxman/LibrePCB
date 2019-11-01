@@ -36,10 +36,11 @@
  ******************************************************************************/
 namespace librepcb {
 
-PolygonPropertiesDialog::PolygonPropertiesDialog(Polygon&   polygon,
-                                                 UndoStack& undoStack,
-                                                 QList<GraphicsLayer*> layers,
-                                                 QWidget* parent) noexcept
+PolygonPropertiesDialog::PolygonPropertiesDialog(
+    Polygon& polygon,
+    UndoStack& undoStack,
+    QList<GraphicsLayer*> layers,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mPolygon(polygon),
     mUndoStack(undoStack),
@@ -51,8 +52,11 @@ PolygonPropertiesDialog::PolygonPropertiesDialog(Polygon&   polygon,
     mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());
   }
 
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &PolygonPropertiesDialog::buttonBoxClicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &PolygonPropertiesDialog::buttonBoxClicked);
 
   // load polygon attributes
   selectLayerNameInCombobox(*mPolygon.getLayerName());

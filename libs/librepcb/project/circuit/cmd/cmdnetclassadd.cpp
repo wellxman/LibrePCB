@@ -37,8 +37,9 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdNetClassAdd::CmdNetClassAdd(Circuit&           circuit,
-                               const ElementName& name) noexcept
+CmdNetClassAdd::CmdNetClassAdd(
+    Circuit& circuit,
+    const ElementName& name) noexcept
   : UndoCommand(tr("Add netclass")),
     mCircuit(circuit),
     mName(name),

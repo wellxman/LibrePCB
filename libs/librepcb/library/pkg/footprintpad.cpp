@@ -51,12 +51,15 @@ FootprintPad::FootprintPad(const FootprintPad& other) noexcept
     mRegisteredGraphicsItem(nullptr) {
 }
 
-FootprintPad::FootprintPad(const Uuid& padUuid, const Point& pos,
-                           const Angle& rot, Shape shape,
-                           const PositiveLength& width,
-                           const PositiveLength& height,
-                           const UnsignedLength& drillDiameter,
-                           BoardSide             side) noexcept
+FootprintPad::FootprintPad(
+    const Uuid& padUuid,
+    const Point& pos,
+    const Angle& rot,
+    Shape shape,
+    const PositiveLength& width,
+    const PositiveLength& height,
+    const UnsignedLength& drillDiameter,
+    BoardSide side) noexcept
   : onEdited(*this),
     mPackagePadUuid(padUuid),
     mPosition(pos),
@@ -113,7 +116,7 @@ bool FootprintPad::isOnLayer(const QString& name) const noexcept {
 }
 
 Path FootprintPad::getOutline(const Length& expansion) const noexcept {
-  Length width  = mWidth + (expansion * 2);
+  Length width = mWidth + (expansion * 2);
   Length height = mHeight + (expansion * 2);
   if (width > 0 && height > 0) {
     PositiveLength pWidth(width);
@@ -138,8 +141,8 @@ QPainterPath FootprintPad::toQPainterPathPx(const Length& expansion) const
   QPainterPath p = getOutline(expansion).toQPainterPathPx();
   if (mBoardSide == BoardSide::THT) {
     p.setFillRule(Qt::OddEvenFill);  // important to subtract the hole!
-    p.addEllipse(QPointF(0, 0), mDrillDiameter->toPx() / 2,
-                 mDrillDiameter->toPx() / 2);
+    p.addEllipse(
+        QPointF(0, 0), mDrillDiameter->toPx() / 2, mDrillDiameter->toPx() / 2);
   }
   return p;
 }
@@ -263,8 +266,8 @@ void FootprintPad::serialize(SExpression& root) const {
   root.appendChild("shape", mShape, false);
   root.appendChild(mPosition.serializeToDomElement("position"), true);
   root.appendChild("rotation", mRotation, false);
-  root.appendChild(Point(*mWidth, *mHeight).serializeToDomElement("size"),
-                   false);
+  root.appendChild(
+      Point(*mWidth, *mHeight).serializeToDomElement("size"), false);
   root.appendChild("drill", mDrillDiameter, false);
 }
 

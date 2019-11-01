@@ -122,16 +122,17 @@ signals:
   virtual void attributesChanged() = 0;
 
 private:
-  QString getAttributeValue(const QString&                     key,
-                            QVector<const AttributeProvider*>& backtrace) const
-      noexcept;
+  QString getAttributeValue(
+      const QString& key,
+      QVector<const AttributeProvider*>& backtrace) const noexcept;
 };
 
 // Make sure that the AttributeProvider class does not contain any data (except
 // the vptr). Otherwise it could introduce issues when using multiple
 // inheritance.
-static_assert(sizeof(AttributeProvider) == sizeof(void*),
-              "AttributeProvider must not contain any data!");
+static_assert(
+    sizeof(AttributeProvider) == sizeof(void*),
+    "AttributeProvider must not contain any data!");
 
 /*******************************************************************************
  *  End of File

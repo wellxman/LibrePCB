@@ -38,7 +38,8 @@ namespace project {
  ******************************************************************************/
 
 CmdComponentInstanceRemove::CmdComponentInstanceRemove(
-    Circuit& circuit, ComponentInstance& cmp) noexcept
+    Circuit& circuit,
+    ComponentInstance& cmp) noexcept
   : UndoCommand(tr("Remove component")),
     mCircuit(circuit),
     mComponentInstance(cmp) {

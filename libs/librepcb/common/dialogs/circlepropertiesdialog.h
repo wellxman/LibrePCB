@@ -51,11 +51,13 @@ class CirclePropertiesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  CirclePropertiesDialog()                                    = delete;
+  CirclePropertiesDialog() = delete;
   CirclePropertiesDialog(const CirclePropertiesDialog& other) = delete;
-  CirclePropertiesDialog(Circle& circle, UndoStack& undoStack,
-                         QList<GraphicsLayer*> layers,
-                         QWidget*              parent = nullptr) noexcept;
+  CirclePropertiesDialog(
+      Circle& circle,
+      UndoStack& undoStack,
+      QList<GraphicsLayer*> layers,
+      QWidget* parent = nullptr) noexcept;
   ~CirclePropertiesDialog() noexcept;
 
   // Operator Overloadings
@@ -69,8 +71,8 @@ private:  // Methods
   void selectLayerNameInCombobox(const QString& name) noexcept;
 
 private:  // Data
-  Circle&                                    mCircle;
-  UndoStack&                                 mUndoStack;
+  Circle& mCircle;
+  UndoStack& mUndoStack;
   QScopedPointer<Ui::CirclePropertiesDialog> mUi;
 };
 

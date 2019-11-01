@@ -52,7 +52,8 @@ namespace editor {
  ******************************************************************************/
 
 PackageEditorState_DrawTextBase::PackageEditorState_DrawTextBase(
-    Context& context, Mode mode) noexcept
+    Context& context,
+    Mode mode) noexcept
   : PackageEditorState(context),
     mMode(mode),
     mCurrentText(nullptr),
@@ -87,8 +88,11 @@ bool PackageEditorState_DrawTextBase::entry() noexcept {
     layerComboBox->setLayers(
         mContext.layerProvider.getBoardGeometryElementLayers());
     layerComboBox->setCurrentLayer(mLastLayerName);
-    connect(layerComboBox.get(), &GraphicsLayerComboBox::currentLayerChanged,
-            this, &PackageEditorState_DrawTextBase::layerComboBoxValueChanged);
+    connect(
+        layerComboBox.get(),
+        &GraphicsLayerComboBox::currentLayerChanged,
+        this,
+        &PackageEditorState_DrawTextBase::layerComboBoxValueChanged);
     mContext.commandToolBar.addWidget(std::move(layerComboBox));
 
     mContext.commandToolBar.addLabel(tr("Text:"), 10);
@@ -107,8 +111,11 @@ bool PackageEditorState_DrawTextBase::entry() noexcept {
     } else {
       textComboBox->setCurrentText(mLastText);
     }
-    connect(textComboBox.get(), &QComboBox::currentTextChanged, this,
-            &PackageEditorState_DrawTextBase::textComboBoxValueChanged);
+    connect(
+        textComboBox.get(),
+        &QComboBox::currentTextChanged,
+        this,
+        &PackageEditorState_DrawTextBase::textComboBoxValueChanged);
     mContext.commandToolBar.addWidget(std::move(textComboBox));
   } else {
     resetToDefaultParameters();
@@ -118,8 +125,11 @@ bool PackageEditorState_DrawTextBase::entry() noexcept {
   std::unique_ptr<PositiveLengthEdit> edtLineWidth(new PositiveLengthEdit());
   edtLineWidth->setSingleStep(0.5);  // [mm]
   edtLineWidth->setValue(mLastHeight);
-  connect(edtLineWidth.get(), &PositiveLengthEdit::valueChanged, this,
-          &PackageEditorState_DrawTextBase::heightEditValueChanged);
+  connect(
+      edtLineWidth.get(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &PackageEditorState_DrawTextBase::heightEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtLineWidth));
 
   // Stroke width
@@ -128,24 +138,33 @@ bool PackageEditorState_DrawTextBase::entry() noexcept {
       new UnsignedLengthEdit());
   strokeWidthSpinBox->setSingleStep(0.1);  // [mm]
   strokeWidthSpinBox->setValue(mLastStrokeWidth);
-  connect(strokeWidthSpinBox.get(), &UnsignedLengthEdit::valueChanged, this,
-          &PackageEditorState_DrawTextBase::strokeWidthEditValueChanged);
+  connect(
+      strokeWidthSpinBox.get(),
+      &UnsignedLengthEdit::valueChanged,
+      this,
+      &PackageEditorState_DrawTextBase::strokeWidthEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(strokeWidthSpinBox));
 
   // Horizontal alignment
   mContext.commandToolBar.addSeparator();
   std::unique_ptr<HAlignActionGroup> hAlignActionGroup(new HAlignActionGroup());
   hAlignActionGroup->setValue(mLastAlignment.getH());
-  connect(hAlignActionGroup.get(), &HAlignActionGroup::valueChanged, this,
-          &PackageEditorState_DrawTextBase::hAlignActionGroupValueChanged);
+  connect(
+      hAlignActionGroup.get(),
+      &HAlignActionGroup::valueChanged,
+      this,
+      &PackageEditorState_DrawTextBase::hAlignActionGroupValueChanged);
   mContext.commandToolBar.addActionGroup(std::move(hAlignActionGroup));
 
   // Vertical alignment
   mContext.commandToolBar.addSeparator();
   std::unique_ptr<VAlignActionGroup> vAlignActionGroup(new VAlignActionGroup());
   vAlignActionGroup->setValue(mLastAlignment.getV());
-  connect(vAlignActionGroup.get(), &VAlignActionGroup::valueChanged, this,
-          &PackageEditorState_DrawTextBase::vAlignActionGroupValueChanged);
+  connect(
+      vAlignActionGroup.get(),
+      &VAlignActionGroup::valueChanged,
+      this,
+      &PackageEditorState_DrawTextBase::vAlignActionGroupValueChanged);
   mContext.commandToolBar.addActionGroup(std::move(vAlignActionGroup));
 
   Point pos =
@@ -227,12 +246,21 @@ bool PackageEditorState_DrawTextBase::startAddText(const Point& pos) noexcept {
     mStartPos = pos;
     mContext.undoStack.beginCmdGroup(tr("Add footprint text"));
     mCurrentText = new StrokeText(
-        Uuid::createRandom(), mLastLayerName, mLastText, pos, mLastRotation,
-        mLastHeight, mLastStrokeWidth, StrokeTextSpacing(), StrokeTextSpacing(),
-        mLastAlignment, false, true);
-    mContext.undoStack.appendToCmdGroup(
-        new CmdStrokeTextInsert(mContext.currentFootprint->getStrokeTexts(),
-                                std::shared_ptr<StrokeText>(mCurrentText)));
+        Uuid::createRandom(),
+        mLastLayerName,
+        mLastText,
+        pos,
+        mLastRotation,
+        mLastHeight,
+        mLastStrokeWidth,
+        StrokeTextSpacing(),
+        StrokeTextSpacing(),
+        mLastAlignment,
+        false,
+        true);
+    mContext.undoStack.appendToCmdGroup(new CmdStrokeTextInsert(
+        mContext.currentFootprint->getStrokeTexts(),
+        std::shared_ptr<StrokeText>(mCurrentText)));
     mEditCmd.reset(new CmdStrokeTextEdit(*mCurrentText));
     mCurrentGraphicsItem =
         mContext.currentGraphicsItem->getTextGraphicsItem(*mCurrentText);
@@ -242,7 +270,7 @@ bool PackageEditorState_DrawTextBase::startAddText(const Point& pos) noexcept {
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mEditCmd.reset();
     return false;
   }
@@ -257,7 +285,7 @@ bool PackageEditorState_DrawTextBase::finishAddText(const Point& pos) noexcept {
     mEditCmd->setPosition(pos, true);
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
     return true;
@@ -271,7 +299,7 @@ bool PackageEditorState_DrawTextBase::abortAddText() noexcept {
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();
     return true;
@@ -285,27 +313,27 @@ void PackageEditorState_DrawTextBase::resetToDefaultParameters() noexcept {
   switch (mMode) {
     case Mode::NAME:
       // Set all properties according library conventions
-      mLastLayerName   = GraphicsLayerName(GraphicsLayer::sTopNames);
-      mLastHeight      = PositiveLength(1000000);
+      mLastLayerName = GraphicsLayerName(GraphicsLayer::sTopNames);
+      mLastHeight = PositiveLength(1000000);
       mLastStrokeWidth = UnsignedLength(200000);
-      mLastAlignment   = Alignment(HAlign::center(), VAlign::bottom());
-      mLastText        = "{{NAME}}";
+      mLastAlignment = Alignment(HAlign::center(), VAlign::bottom());
+      mLastText = "{{NAME}}";
       break;
     case Mode::VALUE:
       // Set all properties according library conventions
-      mLastLayerName   = GraphicsLayerName(GraphicsLayer::sTopValues);
-      mLastHeight      = PositiveLength(1000000);
+      mLastLayerName = GraphicsLayerName(GraphicsLayer::sTopValues);
+      mLastHeight = PositiveLength(1000000);
       mLastStrokeWidth = UnsignedLength(200000);
-      mLastAlignment   = Alignment(HAlign::center(), VAlign::top());
-      mLastText        = "{{VALUE}}";
+      mLastAlignment = Alignment(HAlign::center(), VAlign::top());
+      mLastText = "{{VALUE}}";
       break;
     default:
       // Set properties to something reasonable
-      mLastLayerName   = GraphicsLayerName(GraphicsLayer::sTopPlacement);
-      mLastHeight      = PositiveLength(2000000);
+      mLastLayerName = GraphicsLayerName(GraphicsLayer::sTopPlacement);
+      mLastHeight = PositiveLength(2000000);
       mLastStrokeWidth = UnsignedLength(200000);
-      mLastAlignment   = Alignment(HAlign::left(), VAlign::bottom());
-      mLastText        = "Text";  // Non-empty to avoid invisible graphics item
+      mLastAlignment = Alignment(HAlign::left(), VAlign::bottom());
+      mLastText = "Text";  // Non-empty to avoid invisible graphics item
       break;
   }
 }

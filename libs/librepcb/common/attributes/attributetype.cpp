@@ -43,8 +43,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-AttributeType::AttributeType(Type_t type, const QString& typeName,
-                             const QString& typeNameTr) noexcept
+AttributeType::AttributeType(
+    Type_t type,
+    const QString& typeName,
+    const QString& typeNameTr) noexcept
   : mType(type),
     mTypeName(typeName),
     mTypeNameTr(typeNameTr),
@@ -71,7 +73,8 @@ const AttributeUnit* AttributeType::getUnitFromString(
   }
 
   throw RuntimeError(
-      __FILE__, __LINE__,
+      __FILE__,
+      __LINE__,
       QString(tr("Unknown unit of attribute type \"%1\": \"%2\""))
           .arg(mTypeName, unit));
 }
@@ -119,8 +122,10 @@ const AttributeType& AttributeType::fromString(const QString& type) {
   foreach (const AttributeType* t, getAllTypes()) {
     if (t->getName() == type) return *t;
   }
-  throw RuntimeError(__FILE__, __LINE__,
-                     QString(tr("Invalid attribute type: \"%1\"")).arg(type));
+  throw RuntimeError(
+      __FILE__,
+      __LINE__,
+      QString(tr("Invalid attribute type: \"%1\"")).arg(type));
 }
 
 /*******************************************************************************

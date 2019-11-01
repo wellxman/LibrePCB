@@ -62,17 +62,17 @@ bool CmdRemoveSelectedSymbolItems::performExecute() {
   }
 
   // remove circles
-  foreach (const auto& circle,
-           mContext.symbolGraphicsItem.getSelectedCircles()) {
-    appendChild(new CmdCircleRemove(mContext.symbol.getCircles(),
-                                    &circle->getCircle()));
+  foreach (
+      const auto& circle, mContext.symbolGraphicsItem.getSelectedCircles()) {
+    appendChild(new CmdCircleRemove(
+        mContext.symbol.getCircles(), &circle->getCircle()));
   }
 
   // remove polygons
-  foreach (const auto& polygon,
-           mContext.symbolGraphicsItem.getSelectedPolygons()) {
-    appendChild(new CmdPolygonRemove(mContext.symbol.getPolygons(),
-                                     &polygon->getPolygon()));
+  foreach (
+      const auto& polygon, mContext.symbolGraphicsItem.getSelectedPolygons()) {
+    appendChild(new CmdPolygonRemove(
+        mContext.symbol.getPolygons(), &polygon->getPolygon()));
   }
 
   // remove texts

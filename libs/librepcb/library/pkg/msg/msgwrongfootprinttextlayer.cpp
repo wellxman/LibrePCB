@@ -38,17 +38,20 @@ namespace library {
  ******************************************************************************/
 
 MsgWrongFootprintTextLayer::MsgWrongFootprintTextLayer(
-    std::shared_ptr<const Footprint>  footprint,
+    std::shared_ptr<const Footprint> footprint,
     std::shared_ptr<const StrokeText> text,
-    const QString&                    expectedLayerName) noexcept
+    const QString& expectedLayerName) noexcept
   : LibraryElementCheckMessage(
         Severity::Warning,
         QString(tr("Layer of '%1' in '%2' is not '%3'"))
-            .arg(text->getText(), *footprint->getNames().getDefaultValue(),
-                 GraphicsLayer(expectedLayerName).getNameTr()),
+            .arg(
+                text->getText(),
+                *footprint->getNames().getDefaultValue(),
+                GraphicsLayer(expectedLayerName).getNameTr()),
         QString(tr("The text element '%1' should normally be on layer '%2'."))
-            .arg(text->getText(),
-                 GraphicsLayer(expectedLayerName).getNameTr())),
+            .arg(
+                text->getText(),
+                GraphicsLayer(expectedLayerName).getNameTr())),
     mFootprint(footprint),
     mText(text),
     mExpectedLayerName(expectedLayerName) {

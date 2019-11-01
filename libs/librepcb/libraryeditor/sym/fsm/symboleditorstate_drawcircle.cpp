@@ -55,8 +55,8 @@ SymbolEditorState_DrawCircle::SymbolEditorState_DrawCircle(
     mCurrentGraphicsItem(nullptr),
     mLastLayerName(GraphicsLayer::sSymbolOutlines),  // Most important layer
     mLastLineWidth(200000),  // Typical width according library conventions
-    mLastFill(false),        // Fill is needed very rarely
-    mLastGrabArea(true)      // Most symbol outlines are used as grab areas
+    mLastFill(false),  // Fill is needed very rarely
+    mLastGrabArea(true)  // Most symbol outlines are used as grab areas
 {
 }
 
@@ -81,28 +81,40 @@ bool SymbolEditorState_DrawCircle::entry() noexcept {
   layerComboBox->setLayers(
       mContext.layerProvider.getSchematicGeometryElementLayers());
   layerComboBox->setCurrentLayer(mLastLayerName);
-  connect(layerComboBox.get(), &GraphicsLayerComboBox::currentLayerChanged,
-          this, &SymbolEditorState_DrawCircle::layerComboBoxValueChanged);
+  connect(
+      layerComboBox.get(),
+      &GraphicsLayerComboBox::currentLayerChanged,
+      this,
+      &SymbolEditorState_DrawCircle::layerComboBoxValueChanged);
   mContext.commandToolBar.addWidget(std::move(layerComboBox));
 
   mContext.commandToolBar.addLabel(tr("Line Width:"), 10);
   std::unique_ptr<UnsignedLengthEdit> edtLineWidth(new UnsignedLengthEdit());
   edtLineWidth->setSingleStep(0.1);  // [mm]
   edtLineWidth->setValue(mLastLineWidth);
-  connect(edtLineWidth.get(), &UnsignedLengthEdit::valueChanged, this,
-          &SymbolEditorState_DrawCircle::lineWidthEditValueChanged);
+  connect(
+      edtLineWidth.get(),
+      &UnsignedLengthEdit::valueChanged,
+      this,
+      &SymbolEditorState_DrawCircle::lineWidthEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtLineWidth));
 
   std::unique_ptr<QCheckBox> fillCheckBox(new QCheckBox(tr("Fill")));
   fillCheckBox->setChecked(mLastFill);
-  connect(fillCheckBox.get(), &QCheckBox::toggled, this,
-          &SymbolEditorState_DrawCircle::fillCheckBoxCheckedChanged);
+  connect(
+      fillCheckBox.get(),
+      &QCheckBox::toggled,
+      this,
+      &SymbolEditorState_DrawCircle::fillCheckBoxCheckedChanged);
   mContext.commandToolBar.addWidget(std::move(fillCheckBox), 10);
 
   std::unique_ptr<QCheckBox> grabAreaCheckBox(new QCheckBox(tr("Grab Area")));
   grabAreaCheckBox->setChecked(mLastGrabArea);
-  connect(grabAreaCheckBox.get(), &QCheckBox::toggled, this,
-          &SymbolEditorState_DrawCircle::grabAreaCheckBoxCheckedChanged);
+  connect(
+      grabAreaCheckBox.get(),
+      &QCheckBox::toggled,
+      this,
+      &SymbolEditorState_DrawCircle::grabAreaCheckBoxCheckedChanged);
   mContext.commandToolBar.addWidget(std::move(grabAreaCheckBox));
 
   return true;
@@ -161,9 +173,14 @@ bool SymbolEditorState_DrawCircle::processAbortCommand() noexcept {
 bool SymbolEditorState_DrawCircle::startAddCircle(const Point& pos) noexcept {
   try {
     mContext.undoStack.beginCmdGroup(tr("Add symbol circle"));
-    mCurrentCircle =
-        new Circle(Uuid::createRandom(), mLastLayerName, mLastLineWidth,
-                   mLastFill, mLastGrabArea, pos, PositiveLength(1));
+    mCurrentCircle = new Circle(
+        Uuid::createRandom(),
+        mLastLayerName,
+        mLastLineWidth,
+        mLastFill,
+        mLastGrabArea,
+        pos,
+        PositiveLength(1));
     mContext.undoStack.appendToCmdGroup(new CmdCircleInsert(
         mContext.symbol.getCircles(), std::shared_ptr<Circle>(mCurrentCircle)));
     mEditCmd.reset(new CmdCircleEdit(*mCurrentCircle));
@@ -175,7 +192,7 @@ bool SymbolEditorState_DrawCircle::startAddCircle(const Point& pos) noexcept {
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentCircle       = nullptr;
+    mCurrentCircle = nullptr;
     mEditCmd.reset();
     return false;
   }
@@ -183,7 +200,7 @@ bool SymbolEditorState_DrawCircle::startAddCircle(const Point& pos) noexcept {
 
 bool SymbolEditorState_DrawCircle::updateCircleDiameter(
     const Point& pos) noexcept {
-  Point  delta    = pos - mCurrentCircle->getCenter();
+  Point delta = pos - mCurrentCircle->getCenter();
   Length diameter = delta.getLength() * 2;
   if (diameter < 1) {
     diameter = 1;
@@ -201,7 +218,7 @@ bool SymbolEditorState_DrawCircle::finishAddCircle(const Point& pos) noexcept {
     updateCircleDiameter(pos);
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentCircle       = nullptr;
+    mCurrentCircle = nullptr;
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
     return true;
@@ -215,7 +232,7 @@ bool SymbolEditorState_DrawCircle::abortAddCircle() noexcept {
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentCircle       = nullptr;
+    mCurrentCircle = nullptr;
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();
     return true;

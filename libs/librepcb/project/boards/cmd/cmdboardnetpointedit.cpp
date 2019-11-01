@@ -53,22 +53,26 @@ CmdBoardNetPointEdit::~CmdBoardNetPointEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdBoardNetPointEdit::setPosition(const Point& pos,
-                                       bool         immediate) noexcept {
+void CmdBoardNetPointEdit::setPosition(
+    const Point& pos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos = pos;
   if (immediate) mNetPoint.setPosition(mNewPos);
 }
 
-void CmdBoardNetPointEdit::translate(const Point& deltaPos,
-                                     bool         immediate) noexcept {
+void CmdBoardNetPointEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos += deltaPos;
   if (immediate) mNetPoint.setPosition(mNewPos);
 }
 
-void CmdBoardNetPointEdit::rotate(const Angle& angle, const Point& center,
-                                  bool immediate) noexcept {
+void CmdBoardNetPointEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos.rotate(angle, center);
   if (immediate) mNetPoint.setPosition(mNewPos);

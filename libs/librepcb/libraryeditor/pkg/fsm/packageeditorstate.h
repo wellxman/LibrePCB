@@ -53,7 +53,7 @@ public:
   using Context = PackageEditorFsm::Context;
 
   // Constructors / Destructor
-  PackageEditorState()                                = delete;
+  PackageEditorState() = delete;
   PackageEditorState(const PackageEditorState& other) = delete;
   explicit PackageEditorState(Context& context) noexcept;
   virtual ~PackageEditorState() noexcept;

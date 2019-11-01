@@ -72,9 +72,9 @@ public:
 
   // Getters
   ProjectEditor& getProjectEditor() const noexcept { return mProjectEditor; }
-  Project&       getProject() const noexcept { return mProject; }
+  Project& getProject() const noexcept { return mProject; }
   int getActiveSchematicIndex() const noexcept { return mActiveSchematicIndex; }
-  Schematic*            getActiveSchematic() const noexcept;
+  Schematic* getActiveSchematic() const noexcept;
   const GridProperties& getGridProperties() const noexcept {
     return *mGridProperties;
   }
@@ -121,11 +121,11 @@ private:
   void toolActionGroupChangeTriggered(const QVariant& newTool) noexcept;
 
   // General Attributes
-  ProjectEditor&                       mProjectEditor;
-  Project&                             mProject;
-  Ui::SchematicEditor*                 mUi;
-  GraphicsView*                        mGraphicsView;
-  GridProperties*                      mGridProperties;
+  ProjectEditor& mProjectEditor;
+  Project& mProject;
+  Ui::SchematicEditor* mUi;
+  GraphicsView* mGraphicsView;
+  GridProperties* mGridProperties;
   QScopedPointer<UndoStackActionGroup> mUndoStackActionGroup;
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
 
@@ -133,7 +133,7 @@ private:
 
   // Docks
   SchematicPagesDock* mPagesDock;
-  ErcMsgDock*         mErcMsgDock;
+  ErcMsgDock* mErcMsgDock;
 
   // Finite State Machine
   SES_FSM* mFsm;

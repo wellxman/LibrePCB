@@ -44,9 +44,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-ProjectSettingsDialog::ProjectSettingsDialog(ProjectSettings& settings,
-                                             UndoStack&       undoStack,
-                                             QWidget*         parent) noexcept
+ProjectSettingsDialog::ProjectSettingsDialog(
+    ProjectSettings& settings,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mSettings(settings),
     mUi(new Ui::ProjectSettingsDialog),
@@ -65,8 +66,10 @@ ProjectSettingsDialog::ProjectSettingsDialog(ProjectSettings& settings,
   foreach (const QString& localeStr, allLocales) {
     QLocale locale(localeStr);
     QString str = QString("[%1] %2 (%3)")
-                      .arg(locale.name(), locale.nativeLanguageName(),
-                           locale.nativeCountryName());
+                      .arg(
+                          locale.name(),
+                          locale.nativeLanguageName(),
+                          locale.nativeCountryName());
     if (mUi->cbxLocales->findData(locale.name()) < 0)
       mUi->cbxLocales->addItem(str, locale.name());
   }
@@ -102,7 +105,8 @@ void ProjectSettingsDialog::on_buttonBox_clicked(QAbstractButton* button) {
 
     case QDialogButtonBox::ResetRole: {
       int answer = QMessageBox::question(
-          this, tr("Restore default settings"),
+          this,
+          tr("Restore default settings"),
           tr("Are you sure to reset all settings to their default values?"));
       if (answer == QMessageBox::Yes) restoreDefaultSettings();
       break;
@@ -128,8 +132,10 @@ void ProjectSettingsDialog::on_btnLocaleAdd_clicked() {
     QString localeStr = mUi->cbxLocales->currentData().toString();
     QLocale locale(localeStr);
     QString str = QString("[%1] %2 (%3)")
-                      .arg(locale.name(), locale.nativeLanguageName(),
-                           locale.nativeCountryName());
+                      .arg(
+                          locale.name(),
+                          locale.nativeLanguageName(),
+                          locale.nativeCountryName());
     QListWidgetItem* item = new QListWidgetItem(str, mUi->lstLocaleOrder);
     item->setData(Qt::UserRole, localeStr);
   }
@@ -143,8 +149,8 @@ void ProjectSettingsDialog::on_btnLocaleRemove_clicked() {
 void ProjectSettingsDialog::on_btnLocaleUp_clicked() {
   int row = mUi->lstLocaleOrder->currentRow();
   if (row > 0) {
-    mUi->lstLocaleOrder->insertItem(row - 1,
-                                    mUi->lstLocaleOrder->takeItem(row));
+    mUi->lstLocaleOrder->insertItem(
+        row - 1, mUi->lstLocaleOrder->takeItem(row));
     mUi->lstLocaleOrder->setCurrentRow(row - 1);
   }
 }
@@ -152,8 +158,8 @@ void ProjectSettingsDialog::on_btnLocaleUp_clicked() {
 void ProjectSettingsDialog::on_btnLocaleDown_clicked() {
   int row = mUi->lstLocaleOrder->currentRow();
   if ((row >= 0) && (row < mUi->lstLocaleOrder->count() - 1)) {
-    mUi->lstLocaleOrder->insertItem(row + 1,
-                                    mUi->lstLocaleOrder->takeItem(row));
+    mUi->lstLocaleOrder->insertItem(
+        row + 1, mUi->lstLocaleOrder->takeItem(row));
     mUi->lstLocaleOrder->setCurrentRow(row + 1);
   }
 }
@@ -233,8 +239,10 @@ void ProjectSettingsDialog::updateGuiFromSettings() noexcept {
   foreach (const QString& localeStr, mSettings.getLocaleOrder()) {
     QLocale locale(localeStr);
     QString str = QString("[%1] %2 (%3)")
-                      .arg(locale.name(), locale.nativeLanguageName(),
-                           locale.nativeCountryName());
+                      .arg(
+                          locale.name(),
+                          locale.nativeLanguageName(),
+                          locale.nativeCountryName());
     QListWidgetItem* item = new QListWidgetItem(str, mUi->lstLocaleOrder);
     item->setData(Qt::UserRole, localeStr);
   }

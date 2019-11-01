@@ -190,7 +190,8 @@ void CmdRemoveSelectedSchematicItems::removeNetSegment(
 }
 
 void CmdRemoveSelectedSchematicItems::splitUpNetSegment(
-    SI_NetSegment& netsegment, const NetSegmentItems& selectedItems) {
+    SI_NetSegment& netsegment,
+    const NetSegmentItems& selectedItems) {
   // determine all resulting sub-netsegments
   QList<NetSegmentItems> subsegments =
       getNonCohesiveNetSegmentSubSegments(netsegment, selectedItems);
@@ -230,7 +231,7 @@ void CmdRemoveSelectedSchematicItems::splitUpNetSegment(
   // assign new netsignal to each subsegment (with some exceptions)
   foreach (SI_NetSegment* subsegment, newSubsegments) {
     NetSignal* newNetSignal = nullptr;
-    QString    forcedName   = subsegment->getForcedNetName();
+    QString forcedName = subsegment->getForcedNetName();
     if (!forcedName.isEmpty()) {
       // set netsignal to forced name
       if (subsegment->getNetSignal().getName() != forcedName) {
@@ -238,11 +239,11 @@ void CmdRemoveSelectedSchematicItems::splitUpNetSegment(
             mSchematic.getProject().getCircuit().getNetSignalByName(forcedName);
         if (!newNetSignal) {
           // create new netsignal
-          CmdNetSignalAdd* cmdAddNetSignal =
-              new CmdNetSignalAdd(subsegment->getCircuit(),
-                                  subsegment->getNetSignal().getNetClass(),
-                                  CircuitIdentifier(forcedName));  // can throw
-          execNewChildCmd(cmdAddNetSignal);                        // can throw
+          CmdNetSignalAdd* cmdAddNetSignal = new CmdNetSignalAdd(
+              subsegment->getCircuit(),
+              subsegment->getNetSignal().getNetClass(),
+              CircuitIdentifier(forcedName));  // can throw
+          execNewChildCmd(cmdAddNetSignal);  // can throw
           newNetSignal = cmdAddNetSignal->getNetSignal();
           Q_ASSERT(newNetSignal);
         }
@@ -263,7 +264,8 @@ void CmdRemoveSelectedSchematicItems::splitUpNetSegment(
 }
 
 SI_NetSegment* CmdRemoveSelectedSchematicItems::createNewSubNetSegment(
-    SI_NetSegment& netsegment, const NetSegmentItems& items) {
+    SI_NetSegment& netsegment,
+    const NetSegmentItems& items) {
   // create new netsegment
   CmdSchematicNetSegmentAdd* cmdAddNetSegment = new CmdSchematicNetSegmentAdd(
       netsegment.getSchematic(), netsegment.getNetSignal());
@@ -312,16 +314,18 @@ void CmdRemoveSelectedSchematicItems::removeNetLabel(SI_NetLabel& netlabel) {
   if (netlabel.getNetSegment().getNetLabels().isEmpty()) {
     // are there any forced net names of the net segment?
     CmdNetSignalAdd* cmd;
-    NetClass&     netclass = netlabel.getNetSignalOfNetSegment().getNetClass();
-    QSet<QString> names    = netlabel.getNetSegment().getForcedNetNames();
+    NetClass& netclass = netlabel.getNetSignalOfNetSegment().getNetClass();
+    QSet<QString> names = netlabel.getNetSegment().getForcedNetNames();
     if (names.isEmpty()) {
       // create new netsignal with auto-name
       cmd = new CmdNetSignalAdd(mSchematic.getProject().getCircuit(), netclass);
-    } else if (names.values().first() !=
-               netlabel.getNetSignalOfNetSegment().getName()) {
+    } else if (
+        names.values().first() !=
+        netlabel.getNetSignalOfNetSegment().getName()) {
       // create new netsignal with (first) forced name
       cmd = new CmdNetSignalAdd(
-          mSchematic.getProject().getCircuit(), netclass,
+          mSchematic.getProject().getCircuit(),
+          netclass,
           CircuitIdentifier(names.values().first()));  // can throw
     } else {
       // keep current name, as it is forced anyway
@@ -354,9 +358,9 @@ void CmdRemoveSelectedSchematicItems::removeSymbol(SI_Symbol& symbol) {
         execNewChildCmd(cmd.take());  // can throw
       }
     }
-    execNewChildCmd(
-        new CmdComponentInstanceRemove(mSchematic.getProject().getCircuit(),
-                                       component));  // can throw
+    execNewChildCmd(new CmdComponentInstanceRemove(
+        mSchematic.getProject().getCircuit(),
+        component));  // can throw
   }
 }
 
@@ -369,7 +373,8 @@ void CmdRemoveSelectedSchematicItems::disconnectComponentSignalInstance(
     boardNetLinesToRemove[&pad->getBoard()] += pad->getNetLines();
   }
   for (auto it = boardNetLinesToRemove.constBegin();
-       it != boardNetLinesToRemove.constEnd(); ++it) {
+       it != boardNetLinesToRemove.constEnd();
+       ++it) {
     QScopedPointer<CmdRemoveBoardItems> cmd(new CmdRemoveBoardItems(*it.key()));
     cmd->removeNetLines(it.value());
     execNewChildCmd(cmd.take());  // can throw
@@ -381,8 +386,9 @@ void CmdRemoveSelectedSchematicItems::disconnectComponentSignalInstance(
 }
 
 QList<CmdRemoveSelectedSchematicItems::NetSegmentItems>
-CmdRemoveSelectedSchematicItems::getNonCohesiveNetSegmentSubSegments(
-    SI_NetSegment& segment, const NetSegmentItems& removedItems) noexcept {
+    CmdRemoveSelectedSchematicItems::getNonCohesiveNetSegmentSubSegments(
+        SI_NetSegment& segment,
+        const NetSegmentItems& removedItems) noexcept {
   // get all netpoints, netlines and netlabels of the segment
   QSet<SI_NetLine*> netlines =
       segment.getNetLines().toSet() - removedItems.netlines;
@@ -392,11 +398,14 @@ CmdRemoveSelectedSchematicItems::getNonCohesiveNetSegmentSubSegments(
   // find all separate segments of the netsegment
   QList<NetSegmentItems> segments;
   while (netlines.count() > 0) {
-    NetSegmentItems         seg;
+    NetSegmentItems seg;
     QSet<SI_NetLineAnchor*> processedAnchors;
     findAllConnectedNetPointsAndNetLines(
-        netlines.values().first()->getStartPoint(), processedAnchors,
-        seg.netpoints, seg.netlines, netlines);
+        netlines.values().first()->getStartPoint(),
+        processedAnchors,
+        seg.netpoints,
+        seg.netlines,
+        netlines);
     netlines -= seg.netlines;
     segments.append(seg);
   }
@@ -412,8 +421,10 @@ CmdRemoveSelectedSchematicItems::getNonCohesiveNetSegmentSubSegments(
 }
 
 void CmdRemoveSelectedSchematicItems::findAllConnectedNetPointsAndNetLines(
-    SI_NetLineAnchor& anchor, QSet<SI_NetLineAnchor*>& processedAnchors,
-    QSet<SI_NetPoint*>& netpoints, QSet<SI_NetLine*>& netlines,
+    SI_NetLineAnchor& anchor,
+    QSet<SI_NetLineAnchor*>& processedAnchors,
+    QSet<SI_NetPoint*>& netpoints,
+    QSet<SI_NetLine*>& netlines,
     QSet<SI_NetLine*>& availableNetLines) const noexcept {
   Q_ASSERT(!processedAnchors.contains(&anchor));
   processedAnchors.insert(&anchor);
@@ -430,23 +441,23 @@ void CmdRemoveSelectedSchematicItems::findAllConnectedNetPointsAndNetLines(
       SI_NetLineAnchor* p2 = line->getOtherPoint(anchor);
       Q_ASSERT(p2);
       if (!processedAnchors.contains(p2)) {
-        findAllConnectedNetPointsAndNetLines(*p2, processedAnchors, netpoints,
-                                             netlines, availableNetLines);
+        findAllConnectedNetPointsAndNetLines(
+            *p2, processedAnchors, netpoints, netlines, availableNetLines);
       }
     }
   }
 }
 
 int CmdRemoveSelectedSchematicItems::getNearestNetSegmentOfNetLabel(
-    const SI_NetLabel& netlabel, const QList<NetSegmentItems>& segments) const
-    noexcept {
-  int    nearestIndex = -1;
+    const SI_NetLabel& netlabel,
+    const QList<NetSegmentItems>& segments) const noexcept {
+  int nearestIndex = -1;
   Length nearestDistance;
   for (int i = 0; i < segments.count(); ++i) {
     Length distance =
         getDistanceBetweenNetLabelAndNetSegment(netlabel, segments.at(i));
     if ((distance < nearestDistance) || (nearestIndex < 0)) {
-      nearestIndex    = i;
+      nearestIndex = i;
       nearestDistance = distance;
     }
   }
@@ -454,25 +465,26 @@ int CmdRemoveSelectedSchematicItems::getNearestNetSegmentOfNetLabel(
 }
 
 Length CmdRemoveSelectedSchematicItems::getDistanceBetweenNetLabelAndNetSegment(
-    const SI_NetLabel& netlabel, const NetSegmentItems& netsegment) const
-    noexcept {
-  bool   firstRun = true;
+    const SI_NetLabel& netlabel,
+    const NetSegmentItems& netsegment) const noexcept {
+  bool firstRun = true;
   Length nearestDistance;
   foreach (const SI_NetPoint* netpoint, netsegment.netpoints) {
     Length distance =
         (netpoint->getPosition() - netlabel.getPosition()).getLength();
     if ((distance < nearestDistance) || firstRun) {
       nearestDistance = distance;
-      firstRun        = false;
+      firstRun = false;
     }
   }
   foreach (const SI_NetLine* netline, netsegment.netlines) {
     Length distance = Toolbox::shortestDistanceBetweenPointAndLine(
-        netlabel.getPosition(), netline->getStartPoint().getPosition(),
+        netlabel.getPosition(),
+        netline->getStartPoint().getPosition(),
         netline->getEndPoint().getPosition());
     if ((distance < nearestDistance) || firstRun) {
       nearestDistance = distance;
-      firstRun        = false;
+      firstRun = false;
     }
   }
   Q_ASSERT(firstRun == false);

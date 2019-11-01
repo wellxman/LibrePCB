@@ -59,14 +59,19 @@ StrokeText::StrokeText(const Uuid& uuid, const StrokeText& other) noexcept
   mUuid = uuid;
 }
 
-StrokeText::StrokeText(const Uuid& uuid, const GraphicsLayerName& layerName,
-                       const QString& text, const Point& pos,
-                       const Angle& rotation, const PositiveLength& height,
-                       const UnsignedLength&    strokeWidth,
-                       const StrokeTextSpacing& letterSpacing,
-                       const StrokeTextSpacing& lineSpacing,
-                       const Alignment& align, bool mirrored,
-                       bool autoRotate) noexcept
+StrokeText::StrokeText(
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    const QString& text,
+    const Point& pos,
+    const Angle& rotation,
+    const PositiveLength& height,
+    const UnsignedLength& strokeWidth,
+    const StrokeTextSpacing& letterSpacing,
+    const StrokeTextSpacing& lineSpacing,
+    const Alignment& align,
+    bool mirrored,
+    bool autoRotate) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mLayerName(layerName),
@@ -119,7 +124,7 @@ const QVector<Path>& StrokeText::getPaths() const noexcept {
 bool StrokeText::needsAutoRotation() const noexcept {
   Angle rot360 = (mMirrored ? -mRotation : mRotation).mappedTo0_360deg();
   return mAutoRotate && (rot360 > Angle::deg90()) &&
-         (rot360 <= Angle::deg270());
+      (rot360 <= Angle::deg270());
 }
 
 Length StrokeText::calcLetterSpacing() const noexcept {
@@ -127,7 +132,7 @@ Length StrokeText::calcLetterSpacing() const noexcept {
     // Use recommended letter spacing of font, but add stroke width to avoid
     // overlapped glyphs caused by thick lines.
     return Length(mHeight->toNm() * mFont->getLetterSpacing().toNormalized()) +
-           mStrokeWidth;
+        mStrokeWidth;
   } else {
     // Use given letter spacing without additional factor or stroke width
     // offset. Also don't use recommended letter spacing of font.
@@ -140,7 +145,7 @@ Length StrokeText::calcLineSpacing() const noexcept {
     // Use recommended line spacing of font, but add stroke width to avoid
     // overlapped glyphs caused by thick lines.
     return Length(mHeight->toNm() * mFont->getLineSpacing().toNormalized()) +
-           mStrokeWidth;
+        mStrokeWidth;
   } else {
     // Use given line spacing without additional factor or stroke width offset.
     // Also don't use recommended line spacing of font.
@@ -189,7 +194,7 @@ bool StrokeText::setRotation(const Angle& rotation) noexcept {
   }
 
   bool needsRotation = needsAutoRotation();
-  mRotation          = rotation;
+  mRotation = rotation;
   onEdited.notify(Event::RotationChanged);
   if (needsRotation != needsAutoRotation()) {
     onEdited.notify(Event::PathsChanged);
@@ -258,7 +263,7 @@ bool StrokeText::setMirrored(bool mirrored) noexcept {
   }
 
   bool needsRotation = needsAutoRotation();
-  mMirrored          = mirrored;
+  mMirrored = mirrored;
   onEdited.notify(Event::MirroredChanged);
   if (needsRotation != needsAutoRotation()) {
     onEdited.notify(Event::PathsChanged);
@@ -272,7 +277,7 @@ bool StrokeText::setAutoRotate(bool autoRotate) noexcept {
   }
 
   bool needsRotation = needsAutoRotation();
-  mAutoRotate        = autoRotate;
+  mAutoRotate = autoRotate;
   onEdited.notify(Event::AutoRotateChanged);
   if (needsRotation != needsAutoRotation()) {
     onEdited.notify(Event::PathsChanged);
@@ -299,15 +304,21 @@ void StrokeText::setFont(const StrokeFont* font) noexcept {
 
 void StrokeText::updatePaths() noexcept {
   QVector<Path> paths;
-  Point         center;
+  Point center;
   if (mFont) {
     QString str = mText;
     if (mAttributeProvider) {
       str = AttributeSubstitutor::substitute(str, mAttributeProvider);
     }
     Point bottomLeft, topRight;
-    paths  = mFont->stroke(str, mHeight, calcLetterSpacing(), calcLineSpacing(),
-                          mAlign, bottomLeft, topRight);
+    paths = mFont->stroke(
+        str,
+        mHeight,
+        calcLetterSpacing(),
+        calcLineSpacing(),
+        mAlign,
+        bottomLeft,
+        topRight);
     center = (bottomLeft + topRight) / 2;
   }
   if (paths == mPaths) return;

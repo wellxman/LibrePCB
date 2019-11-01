@@ -45,9 +45,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SES_FSM::SES_FSM(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                 GraphicsView& editorGraphicsView,
-                 UndoStack&    undoStack) noexcept
+SES_FSM::SES_FSM(
+    SchematicEditor& editor,
+    Ui::SchematicEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack) noexcept
   : SES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mCurrentState(State_NoState),
     mPreviousState(State_NoState) {
@@ -61,9 +63,10 @@ SES_FSM::SES_FSM(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
   mSubStates.insert(
       State_AddNetLabel,
       new SES_AddNetLabel(mEditor, mEditorUi, mEditorGraphicsView, mUndoStack));
-  mSubStates.insert(State_AddComponent,
-                    new SES_AddComponent(mEditor, mEditorUi,
-                                         mEditorGraphicsView, mUndoStack));
+  mSubStates.insert(
+      State_AddComponent,
+      new SES_AddComponent(
+          mEditor, mEditorUi, mEditorGraphicsView, mUndoStack));
 
   // go to state "Select"
   if (mSubStates[State_Select]->entry(nullptr)) {
@@ -98,8 +101,8 @@ bool SES_FSM::processEvent(SEE_Base* event, bool deleteEvent) noexcept {
 }
 
 SES_Base::ProcRetVal SES_FSM::process(SEE_Base* event) noexcept {
-  State      nextState = mCurrentState;
-  ProcRetVal retval    = PassToParentState;
+  State nextState = mCurrentState;
+  ProcRetVal retval = PassToParentState;
 
   // let the current state process the event
   if (mCurrentState != State_NoState)
@@ -129,7 +132,7 @@ SES_Base::ProcRetVal SES_FSM::process(SEE_Base* event) noexcept {
       // leave the current state
       if (mSubStates[mCurrentState]->exit(event)) {
         mPreviousState = mCurrentState;
-        mCurrentState  = State_NoState;
+        mCurrentState = State_NoState;
         emit stateChanged(mCurrentState);
       }
     }

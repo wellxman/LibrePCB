@@ -72,8 +72,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_Select::BES_Select(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                       GraphicsView& editorGraphicsView, UndoStack& undoStack)
+BES_Select::BES_Select(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mSubState(SubState_Idle) {
 }
@@ -213,7 +216,8 @@ BES_Base::ProcRetVal BES_Select::processSubStateIdleSceneEvent(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneLeftClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Board& board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Board& board) noexcept {
   // handle items selection
   QList<BI_Base*> items =
       board.getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -242,7 +246,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneLeftClick(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
-    QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Board* board) noexcept {
   // handle item selection
   QList<BI_Base*> items =
       board->getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -256,8 +261,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
     case BI_Base::Type_t::Footprint: {
       BI_Footprint* footprint = dynamic_cast<BI_Footprint*>(items.first());
       Q_ASSERT(footprint);
-      BI_Device&         devInst     = footprint->getDeviceInstance();
-      ComponentInstance& cmpInst     = devInst.getComponentInstance();
+      BI_Device& devInst = footprint->getDeviceInstance();
+      ComponentInstance& cmpInst = devInst.getComponentInstance();
       const QStringList& localeOrder = mProject.getSettings().getLocaleOrder();
 
       // get all available alternative devices and footprints
@@ -269,22 +274,23 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
           menu.addAction(QIcon(":/img/actions/rotate_left.png"), tr("Rotate"));
       QAction* aFlipH = menu.addAction(
           QIcon(":/img/actions/flip_horizontal.png"), tr("Flip"));
-      QAction* aRemove =
-          menu.addAction(QIcon(":/img/actions/delete.png"),
-                         QString(tr("Remove %1")).arg(*cmpInst.getName()));
+      QAction* aRemove = menu.addAction(
+          QIcon(":/img/actions/delete.png"),
+          QString(tr("Remove %1")).arg(*cmpInst.getName()));
       menu.addSeparator();
       QAction* aSnapToGrid =
           menu.addAction(QIcon(":/img/actions/grid.png"), tr("Snap to grid"));
-      aSnapToGrid->setVisible(devInst.getPosition().mappedToGrid(
-                                  board->getGridProperties().getInterval()) !=
-                              devInst.getPosition());  // only show if needed
+      aSnapToGrid->setVisible(
+          devInst.getPosition().mappedToGrid(
+              board->getGridProperties().getInterval()) !=
+          devInst.getPosition());  // only show if needed
       QAction* aResetTexts =
           menu.addAction(QIcon(":/img/actions/undo.png"), "Reset all texts");
       menu.addSeparator();
       QMenu* aChangeDeviceMenu = menu.addMenu(tr("Change Device"));
       aChangeDeviceMenu->setEnabled(devicesList.count() > 0);
       foreach (const Uuid& deviceUuid, devicesList) {
-        QString  devName, pkgName;
+        QString devName, pkgName;
         FilePath devFp = mWorkspace.getLibraryDb().getLatestDevice(deviceUuid);
         mWorkspace.getLibraryDb().getElementTranslations<library::Device>(
             devFp, localeOrder, &devName);
@@ -334,9 +340,10 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
         try {
           QScopedPointer<CmdDeviceInstanceEditAll> cmd(
               new CmdDeviceInstanceEditAll(devInst));
-          cmd->setPosition(devInst.getPosition().mappedToGrid(
-                               board->getGridProperties().getInterval()),
-                           false);
+          cmd->setPosition(
+              devInst.getPosition().mappedToGrid(
+                  board->getGridProperties().getInterval()),
+              false);
           mUndoStack.execCmd(cmd.take());
         } catch (const Exception& e) {
           QMessageBox::critical(&mEditor, tr("Error"), e.getMsg());
@@ -378,8 +385,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
       // build the context menu
       QAction* aRemove =
           menu.addAction(QIcon(":/img/actions/delete.png"), "Remove Trace");
-      QAction* aRemoveSegment = menu.addAction(QIcon(":/img/actions/minus.png"),
-                                               "Remove Whole Segment");
+      QAction* aRemoveSegment = menu.addAction(
+          QIcon(":/img/actions/minus.png"), "Remove Whole Segment");
       menu.addSeparator();
       QAction* aSelectSegment = menu.addAction(
           QIcon(":/img/actions/bookmark.png"), tr("Select Whole Segment"));
@@ -406,8 +413,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
       // build the context menu
       QAction* aRemove =
           menu.addAction(QIcon(":/img/actions/delete.png"), "Remove Via");
-      QAction* aRemoveSegment = menu.addAction(QIcon(":/img/actions/minus.png"),
-                                               "Remove Whole Segment");
+      QAction* aRemoveSegment = menu.addAction(
+          QIcon(":/img/actions/minus.png"), "Remove Whole Segment");
       menu.addSeparator();
       QAction* aSelectSegment = menu.addAction(
           QIcon(":/img/actions/bookmark.png"), tr("Select Whole Segment"));
@@ -447,8 +454,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
       aIsVisible->setCheckable(true);
       aIsVisible->setChecked(plane->isVisible());
       menu.addSeparator();
-      QAction* aProperties = menu.addAction(QIcon(":/img/actions/settings.png"),
-                                            tr("Plane Properties"));
+      QAction* aProperties = menu.addAction(
+          QIcon(":/img/actions/settings.png"), tr("Plane Properties"));
 
       // execute the context menu
       QAction* action = menu.exec(mouseEvent->screenPos());
@@ -558,7 +565,8 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneDoubleClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Board* board) noexcept {
   if (mouseEvent->button() == Qt::LeftButton) {
     // check if there is an element under the mouse
     QList<BI_Base*> items =
@@ -647,9 +655,10 @@ BES_Base::ProcRetVal BES_Select::processSubStateMovingSceneEvent(
         }
         mSelectedItemsDragCommand.reset();
         mSubState = SubState_Idle;
-      } else if ((sceneEvent->button() == Qt::RightButton) &&
-                 (sceneEvent->screenPos() ==
-                  sceneEvent->buttonDownScreenPos(Qt::RightButton))) {
+      } else if (
+          (sceneEvent->button() == Qt::RightButton) &&
+          (sceneEvent->screenPos() ==
+           sceneEvent->buttonDownScreenPos(Qt::RightButton))) {
         rotateSelectedItems(Angle::deg90());
       }
       break;
@@ -698,8 +707,9 @@ BES_Base::ProcRetVal BES_Select::processSubStateMovingSceneEvent(
   return PassToParentState;
 }
 
-bool BES_Select::startMovingSelectedItems(Board&       board,
-                                          const Point& startPos) noexcept {
+bool BES_Select::startMovingSelectedItems(
+    Board& board,
+    const Point& startPos) noexcept {
   Q_ASSERT(mSelectedItemsDragCommand.isNull());
   mSelectedItemsDragCommand.reset(
       new CmdDragSelectedBoardItems(board, startPos));
@@ -783,15 +793,17 @@ void BES_Select::openPlanePropertiesDialog(BI_Plane& plane) noexcept {
   plane.setVisible(visible);
 }
 
-void BES_Select::openPolygonPropertiesDialog(Board&   board,
-                                             Polygon& polygon) noexcept {
+void BES_Select::openPolygonPropertiesDialog(
+    Board& board,
+    Polygon& polygon) noexcept {
   PolygonPropertiesDialog dialog(
       polygon, mUndoStack, board.getLayerStack().getAllowedPolygonLayers());
   dialog.exec();
 }
 
-void BES_Select::openStrokeTextPropertiesDialog(Board&      board,
-                                                StrokeText& text) noexcept {
+void BES_Select::openStrokeTextPropertiesDialog(
+    Board& board,
+    StrokeText& text) noexcept {
   StrokeTextPropertiesDialog dialog(
       text, mUndoStack, board.getLayerStack().getAllowedPolygonLayers());
   dialog.exec();

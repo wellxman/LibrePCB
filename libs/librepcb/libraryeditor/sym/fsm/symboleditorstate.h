@@ -53,7 +53,7 @@ public:
   using Context = SymbolEditorFsm::Context;
 
   // Constructors / Destructor
-  SymbolEditorState()                               = delete;
+  SymbolEditorState() = delete;
   SymbolEditorState(const SymbolEditorState& other) = delete;
   explicit SymbolEditorState(const Context& context) noexcept;
   virtual ~SymbolEditorState() noexcept;

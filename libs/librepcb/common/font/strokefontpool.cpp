@@ -41,9 +41,11 @@ StrokeFontPool::StrokeFontPool(const FileSystem& directory) noexcept {
     if (fp.getSuffix() != "bene") continue;
     try {
       qDebug() << "Load stroke font:" << filename;
-      mFonts.insert(filename, std::make_shared<StrokeFont>(
-                                  fp,
-                                  directory.read(filename)));  // can throw
+      mFonts.insert(
+          filename,
+          std::make_shared<StrokeFont>(
+              fp,
+              directory.read(filename)));  // can throw
     } catch (const Exception& e) {
       qCritical() << "Failed to load stroke font" << fp.toNative() << ":"
                   << e.getMsg();
@@ -63,7 +65,8 @@ const StrokeFont& StrokeFontPool::getFont(const QString& filename) const {
     return *mFonts[filename];
   } else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The font \"%1\" does not exist in the font pool."))
             .arg(filename));
   }

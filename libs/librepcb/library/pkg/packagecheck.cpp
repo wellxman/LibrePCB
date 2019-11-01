@@ -89,10 +89,12 @@ void PackageCheck::checkMissingFootprint(MsgList& msgs) const {
 
 void PackageCheck::checkMissingTexts(MsgList& msgs) const {
   for (auto itFtp = mPackage.getFootprints().begin();
-       itFtp != mPackage.getFootprints().end(); ++itFtp) {
+       itFtp != mPackage.getFootprints().end();
+       ++itFtp) {
     QHash<QString, QVector<std::shared_ptr<const StrokeText>>> texts;
     for (auto it = (*itFtp).getStrokeTexts().begin();
-         it != (*itFtp).getStrokeTexts().end(); ++it) {
+         it != (*itFtp).getStrokeTexts().end();
+         ++it) {
       texts[(*it).getText()].append(it.ptr());
     }
     if (texts.value("{{NAME}}").isEmpty()) {
@@ -110,9 +112,11 @@ void PackageCheck::checkWrongTextLayers(MsgList& msgs) const {
       std::make_pair("{{VALUE}}", QString(GraphicsLayer::sTopValues)),
   };
   for (auto itFtp = mPackage.getFootprints().begin();
-       itFtp != mPackage.getFootprints().end(); ++itFtp) {
+       itFtp != mPackage.getFootprints().end();
+       ++itFtp) {
     for (auto it = (*itFtp).getStrokeTexts().begin();
-         it != (*itFtp).getStrokeTexts().end(); ++it) {
+         it != (*itFtp).getStrokeTexts().end();
+         ++it) {
       QString expectedLayer = textLayers.value((*it).getText());
       if ((!expectedLayer.isEmpty()) &&
           ((*it).getLayerName() != expectedLayer)) {
@@ -125,7 +129,8 @@ void PackageCheck::checkWrongTextLayers(MsgList& msgs) const {
 
 void PackageCheck::checkPadsOverlapWithPlacement(MsgList& msgs) const {
   for (auto itFtp = mPackage.getFootprints().begin();
-       itFtp != mPackage.getFootprints().end(); ++itFtp) {
+       itFtp != mPackage.getFootprints().end();
+       ++itFtp) {
     std::shared_ptr<const Footprint> footprint = itFtp.ptr();
 
     QPainterPath topPlacement;
@@ -152,22 +157,27 @@ void PackageCheck::checkPadsOverlapWithPlacement(MsgList& msgs) const {
     for (auto it = (*itFtp).getPads().begin(); it != (*itFtp).getPads().end();
          ++it) {
       std::shared_ptr<const FootprintPad> pad = it.ptr();
-      std::shared_ptr<const PackagePad>   pkgPad =
+      std::shared_ptr<const PackagePad> pkgPad =
           mPackage.getPads().find(pad->getUuid());
       Length clearance(150000);  // 150 µm
-      Length tolerance(10);      // 0.01 µm, to avoid rounding issues
-      Path   stopMaskPath = pad->getOutline(clearance - tolerance);
+      Length tolerance(10);  // 0.01 µm, to avoid rounding issues
+      Path stopMaskPath = pad->getOutline(clearance - tolerance);
       stopMaskPath.rotate(pad->getRotation()).translate(pad->getPosition());
       QPainterPath stopMask = stopMaskPath.toQPainterPathPx();
       if (pad->isOnLayer(GraphicsLayer::sTopCopper) &&
           stopMask.intersects(topPlacement)) {
         msgs.append(std::make_shared<MsgPadOverlapsWithPlacement>(
-            footprint, pad, pkgPad ? *pkgPad->getName() : QString(),
+            footprint,
+            pad,
+            pkgPad ? *pkgPad->getName() : QString(),
             clearance));
-      } else if (pad->isOnLayer(GraphicsLayer::sBotCopper) &&
-                 stopMask.intersects(botPlacement)) {
+      } else if (
+          pad->isOnLayer(GraphicsLayer::sBotCopper) &&
+          stopMask.intersects(botPlacement)) {
         msgs.append(std::make_shared<MsgPadOverlapsWithPlacement>(
-            footprint, pad, pkgPad ? *pkgPad->getName() : QString(),
+            footprint,
+            pad,
+            pkgPad ? *pkgPad->getName() : QString(),
             clearance));
       }
     }

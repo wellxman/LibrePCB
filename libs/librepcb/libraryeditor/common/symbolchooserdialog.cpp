@@ -48,8 +48,9 @@ namespace editor {
  ******************************************************************************/
 
 SymbolChooserDialog::SymbolChooserDialog(
-    const workspace::Workspace&     ws,
-    const IF_GraphicsLayerProvider& layerProvider, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    const IF_GraphicsLayerProvider& layerProvider,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mLayerProvider(layerProvider),
@@ -60,18 +61,30 @@ SymbolChooserDialog::SymbolChooserDialog(
   mUi->graphicsView->setOriginCrossVisible(false);
 
   mCategoryTreeModel.reset(new workspace::ComponentCategoryTreeModel(
-      mWorkspace.getLibraryDb(), localeOrder(),
+      mWorkspace.getLibraryDb(),
+      localeOrder(),
       workspace::CategoryTreeFilter::SYMBOLS));
   mUi->treeCategories->setModel(mCategoryTreeModel.data());
-  connect(mUi->treeCategories->selectionModel(),
-          &QItemSelectionModel::currentChanged, this,
-          &SymbolChooserDialog::treeCategories_currentItemChanged);
-  connect(mUi->listSymbols, &QListWidget::currentItemChanged, this,
-          &SymbolChooserDialog::listSymbols_currentItemChanged);
-  connect(mUi->listSymbols, &QListWidget::itemDoubleClicked, this,
-          &SymbolChooserDialog::listSymbols_itemDoubleClicked);
-  connect(mUi->edtSearch, &QLineEdit::textChanged, this,
-          &SymbolChooserDialog::searchEditTextChanged);
+  connect(
+      mUi->treeCategories->selectionModel(),
+      &QItemSelectionModel::currentChanged,
+      this,
+      &SymbolChooserDialog::treeCategories_currentItemChanged);
+  connect(
+      mUi->listSymbols,
+      &QListWidget::currentItemChanged,
+      this,
+      &SymbolChooserDialog::listSymbols_currentItemChanged);
+  connect(
+      mUi->listSymbols,
+      &QListWidget::itemDoubleClicked,
+      this,
+      &SymbolChooserDialog::listSymbols_itemDoubleClicked);
+  connect(
+      mUi->edtSearch,
+      &QLineEdit::textChanged,
+      this,
+      &SymbolChooserDialog::searchEditTextChanged);
 
   setSelectedSymbol(FilePath());
 }
@@ -96,8 +109,8 @@ QString SymbolChooserDialog::getSelectedSymbolNameTr() const noexcept {
 
 QString SymbolChooserDialog::getSelectedSymbolDescriptionTr() const noexcept {
   return mSelectedSymbol
-             ? mSelectedSymbol->getDescriptions().value(localeOrder())
-             : QString();
+      ? mSelectedSymbol->getDescriptions().value(localeOrder())
+      : QString();
 }
 
 /*******************************************************************************
@@ -119,14 +132,16 @@ void SymbolChooserDialog::searchEditTextChanged(const QString& text) noexcept {
 }
 
 void SymbolChooserDialog::treeCategories_currentItemChanged(
-    const QModelIndex& current, const QModelIndex& previous) noexcept {
+    const QModelIndex& current,
+    const QModelIndex& previous) noexcept {
   Q_UNUSED(previous);
   setSelectedCategory(
       Uuid::tryFromString(current.data(Qt::UserRole).toString()));
 }
 
 void SymbolChooserDialog::listSymbols_currentItemChanged(
-    QListWidgetItem* current, QListWidgetItem* previous) noexcept {
+    QListWidgetItem* current,
+    QListWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
   if (current) {
     setSelectedSymbol(FilePath(current->data(Qt::UserRole).toString()));
@@ -155,7 +170,8 @@ void SymbolChooserDialog::searchSymbols(const QString& input) {
           mWorkspace.getLibraryDb().getLatestSymbol(uuid);  // can throw
       QString name;
       mWorkspace.getLibraryDb().getElementTranslations<Symbol>(
-          fp, localeOrder(),
+          fp,
+          localeOrder(),
           &name);  // can throw
       QListWidgetItem* item = new QListWidgetItem(name);
       item->setData(Qt::UserRole, fp.toStr());
@@ -178,7 +194,7 @@ void SymbolChooserDialog::setSelectedCategory(
         mWorkspace.getLibraryDb().getSymbolsByCategory(uuid);  // can throw
     foreach (const Uuid& symbolUuid, symbols) {
       try {
-        QString  symName;
+        QString symName;
         FilePath symFp =
             mWorkspace.getLibraryDb().getLatestSymbol(symbolUuid);  // can throw
         mWorkspace.getLibraryDb().getElementTranslations<Symbol>(
@@ -225,8 +241,8 @@ void SymbolChooserDialog::setSelectedSymbol(const FilePath& fp) noexcept {
 
 void SymbolChooserDialog::accept() noexcept {
   if (!mSelectedSymbol) {
-    QMessageBox::information(this, tr("Invalid Selection"),
-                             tr("Please select a symbol."));
+    QMessageBox::information(
+        this, tr("Invalid Selection"), tr("Please select a symbol."));
     return;
   }
   QDialog::accept();

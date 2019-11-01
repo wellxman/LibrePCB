@@ -47,8 +47,9 @@ SortFilterProxyModel::~SortFilterProxyModel() noexcept {
  *  Protected Methods
  ******************************************************************************/
 
-bool SortFilterProxyModel::lessThan(const QModelIndex& source_left,
-                                    const QModelIndex& source_right) const {
+bool SortFilterProxyModel::lessThan(
+    const QModelIndex& source_left,
+    const QModelIndex& source_right) const {
   if (sourceModel() && mKeepLastRowAtBottom) {
     if (source_left.row() == sourceModel()->rowCount() - 1) {
       return sortOrder() == Qt::DescendingOrder;
@@ -57,8 +58,8 @@ bool SortFilterProxyModel::lessThan(const QModelIndex& source_left,
     }
   }
 
-  return mCollator(source_left.data().toString(),
-                   source_right.data().toString());
+  return mCollator(
+      source_left.data().toString(), source_right.data().toString());
 }
 
 /*******************************************************************************

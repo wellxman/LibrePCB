@@ -52,8 +52,10 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Project::Project(std::unique_ptr<TransactionalDirectory> directory,
-                 const QString& filename, bool create)
+Project::Project(
+    std::unique_ptr<TransactionalDirectory> directory,
+    const QString& filename,
+    bool create)
   : QObject(nullptr),
     AttributeProvider(),
     mDirectory(std::move(directory)),
@@ -63,8 +65,10 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
 
   // Check if the file extension is correct
   if (!mFilename.endsWith(".lpp")) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("The suffix of the project file must be \"lpp\"!"));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        tr("The suffix of the project file must be \"lpp\"!"));
   }
 
   if (create) {
@@ -72,7 +76,8 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
     if (mDirectory->fileExists(".librepcb-project") ||
         mDirectory->fileExists(mFilename)) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(
               tr("The directory \"%1\" already contains a LibrePCB project."))
               .arg(getPath().toNative()));
@@ -81,15 +86,18 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
     // check if the project does exist
     if (!mDirectory->fileExists(".librepcb-project")) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(
               tr("The directory \"%1\" does not contain a LibrePCB project."))
               .arg(getPath().toNative()));
     }
     if (!mDirectory->fileExists(mFilename)) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("The file \"%1\" does not exist."))
-                             .arg(getFilepath().toNative()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("The file \"%1\" does not exist."))
+              .arg(getFilepath().toNative()));
     }
     // check the project's file format version
     Version version =
@@ -97,7 +105,8 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
             .getVersion();
     if (version > qApp->getFileFormatVersion()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(
               tr("This project was created with a newer application version.\n"
                  "You need at least LibrePCB %1 to open it.\n\n%2"))
@@ -119,8 +128,8 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
     TransactionalDirectory fontobeneDir(*mDirectory, "resources/fontobene");
     if (create) {
       FilePath src = qApp->getResourcesFilePath("fontobene");
-      foreach (const FilePath& fp,
-               FileUtils::getFilesInDirectory(src, {"*.bene"})) {
+      foreach (
+          const FilePath& fp, FileUtils::getFilesInDirectory(src, {"*.bene"})) {
         if (fp.getSuffix() == "bene") {
           fontobeneDir.write(fp.getFilename(), FileUtils::readFile(fp));
         }
@@ -135,18 +144,25 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
         name = "New Project";  // fallback if the filename is not a valid name
       }
       mProjectMetadata.reset(new ProjectMetadata(
-          Uuid::createRandom(), ElementName(name), tr("Unknown"), "v1",
-          QDateTime::currentDateTime(), QDateTime::currentDateTime()));
+          Uuid::createRandom(),
+          ElementName(name),
+          tr("Unknown"),
+          "v1",
+          QDateTime::currentDateTime(),
+          QDateTime::currentDateTime()));
     } else {
-      QString     fp = "project/metadata.lp";
+      QString fp = "project/metadata.lp";
       SExpression root =
           SExpression::parse(mDirectory->read(fp), mDirectory->getAbsPath(fp));
       mProjectMetadata.reset(new ProjectMetadata(root));
     }
 
     // Create all needed objects
-    connect(mProjectMetadata.data(), &ProjectMetadata::attributesChanged, this,
-            &Project::attributesChanged);
+    connect(
+        mProjectMetadata.data(),
+        &ProjectMetadata::attributesChanged,
+        this,
+        &Project::attributesChanged);
     mProjectSettings.reset(new ProjectSettings(*this, create));
     mProjectLibrary.reset(
         new ProjectLibrary(std::unique_ptr<TransactionalDirectory>(
@@ -159,7 +175,7 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
 
     // Load all schematics
     if (!create) {
-      QString     fp = "schematics/schematics.lp";
+      QString fp = "schematics/schematics.lp";
       SExpression schRoot =
           SExpression::parse(mDirectory->read(fp), mDirectory->getAbsPath(fp));
       foreach (const SExpression& node, schRoot.getChildren("schematic")) {
@@ -175,7 +191,7 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
 
     // Load all boards
     if (!create) {
-      QString     fp = "boards/boards.lp";
+      QString fp = "boards/boards.lp";
       SExpression brdRoot =
           SExpression::parse(mDirectory->read(fp), mDirectory->getAbsPath(fp));
       foreach (const SExpression& node, brdRoot.getChildren("board")) {
@@ -268,15 +284,18 @@ Schematic* Project::createSchematic(const ElementName& name) {
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Invalid schematic name: \"%1\"")).arg(*name));
   }
   std::unique_ptr<TransactionalDirectory> dir(
       new TransactionalDirectory(*mDirectory, "schematics/" % dirname));
   if (dir->fileExists("schematic.lp")) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The schematic exists already: \"%1\""))
-                           .arg(dir->getAbsPath().toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The schematic exists already: \"%1\""))
+            .arg(dir->getAbsPath().toNative()));
   }
   return Schematic::create(*this, std::move(dir), name);
 }
@@ -287,13 +306,15 @@ void Project::addSchematic(Schematic& schematic, int newIndex) {
   }
   if (getSchematicByUuid(schematic.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a schematic with the UUID \"%1\"!"))
             .arg(schematic.getUuid().toStr()));
   }
   if (getSchematicByName(*schematic.getName())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a schematic with the name \"%1\"!"))
             .arg(*schematic.getName()));
   }
@@ -320,7 +341,8 @@ void Project::removeSchematic(Schematic& schematic, bool deleteSchematic) {
   }
   if ((!deleteSchematic) && (!schematic.isEmpty())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There are still elements in the schematic \"%1\"!"))
             .arg(*schematic.getName()));
   }
@@ -369,7 +391,8 @@ void Project::printSchematicPages(QPrinter& printer, QList<int>& pages) {
     Schematic* schematic = getSchematicByIndex(pages[i]);
     if (!schematic) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("No schematic page with the index %1 found."))
               .arg(pages[i]));
     }
@@ -378,8 +401,8 @@ void Project::printSchematicPages(QPrinter& printer, QList<int>& pages) {
 
     if (i != pages.count() - 1) {
       if (!printer.newPage()) {
-        throw RuntimeError(__FILE__, __LINE__,
-                           tr("Unknown error while printing."));
+        throw RuntimeError(
+            __FILE__, __LINE__, tr("Unknown error while printing."));
       }
     }
   }
@@ -411,15 +434,19 @@ Board* Project::createBoard(const ElementName& name) {
   QString dirname = FilePath::cleanFileName(
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Invalid board name: \"%1\"")).arg(*name));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Invalid board name: \"%1\"")).arg(*name));
   }
   std::unique_ptr<TransactionalDirectory> dir(
       new TransactionalDirectory(*mDirectory, "boards/" % dirname));
   if (dir->fileExists("board.lp")) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The board exists already: \"%1\""))
-                           .arg(dir->getAbsPath().toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The board exists already: \"%1\""))
+            .arg(dir->getAbsPath().toNative()));
   }
   return Board::create(*this, std::move(dir), name);
 }
@@ -428,15 +455,19 @@ Board* Project::createBoard(const Board& other, const ElementName& name) {
   QString dirname = FilePath::cleanFileName(
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Invalid board name: \"%1\"")).arg(*name));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Invalid board name: \"%1\"")).arg(*name));
   }
   std::unique_ptr<TransactionalDirectory> dir(
       new TransactionalDirectory(*mDirectory, "boards/" % dirname));
   if (dir->fileExists("board.lp")) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The board exists already: \"%1\""))
-                           .arg(dir->getAbsPath().toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The board exists already: \"%1\""))
+            .arg(dir->getAbsPath().toNative()));
   }
   return new Board(other, std::move(dir), name);
 }
@@ -447,13 +478,15 @@ void Project::addBoard(Board& board, int newIndex) {
   }
   if (getBoardByUuid(board.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a board with the UUID \"%1\"!"))
             .arg(board.getUuid().toStr()));
   }
   if (getBoardByName(*board.getName())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a board with the name \"%1\"!"))
             .arg(*board.getName()));
   }
@@ -530,17 +563,18 @@ void Project::save() {
   // Save schematics/schematics.lp
   SExpression schRoot = SExpression::createList("librepcb_schematics");
   foreach (Schematic* schematic, mSchematics) {
-    schRoot.appendChild("schematic",
-                        schematic->getFilePath().toRelative(getPath()), true);
+    schRoot.appendChild(
+        "schematic", schematic->getFilePath().toRelative(getPath()), true);
   }
-  mDirectory->write("schematics/schematics.lp",
-                    schRoot.toByteArray());  // can throw
+  mDirectory->write(
+      "schematics/schematics.lp",
+      schRoot.toByteArray());  // can throw
 
   // Save boards/boards.lp
   SExpression brdRoot = SExpression::createList("librepcb_boards");
   foreach (Board* board, mBoards) {
-    brdRoot.appendChild("board", board->getFilePath().toRelative(getPath()),
-                        true);
+    brdRoot.appendChild(
+        "board", board->getFilePath().toRelative(getPath()), true);
   }
   mDirectory->write("boards/boards.lp", brdRoot.toByteArray());  // can throw
 
@@ -629,7 +663,7 @@ bool Project::isFilePathInsideProjectDirectory(const FilePath& fp) noexcept {
 
 bool Project::isProjectFile(const FilePath& file) noexcept {
   return file.getSuffix() == "lpp" && file.isExistingFile() &&
-         isProjectDirectory(file.getParentDir());
+      isProjectDirectory(file.getParentDir());
 }
 
 bool Project::isProjectDirectory(const FilePath& dir) noexcept {
@@ -637,8 +671,8 @@ bool Project::isProjectDirectory(const FilePath& dir) noexcept {
 }
 
 Version Project::getProjectFileFormatVersion(const FilePath& dir) {
-  QByteArray  content = FileUtils::readFile(dir.getPathTo(".librepcb-project"));
-  VersionFile file    = VersionFile::fromByteArray(content);
+  QByteArray content = FileUtils::readFile(dir.getPathTo(".librepcb-project"));
+  VersionFile file = VersionFile::fromByteArray(content);
   return file.getVersion();
 }
 

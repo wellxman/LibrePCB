@@ -49,7 +49,9 @@ namespace editor {
  ******************************************************************************/
 
 DeviceInstancePropertiesDialog::DeviceInstancePropertiesDialog(
-    Project& project, BI_Device& device, UndoStack& undoStack,
+    Project& project,
+    BI_Device& device,
+    UndoStack& undoStack,
     QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
@@ -59,8 +61,11 @@ DeviceInstancePropertiesDialog::DeviceInstancePropertiesDialog(
     mUi(new Ui::DeviceInstancePropertiesDialog) {
   mUi->setupUi(this);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &DeviceInstancePropertiesDialog::buttonBoxClicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &DeviceInstancePropertiesDialog::buttonBoxClicked);
   setWindowTitle(QString(tr("Properties of %1"))
                      .arg(*mDevice.getComponentInstance().getName()));
 
@@ -153,13 +158,14 @@ void DeviceInstancePropertiesDialog::accept() noexcept {
 bool DeviceInstancePropertiesDialog::applyChanges() noexcept {
   try {
     UndoStackTransaction transaction(
-        mUndoStack, QString(tr("Change properties of %1"))
-                        .arg(*mDevice.getComponentInstance().getName()));
+        mUndoStack,
+        QString(tr("Change properties of %1"))
+            .arg(*mDevice.getComponentInstance().getName()));
 
     // Component Instance
     QScopedPointer<CmdComponentInstanceEdit> cmdCmp(
-        new CmdComponentInstanceEdit(mProject.getCircuit(),
-                                     mDevice.getComponentInstance()));
+        new CmdComponentInstanceEdit(
+            mProject.getCircuit(), mDevice.getComponentInstance()));
     cmdCmp->setName(CircuitIdentifier(
         mUi->edtCompInstName->text().trimmed()));  // can throw
     cmdCmp->setValue(mUi->edtCompInstValue->toPlainText());
@@ -173,7 +179,7 @@ bool DeviceInstancePropertiesDialog::applyChanges() noexcept {
         Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     cmdDev->setRotation(mUi->edtRotation->getValue(), false);
     cmdDev->setMirrored(mUi->cbxMirror->isChecked(), false);  // can throw
-    transaction.append(cmdDev.take());                        // can throw
+    transaction.append(cmdDev.take());  // can throw
 
     transaction.commit();  // can throw
     return true;

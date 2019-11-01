@@ -54,16 +54,17 @@ public:
   NewElementWizardPage_ChooseType() = delete;
   NewElementWizardPage_ChooseType(
       const NewElementWizardPage_ChooseType& other) = delete;
-  explicit NewElementWizardPage_ChooseType(NewElementWizardContext& context,
-                                           QWidget* parent = 0) noexcept;
+  explicit NewElementWizardPage_ChooseType(
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_ChooseType() noexcept;
 
   // Getters
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_ChooseType& operator       =(
+  NewElementWizardPage_ChooseType& operator=(
       const NewElementWizardPage_ChooseType& rhs) = delete;
 
 private:  // Methods
@@ -78,7 +79,7 @@ private:  // Methods
   void setElementType(NewElementWizardContext::ElementType type) noexcept;
 
 private:  // Data
-  NewElementWizardContext&                            mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_ChooseType> mUi;
 };
 

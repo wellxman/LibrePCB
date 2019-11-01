@@ -46,9 +46,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BomGeneratorDialog::BomGeneratorDialog(const Project& project,
-                                       const Board*   board,
-                                       QWidget*       parent) noexcept
+BomGeneratorDialog::BomGeneratorDialog(
+    const Project& project,
+    const Board* board,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
     mBom(new Bom(QStringList())),
@@ -76,15 +77,28 @@ BomGeneratorDialog::BomGeneratorDialog(const Project& project,
   connect(
       mUi->cbxBoard,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &BomGeneratorDialog::updateBom);
-  connect(mUi->edtAttributes, &QLineEdit::textEdited, this,
-          &BomGeneratorDialog::updateBom);
-  connect(mUi->btnBrowse, &QToolButton::clicked, this,
-          &BomGeneratorDialog::btnChooseOutputPathClicked);
-  connect(mUi->btnOpenDirectory, &QToolButton::clicked, this,
-          &BomGeneratorDialog::btnOpenOutputDirectoryClicked);
-  connect(btnGenerate, &QPushButton::clicked, this,
-          &BomGeneratorDialog::btnGenerateClicked);
+      this,
+      &BomGeneratorDialog::updateBom);
+  connect(
+      mUi->edtAttributes,
+      &QLineEdit::textEdited,
+      this,
+      &BomGeneratorDialog::updateBom);
+  connect(
+      mUi->btnBrowse,
+      &QToolButton::clicked,
+      this,
+      &BomGeneratorDialog::btnChooseOutputPathClicked);
+  connect(
+      mUi->btnOpenDirectory,
+      &QToolButton::clicked,
+      this,
+      &BomGeneratorDialog::btnOpenOutputDirectoryClicked);
+  connect(
+      btnGenerate,
+      &QPushButton::clicked,
+      this,
+      &BomGeneratorDialog::btnGenerateClicked);
 }
 
 BomGeneratorDialog::~BomGeneratorDialog() noexcept {
@@ -110,7 +124,7 @@ void BomGeneratorDialog::btnOpenOutputDirectoryClicked() noexcept {
 
 void BomGeneratorDialog::btnGenerateClicked() noexcept {
   try {
-    FilePath     fp = getOutputFilePath();
+    FilePath fp = getOutputFilePath();
     BomCsvWriter writer;
     writer.writeToFile(*mBom, fp);  // can throw
     mUi->lblSuccess->show();
@@ -129,8 +143,10 @@ void BomGeneratorDialog::updateBom() noexcept {
       mProject.getBoardByIndex(mUi->cbxBoard->currentIndex() - 1);
 
   QStringList attributes;
-  foreach (const QString str, mUi->edtAttributes->text().simplified().split(
-                                  ',', QString::SkipEmptyParts)) {
+  foreach (
+      const QString str,
+      mUi->edtAttributes->text().simplified().split(
+          ',', QString::SkipEmptyParts)) {
     attributes.append(str.trimmed());
   }
 
@@ -143,7 +159,7 @@ void BomGeneratorDialog::updateBom() noexcept {
 void BomGeneratorDialog::updateTable() noexcept {
   mUi->tableWidget->clear();
 
-  BomCsvWriter       writer;
+  BomCsvWriter writer;
   QList<QStringList> lines = writer.toStringList(*mBom);
   Q_ASSERT(lines.count() > 0);
   mUi->tableWidget->setRowCount(lines.count() - 1);
@@ -154,8 +170,8 @@ void BomGeneratorDialog::updateTable() noexcept {
         column,
         column == 0 ? QHeaderView::ResizeToContents : QHeaderView::Stretch);
     for (int row = 0; row < lines.count() - 1; ++row) {
-      mUi->tableWidget->setItem(row, column,
-                                new QTableWidgetItem(lines[row + 1][column]));
+      mUi->tableWidget->setItem(
+          row, column, new QTableWidgetItem(lines[row + 1][column]));
     }
   }
   mUi->tableWidget->resizeRowsToContents();
@@ -164,7 +180,7 @@ void BomGeneratorDialog::updateTable() noexcept {
 
 FilePath BomGeneratorDialog::getOutputFilePath() const noexcept {
   QString path = mUi->edtOutputPath->text().trimmed();
-  path         = AttributeSubstitutor::substitute(
+  path = AttributeSubstitutor::substitute(
       path, &mProject, [&](const QString& str) {
         return FilePath::cleanFileName(
             str, FilePath::ReplaceSpaces | FilePath::KeepCase);

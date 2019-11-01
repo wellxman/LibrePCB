@@ -44,7 +44,8 @@ struct ComponentSymbolVariantItemSuffixVerifier {
       typename std::decay<Value>::type {
     return p(val) ? std::forward<Value>(val)
                   : (throw RuntimeError(
-                         __FILE__, __LINE__,
+                         __FILE__,
+                         __LINE__,
                          QString(QApplication::translate(
                                      "ComponentSymbolVariantItemSuffix",
                                      "Invalid component symbol suffix: '%1'"))
@@ -73,37 +74,40 @@ struct ComponentSymbolVariantItemSuffixConstraint {
  * The constructor throws an exception if constructed from a QString which is
  * not a valid suffix according these rules.
  */
-using ComponentSymbolVariantItemSuffix =
-    type_safe::constrained_type<QString,
-                                ComponentSymbolVariantItemSuffixConstraint,
-                                ComponentSymbolVariantItemSuffixVerifier>;
+using ComponentSymbolVariantItemSuffix = type_safe::constrained_type<
+    QString,
+    ComponentSymbolVariantItemSuffixConstraint,
+    ComponentSymbolVariantItemSuffixVerifier>;
 
 }  // namespace library
 
-inline bool operator==(const library::ComponentSymbolVariantItemSuffix& lhs,
-                       const QString& rhs) noexcept {
+inline bool operator==(
+    const library::ComponentSymbolVariantItemSuffix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) == rhs;
 }
 inline bool operator==(
-    const QString&                                   lhs,
+    const QString& lhs,
     const library::ComponentSymbolVariantItemSuffix& rhs) noexcept {
   return lhs == (*rhs);
 }
-inline bool operator!=(const library::ComponentSymbolVariantItemSuffix& lhs,
-                       const QString& rhs) noexcept {
+inline bool operator!=(
+    const library::ComponentSymbolVariantItemSuffix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) != rhs;
 }
 inline bool operator!=(
-    const QString&                                   lhs,
+    const QString& lhs,
     const library::ComponentSymbolVariantItemSuffix& rhs) noexcept {
   return lhs != (*rhs);
 }
-inline QString operator%(const library::ComponentSymbolVariantItemSuffix& lhs,
-                         const QString& rhs) noexcept {
+inline QString operator%(
+    const library::ComponentSymbolVariantItemSuffix& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) % rhs;
 }
 inline QString operator%(
-    const QString&                                   lhs,
+    const QString& lhs,
     const library::ComponentSymbolVariantItemSuffix& rhs) noexcept {
   return lhs % (*rhs);
 }
@@ -116,25 +120,29 @@ inline SExpression serializeToSExpression(
 
 template <>
 inline library::ComponentSymbolVariantItemSuffix deserializeFromSExpression(
-    const SExpression& sexpr, bool throwIfEmpty) {
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   return library::ComponentSymbolVariantItemSuffix(str);  // can throw
 }
 
 inline QDataStream& operator<<(
-    QDataStream& stream, const library::ComponentSymbolVariantItemSuffix& obj) {
+    QDataStream& stream,
+    const library::ComponentSymbolVariantItemSuffix& obj) {
   stream << *obj;
   return stream;
 }
 
-inline QDebug operator<<(QDebug stream,
-                         const library::ComponentSymbolVariantItemSuffix& obj) {
+inline QDebug operator<<(
+    QDebug stream,
+    const library::ComponentSymbolVariantItemSuffix& obj) {
   stream << QString("ComponentSymbolVariantItemSuffix('%1'')").arg(*obj);
   return stream;
 }
 
-inline uint qHash(const library::ComponentSymbolVariantItemSuffix& key,
-                  uint seed = 0) noexcept {
+inline uint qHash(
+    const library::ComponentSymbolVariantItemSuffix& key,
+    uint seed = 0) noexcept {
   return ::qHash(*key, seed);
 }
 

@@ -40,19 +40,25 @@ namespace library {
 namespace editor {
 
 FootprintPadPropertiesDialog::FootprintPadPropertiesDialog(
-    const Package& pkg, const Footprint& fpt, FootprintPad& pad,
-    UndoStack& undoStack, QWidget* parent) noexcept
+    const Package& pkg,
+    const Footprint& fpt,
+    FootprintPad& pad,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mPad(pad),
     mUndoStack(undoStack),
     mUi(new Ui::FootprintPadPropertiesDialog) {
   mUi->setupUi(this);
-  mUi->edtWidth->setSingleStep(0.1);          // [mm]
-  mUi->edtHeight->setSingleStep(0.1);         // [mm]
+  mUi->edtWidth->setSingleStep(0.1);  // [mm]
+  mUi->edtHeight->setSingleStep(0.1);  // [mm]
   mUi->edtDrillDiameter->setSingleStep(0.1);  // [mm]
-  mUi->edtRotation->setSingleStep(90.0);      // [°]
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &FootprintPadPropertiesDialog::on_buttonBox_clicked);
+  mUi->edtRotation->setSingleStep(90.0);  // [°]
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &FootprintPadPropertiesDialog::on_buttonBox_clicked);
 
   // load pad attributes
   int currentPadIndex = 0;
@@ -104,8 +110,11 @@ FootprintPadPropertiesDialog::FootprintPadPropertiesDialog(
 
   // disable drill diameter for SMT pads
   mUi->edtDrillDiameter->setEnabled(mUi->rbtnBoardSideTht->isChecked());
-  connect(mUi->rbtnBoardSideTht, &QRadioButton::toggled, mUi->edtDrillDiameter,
-          &LengthEdit::setEnabled);
+  connect(
+      mUi->rbtnBoardSideTht,
+      &QRadioButton::toggled,
+      mUi->edtDrillDiameter,
+      &LengthEdit::setEnabled);
 }
 
 FootprintPadPropertiesDialog::~FootprintPadPropertiesDialog() noexcept {
@@ -138,7 +147,7 @@ void FootprintPadPropertiesDialog::on_buttonBox_clicked(
 bool FootprintPadPropertiesDialog::applyChanges() noexcept {
   try {
     QScopedPointer<CmdFootprintPadEdit> cmd(new CmdFootprintPadEdit(mPad));
-    Uuid                                pkgPad = Uuid::fromString(
+    Uuid pkgPad = Uuid::fromString(
         mUi->cbxPackagePad->currentData().toString());  // can throw
     cmd->setPackagePadUuid(pkgPad, false);
     if (mUi->rbtnBoardSideTop->isChecked()) {
@@ -162,8 +171,8 @@ bool FootprintPadPropertiesDialog::applyChanges() noexcept {
     cmd->setWidth(mUi->edtWidth->getValue(), false);
     cmd->setHeight(mUi->edtHeight->getValue(), false);
     cmd->setDrillDiameter(mUi->edtDrillDiameter->getValue(), false);
-    cmd->setPosition(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                     false);
+    cmd->setPosition(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     cmd->setRotation(mUi->edtRotation->getValue(), false);
     mUndoStack.execCmd(cmd.take());
     return true;

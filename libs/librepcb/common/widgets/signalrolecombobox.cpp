@@ -47,7 +47,8 @@ SignalRoleComboBox::SignalRoleComboBox(QWidget* parent) noexcept
   connect(
       mComboBox,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &SignalRoleComboBox::currentIndexChanged);
+      this,
+      &SignalRoleComboBox::currentIndexChanged);
 }
 
 SignalRoleComboBox::~SignalRoleComboBox() noexcept {

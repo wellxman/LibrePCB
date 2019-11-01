@@ -68,8 +68,10 @@ LogicError::LogicError(const LogicError& other) noexcept : Exception(other) {
  *  Class RuntimeError
  ******************************************************************************/
 
-RuntimeError::RuntimeError(const char* file, int line,
-                           const QString& msg) noexcept
+RuntimeError::RuntimeError(
+    const char* file,
+    int line,
+    const QString& msg) noexcept
   : Exception(file, line, msg) {
 }
 
@@ -92,19 +94,24 @@ RangeError::RangeError(const RangeError& other) noexcept : RuntimeError(other) {
  *  Class FileParseError
  ******************************************************************************/
 
-FileParseError::FileParseError(const char* file, int line,
-                               const FilePath& filePath, int fileLine,
-                               int            fileColumn,
-                               const QString& invalidFileContent,
-                               const QString& msg) noexcept
-  : RuntimeError(file, line,
-                 QString("File parse error: %1\n\nFile: %2\nLine,Column: "
-                         "%3,%4\nInvalid Content: \"%5\"")
-                     .arg(msg)
-                     .arg(filePath.toNative())
-                     .arg(fileLine)
-                     .arg(fileColumn)
-                     .arg(invalidFileContent)) {
+FileParseError::FileParseError(
+    const char* file,
+    int line,
+    const FilePath& filePath,
+    int fileLine,
+    int fileColumn,
+    const QString& invalidFileContent,
+    const QString& msg) noexcept
+  : RuntimeError(
+        file,
+        line,
+        QString("File parse error: %1\n\nFile: %2\nLine,Column: "
+                "%3,%4\nInvalid Content: \"%5\"")
+            .arg(msg)
+            .arg(filePath.toNative())
+            .arg(fileLine)
+            .arg(fileColumn)
+            .arg(invalidFileContent)) {
 }
 
 FileParseError::FileParseError(const FileParseError& other) noexcept
@@ -115,8 +122,10 @@ FileParseError::FileParseError(const FileParseError& other) noexcept
  *  Class UserCanceled
  ******************************************************************************/
 
-UserCanceled::UserCanceled(const char* file, int line,
-                           const QString& msg) noexcept
+UserCanceled::UserCanceled(
+    const char* file,
+    int line,
+    const QString& msg) noexcept
   : Exception(file, line, msg) {
 }
 

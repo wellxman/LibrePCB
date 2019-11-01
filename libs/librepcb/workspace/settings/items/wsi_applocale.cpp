@@ -40,7 +40,7 @@ namespace workspace {
 WSI_AppLocale::WSI_AppLocale(const SExpression& node)
   : WSI_Base(), mAppLocale(), mAppLocaleTmp(mAppLocale) {
   if (const SExpression* child = node.tryGetChildByPath("application_locale")) {
-    mAppLocale    = child->getValueOfFirstChild<QString>();
+    mAppLocale = child->getValueOfFirstChild<QString>();
     mAppLocaleTmp = mAppLocale;
   }
 
@@ -88,7 +88,8 @@ WSI_AppLocale::WSI_AppLocale(const SExpression& node)
   connect(
       mComboBox.data(),
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &WSI_AppLocale::comboBoxIndexChanged);
+      this,
+      &WSI_AppLocale::comboBoxIndexChanged);
 
   // create a QWidget
   mWidget.reset(new QWidget());

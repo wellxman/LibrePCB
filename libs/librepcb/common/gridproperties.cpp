@@ -43,8 +43,10 @@ GridProperties::GridProperties(const SExpression& node)
     mUnit(node.getValueByPath<LengthUnit>("unit")) {
 }
 
-GridProperties::GridProperties(Type_t type, const PositiveLength& interval,
-                               const LengthUnit& unit) noexcept
+GridProperties::GridProperties(
+    Type_t type,
+    const PositiveLength& interval,
+    const LengthUnit& unit) noexcept
   : mType(type), mInterval(interval), mUnit(unit) {
 }
 
@@ -70,9 +72,9 @@ void GridProperties::serialize(SExpression& root) const {
  ******************************************************************************/
 
 GridProperties& GridProperties::operator=(const GridProperties& rhs) noexcept {
-  mType     = rhs.mType;
+  mType = rhs.mType;
   mInterval = rhs.mInterval;
-  mUnit     = rhs.mUnit;
+  mUnit = rhs.mUnit;
   return *this;
 }
 

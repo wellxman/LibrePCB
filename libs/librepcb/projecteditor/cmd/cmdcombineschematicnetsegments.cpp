@@ -48,8 +48,10 @@ namespace editor {
  ******************************************************************************/
 
 CmdCombineSchematicNetSegments::CmdCombineSchematicNetSegments(
-    SI_NetSegment& toBeRemoved, SI_NetLineAnchor& oldAnchor,
-    SI_NetSegment& result, SI_NetLineAnchor& newAnchor) noexcept
+    SI_NetSegment& toBeRemoved,
+    SI_NetLineAnchor& oldAnchor,
+    SI_NetSegment& result,
+    SI_NetLineAnchor& newAnchor) noexcept
   : UndoCommandGroup(tr("Combine Schematic Net Segments")),
     mOldSegment(toBeRemoved),
     mNewSegment(result),
@@ -99,7 +101,7 @@ bool CmdCombineSchematicNetSegments::performExecute() {
     Q_ASSERT(newNetLine);
   }
   execNewChildCmd(new CmdSchematicNetSegmentRemove(mOldSegment));  // can throw
-  execNewChildCmd(cmdAdd.take());                                  // can throw
+  execNewChildCmd(cmdAdd.take());  // can throw
 
   // copy net labels
   foreach (SI_NetLabel* netlabel, mOldSegment.getNetLabels()) {

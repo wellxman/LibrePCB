@@ -56,12 +56,17 @@ class Device final : public LibraryElement {
 
 public:
   // Constructors / Destructor
-  Device()                    = delete;
+  Device() = delete;
   Device(const Device& other) = delete;
-  Device(const Uuid& uuid, const Version& version, const QString& author,
-         const ElementName& name_en_US, const QString& description_en_US,
-         const QString& keywords_en_US, const Uuid& component,
-         const Uuid& package);
+  Device(
+      const Uuid& uuid,
+      const Version& version,
+      const QString& author,
+      const ElementName& name_en_US,
+      const QString& description_en_US,
+      const QString& keywords_en_US,
+      const Uuid& component,
+      const Uuid& package);
   explicit Device(std::unique_ptr<TransactionalDirectory> directory);
   ~Device() noexcept;
 
@@ -69,7 +74,7 @@ public:
   const Uuid& getComponentUuid() const noexcept { return mComponentUuid; }
   const Uuid& getPackageUuid() const noexcept { return mPackageUuid; }
   const AttributeList& getAttributes() const noexcept { return mAttributes; }
-  DevicePadSignalMap&  getPadSignalMap() noexcept { return mPadSignalMap; }
+  DevicePadSignalMap& getPadSignalMap() noexcept { return mPadSignalMap; }
   const DevicePadSignalMap& getPadSignalMap() const noexcept {
     return mPadSignalMap;
   }
@@ -101,7 +106,7 @@ private:  // Data
   Uuid mComponentUuid;
   Uuid mPackageUuid;
   AttributeList
-                     mAttributes;  ///< not yet used, but already specified in file format
+      mAttributes;  ///< not yet used, but already specified in file format
   DevicePadSignalMap mPadSignalMap;
 };
 

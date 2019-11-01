@@ -74,7 +74,7 @@ class LibraryEditor final : public QMainWindow,
 
 public:
   // Constructors / Destructor
-  LibraryEditor()                           = delete;
+  LibraryEditor() = delete;
   LibraryEditor(const LibraryEditor& other) = delete;
   LibraryEditor(workspace::Workspace& ws, const FilePath& libFp, bool readOnly);
   ~LibraryEditor() noexcept;
@@ -161,8 +161,9 @@ private:  // GUI Event Handlers
   void duplicateDeviceTriggered(const FilePath& fp) noexcept;
   void closeTabIfOpen(const FilePath& fp) noexcept;
   template <typename EditWidgetType>
-  void editLibraryElementTriggered(const FilePath& fp,
-                                   bool            isNewElement) noexcept;
+  void editLibraryElementTriggered(
+      const FilePath& fp,
+      bool isNewElement) noexcept;
   void currentTabChanged(int index) noexcept;
   void tabCloseRequested(int index) noexcept;
   bool closeTab(int index) noexcept;
@@ -171,23 +172,25 @@ private:  // GUI Event Handlers
 private:  // Methods
   void setActiveEditorWidget(EditorWidgetBase* widget);
   void newLibraryElement(NewElementWizardContext::ElementType type);
-  void duplicateLibraryElement(NewElementWizardContext::ElementType type,
-                               const FilePath&                      fp);
-  void editNewLibraryElement(NewElementWizardContext::ElementType type,
-                             const FilePath&                      fp);
+  void duplicateLibraryElement(
+      NewElementWizardContext::ElementType type,
+      const FilePath& fp);
+  void editNewLibraryElement(
+      NewElementWizardContext::ElementType type,
+      const FilePath& fp);
   void updateTabTitles() noexcept;
   void closeEvent(QCloseEvent* event) noexcept override;
   void addLayer(const QString& name, bool forceVisible = false) noexcept;
 
 private:  // Data
-  workspace::Workspace&                mWorkspace;
-  bool                                 mIsOpenedReadOnly;
-  QScopedPointer<Ui::LibraryEditor>    mUi;
+  workspace::Workspace& mWorkspace;
+  bool mIsOpenedReadOnly;
+  QScopedPointer<Ui::LibraryEditor> mUi;
   QScopedPointer<UndoStackActionGroup> mUndoStackActionGroup;
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
-  QList<GraphicsLayer*>                mLayers;
-  EditorWidgetBase*                    mCurrentEditorWidget;
-  Library*                             mLibrary;
+  QList<GraphicsLayer*> mLayers;
+  EditorWidgetBase* mCurrentEditorWidget;
+  Library* mLibrary;
 };
 
 /*******************************************************************************

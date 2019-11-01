@@ -120,9 +120,10 @@ void PrimitiveTextGraphicsItem::setLayer(const GraphicsLayer* layer) noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void PrimitiveTextGraphicsItem::paint(QPainter*                       painter,
-                                      const QStyleOptionGraphicsItem* option,
-                                      QWidget* widget) noexcept {
+void PrimitiveTextGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   painter->setFont(mFont);
   if (option->state.testFlag(QStyle::State_Selected)) {
@@ -150,7 +151,8 @@ void PrimitiveTextGraphicsItem::paint(QPainter*                       painter,
  ******************************************************************************/
 
 void PrimitiveTextGraphicsItem::layerEdited(
-    const GraphicsLayer& layer, GraphicsLayer::Event event) noexcept {
+    const GraphicsLayer& layer,
+    GraphicsLayer::Event event) noexcept {
   switch (event) {
     case GraphicsLayer::Event::ColorChanged:
       mPen.setColor(layer.getColor(false));
@@ -179,7 +181,7 @@ void PrimitiveTextGraphicsItem::updateBoundingRectAndShape() noexcept {
   mTextFlags = Qt::TextDontClip | mAlignment.toQtAlign();
   QFontMetricsF fm(mFont);
   mBoundingRect = fm.boundingRect(QRectF(), mTextFlags, mText);
-  mShape        = QPainterPath();
+  mShape = QPainterPath();
   mShape.addRect(mBoundingRect);
   update();
 }

@@ -51,10 +51,11 @@ class MsgPadOverlapsWithPlacement final : public LibraryElementCheckMessage {
 public:
   // Constructors / Destructor
   MsgPadOverlapsWithPlacement() = delete;
-  MsgPadOverlapsWithPlacement(std::shared_ptr<const Footprint>    footprint,
-                              std::shared_ptr<const FootprintPad> pad,
-                              const QString&                      pkgPadName,
-                              const Length& clearance) noexcept;
+  MsgPadOverlapsWithPlacement(
+      std::shared_ptr<const Footprint> footprint,
+      std::shared_ptr<const FootprintPad> pad,
+      const QString& pkgPadName,
+      const Length& clearance) noexcept;
   MsgPadOverlapsWithPlacement(const MsgPadOverlapsWithPlacement& other) noexcept
     : LibraryElementCheckMessage(other),
       mFootprint(other.mFootprint),
@@ -68,7 +69,7 @@ public:
   std::shared_ptr<const FootprintPad> getPad() const noexcept { return mPad; }
 
 private:
-  std::shared_ptr<const Footprint>    mFootprint;
+  std::shared_ptr<const Footprint> mFootprint;
   std::shared_ptr<const FootprintPad> mPad;
 };
 

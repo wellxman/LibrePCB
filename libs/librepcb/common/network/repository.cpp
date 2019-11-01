@@ -84,10 +84,18 @@ void Repository::requestLibraryList(const QUrl& url) const noexcept {
   NetworkRequest* request = new NetworkRequest(url);
   request->setHeaderField("Accept", "application/json;charset=UTF-8");
   request->setHeaderField("Accept-Charset", "UTF-8");
-  connect(request, &NetworkRequest::errored, this,
-          &Repository::errorWhileFetchingLibraryList, Qt::QueuedConnection);
-  connect(request, &NetworkRequest::dataReceived, this,
-          &Repository::requestedDataReceived, Qt::QueuedConnection);
+  connect(
+      request,
+      &NetworkRequest::errored,
+      this,
+      &Repository::errorWhileFetchingLibraryList,
+      Qt::QueuedConnection);
+  connect(
+      request,
+      &NetworkRequest::dataReceived,
+      this,
+      &Repository::requestedDataReceived,
+      Qt::QueuedConnection);
   request->start();
 }
 

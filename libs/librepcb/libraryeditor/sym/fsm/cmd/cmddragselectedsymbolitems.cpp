@@ -79,8 +79,8 @@ CmdDragSelectedSymbolItems::CmdDragSelectedSymbolItems(
   foreach (const QSharedPointer<PolygonGraphicsItem>& polygon, polygons) {
     Q_ASSERT(polygon);
     mPolygonEditCmds.append(new CmdPolygonEdit(polygon->getPolygon()));
-    foreach (const Vertex& vertex,
-             polygon->getPolygon().getPath().getVertices()) {
+    foreach (
+        const Vertex& vertex, polygon->getPolygon().getPath().getVertices()) {
       mCenterPos += vertex.getPos();
       ++count;
     }

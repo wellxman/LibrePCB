@@ -48,16 +48,24 @@ namespace editor {
  ******************************************************************************/
 
 ComponentCategoryEditorWidget::ComponentCategoryEditorWidget(
-    const Context& context, const FilePath& fp, QWidget* parent)
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : EditorWidgetBase(context, fp, parent),
     mUi(new Ui::ComponentCategoryEditorWidget) {
   mUi->setupUi(this);
   mUi->lstMessages->setHandler(this);
   setWindowIcon(QIcon(":/img/places/folder.png"));
-  connect(mUi->btnChooseParentCategory, &QToolButton::clicked, this,
-          &ComponentCategoryEditorWidget::btnChooseParentCategoryClicked);
-  connect(mUi->btnResetParentCategory, &QToolButton::clicked, this,
-          &ComponentCategoryEditorWidget::btnResetParentCategoryClicked);
+  connect(
+      mUi->btnChooseParentCategory,
+      &QToolButton::clicked,
+      this,
+      &ComponentCategoryEditorWidget::btnChooseParentCategoryClicked);
+  connect(
+      mUi->btnResetParentCategory,
+      &QToolButton::clicked,
+      this,
+      &ComponentCategoryEditorWidget::btnResetParentCategoryClicked);
 
   // Load element.
   mCategory.reset(new ComponentCategory(std::unique_ptr<TransactionalDirectory>(
@@ -65,22 +73,43 @@ ComponentCategoryEditorWidget::ComponentCategoryEditorWidget(
   updateMetadata();
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &ComponentCategoryEditorWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &ComponentCategoryEditorWidget::updateMetadata);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &ComponentCategoryEditorWidget::commitMetadata);
 }
 
 ComponentCategoryEditorWidget::~ComponentCategoryEditorWidget() noexcept {
@@ -100,7 +129,7 @@ bool ComponentCategoryEditorWidget::save() noexcept {
 
   // Save element.
   try {
-    mCategory->save();    // can throw
+    mCategory->save();  // can throw
     mFileSystem->save();  // can throw
     return EditorWidgetBase::save();
   } catch (const Exception& e) {
@@ -179,7 +208,8 @@ void ComponentCategoryEditorWidget::fixMsg(const MsgMissingAuthor& msg) {
 
 template <typename MessageType>
 bool ComponentCategoryEditorWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -190,7 +220,8 @@ bool ComponentCategoryEditorWidget::fixMsgHelper(
 }
 
 bool ComponentCategoryEditorWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   return false;
@@ -210,9 +241,9 @@ void ComponentCategoryEditorWidget::btnResetParentCategoryClicked() noexcept {
 }
 
 void ComponentCategoryEditorWidget::updateCategoryLabel() noexcept {
-  const workspace::WorkspaceLibraryDb&  db = mContext.workspace.getLibraryDb();
-  ComponentCategoryTreeLabelTextBuilder textBuilder(db, getLibLocaleOrder(),
-                                                    *mUi->lblParentCategories);
+  const workspace::WorkspaceLibraryDb& db = mContext.workspace.getLibraryDb();
+  ComponentCategoryTreeLabelTextBuilder textBuilder(
+      db, getLibLocaleOrder(), *mUi->lblParentCategories);
   textBuilder.setEndlessRecursionUuid(mCategory->getUuid());
   textBuilder.setHighlightLastLine(true);
   textBuilder.updateText(mParentUuid, mUi->edtName->text());

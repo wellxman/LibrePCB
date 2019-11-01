@@ -78,9 +78,9 @@ void ErcMsgList::update(ErcMsg* ercMsg) noexcept {
 void ErcMsgList::restoreIgnoreState() {
   QString fp = "circuit/erc.lp";
   if (mProject.getDirectory().fileExists(fp)) {
-    SExpression root =
-        SExpression::parse(mProject.getDirectory().read(fp),
-                           mProject.getDirectory().getAbsPath(fp));
+    SExpression root = SExpression::parse(
+        mProject.getDirectory().read(fp),
+        mProject.getDirectory().getAbsPath(fp));
 
     // reset all ignore attributes
     foreach (ErcMsg* ercMsg, mItems)
@@ -103,8 +103,9 @@ void ErcMsgList::restoreIgnoreState() {
 
 void ErcMsgList::save() {
   SExpression doc(serializeToDomElement("librepcb_erc"));  // can throw
-  mProject.getDirectory().write("circuit/erc.lp",
-                                doc.toByteArray());  // can throw
+  mProject.getDirectory().write(
+      "circuit/erc.lp",
+      doc.toByteArray());  // can throw
 }
 
 /*******************************************************************************

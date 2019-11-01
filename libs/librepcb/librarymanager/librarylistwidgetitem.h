@@ -58,16 +58,18 @@ public:
   // Constructors / Destructor
   LibraryListWidgetItem() noexcept;
   LibraryListWidgetItem(const LibraryListWidgetItem& other) = delete;
-  LibraryListWidgetItem(workspace::Workspace& ws, const FilePath& libDir,
-                        const QString& name        = "",
-                        const QString& description = "",
-                        const QPixmap& icon        = QPixmap()) noexcept;
+  LibraryListWidgetItem(
+      workspace::Workspace& ws,
+      const FilePath& libDir,
+      const QString& name = "",
+      const QString& description = "",
+      const QPixmap& icon = QPixmap()) noexcept;
   ~LibraryListWidgetItem() noexcept;
 
   // Getters
   const FilePath& getLibraryFilePath() const noexcept { return mLibDir; }
-  QString         getName() const noexcept;
-  bool            isRemoteLibrary() const noexcept { return mIsRemoteLibrary; }
+  QString getName() const noexcept;
+  bool isRemoteLibrary() const noexcept { return mIsRemoteLibrary; }
 
   // Operator Overloadings
   LibraryListWidgetItem& operator=(const LibraryListWidgetItem& rhs) = delete;
@@ -80,8 +82,8 @@ signals:
 
 private:  // Data
   QScopedPointer<Ui::LibraryListWidgetItem> mUi;
-  FilePath                                  mLibDir;
-  bool                                      mIsRemoteLibrary;
+  FilePath mLibDir;
+  bool mIsRemoteLibrary;
 };
 
 /*******************************************************************************

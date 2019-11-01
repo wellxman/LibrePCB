@@ -66,14 +66,26 @@ WSI_Repositories::WSI_Repositories(const SExpression& node) : WSI_Base() {
   mBtnDown->setArrowType(Qt::DownArrow);
   mBtnAdd->setIcon(QIcon(":/img/actions/plus_2.png"));
   mBtnRemove->setIcon(QIcon(":/img/actions/minus.png"));
-  connect(mBtnUp.data(), &QToolButton::clicked, this,
-          &WSI_Repositories::btnUpClicked);
-  connect(mBtnDown.data(), &QToolButton::clicked, this,
-          &WSI_Repositories::btnDownClicked);
-  connect(mBtnAdd.data(), &QToolButton::clicked, this,
-          &WSI_Repositories::btnAddClicked);
-  connect(mBtnRemove.data(), &QToolButton::clicked, this,
-          &WSI_Repositories::btnRemoveClicked);
+  connect(
+      mBtnUp.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_Repositories::btnUpClicked);
+  connect(
+      mBtnDown.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_Repositories::btnDownClicked);
+  connect(
+      mBtnAdd.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_Repositories::btnAddClicked);
+  connect(
+      mBtnRemove.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_Repositories::btnRemoveClicked);
 
   // create the QWidget
   mWidget.reset(new QWidget());
@@ -155,8 +167,8 @@ void WSI_Repositories::btnAddClicked() noexcept {
     updateListWidgetItems();
     mLineEdit->setText("");
   } else {
-    QMessageBox::critical(mWidget.data(), tr("Error"),
-                          tr("The URL is not valid."));
+    QMessageBox::critical(
+        mWidget.data(), tr("Error"), tr("The URL is not valid."));
   }
 }
 
@@ -170,7 +182,7 @@ void WSI_Repositories::btnRemoveClicked() noexcept {
 void WSI_Repositories::updateListWidgetItems() noexcept {
   mListWidget->clear();
   foreach (const Repository* repository, mListTmp) {
-    QString          str  = repository->getUrl().toDisplayString();
+    QString str = repository->getUrl().toDisplayString();
     QListWidgetItem* item = new QListWidgetItem(str, mListWidget.data());
     item->setData(Qt::UserRole, repository);
   }

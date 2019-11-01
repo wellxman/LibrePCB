@@ -58,27 +58,32 @@ public:
     IsNegatedChanged,
     IsClockChanged,
   };
-  Signal<ComponentSignal, Event>       onEdited;
+  Signal<ComponentSignal, Event> onEdited;
   typedef Slot<ComponentSignal, Event> OnEditedSlot;
 
   // Constructors / Destructor
   ComponentSignal() = delete;
   ComponentSignal(const ComponentSignal& other) noexcept;
-  ComponentSignal(const Uuid& uuid, const CircuitIdentifier& name,
-                  const SignalRole& role, const QString& forcedNetName,
-                  bool isRequired, bool isNegated, bool isClock) noexcept;
+  ComponentSignal(
+      const Uuid& uuid,
+      const CircuitIdentifier& name,
+      const SignalRole& role,
+      const QString& forcedNetName,
+      bool isRequired,
+      bool isNegated,
+      bool isClock) noexcept;
   explicit ComponentSignal(const SExpression& node);
   ~ComponentSignal() noexcept;
 
   // Getters
-  const Uuid&              getUuid() const noexcept { return mUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
   const CircuitIdentifier& getName() const noexcept { return mName; }
-  const SignalRole&        getRole() const noexcept { return mRole; }
+  const SignalRole& getRole() const noexcept { return mRole; }
   const QString& getForcedNetName() const noexcept { return mForcedNetName; }
-  bool           isRequired() const noexcept { return mIsRequired; }
-  bool           isNegated() const noexcept { return mIsNegated; }
-  bool           isClock() const noexcept { return mIsClock; }
-  bool           isNetSignalNameForced() const noexcept {
+  bool isRequired() const noexcept { return mIsRequired; }
+  bool isNegated() const noexcept { return mIsNegated; }
+  bool isClock() const noexcept { return mIsClock; }
+  bool isNetSignalNameForced() const noexcept {
     return !mForcedNetName.isEmpty();
   }
 
@@ -103,13 +108,13 @@ public:
   ComponentSignal& operator=(const ComponentSignal& rhs) noexcept;
 
 private:  // Data
-  Uuid              mUuid;
+  Uuid mUuid;
   CircuitIdentifier mName;
-  SignalRole        mRole;
-  QString           mForcedNetName;
-  bool              mIsRequired;
-  bool              mIsNegated;
-  bool              mIsClock;
+  SignalRole mRole;
+  QString mForcedNetName;
+  bool mIsRequired;
+  bool mIsNegated;
+  bool mIsClock;
 };
 
 /*******************************************************************************
@@ -119,18 +124,22 @@ private:  // Data
 struct ComponentSignalListNameProvider {
   static constexpr const char* tagname = "signal";
 };
-using ComponentSignalList =
-    SerializableObjectList<ComponentSignal, ComponentSignalListNameProvider,
-                           ComponentSignal::Event>;
-using CmdComponentSignalInsert =
-    CmdListElementInsert<ComponentSignal, ComponentSignalListNameProvider,
-                         ComponentSignal::Event>;
-using CmdComponentSignalRemove =
-    CmdListElementRemove<ComponentSignal, ComponentSignalListNameProvider,
-                         ComponentSignal::Event>;
-using CmdComponentSignalsSwap =
-    CmdListElementsSwap<ComponentSignal, ComponentSignalListNameProvider,
-                        ComponentSignal::Event>;
+using ComponentSignalList = SerializableObjectList<
+    ComponentSignal,
+    ComponentSignalListNameProvider,
+    ComponentSignal::Event>;
+using CmdComponentSignalInsert = CmdListElementInsert<
+    ComponentSignal,
+    ComponentSignalListNameProvider,
+    ComponentSignal::Event>;
+using CmdComponentSignalRemove = CmdListElementRemove<
+    ComponentSignal,
+    ComponentSignalListNameProvider,
+    ComponentSignal::Event>;
+using CmdComponentSignalsSwap = CmdListElementsSwap<
+    ComponentSignal,
+    ComponentSignalListNameProvider,
+    ComponentSignal::Event>;
 
 /*******************************************************************************
  *  End of File

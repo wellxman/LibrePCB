@@ -43,7 +43,9 @@ namespace project {
  ******************************************************************************/
 
 CmdComponentInstanceAdd::CmdComponentInstanceAdd(
-    Circuit& circuit, const Uuid& cmp, const Uuid& symbVar,
+    Circuit& circuit,
+    const Uuid& cmp,
+    const Uuid& symbVar,
     const tl::optional<Uuid>& defaultDevice) noexcept
   : UndoCommand(tr("Add component")),
     mCircuit(circuit),
@@ -65,7 +67,8 @@ bool CmdComponentInstanceAdd::performExecute() {
       mCircuit.getProject().getLibrary().getComponent(mComponentUuid);
   if (!cmp) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The component with the UUID \"%1\" does not exist in the "
                    "project's library!"))
             .arg(mComponentUuid.toStr()));
@@ -74,9 +77,12 @@ bool CmdComponentInstanceAdd::performExecute() {
       mCircuit.getProject().getSettings().getNormOrder();
   QString name = mCircuit.generateAutoComponentInstanceName(
       cmp->getPrefixes().value(normOrder));
-  mComponentInstance = new ComponentInstance(mCircuit, *cmp, mSymbVarUuid,
-                                             CircuitIdentifier(name),
-                                             mDefaultDeviceUuid);  // can throw
+  mComponentInstance = new ComponentInstance(
+      mCircuit,
+      *cmp,
+      mSymbVarUuid,
+      CircuitIdentifier(name),
+      mDefaultDeviceUuid);  // can throw
 
   performRedo();  // can throw
 

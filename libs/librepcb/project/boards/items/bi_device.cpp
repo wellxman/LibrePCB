@@ -74,18 +74,19 @@ BI_Device::BI_Device(Board& board, const SExpression& node)
       mBoard.getProject().getCircuit().getComponentInstanceByUuid(compInstUuid);
   if (!mCompInstance) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Could not find the component instance with UUID \"%1\"!"))
             .arg(compInstUuid.toStr()));
   }
   // get device and footprint uuid
-  Uuid deviceUuid    = node.getValueByPath<Uuid>("lib_device");
+  Uuid deviceUuid = node.getValueByPath<Uuid>("lib_device");
   Uuid footprintUuid = node.getValueByPath<Uuid>("lib_footprint");
   initDeviceAndPackageAndFootprint(deviceUuid, footprintUuid);
 
   // get position, rotation and mirrored
-  mPosition   = Point(node.getChildByPath("position"));
-  mRotation   = node.getValueByPath<Angle>("rotation");
+  mPosition = Point(node.getChildByPath("position"));
+  mRotation = node.getValueByPath<Angle>("rotation");
   mIsMirrored = node.getValueByPath<bool>("mirror");
 
   // load attributes
@@ -97,9 +98,14 @@ BI_Device::BI_Device(Board& board, const SExpression& node)
   init();
 }
 
-BI_Device::BI_Device(Board& board, ComponentInstance& compInstance,
-                     const Uuid& deviceUuid, const Uuid& footprintUuid,
-                     const Point& position, const Angle& rotation, bool mirror)
+BI_Device::BI_Device(
+    Board& board,
+    ComponentInstance& compInstance,
+    const Uuid& deviceUuid,
+    const Uuid& footprintUuid,
+    const Point& position,
+    const Angle& rotation,
+    bool mirror)
   : BI_Base(board),
     mCompInstance(&compInstance),
     mLibDevice(nullptr),
@@ -119,36 +125,43 @@ BI_Device::BI_Device(Board& board, ComponentInstance& compInstance,
   init();
 }
 
-void BI_Device::initDeviceAndPackageAndFootprint(const Uuid& deviceUuid,
-                                                 const Uuid& footprintUuid) {
+void BI_Device::initDeviceAndPackageAndFootprint(
+    const Uuid& deviceUuid,
+    const Uuid& footprintUuid) {
   // get device from library
   mLibDevice = mBoard.getProject().getLibrary().getDevice(deviceUuid);
   if (!mLibDevice) {
     qDebug() << mCompInstance->getUuid();
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("No device with the UUID \"%1\" found in the "
-                                  "project's library."))
-                           .arg(deviceUuid.toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("No device with the UUID \"%1\" found in the "
+                   "project's library."))
+            .arg(deviceUuid.toStr()));
   }
   // check if the device matches with the component
   if (mLibDevice->getComponentUuid() !=
       mCompInstance->getLibComponent().getUuid()) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("The device \"%1\" does not match with the component"
                    "instance \"%2\"."))
-            .arg(mLibDevice->getUuid().toStr(),
-                 mCompInstance->getUuid().toStr()));
+            .arg(
+                mLibDevice->getUuid().toStr(),
+                mCompInstance->getUuid().toStr()));
   }
   // get package from library
   Uuid packageUuid = mLibDevice->getPackageUuid();
-  mLibPackage      = mBoard.getProject().getLibrary().getPackage(packageUuid);
+  mLibPackage = mBoard.getProject().getLibrary().getPackage(packageUuid);
   if (!mLibPackage) {
     qDebug() << mCompInstance->getUuid();
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("No package with the UUID \"%1\" found in "
-                                  "the project's library."))
-                           .arg(packageUuid.toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("No package with the UUID \"%1\" found in "
+                   "the project's library."))
+            .arg(packageUuid.toStr()));
   }
   // get footprint from package
   mLibFootprint =
@@ -162,15 +175,16 @@ void BI_Device::init() {
     tl::optional<Uuid> signalUuid = item.getSignalUuid();
     if ((signalUuid) && (!mCompInstance->getSignalInstance(*signalUuid))) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("Unknown signal \"%1\" found in device \"%2\""))
               .arg(signalUuid->toStr(), mLibDevice->getUuid().toStr()));
     }
   }
 
   // emit the "attributesChanged" signal when the board has emited it
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BI_Device::attributesChanged);
+  connect(
+      &mBoard, &Board::attributesChanged, this, &BI_Device::attributesChanged);
 
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
 }

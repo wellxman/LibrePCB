@@ -54,7 +54,7 @@ class WorkspaceLibraryDb final : public QObject {
 
 public:
   // Constructors / Destructor
-  WorkspaceLibraryDb()                                = delete;
+  WorkspaceLibraryDb() = delete;
   WorkspaceLibraryDb(const WorkspaceLibraryDb& other) = delete;
 
   /**
@@ -102,27 +102,38 @@ public:
 
   // Getters: Element Metadata
   template <typename ElementType>
-  void getElementTranslations(const FilePath&    elemDir,
-                              const QStringList& localeOrder,
-                              QString* name = nullptr, QString* desc = nullptr,
-                              QString* keywords = nullptr) const;
+  void getElementTranslations(
+      const FilePath& elemDir,
+      const QStringList& localeOrder,
+      QString* name = nullptr,
+      QString* desc = nullptr,
+      QString* keywords = nullptr) const;
   template <typename ElementType>
-  void getElementMetadata(const FilePath elemDir, Uuid* uuid = nullptr,
-                          Version* version = nullptr) const;
+  void getElementMetadata(
+      const FilePath elemDir,
+      Uuid* uuid = nullptr,
+      Version* version = nullptr) const;
   void getLibraryMetadata(const FilePath libDir, QPixmap* icon = nullptr) const;
-  void getDeviceMetadata(const FilePath& devDir, Uuid* pkgUuid = nullptr,
-                         Uuid* cmpUuid = nullptr) const;
+  void getDeviceMetadata(
+      const FilePath& devDir,
+      Uuid* pkgUuid = nullptr,
+      Uuid* cmpUuid = nullptr) const;
 
   // Getters: Special
   QSet<Uuid> getComponentCategoryChilds(const tl::optional<Uuid>& parent) const;
   QSet<Uuid> getPackageCategoryChilds(const tl::optional<Uuid>& parent) const;
   QList<Uuid> getComponentCategoryParents(const Uuid& category) const;
   QList<Uuid> getPackageCategoryParents(const Uuid& category) const;
-  void getComponentCategoryElementCount(const tl::optional<Uuid>& category,
-                                        int* categories, int* symbols,
-                                        int* components, int* devices) const;
-  void getPackageCategoryElementCount(const tl::optional<Uuid>& category,
-                                      int* categories, int* packages) const;
+  void getComponentCategoryElementCount(
+      const tl::optional<Uuid>& category,
+      int* categories,
+      int* symbols,
+      int* components,
+      int* devices) const;
+  void getPackageCategoryElementCount(
+      const tl::optional<Uuid>& category,
+      int* categories,
+      int* packages) const;
   QSet<Uuid> getSymbolsByCategory(const tl::optional<Uuid>& category) const;
   QSet<Uuid> getPackagesByCategory(const tl::optional<Uuid>& category) const;
   QSet<Uuid> getComponentsByCategory(const tl::optional<Uuid>& category) const;
@@ -150,44 +161,59 @@ signals:
 
 private:
   // Private Methods
-  void getElementTranslations(const QString& table, const QString& idRow,
-                              const FilePath&    elemDir,
-                              const QStringList& localeOrder, QString* name,
-                              QString* desc, QString* keywords) const;
-  void getElementMetadata(const QString& table, const FilePath elemDir,
-                          Uuid* uuid, Version* version) const;
+  void getElementTranslations(
+      const QString& table,
+      const QString& idRow,
+      const FilePath& elemDir,
+      const QStringList& localeOrder,
+      QString* name,
+      QString* desc,
+      QString* keywords) const;
+  void getElementMetadata(
+      const QString& table,
+      const FilePath elemDir,
+      Uuid* uuid,
+      Version* version) const;
   QMultiMap<Version, FilePath> getElementFilePathsFromDb(
-      const QString& tablename, const Uuid& uuid) const;
+      const QString& tablename,
+      const Uuid& uuid) const;
   FilePath getLatestVersionFilePath(
       const QMultiMap<Version, FilePath>& list) const noexcept;
-  QSet<Uuid>         getCategoryChilds(const QString&            tablename,
-                                       const tl::optional<Uuid>& categoryUuid) const;
-  QList<Uuid>        getCategoryParents(const QString& tablename,
-                                        const Uuid&    category) const;
-  tl::optional<Uuid> getCategoryParent(const QString& tablename,
-                                       const Uuid&    category) const;
-  int                getCategoryChildCount(const QString&            tablename,
-                                           const tl::optional<Uuid>& category) const;
-  int                getCategoryElementCount(const QString&            tablename,
-                                             const QString&            idrowname,
-                                             const tl::optional<Uuid>& category) const;
-  QSet<Uuid>         getElementsByCategory(
-              const QString& tablename, const QString& idrowname,
-              const tl::optional<Uuid>& categoryUuid) const;
-  QList<Uuid>     getElementsBySearchKeyword(const QString& tablename,
-                                             const QString& idrowname,
-                                             const QString& keyword) const;
-  int             getLibraryId(const FilePath& lib) const;
-  QList<FilePath> getLibraryElements(const FilePath& lib,
-                                     const QString&  tablename) const;
-  void            createAllTables();
-  void            setDbVersion(int version);
-  int             getDbVersion() const noexcept;
+  QSet<Uuid> getCategoryChilds(
+      const QString& tablename,
+      const tl::optional<Uuid>& categoryUuid) const;
+  QList<Uuid> getCategoryParents(const QString& tablename, const Uuid& category)
+      const;
+  tl::optional<Uuid> getCategoryParent(
+      const QString& tablename,
+      const Uuid& category) const;
+  int getCategoryChildCount(
+      const QString& tablename,
+      const tl::optional<Uuid>& category) const;
+  int getCategoryElementCount(
+      const QString& tablename,
+      const QString& idrowname,
+      const tl::optional<Uuid>& category) const;
+  QSet<Uuid> getElementsByCategory(
+      const QString& tablename,
+      const QString& idrowname,
+      const tl::optional<Uuid>& categoryUuid) const;
+  QList<Uuid> getElementsBySearchKeyword(
+      const QString& tablename,
+      const QString& idrowname,
+      const QString& keyword) const;
+  int getLibraryId(const FilePath& lib) const;
+  QList<FilePath> getLibraryElements(
+      const FilePath& lib,
+      const QString& tablename) const;
+  void createAllTables();
+  void setDbVersion(int version);
+  int getDbVersion() const noexcept;
 
   // Attributes
-  Workspace&                     mWorkspace;
-  FilePath                       mFilePath;  ///< path to the SQLite database
-  QScopedPointer<SQLiteDatabase> mDb;        ///< the SQLite database
+  Workspace& mWorkspace;
+  FilePath mFilePath;  ///< path to the SQLite database
+  QScopedPointer<SQLiteDatabase> mDb;  ///< the SQLite database
   QScopedPointer<WorkspaceLibraryScanner> mLibraryScanner;
 
   // Constants

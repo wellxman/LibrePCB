@@ -53,10 +53,16 @@ PackagePadListEditorWidget::PackagePadListEditorWidget(QWidget* parent) noexcept
   mView->horizontalHeader()->setSectionResizeMode(
       PackagePadListModel::COLUMN_ACTIONS, QHeaderView::ResizeToContents);
   mView->sortByColumn(PackagePadListModel::COLUMN_NAME, Qt::AscendingOrder);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &PackagePadListModel::addPad);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &PackagePadListModel::removePad);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &PackagePadListModel::addPad);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &PackagePadListModel::removePad);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -70,8 +76,9 @@ PackagePadListEditorWidget::~PackagePadListEditorWidget() noexcept {
  *  Setters
  ******************************************************************************/
 
-void PackagePadListEditorWidget::setReferences(PackagePadList& list,
-                                               UndoStack*      stack) noexcept {
+void PackagePadListEditorWidget::setReferences(
+    PackagePadList& list,
+    UndoStack* stack) noexcept {
   mModel->setPadList(&list);
   mModel->setUndoStack(stack);
 }

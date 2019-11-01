@@ -43,7 +43,8 @@ ComponentPinSignalMapItem::ComponentPinSignalMapItem(
 }
 
 ComponentPinSignalMapItem::ComponentPinSignalMapItem(
-    const Uuid& pin, const tl::optional<Uuid>& signal,
+    const Uuid& pin,
+    const tl::optional<Uuid>& signal,
     const CmpSigPinDisplayType& displayType) noexcept
   : onEdited(*this),
     mPinUuid(pin),

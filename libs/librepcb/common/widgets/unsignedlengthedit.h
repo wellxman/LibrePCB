@@ -73,7 +73,7 @@ private:  // Data
   UnsignedLength mMinValue;
   UnsignedLength mMaxValue;
   UnsignedLength mValue;
-  LengthUnit     mUnit;
+  LengthUnit mUnit;
 };
 
 /*******************************************************************************

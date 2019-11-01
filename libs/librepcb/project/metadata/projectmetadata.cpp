@@ -36,10 +36,13 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-ProjectMetadata::ProjectMetadata(const Uuid& uuid, const ElementName& name,
-                                 const QString& author, const QString& version,
-                                 const QDateTime& created,
-                                 const QDateTime& lastModified)
+ProjectMetadata::ProjectMetadata(
+    const Uuid& uuid,
+    const ElementName& name,
+    const QString& author,
+    const QString& version,
+    const QDateTime& created,
+    const QDateTime& lastModified)
   : QObject(nullptr),
     mUuid(uuid),
     mName(name),
@@ -53,9 +56,9 @@ ProjectMetadata::ProjectMetadata(const SExpression& node)
   : QObject(nullptr), mUuid(Uuid::createRandom()), mName("Project") {
   qDebug() << "load project metadata...";
 
-  mUuid    = node.getChildByIndex(0).getValue<Uuid>();
-  mName    = node.getValueByPath<ElementName>("name");
-  mAuthor  = node.getValueByPath<QString>("author");
+  mUuid = node.getChildByIndex(0).getValue<Uuid>();
+  mName = node.getValueByPath<ElementName>("name");
+  mAuthor = node.getValueByPath<QString>("author");
   mVersion = node.getValueByPath<QString>("version");
   mCreated = node.getValueByPath<QDateTime>("created");
   mAttributes.loadFromSExpression(node);  // can throw

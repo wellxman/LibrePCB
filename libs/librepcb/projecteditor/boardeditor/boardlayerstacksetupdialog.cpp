@@ -43,7 +43,9 @@ namespace editor {
  ******************************************************************************/
 
 BoardLayerStackSetupDialog::BoardLayerStackSetupDialog(
-    BoardLayerStack& layerStack, UndoStack& undoStack, QWidget* parent) noexcept
+    BoardLayerStack& layerStack,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mLayerStack(layerStack),
     mUndoStack(undoStack),

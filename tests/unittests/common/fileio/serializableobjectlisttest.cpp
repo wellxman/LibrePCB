@@ -43,7 +43,7 @@ struct SerializableObjectListTagNameProvider {
 };
 
 using MinimalMock = MinimalSerializableObjectMock;
-using Mock        = SerializableObjectMock;
+using Mock = SerializableObjectMock;
 
 using MinimalList =
     SerializableObjectList<MinimalMock, SerializableObjectListTagNameProvider>;
@@ -75,8 +75,8 @@ private:
  ******************************************************************************/
 
 TEST_F(SerializableObjectListTest, testInstantiationWithMinimalElementClass) {
-  MinimalList l1;                                   // default ctor
-  MinimalList l2(std::move(l1));                    // move ctor
+  MinimalList l1;  // default ctor
+  MinimalList l2(std::move(l1));  // move ctor
   MinimalList l3(SExpression::createList("list"));  // SExpression ctor
   l3.append(std::make_shared<MinimalMock>("foo"));
   EXPECT_TRUE(l1.isEmpty());
@@ -138,10 +138,10 @@ TEST_F(SerializableObjectListTest, testDomElementConstructor) {
 }
 
 TEST_F(SerializableObjectListTest, testGetUuids) {
-  List              l{mMocks[0], mMocks[1], mMocks[2], mMocks[2]};
-  std::vector<Uuid> vector{mMocks[0]->mUuid, mMocks[1]->mUuid, mMocks[2]->mUuid,
-                           mMocks[2]->mUuid};
-  QSet<Uuid>        set{mMocks[0]->mUuid, mMocks[1]->mUuid, mMocks[2]->mUuid};
+  List l{mMocks[0], mMocks[1], mMocks[2], mMocks[2]};
+  std::vector<Uuid> vector{
+      mMocks[0]->mUuid, mMocks[1]->mUuid, mMocks[2]->mUuid, mMocks[2]->mUuid};
+  QSet<Uuid> set{mMocks[0]->mUuid, mMocks[1]->mUuid, mMocks[2]->mUuid};
   EXPECT_EQ(vector, l.getUuids());
   EXPECT_EQ(set, l.getUuidSet());
 }
@@ -206,7 +206,7 @@ TEST_F(SerializableObjectListTest, testIteratorOnEmptyList) {
 
 TEST_F(SerializableObjectListTest, testConstIterator) {
   const List l{mMocks[0], mMocks[1], mMocks[2]};
-  int        i = 0;
+  int i = 0;
   for (const auto& mock : l) {
     EXPECT_EQ(*mMocks[i], mock);
     ++i;
@@ -216,7 +216,7 @@ TEST_F(SerializableObjectListTest, testConstIterator) {
 
 TEST_F(SerializableObjectListTest, testMutableIterator) {
   List l{mMocks[0], mMocks[1], mMocks[2]};
-  int  i = 0;
+  int i = 0;
   for (auto& mock : l) {
     mock.mName = QString::number(i++);
   }
@@ -272,22 +272,23 @@ TEST_F(SerializableObjectListTest, testClear) {
 
 TEST_F(SerializableObjectListTest, testSerialize) {
   SExpression e = SExpression::createList("list");
-  List        l{mMocks[0], mMocks[1], mMocks[2]};
+  List l{mMocks[0], mMocks[1], mMocks[2]};
   l.serialize(e);
   e.removeLineBreaks();  // we are not interested in line breaks...
   EXPECT_EQ(3, e.getChildren().count());
   EXPECT_EQ("test", e.getChildren()[0].getName());
   EXPECT_EQ(mMocks[1]->mUuid, e.getChildren()[1].getValueOfFirstChild<Uuid>());
-  EXPECT_EQ(mMocks[2]->mName,
-            e.getChildren()[2].getValueByPath<QString>("name"));
+  EXPECT_EQ(
+      mMocks[2]->mName, e.getChildren()[2].getValueByPath<QString>("name"));
 }
 
 TEST_F(SerializableObjectListTest, testOperatorEqual) {
   EXPECT_TRUE(List() == List());
   EXPECT_TRUE(List({mMocks[0], mMocks[1]}) == List({mMocks[0], mMocks[1]}));
-  EXPECT_TRUE(List({mMocks[0], mMocks[1]}) ==
-              List({std::make_shared<Mock>(*mMocks[0]),
-                    std::make_shared<Mock>(*mMocks[1])}));
+  EXPECT_TRUE(
+      List({mMocks[0], mMocks[1]}) ==
+      List({std::make_shared<Mock>(*mMocks[0]),
+            std::make_shared<Mock>(*mMocks[1])}));
   EXPECT_FALSE(List({mMocks[0], mMocks[1]}) == List({mMocks[0], mMocks[2]}));
   EXPECT_FALSE(List({mMocks[0]}) == List({mMocks[0], mMocks[1]}));
 }
@@ -295,9 +296,10 @@ TEST_F(SerializableObjectListTest, testOperatorEqual) {
 TEST_F(SerializableObjectListTest, testOperatorUnequal) {
   EXPECT_FALSE(List() != List());
   EXPECT_FALSE(List({mMocks[0], mMocks[1]}) != List({mMocks[0], mMocks[1]}));
-  EXPECT_FALSE(List({mMocks[0], mMocks[1]}) !=
-               List({std::make_shared<Mock>(*mMocks[0]),
-                     std::make_shared<Mock>(*mMocks[1])}));
+  EXPECT_FALSE(
+      List({mMocks[0], mMocks[1]}) !=
+      List({std::make_shared<Mock>(*mMocks[0]),
+            std::make_shared<Mock>(*mMocks[1])}));
   EXPECT_TRUE(List({mMocks[0], mMocks[1]}) != List({mMocks[0], mMocks[2]}));
   EXPECT_TRUE(List({mMocks[0]}) != List({mMocks[0], mMocks[1]}));
 }

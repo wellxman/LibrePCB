@@ -39,8 +39,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-GerberGenerator::GerberGenerator(const QString& projName, const Uuid& projUuid,
-                                 const QString& projRevision) noexcept
+GerberGenerator::GerberGenerator(
+    const QString& projName,
+    const Uuid& projUuid,
+    const QString& projRevision) noexcept
   : mProjectId(escapeString(projName)),
     mProjectUuid(projUuid),
     mProjectRevision(escapeString(projRevision)),
@@ -72,8 +74,10 @@ void GerberGenerator::setLayerPolarity(LayerPolarity p) noexcept {
   }
 }
 
-void GerberGenerator::drawLine(const Point& start, const Point& end,
-                               const UnsignedLength& width) noexcept {
+void GerberGenerator::drawLine(
+    const Point& start,
+    const Point& end,
+    const UnsignedLength& width) noexcept {
   setCurrentAperture(mApertureList->setCircle(width, UnsignedLength(0)));
   moveToPosition(start);
   linearInterpolateToPosition(end);
@@ -81,19 +85,24 @@ void GerberGenerator::drawLine(const Point& start, const Point& end,
 
 void GerberGenerator::drawCircleOutline(const Circle& circle) noexcept {
   PositiveLength outerDia = circle.getDiameter() + circle.getLineWidth();
-  Length         innerDia = circle.getDiameter() - circle.getLineWidth();
+  Length innerDia = circle.getDiameter() - circle.getLineWidth();
   if (innerDia < 0) innerDia = 0;
-  flashCircle(circle.getCenter(), positiveToUnsigned(outerDia),
-              UnsignedLength(innerDia));
+  flashCircle(
+      circle.getCenter(),
+      positiveToUnsigned(outerDia),
+      UnsignedLength(innerDia));
 }
 
 void GerberGenerator::drawCircleArea(const Circle& circle) noexcept {
-  flashCircle(circle.getCenter(), positiveToUnsigned(circle.getDiameter()),
-              UnsignedLength(0));
+  flashCircle(
+      circle.getCenter(),
+      positiveToUnsigned(circle.getDiameter()),
+      UnsignedLength(0));
 }
 
 void GerberGenerator::drawPathOutline(
-    const Path& path, const UnsignedLength& lineWidth) noexcept {
+    const Path& path,
+    const UnsignedLength& lineWidth) noexcept {
   if (path.getVertices().count() < 2) {
     qWarning() << "Invalid path was ignored in gerber output!";
     return;
@@ -101,7 +110,7 @@ void GerberGenerator::drawPathOutline(
   setCurrentAperture(mApertureList->setCircle(lineWidth, UnsignedLength(0)));
   moveToPosition(path.getVertices().first().getPos());
   for (int i = 1; i < path.getVertices().count(); ++i) {
-    const Vertex& v  = path.getVertices().at(i);
+    const Vertex& v = path.getVertices().at(i);
     const Vertex& v0 = path.getVertices().at(i - 1);
     interpolateBetween(v0, v);
   }
@@ -117,45 +126,58 @@ void GerberGenerator::drawPathArea(const Path& path) noexcept {
   setRegionModeOn();
   moveToPosition(path.getVertices().first().getPos());
   for (int i = 1; i < path.getVertices().count(); ++i) {
-    const Vertex& v  = path.getVertices().at(i);
+    const Vertex& v = path.getVertices().at(i);
     const Vertex& v0 = path.getVertices().at(i - 1);
     interpolateBetween(v0, v);
   }
   setRegionModeOff();
 }
 
-void GerberGenerator::flashCircle(const Point& pos, const UnsignedLength& dia,
-                                  const UnsignedLength& hole) noexcept {
+void GerberGenerator::flashCircle(
+    const Point& pos,
+    const UnsignedLength& dia,
+    const UnsignedLength& hole) noexcept {
   setCurrentAperture(mApertureList->setCircle(dia, hole));
   flashAtPosition(pos);
 }
 
-void GerberGenerator::flashRect(const Point& pos, const UnsignedLength& w,
-                                const UnsignedLength& h, const Angle& rot,
-                                const UnsignedLength& hole) noexcept {
+void GerberGenerator::flashRect(
+    const Point& pos,
+    const UnsignedLength& w,
+    const UnsignedLength& h,
+    const Angle& rot,
+    const UnsignedLength& hole) noexcept {
   setCurrentAperture(mApertureList->setRect(w, h, rot, hole));
   flashAtPosition(pos);
 }
 
-void GerberGenerator::flashObround(const Point& pos, const UnsignedLength& w,
-                                   const UnsignedLength& h, const Angle& rot,
-                                   const UnsignedLength& hole) noexcept {
+void GerberGenerator::flashObround(
+    const Point& pos,
+    const UnsignedLength& w,
+    const UnsignedLength& h,
+    const Angle& rot,
+    const UnsignedLength& hole) noexcept {
   setCurrentAperture(mApertureList->setObround(w, h, rot, hole));
   flashAtPosition(pos);
 }
 
-void GerberGenerator::flashRegularPolygon(const Point&          pos,
-                                          const UnsignedLength& dia, int n,
-                                          const Angle&          rot,
-                                          const UnsignedLength& hole) noexcept {
+void GerberGenerator::flashRegularPolygon(
+    const Point& pos,
+    const UnsignedLength& dia,
+    int n,
+    const Angle& rot,
+    const UnsignedLength& hole) noexcept {
   setCurrentAperture(mApertureList->setRegularPolygon(dia, n, rot, hole));
   flashAtPosition(pos);
 }
 
-void GerberGenerator::flashOctagon(const Point& pos, const UnsignedLength& w,
-                                   const UnsignedLength& h,
-                                   const UnsignedLength& edge, const Angle& rot,
-                                   const UnsignedLength& hole) noexcept {
+void GerberGenerator::flashOctagon(
+    const Point& pos,
+    const UnsignedLength& w,
+    const UnsignedLength& h,
+    const UnsignedLength& edge,
+    const Angle& rot,
+    const UnsignedLength& hole) noexcept {
   setCurrentAperture(mApertureList->setOctagon(w, h, edge, rot, hole));
   flashAtPosition(pos);
 }
@@ -238,37 +260,44 @@ void GerberGenerator::linearInterpolateToPosition(const Point& pos) noexcept {
                       .arg(pos.getX().toNmString(), pos.getY().toNmString()));
 }
 
-void GerberGenerator::circularInterpolateToPosition(const Point& start,
-                                                    const Point& center,
-                                                    const Point& end) noexcept {
+void GerberGenerator::circularInterpolateToPosition(
+    const Point& start,
+    const Point& center,
+    const Point& end) noexcept {
   Point diff = center - start;
   if (!mMultiQuadrantArcModeOn) {
     diff.makeAbs();  // no sign allowed in single quadrant mode!
   }
   mContent.append(QString("X%1Y%2I%3J%4D01*\n")
-                      .arg(end.getX().toNmString(), end.getY().toNmString(),
-                           diff.getX().toNmString(), diff.getY().toNmString()));
+                      .arg(
+                          end.getX().toNmString(),
+                          end.getY().toNmString(),
+                          diff.getX().toNmString(),
+                          diff.getY().toNmString()));
 }
 
-void GerberGenerator::interpolateBetween(const Vertex& from, const Vertex& to) noexcept {
-    if (from.getAngle() == 0) {
-      // linear segment
-      linearInterpolateToPosition(to.getPos());
+void GerberGenerator::interpolateBetween(
+    const Vertex& from,
+    const Vertex& to) noexcept {
+  if (from.getAngle() == 0) {
+    // linear segment
+    linearInterpolateToPosition(to.getPos());
+  } else {
+    // arc segment
+    // note: due to buggy clients when using single quadrant mode,
+    // we always use multi quadrant mode.
+    // see https://github.com/LibrePCB/LibrePCB/issues/247
+    setMultiQuadrantArcModeOn();
+    if (from.getAngle() < 0) {
+      switchToCircularCwInterpolationModeG02();
     } else {
-      // arc segment
-      // note: due to buggy clients when using single quadrant mode,
-      // we always use multi quadrant mode.
-      // see https://github.com/LibrePCB/LibrePCB/issues/247
-      setMultiQuadrantArcModeOn();
-      if (from.getAngle() < 0) {
-        switchToCircularCwInterpolationModeG02();
-      } else {
-        switchToCircularCcwInterpolationModeG03();
-      }
-      Point center = Toolbox::arcCenter(from.getPos(), to.getPos(), from.getAngle());
-      circularInterpolateToPosition(from.getPos(), center, to.getPos());
-      switchToLinearInterpolationModeG01();
+      switchToCircularCcwInterpolationModeG03();
     }
+    Point center =
+        Toolbox::arcCenter(from.getPos(), to.getPos(), from.getAngle());
+    circularInterpolateToPosition(from.getPos(), center, to.getPos());
+    switchToLinearInterpolationModeG01();
+  }
 }
 
 void GerberGenerator::flashAtPosition(const Point& pos) noexcept {
@@ -280,10 +309,10 @@ void GerberGenerator::printHeader() noexcept {
   mOutput.append("G04 --- HEADER BEGIN --- *\n");
 
   // add some X2 attributes
-  QString appVersion   = qApp->applicationVersion();
+  QString appVersion = qApp->applicationVersion();
   QString creationDate = QDateTime::currentDateTime().toString(Qt::ISODate);
-  QString projId       = mProjectId.remove(',');
-  QString projUuid     = mProjectUuid.toStr();
+  QString projId = mProjectId.remove(',');
+  QString projUuid = mProjectUuid.toStr();
   QString projRevision = mProjectRevision.remove(',');
   mOutput.append(QString("%TF.GenerationSoftware,LibrePCB,LibrePCB,%1*%\n")
                      .arg(appVersion));

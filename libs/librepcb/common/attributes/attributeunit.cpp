@@ -33,8 +33,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-AttributeUnit::AttributeUnit(const QString& name, const QString& symbolTr,
-                             const QStringList& userInputSuffixes) noexcept
+AttributeUnit::AttributeUnit(
+    const QString& name,
+    const QString& symbolTr,
+    const QStringList& userInputSuffixes) noexcept
   : mName(name), mSymbolTr(symbolTr), mUserInputSuffixes(userInputSuffixes) {
 }
 

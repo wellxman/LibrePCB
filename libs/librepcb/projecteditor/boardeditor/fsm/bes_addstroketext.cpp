@@ -49,10 +49,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_AddStrokeText::BES_AddStrokeText(BoardEditor&     editor,
-                                     Ui::BoardEditor& editorUi,
-                                     GraphicsView&    editorGraphicsView,
-                                     UndoStack&       undoStack)
+BES_AddStrokeText::BES_AddStrokeText(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mUndoCmdActive(false),
     mText(nullptr),
@@ -114,8 +115,11 @@ bool BES_AddStrokeText::entry(BEE_Base* event) noexcept {
   }
   mLayerComboBox->setCurrentLayer(mCurrentLayerName);
   mEditorUi.commandToolbar->addWidget(mLayerComboBox.data());
-  connect(mLayerComboBox.data(), &GraphicsLayerComboBox::currentLayerChanged,
-          this, &BES_AddStrokeText::layerComboBoxLayerChanged);
+  connect(
+      mLayerComboBox.data(),
+      &GraphicsLayerComboBox::currentLayerChanged,
+      this,
+      &BES_AddStrokeText::layerComboBoxLayerChanged);
 
   // add the "Text:" label to the toolbar
   mTextLabel.reset(new QLabel(tr("Text:")));
@@ -132,8 +136,11 @@ bool BES_AddStrokeText::entry(BEE_Base* event) noexcept {
   mTextComboBox->addItem("{{VERSION}}");
   mTextComboBox->setCurrentIndex(mTextComboBox->findText(mCurrentText));
   mTextComboBox->setCurrentText(mCurrentText);
-  connect(mTextComboBox.data(), &QComboBox::currentTextChanged, this,
-          &BES_AddStrokeText::textComboBoxValueChanged);
+  connect(
+      mTextComboBox.data(),
+      &QComboBox::currentTextChanged,
+      this,
+      &BES_AddStrokeText::textComboBoxValueChanged);
   mEditorUi.commandToolbar->addWidget(mTextComboBox.data());
 
   // add the "Height:" label to the toolbar
@@ -145,8 +152,11 @@ bool BES_AddStrokeText::entry(BEE_Base* event) noexcept {
   mHeightEdit.reset(new PositiveLengthEdit());
   mHeightEdit->setSingleStep(0.5);  // [mm]
   mHeightEdit->setValue(mCurrentHeight);
-  connect(mHeightEdit.data(), &PositiveLengthEdit::valueChanged, this,
-          &BES_AddStrokeText::heightEditValueChanged);
+  connect(
+      mHeightEdit.data(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &BES_AddStrokeText::heightEditValueChanged);
   mEditorUi.commandToolbar->addWidget(mHeightEdit.data());
 
   // add the "Mirror:" label to the toolbar
@@ -157,8 +167,11 @@ bool BES_AddStrokeText::entry(BEE_Base* event) noexcept {
   // add the mirror checkbox to the toolbar
   mMirrorCheckBox.reset(new QCheckBox());
   mMirrorCheckBox->setChecked(mCurrentMirror);
-  connect(mMirrorCheckBox.data(), &QCheckBox::toggled, this,
-          &BES_AddStrokeText::mirrorCheckBoxToggled);
+  connect(
+      mMirrorCheckBox.data(),
+      &QCheckBox::toggled,
+      this,
+      &BES_AddStrokeText::mirrorCheckBoxToggled);
   mEditorUi.commandToolbar->addWidget(mMirrorCheckBox.data());
 
   // change the cursor
@@ -288,13 +301,21 @@ bool BES_AddStrokeText::addText(Board& board, const Point& pos) noexcept {
   try {
     mUndoStack.beginCmdGroup(tr("Add text to board"));
     mUndoCmdActive = true;
-    mText          = new BI_StrokeText(
+    mText = new BI_StrokeText(
         board,
-        StrokeText(Uuid::createRandom(), mCurrentLayerName, mCurrentText, pos,
-                   mCurrentRotation, mCurrentHeight, UnsignedLength(200000),
-                   StrokeTextSpacing(), StrokeTextSpacing(),
-                   Alignment(HAlign::left(), VAlign::bottom()), mCurrentMirror,
-                   true));
+        StrokeText(
+            Uuid::createRandom(),
+            mCurrentLayerName,
+            mCurrentText,
+            pos,
+            mCurrentRotation,
+            mCurrentHeight,
+            UnsignedLength(200000),
+            StrokeTextSpacing(),
+            StrokeTextSpacing(),
+            Alignment(HAlign::left(), VAlign::bottom()),
+            mCurrentMirror,
+            true));
     QScopedPointer<CmdBoardStrokeTextAdd> cmdAdd(
         new CmdBoardStrokeTextAdd(*mText));
     mUndoStack.appendToCmdGroup(cmdAdd.take());
@@ -328,7 +349,7 @@ bool BES_AddStrokeText::fixText(const Point& pos) noexcept {
     mUndoStack.appendToCmdGroup(mEditCmd.take());
     mUndoStack.commitCmdGroup();
     mUndoCmdActive = false;
-    mText          = nullptr;
+    mText = nullptr;
     return true;
   } catch (Exception& e) {
     if (mUndoCmdActive) {
@@ -337,7 +358,7 @@ bool BES_AddStrokeText::fixText(const Point& pos) noexcept {
       } catch (...) {
       }
       mUndoCmdActive = false;
-      mText          = nullptr;
+      mText = nullptr;
     }
     QMessageBox::critical(&mEditor, tr("Error"), e.getMsg());
     return false;

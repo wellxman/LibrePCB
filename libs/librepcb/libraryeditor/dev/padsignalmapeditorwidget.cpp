@@ -60,8 +60,8 @@ PadSignalMapEditorWidget::PadSignalMapEditorWidget(QWidget* parent) noexcept
       DevicePadSignalMapModel::COLUMN_PAD, QHeaderView::ResizeToContents);
   mView->horizontalHeader()->setSectionResizeMode(
       DevicePadSignalMapModel::COLUMN_SIGNAL, QHeaderView::Stretch);
-  mView->setItemDelegateForColumn(DevicePadSignalMapModel::COLUMN_SIGNAL,
-                                  new ComboBoxDelegate(this));
+  mView->setItemDelegateForColumn(
+      DevicePadSignalMapModel::COLUMN_SIGNAL, new ComboBoxDelegate(this));
   mView->sortByColumn(DevicePadSignalMapModel::COLUMN_PAD, Qt::AscendingOrder);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
@@ -76,8 +76,9 @@ PadSignalMapEditorWidget::~PadSignalMapEditorWidget() noexcept {
  *  Setters
  ******************************************************************************/
 
-void PadSignalMapEditorWidget::setReferences(UndoStack*          undoStack,
-                                             DevicePadSignalMap* map) noexcept {
+void PadSignalMapEditorWidget::setReferences(
+    UndoStack* undoStack,
+    DevicePadSignalMap* map) noexcept {
   mModel->setPadSignalMap(map);
   mModel->setUndoStack(undoStack);
 }

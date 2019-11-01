@@ -50,8 +50,8 @@ ComponentPinSignalMapModel::ComponentPinSignalMapModel(QObject* parent) noexcept
     mUndoStack(nullptr),
     mOnItemsEditedSlot(*this, &ComponentPinSignalMapModel::symbolItemsEdited),
     mOnSignalsEditedSlot(*this, &ComponentPinSignalMapModel::signalListEdited) {
-  foreach (const CmpSigPinDisplayType& type,
-           CmpSigPinDisplayType::getAllTypes()) {
+  foreach (
+      const CmpSigPinDisplayType& type, CmpSigPinDisplayType::getAllTypes()) {
     mDisplayTypeComboBoxItems.append(
         qMakePair(type.getNameTr(), QVariant(type.toString())));
   }
@@ -153,15 +153,15 @@ int ComponentPinSignalMapModel::columnCount(const QModelIndex& parent) const {
   return 0;
 }
 
-QVariant ComponentPinSignalMapModel::data(const QModelIndex& index,
-                                          int                role) const {
+QVariant ComponentPinSignalMapModel::data(const QModelIndex& index, int role)
+    const {
   if (!index.isValid() || !mSymbolVariant) {
     return QVariant();
   }
 
-  int                                         symbolItemIndex = -1;
+  int symbolItemIndex = -1;
   std::shared_ptr<ComponentSymbolVariantItem> symbolItem;
-  std::shared_ptr<ComponentPinSignalMapItem>  mapItem;
+  std::shared_ptr<ComponentPinSignalMapItem> mapItem;
   getRowItem(index.row(), symbolItemIndex, symbolItem, mapItem);
   if (!symbolItem || !mapItem) {
     return QVariant();
@@ -169,7 +169,7 @@ QVariant ComponentPinSignalMapModel::data(const QModelIndex& index,
 
   switch (index.column()) {
     case COLUMN_SYMBOL: {
-      Uuid                          symbolUuid = symbolItem->getSymbolUuid();
+      Uuid symbolUuid = symbolItem->getSymbolUuid();
       std::shared_ptr<const Symbol> symbol;
       if (mSymbolsCache) {
         symbol = mSymbolsCache->getSymbol(symbolUuid);
@@ -185,12 +185,12 @@ QVariant ComponentPinSignalMapModel::data(const QModelIndex& index,
       }
     }
     case COLUMN_PIN: {
-      Uuid                          symbolUuid = symbolItem->getSymbolUuid();
+      Uuid symbolUuid = symbolItem->getSymbolUuid();
       std::shared_ptr<const Symbol> symbol;
       if (mSymbolsCache) {
         symbol = mSymbolsCache->getSymbol(symbolUuid);
       }
-      Uuid                             pinUuid = mapItem->getPinUuid();
+      Uuid pinUuid = mapItem->getPinUuid();
       std::shared_ptr<const SymbolPin> pin =
           symbol ? symbol->getPins().find(pinUuid) : nullptr;
       QString pinName = pin ? *pin->getName() : pinUuid.toStr();
@@ -211,14 +211,14 @@ QVariant ComponentPinSignalMapModel::data(const QModelIndex& index,
       }
     }
     case COLUMN_SIGNAL: {
-      tl::optional<Uuid>                     uuid = mapItem->getSignalUuid();
+      tl::optional<Uuid> uuid = mapItem->getSignalUuid();
       std::shared_ptr<const ComponentSignal> sig =
           uuid && mSignals ? mSignals->find(*uuid) : nullptr;
       switch (role) {
         case Qt::DisplayRole:
-          return sig ? *sig->getName()
-                     : (uuid ? uuid->toStr()
-                             : QString("(%1)").arg(tr("unconnected")));
+          return sig
+              ? *sig->getName()
+              : (uuid ? uuid->toStr() : QString("(%1)").arg(tr("unconnected")));
         case Qt::EditRole:
         case Qt::ToolTipRole:
           return uuid ? uuid->toStr() : QVariant();  // NULL means unconnected!
@@ -248,9 +248,10 @@ QVariant ComponentPinSignalMapModel::data(const QModelIndex& index,
   return QVariant();
 }
 
-QVariant ComponentPinSignalMapModel::headerData(int             section,
-                                                Qt::Orientation orientation,
-                                                int             role) const {
+QVariant ComponentPinSignalMapModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -282,22 +283,25 @@ QVariant ComponentPinSignalMapModel::headerData(int             section,
 Qt::ItemFlags ComponentPinSignalMapModel::flags(
     const QModelIndex& index) const {
   Qt::ItemFlags f = QAbstractTableModel::flags(index);
-  if (index.isValid() && ((index.column() == COLUMN_SIGNAL) ||
-                          (index.column() == COLUMN_DISPLAY))) {
+  if (index.isValid() &&
+      ((index.column() == COLUMN_SIGNAL) ||
+       (index.column() == COLUMN_DISPLAY))) {
     f |= Qt::ItemIsEditable;
   }
   return f;
 }
 
-bool ComponentPinSignalMapModel::setData(const QModelIndex& index,
-                                         const QVariant& value, int role) {
+bool ComponentPinSignalMapModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mSymbolVariant) {
     return false;
   }
   try {
-    int                                         symbolItemIndex = -1;
+    int symbolItemIndex = -1;
     std::shared_ptr<ComponentSymbolVariantItem> symbolItem;
-    std::shared_ptr<ComponentPinSignalMapItem>  mapItem;
+    std::shared_ptr<ComponentPinSignalMapItem> mapItem;
     getRowItem(index.row(), symbolItemIndex, symbolItem, mapItem);
     if (!mapItem) {
       return false;
@@ -327,9 +331,10 @@ bool ComponentPinSignalMapModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void ComponentPinSignalMapModel::symbolItemsEdited(
-    const ComponentSymbolVariantItemList& list, int index,
+    const ComponentSymbolVariantItemList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-    ComponentSymbolVariantItemList::Event                    event) noexcept {
+    ComponentSymbolVariantItemList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   Q_UNUSED(item);
@@ -348,9 +353,10 @@ void ComponentPinSignalMapModel::symbolItemsEdited(
 }
 
 void ComponentPinSignalMapModel::signalListEdited(
-    const ComponentSignalList& list, int index,
+    const ComponentSignalList& list,
+    int index,
     const std::shared_ptr<const ComponentSignal>& signal,
-    ComponentSignalList::Event                    event) noexcept {
+    ComponentSignalList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   Q_UNUSED(signal);
@@ -359,8 +365,9 @@ void ComponentPinSignalMapModel::signalListEdited(
     case ComponentSignalList::Event::ElementRemoved:
     case ComponentSignalList::Event::ElementEdited:
       updateSignalComboBoxItems();
-      dataChanged(this->index(0, COLUMN_SIGNAL),
-                  this->index(rowCount() - 1, COLUMN_SIGNAL));
+      dataChanged(
+          this->index(0, COLUMN_SIGNAL),
+          this->index(rowCount() - 1, COLUMN_SIGNAL));
       break;
     default:
       qWarning() << "Unhandled switch-case in "
@@ -390,23 +397,27 @@ void ComponentPinSignalMapModel::updateSignalComboBoxItems() noexcept {
   collator.setCaseSensitivity(Qt::CaseInsensitive);
   collator.setIgnorePunctuation(false);
   collator.setNumericMode(true);
-  std::sort(mSignalComboBoxItems.begin(), mSignalComboBoxItems.end(),
-            [&collator](const QPair<QString, QVariant>& lhs,
-                        const QPair<QString, QVariant>& rhs) {
-              return collator(lhs.first, rhs.first);
-            });
+  std::sort(
+      mSignalComboBoxItems.begin(),
+      mSignalComboBoxItems.end(),
+      [&collator](
+          const QPair<QString, QVariant>& lhs,
+          const QPair<QString, QVariant>& rhs) {
+        return collator(lhs.first, rhs.first);
+      });
   mSignalComboBoxItems.insert(
       0, qMakePair(QString("(%1)").arg(tr("unconnected")), QVariant()));
 }
 
 void ComponentPinSignalMapModel::getRowItem(
-    int row, int& symbolItemIndex,
+    int row,
+    int& symbolItemIndex,
     std::shared_ptr<ComponentSymbolVariantItem>& symbolItem,
-    std::shared_ptr<ComponentPinSignalMapItem>&  mapItem) const noexcept {
+    std::shared_ptr<ComponentPinSignalMapItem>& mapItem) const noexcept {
   int count = 0;
   for (int i = 0; i < mSymbolVariant->getSymbolItems().count(); ++i) {
     symbolItemIndex = i;
-    symbolItem      = mSymbolVariant->getSymbolItems().value(i);
+    symbolItem = mSymbolVariant->getSymbolItems().value(i);
     if (row < (count + symbolItem->getPinSignalMap().count())) {
       mapItem = symbolItem->getPinSignalMap().value(row - count);
       break;

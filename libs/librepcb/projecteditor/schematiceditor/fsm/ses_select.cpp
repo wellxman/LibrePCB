@@ -53,8 +53,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SES_Select::SES_Select(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                       GraphicsView& editorGraphicsView, UndoStack& undoStack)
+SES_Select::SES_Select(
+    SchematicEditor& editor,
+    Ui::SchematicEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : SES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mSubState(SubState_Idle) {
 }
@@ -157,8 +160,8 @@ SES_Base::ProcRetVal SES_Select::processSubStateIdleSceneEvent(
           schematic->setSelectionRect(Point(), Point(), false);
           return ForceStayInState;
         case Qt::RightButton:
-          return proccessIdleSceneRightMouseButtonReleased(mouseEvent,
-                                                           schematic);
+          return proccessIdleSceneRightMouseButtonReleased(
+              mouseEvent, schematic);
         default:
           break;
       }
@@ -193,7 +196,8 @@ SES_Base::ProcRetVal SES_Select::processSubStateIdleSceneEvent(
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneLeftClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic& schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Schematic& schematic) noexcept {
   // handle items selection
   QList<SI_Base*> items =
       schematic.getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -215,15 +219,16 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneLeftClick(
     items.first()->setSelected(true);
   }
 
-  if (startMovingSelectedItems(schematic,
-                               Point::fromPx(mouseEvent->scenePos())))
+  if (startMovingSelectedItems(
+          schematic, Point::fromPx(mouseEvent->scenePos())))
     return ForceStayInState;
   else
     return PassToParentState;
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic* schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Schematic* schematic) noexcept {
   // handle item selection
   QList<SI_Base*> items =
       schematic->getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -243,8 +248,8 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
           menu.addAction(QIcon(":/img/actions/rotate_left.png"), tr("Rotate"));
       QAction* aMirror = menu.addAction(
           QIcon(":/img/actions/flip_horizontal.png"), tr("Mirror"));
-      QAction* aRemoveSymbol = menu.addAction(QIcon(":/img/actions/delete.png"),
-                                              tr("Remove Symbol"));
+      QAction* aRemoveSymbol = menu.addAction(
+          QIcon(":/img/actions/delete.png"), tr("Remove Symbol"));
       menu.addSeparator();
       QAction* aProperties = menu.addAction(tr("Properties"));
 
@@ -269,8 +274,8 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
       // build the context menu
       QAction* aRotateCCW =
           menu.addAction(QIcon(":/img/actions/rotate_left.png"), tr("Rotate"));
-      QAction* aRemove = menu.addAction(QIcon(":/img/actions/delete.png"),
-                                        tr("Remove Net Label"));
+      QAction* aRemove = menu.addAction(
+          QIcon(":/img/actions/delete.png"), tr("Remove Net Label"));
       menu.addSeparator();
       QAction* aRenameNetSegment = menu.addAction(tr("Rename Net Segment"));
 
@@ -293,7 +298,8 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneDoubleClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic* schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent,
+    Schematic* schematic) noexcept {
   if (mouseEvent->button() == Qt::LeftButton) {
     // check if there is an element under the mouse
     QList<SI_Base*> items =
@@ -401,8 +407,9 @@ SES_Base::ProcRetVal SES_Select::processSubStateMovingSceneEvent(
   return PassToParentState;
 }
 
-bool SES_Select::startMovingSelectedItems(Schematic&   schematic,
-                                          const Point& startPos) noexcept {
+bool SES_Select::startMovingSelectedItems(
+    Schematic& schematic,
+    const Point& startPos) noexcept {
   Q_ASSERT(mSelectedItemsMoveCommand.isNull());
   mSelectedItemsMoveCommand.reset(
       new CmdMoveSelectedSchematicItems(schematic, startPos));
@@ -459,9 +466,13 @@ bool SES_Select::removeSelectedItems() noexcept {
 }
 
 void SES_Select::openSymbolPropertiesDialog(SI_Symbol& symbol) noexcept {
-  SymbolInstancePropertiesDialog dialog(mWorkspace, mProject,
-                                        symbol.getComponentInstance(), symbol,
-                                        mUndoStack, &mEditor);
+  SymbolInstancePropertiesDialog dialog(
+      mWorkspace,
+      mProject,
+      symbol.getComponentInstance(),
+      symbol,
+      mUndoStack,
+      &mEditor);
   dialog.exec();
 }
 

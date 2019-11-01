@@ -50,7 +50,8 @@ namespace editor {
  ******************************************************************************/
 
 CmdMirrorSelectedSchematicItems::CmdMirrorSelectedSchematicItems(
-    Schematic& schematic, Qt::Orientation orientation) noexcept
+    Schematic& schematic,
+    Qt::Orientation orientation) noexcept
   : UndoCommandGroup(tr("Mirror Schematic Elements")),
     mSchematic(schematic),
     mOrientation(orientation) {
@@ -74,7 +75,7 @@ bool CmdMirrorSelectedSchematicItems::performExecute() {
 
   // find the center of all elements
   Point center = Point(0, 0);
-  int   count  = 0;
+  int count = 0;
   foreach (SI_Symbol* symbol, query->getSymbols()) {
     center += symbol->getPosition();
     ++count;
@@ -103,8 +104,8 @@ bool CmdMirrorSelectedSchematicItems::performExecute() {
   }
   foreach (SI_NetPoint* netpoint, query->getNetPoints()) {
     CmdSchematicNetPointEdit* cmd = new CmdSchematicNetPointEdit(*netpoint);
-    cmd->setPosition(netpoint->getPosition().mirrored(mOrientation, center),
-                     false);
+    cmd->setPosition(
+        netpoint->getPosition().mirrored(mOrientation, center), false);
     appendChild(cmd);
   }
   foreach (SI_NetLabel* netlabel, query->getNetLabels()) {

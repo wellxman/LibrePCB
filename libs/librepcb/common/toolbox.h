@@ -49,9 +49,9 @@ class Toolbox final {
 
 public:
   // Constructors / Destructor
-  Toolbox()                     = delete;
+  Toolbox() = delete;
   Toolbox(const Toolbox& other) = delete;
-  ~Toolbox()                    = delete;
+  ~Toolbox() = delete;
 
   // Operator Overloadings
   Toolbox& operator=(const Toolbox& rhs) = delete;
@@ -79,19 +79,22 @@ public:
     return QRectF(-rx, -ry, 2 * rx, 2 * ry);
   }
 
-  static QRectF adjustedBoundingRect(const QRectF& rect,
-                                     qreal         offset) noexcept {
+  static QRectF adjustedBoundingRect(
+      const QRectF& rect,
+      qreal offset) noexcept {
     return rect.adjusted(-offset, -offset, offset, offset);
   }
 
   static QPainterPath shapeFromPath(
-      const QPainterPath& path, const QPen& pen, const QBrush& brush,
+      const QPainterPath& path,
+      const QPen& pen,
+      const QBrush& brush,
       const UnsignedLength& minWidth = UnsignedLength(0)) noexcept;
 
-  static Length arcRadius(const Point& p1, const Point& p2,
-                          const Angle& a) noexcept;
-  static Point  arcCenter(const Point& p1, const Point& p2,
-                          const Angle& a) noexcept;
+  static Length
+      arcRadius(const Point& p1, const Point& p2, const Angle& a) noexcept;
+  static Point
+      arcCenter(const Point& p1, const Point& p2, const Angle& a) noexcept;
 
   /**
    * @brief Calculate the point on a given line which is nearest to a given
@@ -107,8 +110,10 @@ public:
    * @warning This method works with floating point numbers and thus the result
    * may not be perfectly precise.
    */
-  static Point nearestPointOnLine(const Point& p, const Point& l1,
-                                  const Point& l2) noexcept;
+  static Point nearestPointOnLine(
+      const Point& p,
+      const Point& l1,
+      const Point& l2) noexcept;
 
   /**
    * @brief Calculate the shortest distance between a given point and a given
@@ -122,7 +127,9 @@ public:
    * @return Shortest distance between the given point and the given line (>=0)
    */
   static Length shortestDistanceBetweenPointAndLine(
-      const Point& p, const Point& l1, const Point& l2,
+      const Point& p,
+      const Point& l1,
+      const Point& l2,
       Point* nearest = nullptr) noexcept;
 
   /**
@@ -174,12 +181,14 @@ public:
    *
    * @return The cleaned string (may be empty)
    */
-  static QString cleanUserInputString(const QString&            input,
-                                      const QRegularExpression& removeRegex,
-                                      bool trim = true, bool toLower = false,
-                                      bool           toUpper          = false,
-                                      const QString& spaceReplacement = " ",
-                                      int            maxLength = -1) noexcept;
+  static QString cleanUserInputString(
+      const QString& input,
+      const QRegularExpression& removeRegex,
+      bool trim = true,
+      bool toLower = false,
+      bool toUpper = false,
+      const QString& spaceReplacement = " ",
+      int maxLength = -1) noexcept;
 
   /**
    * @brief Convert a float or double to a localized string
@@ -188,8 +197,8 @@ public:
    * and without group separators.
    */
   template <typename T>
-  static QString floatToString(T value, int decimals,
-                               const QLocale& locale) noexcept {
+  static QString
+      floatToString(T value, int decimals, const QLocale& locale) noexcept {
     QString s = locale.toString(value, 'f', decimals);
     for (int i = 1; (i < decimals) && s.endsWith(locale.zeroDigit()); ++i) {
       s.chop(1);
@@ -249,8 +258,8 @@ public:
   static T decimalFixedPointFromString(const QString& str, qint32 pointPos) {
     using UnsignedT = typename std::make_unsigned<T>::type;
 
-    const T         min   = std::numeric_limits<T>::min();
-    const T         max   = std::numeric_limits<T>::max();
+    const T min = std::numeric_limits<T>::min();
+    const T max = std::numeric_limits<T>::max();
     const UnsignedT max_u = std::numeric_limits<UnsignedT>::max();
 
     enum class State {
@@ -264,14 +273,14 @@ public:
       EXP_AFTER_SIGN,
       EXP_DIGITS,
     };
-    State     state     = State::START;
-    UnsignedT valueAbs  = 0;
-    bool      sign      = false;
-    qint32    expOffset = pointPos;
+    State state = State::START;
+    UnsignedT valueAbs = 0;
+    bool sign = false;
+    qint32 expOffset = pointPos;
 
-    const quint32 maxExp  = std::numeric_limits<quint32>::max();
-    quint32       exp     = 0;
-    bool          expSign = false;
+    const quint32 maxExp = std::numeric_limits<quint32>::max();
+    quint32 exp = 0;
+    bool expSign = false;
 
     for (QChar c : str) {
       if (state == State::INVALID) {
@@ -285,7 +294,7 @@ public:
 
         case State::START:
           if (c == '-') {
-            sign  = true;
+            sign = true;
             state = State::AFTER_SIGN;
           } else if (c == '+') {
             state = State::AFTER_SIGN;
@@ -293,7 +302,7 @@ public:
             state = State::LONELY_DOT;
           } else if (c.isDigit()) {
             valueAbs = static_cast<UnsignedT>(c.digitValue());
-            state    = State::INT_PART;
+            state = State::INT_PART;
           } else {
             state = State::INVALID;
           }
@@ -304,7 +313,7 @@ public:
             state = State::LONELY_DOT;
           } else if (c.isDigit()) {
             valueAbs = static_cast<UnsignedT>(c.digitValue());
-            state    = State::INT_PART;
+            state = State::INT_PART;
           } else {
             state = State::INVALID;
           }
@@ -370,11 +379,11 @@ public:
         case State::EXP:
           if (c == '-') {
             expSign = true;
-            state   = State::EXP_AFTER_SIGN;
+            state = State::EXP_AFTER_SIGN;
           } else if (c == '+') {
             state = State::EXP_AFTER_SIGN;
           } else if (c.isDigit()) {
-            exp   = static_cast<quint32>(c.digitValue());
+            exp = static_cast<quint32>(c.digitValue());
             state = State::EXP_DIGITS;
           } else {
             state = State::INVALID;
@@ -383,7 +392,7 @@ public:
 
         case State::EXP_AFTER_SIGN:
           if (c.isDigit()) {
-            exp   = static_cast<quint32>(c.digitValue());
+            exp = static_cast<quint32>(c.digitValue());
             state = State::EXP_DIGITS;
           } else {
             state = State::INVALID;
@@ -496,7 +505,8 @@ public:
 
     if (!ok) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("Invalid fixed point number string: \"%1\"")).arg(str));
     }
     return result;
@@ -507,7 +517,7 @@ private:
    * @brief Internal helper function for #expandRangesInString(const QString&)
    */
   static QStringList expandRangesInString(
-      const QString&                                    input,
+      const QString& input,
       const QVector<std::tuple<int, int, QStringList>>& replacements) noexcept;
 };
 

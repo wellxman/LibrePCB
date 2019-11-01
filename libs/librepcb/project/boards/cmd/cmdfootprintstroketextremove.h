@@ -46,8 +46,9 @@ class BI_StrokeText;
 class CmdFootprintStrokeTextRemove final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdFootprintStrokeTextRemove(BI_Footprint&  footprint,
-                               BI_StrokeText& text) noexcept;
+  CmdFootprintStrokeTextRemove(
+      BI_Footprint& footprint,
+      BI_StrokeText& text) noexcept;
   ~CmdFootprintStrokeTextRemove() noexcept;
 
 private:
@@ -65,7 +66,7 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  BI_Footprint&  mFootprint;
+  BI_Footprint& mFootprint;
   BI_StrokeText& mText;
 };
 

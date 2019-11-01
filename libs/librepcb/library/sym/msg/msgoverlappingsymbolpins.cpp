@@ -39,7 +39,8 @@ namespace library {
 MsgOverlappingSymbolPins::MsgOverlappingSymbolPins(
     QVector<std::shared_ptr<const SymbolPin>> pins) noexcept
   : LibraryElementCheckMessage(
-        Severity::Error, buildMessage(pins),
+        Severity::Error,
+        buildMessage(pins),
         tr("There are multiple pins at the same position. This is not allowed "
            "because you cannot connect wires to these pins in the schematic "
            "editor.")),

@@ -42,7 +42,8 @@ namespace editor {
 
 template <typename ElementType>
 CategoryTreeLabelTextBuilder<ElementType>::CategoryTreeLabelTextBuilder(
-    const workspace::WorkspaceLibraryDb& db, const QStringList& localeOrder,
+    const workspace::WorkspaceLibraryDb& db,
+    const QStringList& localeOrder,
     QLabel& label) noexcept
   : mDb(db),
     mLocaleOrder(localeOrder),
@@ -81,15 +82,16 @@ void CategoryTreeLabelTextBuilder<ElementType>::setErrorText(
 
 template <typename ElementType>
 bool CategoryTreeLabelTextBuilder<ElementType>::updateText(
-    const tl::optional<Uuid>& category, const QString& lastLine) noexcept {
+    const tl::optional<Uuid>& category,
+    const QString& lastLine) noexcept {
   try {
     QList<Uuid> uuids;
     if (category) {
       uuids.append(*category);
       uuids.append(getCategoryParents(*category));  // can throw
       if (mEndlessRecursionUuid && uuids.contains(*mEndlessRecursionUuid)) {
-        throw RuntimeError(__FILE__, __LINE__,
-                           tr("Endless recursion detected!"));
+        throw RuntimeError(
+            __FILE__, __LINE__, tr("Endless recursion detected!"));
       }
     }
     return updateText(uuids, lastLine);
@@ -105,14 +107,17 @@ bool CategoryTreeLabelTextBuilder<ElementType>::updateText(
 
 template <typename ElementType>
 bool CategoryTreeLabelTextBuilder<ElementType>::updateText(
-    const QList<Uuid>& uuids, const QString& lastLine) noexcept {
+    const QList<Uuid>& uuids,
+    const QString& lastLine) noexcept {
   try {
     QStringList lines;
     foreach (const Uuid& uuid, uuids) {
       FilePath filepath = getLatestCategory(uuid);  // can throw
-      QString  name;
-      mDb.getElementTranslations<ElementType>(filepath, mLocaleOrder,
-                                              &name);  // can throw
+      QString name;
+      mDb.getElementTranslations<ElementType>(
+          filepath,
+          mLocaleOrder,
+          &name);  // can throw
       lines.prepend(name);
     }
     lines.prepend(tr("Root category"));
@@ -132,7 +137,7 @@ void CategoryTreeLabelTextBuilder<ElementType>::setText(
     const QStringList& lines) noexcept {
   QString text;
   for (int i = 0; i < lines.count(); ++i) {
-    QString line   = lines.value(i);
+    QString line = lines.value(i);
     QString spaces = QString("&nbsp;").repeated(i * 2);
     QString separator =
         mOneLine ? QString(" &rArr; ") : QString("<br>%1⤷ ").arg(spaces);

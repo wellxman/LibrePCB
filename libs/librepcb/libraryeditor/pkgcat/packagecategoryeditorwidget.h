@@ -60,38 +60,41 @@ public:
   PackageCategoryEditorWidget() = delete;
   PackageCategoryEditorWidget(const PackageCategoryEditorWidget& other) =
       delete;
-  PackageCategoryEditorWidget(const Context& context, const FilePath& fp,
-                              QWidget* parent = nullptr);
+  PackageCategoryEditorWidget(
+      const Context& context,
+      const FilePath& fp,
+      QWidget* parent = nullptr);
   ~PackageCategoryEditorWidget() noexcept;
 
   // Operator Overloadings
-  PackageCategoryEditorWidget& operator       =(
+  PackageCategoryEditorWidget& operator=(
       const PackageCategoryEditorWidget& rhs) = delete;
 
 public slots:
   bool save() noexcept override;
 
 private:  // Methods
-  void    updateMetadata() noexcept;
+  void updateMetadata() noexcept;
   QString commitMetadata() noexcept;
-  bool    isInterfaceBroken() const noexcept override { return false; }
-  bool    runChecks(LibraryElementCheckMessageList& msgs) const override;
+  bool isInterfaceBroken() const noexcept override { return false; }
+  bool runChecks(LibraryElementCheckMessageList& msgs) const override;
   template <typename MessageType>
   void fixMsg(const MessageType& msg);
   template <typename MessageType>
-  bool fixMsgHelper(std::shared_ptr<const LibraryElementCheckMessage> msg,
-                    bool                                              applyFix);
+  bool fixMsgHelper(
+      std::shared_ptr<const LibraryElementCheckMessage> msg,
+      bool applyFix);
   bool processCheckMessage(
       std::shared_ptr<const LibraryElementCheckMessage> msg,
-      bool                                              applyFix) override;
+      bool applyFix) override;
   void btnChooseParentCategoryClicked() noexcept;
   void btnResetParentCategoryClicked() noexcept;
   void updateCategoryLabel() noexcept;
 
 private:  // Data
   QScopedPointer<Ui::PackageCategoryEditorWidget> mUi;
-  QSharedPointer<PackageCategory>                 mCategory;
-  tl::optional<Uuid>                              mParentUuid;
+  QSharedPointer<PackageCategory> mCategory;
+  tl::optional<Uuid> mParentUuid;
 };
 
 /*******************************************************************************

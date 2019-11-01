@@ -38,17 +38,29 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Package::Package(const Uuid& uuid, const Version& version,
-                 const QString& author, const ElementName& name_en_US,
-                 const QString& description_en_US,
-                 const QString& keywords_en_US)
-  : LibraryElement(getShortElementName(), getLongElementName(), uuid, version,
-                   author, name_en_US, description_en_US, keywords_en_US) {
+Package::Package(
+    const Uuid& uuid,
+    const Version& version,
+    const QString& author,
+    const ElementName& name_en_US,
+    const QString& description_en_US,
+    const QString& keywords_en_US)
+  : LibraryElement(
+        getShortElementName(),
+        getLongElementName(),
+        uuid,
+        version,
+        author,
+        name_en_US,
+        description_en_US,
+        keywords_en_US) {
 }
 
 Package::Package(std::unique_ptr<TransactionalDirectory> directory)
-  : LibraryElement(std::move(directory), getShortElementName(),
-                   getLongElementName()) {
+  : LibraryElement(
+        std::move(directory),
+        getShortElementName(),
+        getLongElementName()) {
   mPads.loadFromSExpression(mLoadingFileDocument);
   mFootprints.loadFromSExpression(mLoadingFileDocument);
 

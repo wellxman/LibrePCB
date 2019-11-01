@@ -46,30 +46,45 @@ PathEditorWidget::PathEditorWidget(QWidget* parent) noexcept
   mView->setShowMoveButtons(true);
   mView->setShowCopyButton(true);
   mView->setModel(mModel.data());
-  mView->setItemDelegateForColumn(PathModel::COLUMN_X,
-                                  new LengthDelegate(this));
-  mView->setItemDelegateForColumn(PathModel::COLUMN_Y,
-                                  new LengthDelegate(this));
-  mView->setItemDelegateForColumn(PathModel::COLUMN_ANGLE,
-                                  new AngleDelegate(this));
-  mView->horizontalHeader()->setSectionResizeMode(PathModel::COLUMN_X,
-                                                  QHeaderView::Stretch);
-  mView->horizontalHeader()->setSectionResizeMode(PathModel::COLUMN_Y,
-                                                  QHeaderView::Stretch);
-  mView->horizontalHeader()->setSectionResizeMode(PathModel::COLUMN_ANGLE,
-                                                  QHeaderView::Stretch);
+  mView->setItemDelegateForColumn(
+      PathModel::COLUMN_X, new LengthDelegate(this));
+  mView->setItemDelegateForColumn(
+      PathModel::COLUMN_Y, new LengthDelegate(this));
+  mView->setItemDelegateForColumn(
+      PathModel::COLUMN_ANGLE, new AngleDelegate(this));
+  mView->horizontalHeader()->setSectionResizeMode(
+      PathModel::COLUMN_X, QHeaderView::Stretch);
+  mView->horizontalHeader()->setSectionResizeMode(
+      PathModel::COLUMN_Y, QHeaderView::Stretch);
+  mView->horizontalHeader()->setSectionResizeMode(
+      PathModel::COLUMN_ANGLE, QHeaderView::Stretch);
   mView->horizontalHeader()->setSectionResizeMode(
       PathModel::COLUMN_ACTIONS, QHeaderView::ResizeToContents);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &PathModel::addItem);
-  connect(mView.data(), &EditableTableWidget::btnCopyClicked, mModel.data(),
-          &PathModel::copyItem);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &PathModel::removeItem);
-  connect(mView.data(), &EditableTableWidget::btnMoveUpClicked, mModel.data(),
-          &PathModel::moveItemUp);
-  connect(mView.data(), &EditableTableWidget::btnMoveDownClicked, mModel.data(),
-          &PathModel::moveItemDown);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &PathModel::addItem);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnCopyClicked,
+      mModel.data(),
+      &PathModel::copyItem);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &PathModel::removeItem);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveUpClicked,
+      mModel.data(),
+      &PathModel::moveItemUp);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveDownClicked,
+      mModel.data(),
+      &PathModel::moveItemDown);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);

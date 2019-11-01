@@ -44,7 +44,7 @@ class WSI_DebugTools final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_DebugTools()                            = delete;
+  WSI_DebugTools() = delete;
   WSI_DebugTools(const WSI_DebugTools& other) = delete;
   explicit WSI_DebugTools(const SExpression& node);
   ~WSI_DebugTools() noexcept;

@@ -38,8 +38,9 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdBoardPlaneEdit::CmdBoardPlaneEdit(BI_Plane& plane,
-                                     bool      rebuildOnChanges) noexcept
+CmdBoardPlaneEdit::CmdBoardPlaneEdit(
+    BI_Plane& plane,
+    bool rebuildOnChanges) noexcept
   : UndoCommand(tr("Edit plane")),
     mPlane(plane),
     mDoRebuildOnChanges(rebuildOnChanges),
@@ -72,37 +73,44 @@ CmdBoardPlaneEdit::~CmdBoardPlaneEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdBoardPlaneEdit::translate(const Point& deltaPos,
-                                  bool         immediate) noexcept {
+void CmdBoardPlaneEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewOutline.translate(deltaPos);
   if (immediate) mPlane.setOutline(mNewOutline);
 }
 
-void CmdBoardPlaneEdit::rotate(const Angle& angle, const Point& center,
-                               bool immediate) noexcept {
+void CmdBoardPlaneEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewOutline.rotate(angle, center);
   if (immediate) mPlane.setOutline(mNewOutline);
 }
 
-void CmdBoardPlaneEdit::mirror(const Point& center, Qt::Orientation orientation,
-                               bool immediate) noexcept {
+void CmdBoardPlaneEdit::mirror(
+    const Point& center,
+    Qt::Orientation orientation,
+    bool immediate) noexcept {
   setLayerName(
       GraphicsLayerName(GraphicsLayer::getMirroredLayerName(*mNewLayerName)),
       immediate);
   setOutline(mNewOutline.mirrored(orientation, center), immediate);
 }
 
-void CmdBoardPlaneEdit::setOutline(const Path& outline,
-                                   bool        immediate) noexcept {
+void CmdBoardPlaneEdit::setOutline(
+    const Path& outline,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewOutline = outline;
   if (immediate) mPlane.setOutline(mNewOutline);
 }
 
-void CmdBoardPlaneEdit::setLayerName(const GraphicsLayerName& layerName,
-                                     bool immediate) noexcept {
+void CmdBoardPlaneEdit::setLayerName(
+    const GraphicsLayerName& layerName,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLayerName = layerName;
   if (immediate) mPlane.setLayerName(mNewLayerName);

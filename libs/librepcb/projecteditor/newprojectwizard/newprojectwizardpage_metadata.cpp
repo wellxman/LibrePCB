@@ -44,19 +44,29 @@ namespace editor {
  ******************************************************************************/
 
 NewProjectWizardPage_Metadata::NewProjectWizardPage_Metadata(
-    const workspace::Workspace& ws, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : QWizardPage(parent), mUi(new Ui::NewProjectWizardPage_Metadata) {
   mUi->setupUi(this);
   setPixmap(QWizard::LogoPixmap, QPixmap(":/img/actions/plus_2.png"));
   setPixmap(QWizard::WatermarkPixmap, QPixmap(":/img/wizards/watermark.jpg"));
 
   // signal/slot connections
-  connect(mUi->edtName, &QLineEdit::textChanged, this,
-          &NewProjectWizardPage_Metadata::nameChanged);
-  connect(mUi->edtLocation, &QLineEdit::textChanged, this,
-          &NewProjectWizardPage_Metadata::locationChanged);
-  connect(mUi->btnLocation, &QPushButton::clicked, this,
-          &NewProjectWizardPage_Metadata::chooseLocationClicked);
+  connect(
+      mUi->edtName,
+      &QLineEdit::textChanged,
+      this,
+      &NewProjectWizardPage_Metadata::nameChanged);
+  connect(
+      mUi->edtLocation,
+      &QLineEdit::textChanged,
+      this,
+      &NewProjectWizardPage_Metadata::locationChanged);
+  connect(
+      mUi->btnLocation,
+      &QPushButton::clicked,
+      this,
+      &NewProjectWizardPage_Metadata::chooseLocationClicked);
 
   // insert values
   mUi->edtAuthor->setText(ws.getSettings().getUser().getName());
@@ -64,8 +74,9 @@ NewProjectWizardPage_Metadata::NewProjectWizardPage_Metadata(
   mUi->cbxLicense->addItem(
       tr("CC0-1.0 (no restrictions, recommended for open hardware projects)"),
       QString("licenses/cc0-1.0.txt"));
-  mUi->cbxLicense->addItem(tr("CC-BY-4.0 (requires attribution)"),
-                           QString("licenses/cc-by-4.0.txt"));
+  mUi->cbxLicense->addItem(
+      tr("CC-BY-4.0 (requires attribution)"),
+      QString("licenses/cc-by-4.0.txt"));
   mUi->cbxLicense->addItem(
       tr("CC-BY-SA-4.0 (requires attribution + share alike)"),
       QString("licenses/cc-by-sa-4.0.txt"));
@@ -153,7 +164,7 @@ void NewProjectWizardPage_Metadata::updateProjectFilePath() noexcept {
   mFullFilePath = FilePath();
 
   // check filename
-  QString name     = mUi->edtName->text();
+  QString name = mUi->edtName->text();
   QString filename = FilePath::cleanFileName(name, FilePath::ReplaceSpaces);
   if (filename.isEmpty()) {
     mUi->lblFullFilePath->setText(tr("Please enter a valid project name."));
@@ -169,7 +180,7 @@ void NewProjectWizardPage_Metadata::updateProjectFilePath() noexcept {
   }
 
   // determine project directory and filepath
-  FilePath projDir      = location.getPathTo(filename);
+  FilePath projDir = location.getPathTo(filename);
   FilePath fullFilePath = projDir.getPathTo(filename % ".lpp");
   if ((!projDir.isValid()) || (!fullFilePath.isValid())) {
     mUi->lblFullFilePath->setText(
@@ -201,7 +212,8 @@ bool NewProjectWizardPage_Metadata::validatePage() noexcept {
   if ((projDir.isExistingDir() && !projDir.isEmptyDir()) ||
       (projDir.isExistingFile())) {
     QMessageBox::critical(
-        this, tr("Invalid filepath"),
+        this,
+        tr("Invalid filepath"),
         tr("The project's directory exists already and is not empty."));
     return false;
   }

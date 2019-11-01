@@ -63,19 +63,22 @@ class SES_Base : public QObject {
 public:
   /// process() return values
   enum ProcRetVal {
-    ForceStayInState,   ///< event handled, stay in the current state
-    ForceLeaveState,    ///< event handled, leave the current state
+    ForceStayInState,  ///< event handled, stay in the current state
+    ForceLeaveState,  ///< event handled, leave the current state
     PassToParentState,  ///< event unhandled, pass it to the parent
   };
 
   // Constructors / Destructor
-  explicit SES_Base(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                    GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit SES_Base(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   virtual ~SES_Base();
 
   // General Methods
   virtual ProcRetVal process(SEE_Base* event) noexcept = 0;
-  virtual bool       entry(SEE_Base* event) noexcept {
+  virtual bool entry(SEE_Base* event) noexcept {
     Q_UNUSED(event);
     return true;
   }
@@ -87,10 +90,10 @@ public:
 protected:
   // General Attributes which are needed by some state objects
   workspace::Workspace& mWorkspace;
-  Project&              mProject;
-  Circuit&              mCircuit;
-  SchematicEditor&      mEditor;
-  Ui::SchematicEditor&  mEditorUi;    ///< allows access to SchematicEditor UI
+  Project& mProject;
+  Circuit& mCircuit;
+  SchematicEditor& mEditor;
+  Ui::SchematicEditor& mEditorUi;  ///< allows access to SchematicEditor UI
   GraphicsView& mEditorGraphicsView;  ///< allows access to the schematic editor
                                       ///< graphics view
   UndoStack& mUndoStack;

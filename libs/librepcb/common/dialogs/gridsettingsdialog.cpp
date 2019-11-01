@@ -35,8 +35,9 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-GridSettingsDialog::GridSettingsDialog(const GridProperties& grid,
-                                       QWidget*              parent)
+GridSettingsDialog::GridSettingsDialog(
+    const GridProperties& grid,
+    QWidget* parent)
   : QDialog(parent),
     mUi(new Ui::GridSettingsDialog),
     mOriginalGrid(grid),
@@ -44,12 +45,12 @@ GridSettingsDialog::GridSettingsDialog(const GridProperties& grid,
   mUi->setupUi(this);
 
   // set radiobutton id's
-  mUi->rbtnGroup->setId(mUi->rbtnNoGrid,
-                        static_cast<int>(GridProperties::Type_t::Off));
-  mUi->rbtnGroup->setId(mUi->rbtnDots,
-                        static_cast<int>(GridProperties::Type_t::Dots));
-  mUi->rbtnGroup->setId(mUi->rbtnLines,
-                        static_cast<int>(GridProperties::Type_t::Lines));
+  mUi->rbtnGroup->setId(
+      mUi->rbtnNoGrid, static_cast<int>(GridProperties::Type_t::Off));
+  mUi->rbtnGroup->setId(
+      mUi->rbtnDots, static_cast<int>(GridProperties::Type_t::Dots));
+  mUi->rbtnGroup->setId(
+      mUi->rbtnLines, static_cast<int>(GridProperties::Type_t::Lines));
 
   // select the grid type
   mUi->rbtnGroup->button(static_cast<int>(mCurrentGrid.getType()))
@@ -65,18 +66,36 @@ GridSettingsDialog::GridSettingsDialog(const GridProperties& grid,
       mCurrentGrid.getUnit().convertToUnit(*mCurrentGrid.getInterval()));
 
   // connect UI signal with slots
-  connect(mUi->rbtnGroup, SIGNAL(buttonClicked(int)), this,
-          SLOT(rbtnGroupClicked(int)));
-  connect(mUi->spbxInterval, SIGNAL(valueChanged(double)), this,
-          SLOT(spbxIntervalChanged(double)));
-  connect(mUi->cbxUnits, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(cbxUnitsChanged(int)));
-  connect(mUi->btnMul2, &QToolButton::clicked, this,
-          &GridSettingsDialog::btnMul2Clicked);
-  connect(mUi->btnDiv2, &QToolButton::clicked, this,
-          &GridSettingsDialog::btnDiv2Clicked);
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &GridSettingsDialog::buttonBoxClicked);
+  connect(
+      mUi->rbtnGroup,
+      SIGNAL(buttonClicked(int)),
+      this,
+      SLOT(rbtnGroupClicked(int)));
+  connect(
+      mUi->spbxInterval,
+      SIGNAL(valueChanged(double)),
+      this,
+      SLOT(spbxIntervalChanged(double)));
+  connect(
+      mUi->cbxUnits,
+      SIGNAL(currentIndexChanged(int)),
+      this,
+      SLOT(cbxUnitsChanged(int)));
+  connect(
+      mUi->btnMul2,
+      &QToolButton::clicked,
+      this,
+      &GridSettingsDialog::btnMul2Clicked);
+  connect(
+      mUi->btnDiv2,
+      &QToolButton::clicked,
+      this,
+      &GridSettingsDialog::btnDiv2Clicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &GridSettingsDialog::buttonBoxClicked);
 
   updateInternalRepresentation();
 }

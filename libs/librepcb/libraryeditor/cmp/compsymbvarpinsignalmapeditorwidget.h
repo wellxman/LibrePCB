@@ -64,18 +64,19 @@ public:
 
   // General Methods
   void setReferences(
-      ComponentSymbolVariant*                           variant,
+      ComponentSymbolVariant* variant,
       const std::shared_ptr<const LibraryElementCache>& symbolCache,
-      const ComponentSignalList* sigs, UndoStack* undoStack) noexcept;
+      const ComponentSignalList* sigs,
+      UndoStack* undoStack) noexcept;
 
   // Operator Overloadings
-  CompSymbVarPinSignalMapEditorWidget& operator       =(
+  CompSymbVarPinSignalMapEditorWidget& operator=(
       const CompSymbVarPinSignalMapEditorWidget& rhs) = delete;
 
 private:
   QScopedPointer<ComponentPinSignalMapModel> mModel;
-  QScopedPointer<SortFilterProxyModel>       mProxy;
-  QScopedPointer<QTableView>                 mView;
+  QScopedPointer<SortFilterProxyModel> mProxy;
+  QScopedPointer<QTableView> mView;
 };
 
 /*******************************************************************************

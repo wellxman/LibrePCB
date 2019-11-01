@@ -33,15 +33,15 @@ namespace librepcb {
 
 VAlignActionGroup::VAlignActionGroup(QWidget* parent) noexcept
   : QActionGroup(parent), mValue(VAlign::bottom()) {
-  QAction* bottom =
-      addAction(QIcon(":img/command_toolbars/align_vertical_bottom.png"),
-                tr("Align bottom"));
+  QAction* bottom = addAction(
+      QIcon(":img/command_toolbars/align_vertical_bottom.png"),
+      tr("Align bottom"));
   bottom->setCheckable(true);
   bottom->setData(QVariant::fromValue(VAlign::bottom()));
 
-  QAction* center =
-      addAction(QIcon(":img/command_toolbars/align_vertical_center.png"),
-                tr("Align center"));
+  QAction* center = addAction(
+      QIcon(":img/command_toolbars/align_vertical_center.png"),
+      tr("Align center"));
   center->setCheckable(true);
   center->setData(QVariant::fromValue(VAlign::center()));
 
@@ -52,8 +52,11 @@ VAlignActionGroup::VAlignActionGroup(QWidget* parent) noexcept
 
   updateSelection();
 
-  connect(this, &VAlignActionGroup::triggered, this,
-          &VAlignActionGroup::actionTriggered);
+  connect(
+      this,
+      &VAlignActionGroup::triggered,
+      this,
+      &VAlignActionGroup::actionTriggered);
 }
 
 VAlignActionGroup::~VAlignActionGroup() noexcept {

@@ -52,29 +52,34 @@ class BES_AddDevice final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  BES_AddDevice(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  BES_AddDevice(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_AddDevice();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
-  void       startAddingDevice(ComponentInstance& cmp, const Uuid& dev,
-                               const Uuid& fpt);
-  bool       abortCommand(bool showErrMsgBox) noexcept;
-  void       rotateDevice(const Angle& angle) noexcept;
-  void       mirrorDevice(Qt::Orientation orientation) noexcept;
+  void startAddingDevice(
+      ComponentInstance& cmp,
+      const Uuid& dev,
+      const Uuid& fpt);
+  bool abortCommand(bool showErrMsgBox) noexcept;
+  void rotateDevice(const Angle& angle) noexcept;
+  void mirrorDevice(Qt::Orientation orientation) noexcept;
 
   // General Attributes
   bool mIsUndoCmdActive;
 
   // information about the current device to place
-  BI_Device*                               mCurrentDeviceToPlace;
+  BI_Device* mCurrentDeviceToPlace;
   QScopedPointer<CmdDeviceInstanceEditAll> mCurrentDeviceEditCmd;
 };
 

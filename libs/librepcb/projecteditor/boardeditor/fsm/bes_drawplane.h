@@ -57,25 +57,27 @@ class BES_DrawPlane final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_DrawPlane(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                         GraphicsView& editorGraphicsView,
-                         UndoStack&    undoStack);
+  explicit BES_DrawPlane(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_DrawPlane();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:  // Methods
   ProcRetVal processSubStateIdle(BEE_Base* event) noexcept;
   ProcRetVal processSubStatePositioning(BEE_Base* event) noexcept;
   ProcRetVal processIdleSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processPositioningSceneEvent(BEE_Base* event) noexcept;
-  bool       start(Board& board, const Point& pos) noexcept;
-  bool       addSegment(Board& board, const Point& pos) noexcept;
-  bool       abort(bool showErrMsgBox) noexcept;
-  void       updateVertexPosition(const Point& cursorPos) noexcept;
+  bool start(Board& board, const Point& pos) noexcept;
+  bool addSegment(Board& board, const Point& pos) noexcept;
+  bool abort(bool showErrMsgBox) noexcept;
+  void updateVertexPosition(const Point& cursorPos) noexcept;
   void layerComboBoxLayerChanged(const GraphicsLayerName& layerName) noexcept;
   // void widthComboBoxTextChanged(const QString& width) noexcept;
   // void filledCheckBoxCheckedChanged(bool checked) noexcept;
@@ -91,18 +93,18 @@ private:  // Types
 
 private:  // Data
   // State
-  SubState           mSubState;
-  NetSignal*         mCurrentNetSignal;
-  GraphicsLayerName  mCurrentLayerName;
-  BI_Plane*          mCurrentPlane;
+  SubState mSubState;
+  NetSignal* mCurrentNetSignal;
+  GraphicsLayerName mCurrentLayerName;
+  BI_Plane* mCurrentPlane;
   CmdBoardPlaneEdit* mCmdEditCurrentPlane;
-  Point              mLastVertexPos;
+  Point mLastVertexPos;
 
   // Widgets for the command toolbar
-  QList<QAction*>        mActionSeparators;
-  QLabel*                mNetSignalLabel;
-  QComboBox*             mNetSignalComboBox;
-  QLabel*                mLayerLabel;
+  QList<QAction*> mActionSeparators;
+  QLabel* mNetSignalLabel;
+  QComboBox* mNetSignalComboBox;
+  QLabel* mLayerLabel;
   GraphicsLayerComboBox* mLayerComboBox;
 };
 

@@ -44,7 +44,7 @@ class WSI_LibraryNormOrder final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_LibraryNormOrder()                                  = delete;
+  WSI_LibraryNormOrder() = delete;
   WSI_LibraryNormOrder(const WSI_LibraryNormOrder& other) = delete;
   explicit WSI_LibraryNormOrder(const SExpression& node);
   ~WSI_LibraryNormOrder() noexcept;
@@ -86,9 +86,9 @@ private:  // Data
   QStringList mListTmp;
 
   // Widgets
-  QScopedPointer<QWidget>     mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QListWidget> mListWidget;
-  QScopedPointer<QComboBox>   mComboBox;
+  QScopedPointer<QComboBox> mComboBox;
   QScopedPointer<QToolButton> mBtnUp;
   QScopedPointer<QToolButton> mBtnDown;
   QScopedPointer<QToolButton> mBtnAdd;

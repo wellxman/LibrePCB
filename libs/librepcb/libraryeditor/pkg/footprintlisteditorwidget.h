@@ -69,7 +69,7 @@ signals:
   void currentFootprintChanged(int index);
 
 private:
-  QScopedPointer<FootprintListModel>  mModel;
+  QScopedPointer<FootprintListModel> mModel;
   QScopedPointer<EditableTableWidget> mView;
 };
 

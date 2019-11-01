@@ -37,7 +37,8 @@ namespace project {
  ******************************************************************************/
 
 CmdFootprintStrokeTextRemove::CmdFootprintStrokeTextRemove(
-    BI_Footprint& footprint, BI_StrokeText& text) noexcept
+    BI_Footprint& footprint,
+    BI_StrokeText& text) noexcept
   : UndoCommand(tr("Remove footprint text")),
     mFootprint(footprint),
     mText(text) {

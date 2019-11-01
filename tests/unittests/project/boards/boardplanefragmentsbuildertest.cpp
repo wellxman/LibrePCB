@@ -63,10 +63,10 @@ TEST(BoardPlaneFragmentsBuilderTest, testFragments) {
   FilePath projectFp(TEST_DATA_DIR "/projects/Nested Planes/project.lpp");
   std::shared_ptr<TransactionalFileSystem> projectFs =
       TransactionalFileSystem::openRO(projectFp.getParentDir());
-  QScopedPointer<Project> project(
-      new Project(std::unique_ptr<TransactionalDirectory>(
-                      new TransactionalDirectory(projectFs)),
-                  projectFp.getFilename()));
+  QScopedPointer<Project> project(new Project(
+      std::unique_ptr<TransactionalDirectory>(
+          new TransactionalDirectory(projectFs)),
+      projectFp.getFilename()));
 
   // force planes rebuild
   Board* board = project->getBoards().first();
@@ -90,11 +90,11 @@ TEST(BoardPlaneFragmentsBuilderTest, testFragments) {
     }
     actualSexpr.appendChild(child, true);
   }
-  FileUtils::writeFile(testDataDir.getPathTo("actual.lp"),
-                       actualSexpr.toByteArray());
+  FileUtils::writeFile(
+      testDataDir.getPathTo("actual.lp"), actualSexpr.toByteArray());
 
   // load expected plane fragments from file
-  FilePath    expectedFp = testDataDir.getPathTo("expected.lp");
+  FilePath expectedFp = testDataDir.getPathTo("expected.lp");
   SExpression expectedSexpr =
       SExpression::parse(FileUtils::readFile(expectedFp), expectedFp);
   QMap<Uuid, QSet<Path>> expectedPlaneFragments;

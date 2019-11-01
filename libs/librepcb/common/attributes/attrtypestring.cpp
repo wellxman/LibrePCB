@@ -53,9 +53,9 @@ QString AttrTypeString::valueFromTr(const QString& value) const noexcept {
   return value;
 }
 
-QString AttrTypeString::printableValueTr(const QString&       value,
-                                         const AttributeUnit* unit) const
-    noexcept {
+QString AttrTypeString::printableValueTr(
+    const QString& value,
+    const AttributeUnit* unit) const noexcept {
   Q_UNUSED(unit);
   return value;
 }

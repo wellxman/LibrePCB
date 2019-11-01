@@ -68,27 +68,32 @@ void GraphicsScene::removeItem(QGraphicsItem& item) noexcept {
   QGraphicsScene::removeItem(&item);
 }
 
-void GraphicsScene::setSelectionRect(const Point& p1,
-                                     const Point& p2) noexcept {
+void GraphicsScene::setSelectionRect(
+    const Point& p1,
+    const Point& p2) noexcept {
   QRectF rectPx = QRectF(p1.toPxQPointF(), p2.toPxQPointF()).normalized();
   mSelectionRectItem->setRect(rectPx);
 }
 
 QPixmap GraphicsScene::toPixmap(int dpi, const QColor& background) noexcept {
   QRectF rect = itemsBoundingRect();
-  return toPixmap(QSize(qCeil(dpi * Length::fromPx(rect.width()).toInch()),
-                        qCeil(dpi * Length::fromPx(rect.height()).toInch())),
-                  background);
+  return toPixmap(
+      QSize(
+          qCeil(dpi * Length::fromPx(rect.width()).toInch()),
+          qCeil(dpi * Length::fromPx(rect.height()).toInch())),
+      background);
 }
 
-QPixmap GraphicsScene::toPixmap(const QSize&  size,
-                                const QColor& background) noexcept {
-  QRectF  rect = itemsBoundingRect();
+QPixmap GraphicsScene::toPixmap(
+    const QSize& size,
+    const QColor& background) noexcept {
+  QRectF rect = itemsBoundingRect();
   QPixmap pixmap(size);
   pixmap.fill(background);
   QPainter painter(&pixmap);
-  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
-                         QPainter::SmoothPixmapTransform);
+  painter.setRenderHints(
+      QPainter::Antialiasing | QPainter::TextAntialiasing |
+      QPainter::SmoothPixmapTransform);
   render(&painter, QRectF(), rect, Qt::KeepAspectRatio);
   return pixmap;
 }

@@ -57,8 +57,9 @@ class LibraryListEditorWidget final : public QWidget {
 public:
   // Constructors / Destructor
   LibraryListEditorWidget() = delete;
-  explicit LibraryListEditorWidget(const workspace::Workspace& ws,
-                                   QWidget* parent = nullptr) noexcept;
+  explicit LibraryListEditorWidget(
+      const workspace::Workspace& ws,
+      QWidget* parent = nullptr) noexcept;
   LibraryListEditorWidget(const LibraryListEditorWidget& other) = delete;
   ~LibraryListEditorWidget() noexcept;
 
@@ -83,10 +84,10 @@ signals:
   void libraryRemoved(const Uuid& lib);
 
 protected:  // Data
-  const workspace::Workspace&                 mWorkspace;
+  const workspace::Workspace& mWorkspace;
   QScopedPointer<Ui::LibraryListEditorWidget> mUi;
-  QSet<Uuid>                                  mUuids;
-  QHash<Uuid, QString>                        mLibNames;
+  QSet<Uuid> mUuids;
+  QHash<Uuid, QString> mLibNames;
 };
 
 /*******************************************************************************

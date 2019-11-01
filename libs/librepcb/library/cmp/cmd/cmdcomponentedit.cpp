@@ -62,8 +62,9 @@ void CmdComponentEdit::setDefaultValue(const QString& value) noexcept {
   mNewDefaultValue = value;
 }
 
-void CmdComponentEdit::setPrefix(const QString&         norm,
-                                 const ComponentPrefix& prefix) noexcept {
+void CmdComponentEdit::setPrefix(
+    const QString& norm,
+    const ComponentPrefix& prefix) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPrefixes.insert(norm, prefix);
 }

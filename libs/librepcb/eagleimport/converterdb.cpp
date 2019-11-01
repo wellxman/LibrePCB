@@ -49,8 +49,9 @@ Uuid ConverterDb::getSymbolUuid(const QString& symbolName) {
   return getOrCreateUuid("symbols", symbolName);
 }
 
-Uuid ConverterDb::getSymbolPinUuid(const Uuid&    symbolUuid,
-                                   const QString& pinName) {
+Uuid ConverterDb::getSymbolPinUuid(
+    const Uuid& symbolUuid,
+    const QString& pinName) {
   return getOrCreateUuid("symbol_pins", symbolUuid.toStr(), pinName);
 }
 
@@ -62,8 +63,9 @@ Uuid ConverterDb::getPackageUuid(const QString& packageName) {
   return getOrCreateUuid("packages_to_packages", packageName);
 }
 
-Uuid ConverterDb::getPackagePadUuid(const Uuid&    footprintUuid,
-                                    const QString& padName) {
+Uuid ConverterDb::getPackagePadUuid(
+    const Uuid& footprintUuid,
+    const QString& padName) {
   return getOrCreateUuid("package_pads", footprintUuid.toStr(), padName);
 }
 
@@ -71,25 +73,30 @@ Uuid ConverterDb::getComponentUuid(const QString& deviceSetName) {
   return getOrCreateUuid("devices_to_components", deviceSetName);
 }
 
-Uuid ConverterDb::getComponentSignalUuid(const Uuid&    componentUuid,
-                                         const QString& gateName,
-                                         const QString& pinName) {
-  return getOrCreateUuid("gatepins_to_componentsignals", componentUuid.toStr(),
-                         gateName % pinName);
+Uuid ConverterDb::getComponentSignalUuid(
+    const Uuid& componentUuid,
+    const QString& gateName,
+    const QString& pinName) {
+  return getOrCreateUuid(
+      "gatepins_to_componentsignals",
+      componentUuid.toStr(),
+      gateName % pinName);
 }
 
 Uuid ConverterDb::getSymbolVariantUuid(const Uuid& componentUuid) {
   return getOrCreateUuid("component_symbolvariants", componentUuid.toStr());
 }
 
-Uuid ConverterDb::getSymbolVariantItemUuid(const Uuid&    componentUuid,
-                                           const QString& gateName) {
-  return getOrCreateUuid("symbolgates_to_symbvaritems", componentUuid.toStr(),
-                         gateName);
+Uuid ConverterDb::getSymbolVariantItemUuid(
+    const Uuid& componentUuid,
+    const QString& gateName) {
+  return getOrCreateUuid(
+      "symbolgates_to_symbvaritems", componentUuid.toStr(), gateName);
 }
 
-Uuid ConverterDb::getDeviceUuid(const QString& deviceSetName,
-                                const QString& deviceName) {
+Uuid ConverterDb::getDeviceUuid(
+    const QString& deviceSetName,
+    const QString& deviceName) {
   return getOrCreateUuid("devices_to_devices", deviceSetName, deviceName);
 }
 
@@ -97,8 +104,10 @@ Uuid ConverterDb::getDeviceUuid(const QString& deviceSetName,
  *  Private Methods
  ******************************************************************************/
 
-Uuid ConverterDb::getOrCreateUuid(const QString& cat, const QString& key1,
-                                  const QString& key2) {
+Uuid ConverterDb::getOrCreateUuid(
+    const QString& cat,
+    const QString& key1,
+    const QString& key2) {
   QString allowedChars(
       "_-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 
@@ -109,13 +118,14 @@ Uuid ConverterDb::getOrCreateUuid(const QString& cat, const QString& key1,
   for (int i = 0; i < settingsKey.length(); i++) {
     if (!allowedChars.contains(settingsKey[i]))
       settingsKey.replace(
-          i, 1,
+          i,
+          1,
           QString("__U%1__").arg(
               QString::number(settingsKey[i].unicode(), 16).toUpper()));
   }
   settingsKey.prepend(cat % '/');
 
-  Uuid    uuid  = Uuid::createRandom();
+  Uuid uuid = Uuid::createRandom();
   QString value = mIniFile.value(settingsKey).toString();
   if (!value.isEmpty()) uuid = Uuid::fromString(value);  // can throw
   mIniFile.setValue(settingsKey, uuid.toStr());

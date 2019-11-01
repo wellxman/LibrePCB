@@ -44,7 +44,7 @@ class WSI_AppLocale final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_AppLocale()                           = delete;
+  WSI_AppLocale() = delete;
   WSI_AppLocale(const WSI_AppLocale& other) = delete;
   explicit WSI_AppLocale(const SExpression& node);
   ~WSI_AppLocale() noexcept;
@@ -53,7 +53,7 @@ public:
   const QString& getAppLocaleName() const noexcept { return mAppLocale; }
 
   // Getters: Widgets
-  QString  getLabelText() const noexcept { return tr("Application Language:"); }
+  QString getLabelText() const noexcept { return tr("Application Language:"); }
   QWidget* getWidget() const noexcept { return mWidget.data(); }
 
   // General Methods
@@ -88,7 +88,7 @@ private:  // Data
       mInstalledTranslators;  ///< see constructor/destructor code
 
   // Widgets
-  QScopedPointer<QWidget>   mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QComboBox> mComboBox;
 };
 

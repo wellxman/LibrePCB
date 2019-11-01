@@ -37,8 +37,9 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdSymbolInstanceRemove::CmdSymbolInstanceRemove(Schematic& schematic,
-                                                 SI_Symbol& symbol) noexcept
+CmdSymbolInstanceRemove::CmdSymbolInstanceRemove(
+    Schematic& schematic,
+    SI_Symbol& symbol) noexcept
   : UndoCommand(tr("Remove symbol")), mSchematic(schematic), mSymbol(symbol) {
 }
 

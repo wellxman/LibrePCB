@@ -79,8 +79,8 @@ TEST(ApplicationTest, testGetResourcesFilePath) {
   EXPECT_EQ(dir, qApp->getResourcesFilePath(""));
   EXPECT_EQ(dir, qApp->getResourcesFilePath(QString()));
   EXPECT_EQ(dir.getPathTo("foo"), qApp->getResourcesFilePath("foo"));
-  EXPECT_EQ(dir.getPathTo("foo/bar.ext"),
-            qApp->getResourcesFilePath("foo/bar.ext"));
+  EXPECT_EQ(
+      dir.getPathTo("foo/bar.ext"), qApp->getResourcesFilePath("foo/bar.ext"));
 }
 
 TEST(ApplicationTest, testExistenceOfResourceFiles) {

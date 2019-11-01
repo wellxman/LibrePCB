@@ -47,11 +47,15 @@ class ProjectMetadata final : public QObject, public SerializableObject {
 
 public:
   // Constructors / Destructor
-  ProjectMetadata()                             = delete;
+  ProjectMetadata() = delete;
   ProjectMetadata(const ProjectMetadata& other) = delete;
-  ProjectMetadata(const Uuid& uuid, const ElementName& name,
-                  const QString& author, const QString& version,
-                  const QDateTime& created, const QDateTime& lastModified);
+  ProjectMetadata(
+      const Uuid& uuid,
+      const ElementName& name,
+      const QString& author,
+      const QString& version,
+      const QDateTime& created,
+      const QDateTime& lastModified);
   explicit ProjectMetadata(const SExpression& node);
   ~ProjectMetadata() noexcept;
 
@@ -157,13 +161,13 @@ public:
 signals:
   void attributesChanged();
 
-private:                      // Data
-  Uuid        mUuid;          ///< the UUID of the project
-  ElementName mName;          ///< the name of the project
-  QString     mAuthor;        ///< the author of the project
-  QString     mVersion;       ///< the version of the project (arbitrary string)
-  QDateTime   mCreated;       ///< the datetime of the project creation
-  QDateTime   mLastModified;  ///< the datetime of the last project modification
+private:  // Data
+  Uuid mUuid;  ///< the UUID of the project
+  ElementName mName;  ///< the name of the project
+  QString mAuthor;  ///< the author of the project
+  QString mVersion;  ///< the version of the project (arbitrary string)
+  QDateTime mCreated;  ///< the datetime of the project creation
+  QDateTime mLastModified;  ///< the datetime of the last project modification
   AttributeList mAttributes;  ///< all attributes in a specific order
 };
 

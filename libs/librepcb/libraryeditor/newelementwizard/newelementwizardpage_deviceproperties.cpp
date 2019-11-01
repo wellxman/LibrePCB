@@ -43,15 +43,22 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_DeviceProperties::NewElementWizardPage_DeviceProperties(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_DeviceProperties) {
   mUi->setupUi(this);
-  connect(mUi->btnChooseComponent, &QToolButton::clicked, this,
-          &NewElementWizardPage_DeviceProperties::btnChooseComponentClicked);
-  connect(mUi->btnChoosePackage, &QToolButton::clicked, this,
-          &NewElementWizardPage_DeviceProperties::btnChoosePackageClicked);
+  connect(
+      mUi->btnChooseComponent,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_DeviceProperties::btnChooseComponentClicked);
+  connect(
+      mUi->btnChoosePackage,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_DeviceProperties::btnChoosePackageClicked);
 }
 
 NewElementWizardPage_DeviceProperties::
@@ -78,8 +85,8 @@ int NewElementWizardPage_DeviceProperties::nextId() const noexcept {
 
 void NewElementWizardPage_DeviceProperties::
     btnChooseComponentClicked() noexcept {
-  ComponentChooserDialog dialog(mContext.getWorkspace(),
-                                &mContext.getLayerProvider(), this);
+  ComponentChooserDialog dialog(
+      mContext.getWorkspace(), &mContext.getLayerProvider(), this);
   if (dialog.exec() == QDialog::Accepted) {
     tl::optional<Uuid> uuid = dialog.getSelectedComponentUuid();
     setComponent(uuid);
@@ -87,8 +94,8 @@ void NewElementWizardPage_DeviceProperties::
 }
 
 void NewElementWizardPage_DeviceProperties::btnChoosePackageClicked() noexcept {
-  PackageChooserDialog dialog(mContext.getWorkspace(),
-                              &mContext.getLayerProvider(), this);
+  PackageChooserDialog dialog(
+      mContext.getWorkspace(), &mContext.getLayerProvider(), this);
   if (dialog.exec() == QDialog::Accepted) {
     tl::optional<Uuid> uuid = dialog.getSelectedPackageUuid();
     setPackage(uuid);
@@ -128,8 +135,8 @@ void NewElementWizardPage_DeviceProperties::setPackage(
       Package package(
           std::unique_ptr<TransactionalDirectory>(new TransactionalDirectory(
               TransactionalFileSystem::openRO(fp))));  // can throw
-      DevicePadSignalMapHelpers::setPads(mContext.mDevicePadSignalMap,
-                                         package.getPads().getUuidSet());
+      DevicePadSignalMapHelpers::setPads(
+          mContext.mDevicePadSignalMap, package.getPads().getUuidSet());
       mUi->lblPackageName->setText(
           *package.getNames().value(mContext.getLibLocaleOrder()));
       mUi->lblPackageDescription->setText(

@@ -93,9 +93,10 @@ void LineGraphicsItem::setLayer(const GraphicsLayer* layer) noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void LineGraphicsItem::paint(QPainter*                       painter,
-                             const QStyleOptionGraphicsItem* option,
-                             QWidget*                        widget) noexcept {
+void LineGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   if (option->state.testFlag(QStyle::State_Selected)) {
     painter->setPen(mPenHighlighted);
@@ -109,8 +110,9 @@ void LineGraphicsItem::paint(QPainter*                       painter,
  *  Private Methods
  ******************************************************************************/
 
-void LineGraphicsItem::layerEdited(const GraphicsLayer& layer,
-                                   GraphicsLayer::Event event) noexcept {
+void LineGraphicsItem::layerEdited(
+    const GraphicsLayer& layer,
+    GraphicsLayer::Event event) noexcept {
   switch (event) {
     case GraphicsLayer::Event::ColorChanged:
       mPen.setColor(layer.getColor(false));

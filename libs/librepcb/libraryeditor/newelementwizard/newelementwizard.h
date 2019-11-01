@@ -63,11 +63,13 @@ class NewElementWizard final : public QWizard {
 
 public:
   // Constructors / Destructor
-  NewElementWizard()                              = delete;
+  NewElementWizard() = delete;
   NewElementWizard(const NewElementWizard& other) = delete;
-  NewElementWizard(const workspace::Workspace& ws, Library& lib,
-                   const IF_GraphicsLayerProvider& lp,
-                   QWidget*                        parent = 0) noexcept;
+  NewElementWizard(
+      const workspace::Workspace& ws,
+      Library& lib,
+      const IF_GraphicsLayerProvider& lp,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizard() noexcept;
 
   // Getters
@@ -77,8 +79,9 @@ public:
 
   // General Methods
   void setNewElementType(NewElementWizardContext::ElementType type) noexcept;
-  void setElementToCopy(NewElementWizardContext::ElementType type,
-                        const FilePath&                      fp) noexcept;
+  void setElementToCopy(
+      NewElementWizardContext::ElementType type,
+      const FilePath& fp) noexcept;
   bool validateCurrentPage() noexcept override;
 
   // Operator Overloadings
@@ -88,9 +91,9 @@ private:  // Methods
   void insertPage(int index, QWizardPage* page) noexcept;
 
 private:  // Data
-  QScopedPointer<Ui::NewElementWizard>    mUi;
+  QScopedPointer<Ui::NewElementWizard> mUi;
   QScopedPointer<NewElementWizardContext> mContext;
-  QList<QWizardPage*>                     mPages;
+  QList<QWizardPage*> mPages;
 };
 
 /*******************************************************************************

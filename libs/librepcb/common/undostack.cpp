@@ -37,8 +37,9 @@ namespace librepcb {
  *  Class UndoStackTransaction
  ******************************************************************************/
 
-UndoStackTransaction::UndoStackTransaction(UndoStack&     stack,
-                                           const QString& text)
+UndoStackTransaction::UndoStackTransaction(
+    UndoStack& stack,
+    const QString& text)
   : mStack(stack), mCmdActive(true) {
   mStack.beginCmdGroup(text);  // can throw
 }
@@ -141,7 +142,8 @@ bool UndoStack::execCmd(UndoCommand* cmd, bool forceKeepCmd) {
 
   if (isCommandGroupActive()) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("Another command is active "
            "at the moment. Please finish that command to continue."));
   }
@@ -184,7 +186,8 @@ bool UndoStack::execCmd(UndoCommand* cmd, bool forceKeepCmd) {
 void UndoStack::beginCmdGroup(const QString& text) {
   if (isCommandGroupActive()) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         tr("Another command is active "
            "at the moment. Please finish that command to continue."));
   }
@@ -334,8 +337,8 @@ void UndoStack::clear() noexcept {
     delete mCommands.takeLast();
   }
 
-  mCurrentIndex       = 0;
-  mCleanIndex         = 0;
+  mCurrentIndex = 0;
+  mCleanIndex = 0;
   mActiveCommandGroup = nullptr;
 
   // emit signals

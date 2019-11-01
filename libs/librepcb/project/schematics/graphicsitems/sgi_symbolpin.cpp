@@ -98,8 +98,11 @@ void SGI_SymbolPin::updateCacheAndRepaint() noexcept {
   QRectF lineRect =
       QRectF(QPointF(0, 0), Point(*mLibPin.getLength(), 0).toPxQPointF())
           .normalized();
-  lineRect.adjust(-Length(79375).toPx(), -Length(79375).toPx(),
-                  Length(79375).toPx(), Length(79375).toPx());
+  lineRect.adjust(
+      -Length(79375).toPx(),
+      -Length(79375).toPx(),
+      Length(79375).toPx(),
+      Length(79375).toPx());
   mBoundingRect = mBoundingRect.united(lineRect).normalized();
 
   // text
@@ -108,20 +111,25 @@ void SGI_SymbolPin::updateCacheAndRepaint() noexcept {
   mStaticText.prepare(QTransform(), mFont);
   mTextOrigin.setX(mRotate180 ? -x - mStaticText.size().width() : x);
   mTextOrigin.setY(-mStaticText.size().height() / 2);
-  mStaticText.prepare(QTransform()
-                          .rotate(mRotate180 ? 180 : 0)
-                          .translate(mTextOrigin.x(), mTextOrigin.y()),
-                      mFont);
+  mStaticText.prepare(
+      QTransform()
+          .rotate(mRotate180 ? 180 : 0)
+          .translate(mTextOrigin.x(), mTextOrigin.y()),
+      mFont);
   if (mRotate180)
-    mTextBoundingRect =
-        QRectF(-mTextOrigin.x(), -mTextOrigin.y(), -mStaticText.size().width(),
-               -mStaticText.size().height())
-            .normalized();
+    mTextBoundingRect = QRectF(
+                            -mTextOrigin.x(),
+                            -mTextOrigin.y(),
+                            -mStaticText.size().width(),
+                            -mStaticText.size().height())
+                            .normalized();
   else
-    mTextBoundingRect =
-        QRectF(mTextOrigin.x(), -mTextOrigin.y() - mStaticText.size().height(),
-               mStaticText.size().width(), mStaticText.size().height())
-            .normalized();
+    mTextBoundingRect = QRectF(
+                            mTextOrigin.x(),
+                            -mTextOrigin.y() - mStaticText.size().height(),
+                            mStaticText.size().width(),
+                            mStaticText.size().height())
+                            .normalized();
   mBoundingRect = mBoundingRect.united(mTextBoundingRect).normalized();
 
   if (mMirrored)
@@ -136,9 +144,10 @@ void SGI_SymbolPin::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SGI_SymbolPin::paint(QPainter*                       painter,
-                          const QStyleOptionGraphicsItem* option,
-                          QWidget*                        widget) {
+void SGI_SymbolPin::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(widget);
   const bool deviceIsPrinter =
       (dynamic_cast<QPrinter*>(painter->device()) != 0);
@@ -146,17 +155,20 @@ void SGI_SymbolPin::paint(QPainter*                       painter,
       option->levelOfDetailFromTransform(painter->worldTransform());
 
   const NetSignal* netsignal = mPin.getCompSigInstNetSignal();
-  bool             highlight =
+  bool highlight =
       mPin.isSelected() || (netsignal && netsignal->isHighlighted());
 
   // draw line
   GraphicsLayer* layer = getLayer(GraphicsLayer::sSymbolOutlines);
   Q_ASSERT(layer);
   if (layer->isVisible()) {
-    painter->setPen(QPen(layer->getColor(highlight), Length(158750).toPx(),
-                         Qt::SolidLine, Qt::RoundCap));
-    painter->drawLine(QPointF(0, 0),
-                      Point(*mLibPin.getLength(), 0).toPxQPointF());
+    painter->setPen(QPen(
+        layer->getColor(highlight),
+        Length(158750).toPx(),
+        Qt::SolidLine,
+        Qt::RoundCap));
+    painter->drawLine(
+        QPointF(0, 0), Point(*mLibPin.getLength(), 0).toPxQPointF());
   }
 
   // draw circle
@@ -214,10 +226,11 @@ void SGI_SymbolPin::paint(QPainter*                       painter,
     painter->setPen(QPen(layer->getColor(highlight), 0));
     painter->save();
     if (mRotate180) painter->rotate(180);
-    painter->drawText(QRectF(),
-                      Qt::AlignHCenter | Qt::AlignBottom | Qt::TextSingleLine |
-                          Qt::TextDontClip,
-                      *netsignal->getName());
+    painter->drawText(
+        QRectF(),
+        Qt::AlignHCenter | Qt::AlignBottom | Qt::TextSingleLine |
+            Qt::TextDontClip,
+        *netsignal->getName());
     painter->restore();
   }
   layer = getLayer(GraphicsLayer::sDebugGraphicsItemsBoundingRects);

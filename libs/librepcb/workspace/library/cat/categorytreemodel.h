@@ -46,11 +46,12 @@ template <typename ElementType>
 class CategoryTreeModel final : public QAbstractItemModel {
 public:
   // Constructors / Destructor
-  CategoryTreeModel()                               = delete;
+  CategoryTreeModel() = delete;
   CategoryTreeModel(const CategoryTreeModel& other) = delete;
-  explicit CategoryTreeModel(const WorkspaceLibraryDb& library,
-                             const QStringList&        localeOrder,
-                             CategoryTreeFilter::Flags filter) noexcept;
+  explicit CategoryTreeModel(
+      const WorkspaceLibraryDb& library,
+      const QStringList& localeOrder,
+      CategoryTreeFilter::Flags filter) noexcept;
   ~CategoryTreeModel() noexcept;
 
   // Getters
@@ -59,13 +60,17 @@ public:
   // Inherited Methods
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QModelIndex index(int row, int column,
-                            const QModelIndex& parent = QModelIndex()) const;
+  virtual QModelIndex index(
+      int row,
+      int column,
+      const QModelIndex& parent = QModelIndex()) const;
   virtual QModelIndex parent(const QModelIndex& index) const;
-  virtual QVariant    headerData(int section, Qt::Orientation orientation,
-                                 int role = Qt::DisplayRole) const;
-  virtual QVariant    data(const QModelIndex& index,
-                           int                role = Qt::DisplayRole) const;
+  virtual QVariant headerData(
+      int section,
+      Qt::Orientation orientation,
+      int role = Qt::DisplayRole) const;
+  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole)
+      const;
 
   // Operator Overloadings
   CategoryTreeModel& operator=(const CategoryTreeModel& rhs) = delete;
@@ -76,7 +81,7 @@ private:
 };
 
 typedef CategoryTreeModel<library::ComponentCategory>
-                                                    ComponentCategoryTreeModel;
+    ComponentCategoryTreeModel;
 typedef CategoryTreeModel<library::PackageCategory> PackageCategoryTreeModel;
 
 /*******************************************************************************

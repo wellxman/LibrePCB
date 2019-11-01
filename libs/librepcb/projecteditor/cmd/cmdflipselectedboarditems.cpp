@@ -65,7 +65,8 @@ namespace editor {
  ******************************************************************************/
 
 CmdFlipSelectedBoardItems::CmdFlipSelectedBoardItems(
-    Board& board, Qt::Orientation orientation) noexcept
+    Board& board,
+    Qt::Orientation orientation) noexcept
   : UndoCommandGroup(tr("Flip Board Elements")),
     mBoard(board),
     mOrientation(orientation) {
@@ -96,7 +97,7 @@ bool CmdFlipSelectedBoardItems::performExecute() {
 
   // find the center of all elements
   Point center = Point(0, 0);
-  int   count  = 0;
+  int count = 0;
   foreach (BI_Device* device, query->getDeviceInstances()) {
     center += device->getPosition();
     ++count;
@@ -178,7 +179,7 @@ bool CmdFlipSelectedBoardItems::performExecute() {
     QScopedPointer<CmdDeviceInstanceEdit> cmd(
         new CmdDeviceInstanceEdit(*device));
     cmd->mirror(center, mOrientation, false);  // can throw
-    execNewChildCmd(cmd.take());               // can throw
+    execNewChildCmd(cmd.take());  // can throw
   }
 
   // mirror all netlines
@@ -197,8 +198,8 @@ bool CmdFlipSelectedBoardItems::performExecute() {
     Q_ASSERT(netpoint);
     QScopedPointer<CmdBoardNetPointEdit> cmd(
         new CmdBoardNetPointEdit(*netpoint));
-    cmd->setPosition(netpoint->getPosition().mirrored(mOrientation, center),
-                     false);
+    cmd->setPosition(
+        netpoint->getPosition().mirrored(mOrientation, center), false);
     execNewChildCmd(cmd.take());  // can throw
   }
 

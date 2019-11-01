@@ -48,10 +48,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SES_AddNetLabel::SES_AddNetLabel(SchematicEditor&     editor,
-                                 Ui::SchematicEditor& editorUi,
-                                 GraphicsView&        editorGraphicsView,
-                                 UndoStack&           undoStack)
+SES_AddNetLabel::SES_AddNetLabel(
+    SchematicEditor& editor,
+    Ui::SchematicEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : SES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mUndoCmdActive(false),
     mCurrentNetLabel(nullptr),
@@ -179,8 +180,9 @@ SES_Base::ProcRetVal SES_AddNetLabel::processSceneEvent(
   return PassToParentState;
 }
 
-bool SES_AddNetLabel::addLabel(Schematic&   schematic,
-                               const Point& pos) noexcept {
+bool SES_AddNetLabel::addLabel(
+    Schematic& schematic,
+    const Point& pos) noexcept {
   Q_ASSERT(mUndoCmdActive == false);
 
   try {
@@ -195,7 +197,7 @@ bool SES_AddNetLabel::addLabel(Schematic&   schematic,
         new CmdSchematicNetLabelAdd(netsegment, pos, Angle::deg0());
     mUndoStack.appendToCmdGroup(cmdAdd);
     mCurrentNetLabel = cmdAdd->getNetLabel();
-    mEditCmd         = new CmdSchematicNetLabelEdit(*mCurrentNetLabel);
+    mEditCmd = new CmdSchematicNetLabelEdit(*mCurrentNetLabel);
     return true;
   } catch (Exception& e) {
     if (mUndoCmdActive) {

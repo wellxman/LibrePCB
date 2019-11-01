@@ -56,24 +56,26 @@ class BES_AddStrokeText final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_AddStrokeText(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                             GraphicsView& editorGraphicsView,
-                             UndoStack&    undoStack);
+  explicit BES_AddStrokeText(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_AddStrokeText();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processRotateEvent(const Angle& angle) noexcept;
   ProcRetVal processFlipEvent(Qt::Orientation orientation) noexcept;
-  bool       addText(Board& board, const Point& pos) noexcept;
-  void       updateTextPosition(const Point& pos) noexcept;
-  bool       fixText(const Point& pos) noexcept;
+  bool addText(Board& board, const Point& pos) noexcept;
+  void updateTextPosition(const Point& pos) noexcept;
+  bool fixText(const Point& pos) noexcept;
   void layerComboBoxLayerChanged(const GraphicsLayerName& layerName) noexcept;
   void textComboBoxValueChanged(const QString& value) noexcept;
   void heightEditValueChanged(const PositiveLength& value) noexcept;
@@ -81,24 +83,24 @@ private:
   void makeSelectedLayerVisible() noexcept;
 
   // State
-  bool                              mUndoCmdActive;
-  BI_StrokeText*                    mText;
+  bool mUndoCmdActive;
+  BI_StrokeText* mText;
   QScopedPointer<CmdStrokeTextEdit> mEditCmd;
-  GraphicsLayerName                 mCurrentLayerName;
-  QString                           mCurrentText;
-  PositiveLength                    mCurrentHeight;
-  bool                              mCurrentMirror;
-  Angle                             mCurrentRotation;
+  GraphicsLayerName mCurrentLayerName;
+  QString mCurrentText;
+  PositiveLength mCurrentHeight;
+  bool mCurrentMirror;
+  Angle mCurrentRotation;
 
   // Widgets for the command toolbar
-  QScopedPointer<QLabel>                mLayerLabel;
+  QScopedPointer<QLabel> mLayerLabel;
   QScopedPointer<GraphicsLayerComboBox> mLayerComboBox;
-  QScopedPointer<QLabel>                mTextLabel;
-  QScopedPointer<QComboBox>             mTextComboBox;
-  QScopedPointer<QLabel>                mHeightLabel;
-  QScopedPointer<PositiveLengthEdit>    mHeightEdit;
-  QScopedPointer<QLabel>                mMirrorLabel;
-  QScopedPointer<QCheckBox>             mMirrorCheckBox;
+  QScopedPointer<QLabel> mTextLabel;
+  QScopedPointer<QComboBox> mTextComboBox;
+  QScopedPointer<QLabel> mHeightLabel;
+  QScopedPointer<PositiveLengthEdit> mHeightEdit;
+  QScopedPointer<QLabel> mMirrorLabel;
+  QScopedPointer<QCheckBox> mMirrorCheckBox;
 };
 
 /*******************************************************************************

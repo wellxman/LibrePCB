@@ -61,7 +61,7 @@ protected:
 #if defined(Q_OS_OSX)  // Mac OS X
     return generatedDir.getPathTo(
         "uuid-generator.app/Contents/MacOS/uuid-generator");
-#elif defined(Q_OS_UNIX)                          // UNIX/Linux
+#elif defined(Q_OS_UNIX)  // UNIX/Linux
     return generatedDir.getPathTo("uuid-generator");
 #elif defined(Q_OS_WIN32) || defined(Q_OS_WIN64)  // Windows
     return generatedDir.getPathTo("uuid-generator.exe");
@@ -101,7 +101,7 @@ TEST_F(DirectoryLockTest, testConstructorWithExistingDir) {
 
 TEST_F(DirectoryLockTest, testConstructorWithNonExistingDir) {
   // using DirectoryLock on non-existent directories must not be possible
-  FilePath      dir = mTempDir.getPathTo("ghost");
+  FilePath dir = mTempDir.getPathTo("ghost");
   DirectoryLock lock(dir);
   EXPECT_EQ(dir, lock.getDirToLock());
   EXPECT_EQ(dir.getPathTo(".lock"), lock.getLockFilepath());
@@ -152,8 +152,9 @@ TEST_F(DirectoryLockTest, testDestructorDontUnlock) {
   // destroying without lock
   {
     DirectoryLock lock(mTempDir);
-    FileUtils::writeFile(mTempLockFilePath,
-                         QByteArray());  // create imaginary lock file
+    FileUtils::writeFile(
+        mTempLockFilePath,
+        QByteArray());  // create imaginary lock file
   }
   EXPECT_TRUE(mTempLockFilePath.isExistingFile());
 
@@ -162,8 +163,9 @@ TEST_F(DirectoryLockTest, testDestructorDontUnlock) {
     DirectoryLock lock(mTempDir);
     lock.lock();
     lock.unlock();
-    FileUtils::writeFile(mTempLockFilePath,
-                         QByteArray());  // create imaginary lock file
+    FileUtils::writeFile(
+        mTempLockFilePath,
+        QByteArray());  // create imaginary lock file
   }
   EXPECT_TRUE(mTempLockFilePath.isExistingFile());
 }
@@ -227,7 +229,7 @@ TEST_F(DirectoryLockTest, testTryLockWithoutArgument) {
 }
 
 TEST_F(DirectoryLockTest, testTryLockUnlockedDir) {
-  bool          wasStale = true;
+  bool wasStale = true;
   DirectoryLock lock(mTempDir);
   lock.tryLock(&wasStale);
   EXPECT_EQ(DirectoryLock::LockStatus::Locked, lock.getStatus());
@@ -235,7 +237,7 @@ TEST_F(DirectoryLockTest, testTryLockUnlockedDir) {
 }
 
 TEST_F(DirectoryLockTest, testTryLockLockedDir) {
-  bool          wasStale = true;
+  bool wasStale = true;
   DirectoryLock lock1(mTempDir);
   DirectoryLock lock2(mTempDir);
   lock1.tryLock(&wasStale);
@@ -259,8 +261,8 @@ TEST_F(DirectoryLockTest, testUnlockIfLockedOnLockedDir) {
   EXPECT_EQ(DirectoryLock::LockStatus::Unlocked, lock.getStatus());
 }
 
-#if (QT_VERSION >= \
-     QT_VERSION_CHECK(5, 3, 0))  // QProcess::processId() requires Qt>=5.3
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 3, 0))  // QProcess::processId() requires
+                                               // Qt>=5.3
 TEST_F(DirectoryLockTest, testStaleLock) {
   QProcess process;
   process.start(getTestProcessExePath().toStr());
@@ -305,14 +307,16 @@ TEST_F(DirectoryLockTest, testLockFileContent) {
   EXPECT_EQ(SystemInfo::getUsername(), QString(lines.value(1)));
   EXPECT_EQ(SystemInfo::getHostname(), QString(lines.value(2)));
   EXPECT_EQ(QString::number(qApp->applicationPid()), QString(lines.value(3)));
-  EXPECT_EQ(SystemInfo::getProcessNameByPid(qApp->applicationPid()),
-            QString(lines.value(4)));
+  EXPECT_EQ(
+      SystemInfo::getProcessNameByPid(qApp->applicationPid()),
+      QString(lines.value(4)));
   QDateTime lockTime =
       QDateTime::fromString(QString(lines.value(5)), Qt::ISODate);
   EXPECT_TRUE(lockTime.isValid());
-  EXPECT_NEAR(lockTime.toMSecsSinceEpoch(),
-              QDateTime::currentDateTime().toMSecsSinceEpoch(),
-              10000);  // allow up to 10 seconds difference
+  EXPECT_NEAR(
+      lockTime.toMSecsSinceEpoch(),
+      QDateTime::currentDateTime().toMSecsSinceEpoch(),
+      10000);  // allow up to 10 seconds difference
 }
 
 /*******************************************************************************

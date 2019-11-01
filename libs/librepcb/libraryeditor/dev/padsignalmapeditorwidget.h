@@ -75,8 +75,8 @@ public:
 
 private:
   QScopedPointer<DevicePadSignalMapModel> mModel;
-  QScopedPointer<SortFilterProxyModel>    mProxy;
-  QScopedPointer<QTableView>              mView;
+  QScopedPointer<SortFilterProxyModel> mProxy;
+  QScopedPointer<QTableView> mView;
 };
 
 /*******************************************************************************

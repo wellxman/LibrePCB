@@ -105,9 +105,10 @@ void PrimitiveCircleGraphicsItem::setFillLayer(
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void PrimitiveCircleGraphicsItem::paint(QPainter*                       painter,
-                                        const QStyleOptionGraphicsItem* option,
-                                        QWidget* widget) noexcept {
+void PrimitiveCircleGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   if (option->state.testFlag(QStyle::State_Selected)) {
     painter->setPen(mPenHighlighted);
@@ -124,7 +125,8 @@ void PrimitiveCircleGraphicsItem::paint(QPainter*                       painter,
  ******************************************************************************/
 
 void PrimitiveCircleGraphicsItem::layerEdited(
-    const GraphicsLayer& layer, GraphicsLayer::Event event) noexcept {
+    const GraphicsLayer& layer,
+    GraphicsLayer::Event event) noexcept {
   switch (event) {
     case GraphicsLayer::Event::ColorChanged:
     case GraphicsLayer::Event::HighlightColorChanged:

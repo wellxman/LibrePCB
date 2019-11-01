@@ -58,27 +58,32 @@ public:
     CenterChanged,
     DiameterChanged,
   };
-  Signal<Circle, Event>       onEdited;
+  Signal<Circle, Event> onEdited;
   typedef Slot<Circle, Event> OnEditedSlot;
 
   // Constructors / Destructor
   Circle() = delete;
   Circle(const Circle& other) noexcept;
   Circle(const Uuid& uuid, const Circle& other) noexcept;
-  Circle(const Uuid& uuid, const GraphicsLayerName& layerName,
-         const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
-         const Point& center, const PositiveLength& diameter) noexcept;
+  Circle(
+      const Uuid& uuid,
+      const GraphicsLayerName& layerName,
+      const UnsignedLength& lineWidth,
+      bool fill,
+      bool isGrabArea,
+      const Point& center,
+      const PositiveLength& diameter) noexcept;
   explicit Circle(const SExpression& node);
   virtual ~Circle() noexcept;
 
   // Getters
-  const Uuid&              getUuid() const noexcept { return mUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
   const GraphicsLayerName& getLayerName() const noexcept { return mLayerName; }
-  const UnsignedLength&    getLineWidth() const noexcept { return mLineWidth; }
-  bool                     isFilled() const noexcept { return mIsFilled; }
-  bool                     isGrabArea() const noexcept { return mIsGrabArea; }
-  const Point&             getCenter() const noexcept { return mCenter; }
-  const PositiveLength&    getDiameter() const noexcept { return mDiameter; }
+  const UnsignedLength& getLineWidth() const noexcept { return mLineWidth; }
+  bool isFilled() const noexcept { return mIsFilled; }
+  bool isGrabArea() const noexcept { return mIsGrabArea; }
+  const Point& getCenter() const noexcept { return mCenter; }
+  const PositiveLength& getDiameter() const noexcept { return mDiameter; }
 
   // Setters
   bool setLayerName(const GraphicsLayerName& name) noexcept;
@@ -97,13 +102,13 @@ public:
   Circle& operator=(const Circle& rhs) noexcept;
 
 private:  // Data
-  Uuid              mUuid;
+  Uuid mUuid;
   GraphicsLayerName mLayerName;
-  UnsignedLength    mLineWidth;
-  bool              mIsFilled;
-  bool              mIsGrabArea;
-  Point             mCenter;
-  PositiveLength    mDiameter;
+  UnsignedLength mLineWidth;
+  bool mIsFilled;
+  bool mIsGrabArea;
+  Point mCenter;
+  PositiveLength mDiameter;
 };
 
 /*******************************************************************************

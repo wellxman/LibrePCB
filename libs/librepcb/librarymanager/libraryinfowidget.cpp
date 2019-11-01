@@ -45,17 +45,24 @@ namespace manager {
  *  Constructors / Destructor
  ******************************************************************************/
 
-LibraryInfoWidget::LibraryInfoWidget(workspace::Workspace& ws,
-                                     const FilePath&       libDir)
+LibraryInfoWidget::LibraryInfoWidget(
+    workspace::Workspace& ws,
+    const FilePath& libDir)
   : QWidget(nullptr),
     mUi(new Ui::LibraryInfoWidget),
     mWorkspace(ws),
     mLibDir(libDir) {
   mUi->setupUi(this);
-  connect(mUi->btnOpenLibraryEditor, &QPushButton::clicked, this,
-          &LibraryInfoWidget::btnOpenLibraryEditorClicked);
-  connect(mUi->btnRemove, &QPushButton::clicked, this,
-          &LibraryInfoWidget::btnRemoveLibraryClicked);
+  connect(
+      mUi->btnOpenLibraryEditor,
+      &QPushButton::clicked,
+      this,
+      &LibraryInfoWidget::btnOpenLibraryEditorClicked);
+  connect(
+      mUi->btnRemove,
+      &QPushButton::clicked,
+      this,
+      &LibraryInfoWidget::btnRemoveLibraryClicked);
 
   // try to load the library
   Library lib(
@@ -91,12 +98,14 @@ LibraryInfoWidget::LibraryInfoWidget(workspace::Workspace& ws,
   mUi->lblLibType->setText(isRemoteLibrary() ? tr("Remote") : tr("Local"));
   QString dependencies;
   foreach (const Uuid& uuid, lib.getDependencies()) {
-    QString  line = dependencies.isEmpty() ? "" : "<br>";
-    FilePath fp   = ws.getLibraryDb().getLatestLibrary(uuid);  // can throw
+    QString line = dependencies.isEmpty() ? "" : "<br>";
+    FilePath fp = ws.getLibraryDb().getLatestLibrary(uuid);  // can throw
     if (fp.isValid()) {
       QString name;
-      ws.getLibraryDb().getElementTranslations<Library>(fp, localeOrder,
-                                                        &name);  // can throw
+      ws.getLibraryDb().getElementTranslations<Library>(
+          fp,
+          localeOrder,
+          &name);  // can throw
       line += QString(" <font color=\"green\">%1 ✔</font>").arg(name);
     } else {
       line += QString(" <font color=\"red\">%1 ✖</font>").arg(uuid.toStr());
@@ -106,8 +115,9 @@ LibraryInfoWidget::LibraryInfoWidget(workspace::Workspace& ws,
   mUi->lblDependencies->setText(dependencies);
   mUi->lblDirectory->setText(
       QString("<a href='%1'>%2</a>")
-          .arg(mLibDir.toQUrl().toLocalFile(),
-               mLibDir.toRelative(ws.getLibrariesPath())));
+          .arg(
+              mLibDir.toQUrl().toLocalFile(),
+              mLibDir.toRelative(ws.getLibrariesPath())));
   mUi->lblDirectory->setToolTip(mLibDir.toNative());
 }
 
@@ -129,8 +139,8 @@ void LibraryInfoWidget::btnRemoveLibraryClicked() noexcept {
                  "\n\n%1\n\nAre you really sure to remove \"%2\"?"))
           .arg(mLibDir.toNative(), mUi->lblName->text());
 
-  int res = QMessageBox::question(this, title, text,
-                                  QMessageBox::Yes | QMessageBox::No);
+  int res = QMessageBox::question(
+      this, title, text, QMessageBox::Yes | QMessageBox::No);
 
   if (res == QMessageBox::Yes) {
     try {

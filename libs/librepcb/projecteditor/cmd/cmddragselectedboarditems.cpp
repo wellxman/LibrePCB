@@ -55,7 +55,8 @@ namespace editor {
  ******************************************************************************/
 
 CmdDragSelectedBoardItems::CmdDragSelectedBoardItems(
-    Board& board, const Point& startPos) noexcept
+    Board& board,
+    const Point& startPos) noexcept
   : UndoCommandGroup(tr("Drag Board Elements")),
     mBoard(board),
     mStartPos(startPos),
@@ -184,8 +185,9 @@ void CmdDragSelectedBoardItems::setCurrentPosition(const Point& pos) noexcept {
   }
 }
 
-void CmdDragSelectedBoardItems::rotate(const Angle& angle,
-                                       bool aroundItemsCenter) noexcept {
+void CmdDragSelectedBoardItems::rotate(
+    const Angle& angle,
+    bool aroundItemsCenter) noexcept {
   Point center = (aroundItemsCenter ? mCenterPos : mStartPos) + mDeltaPos;
 
   // rotate selected elements

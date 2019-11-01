@@ -62,8 +62,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-AddComponentDialog::AddComponentDialog(workspace::Workspace& workspace,
-                                       Project& project, QWidget* parent)
+AddComponentDialog::AddComponentDialog(
+    workspace::Workspace& workspace,
+    Project& project,
+    QWidget* parent)
   : QDialog(parent),
     mWorkspace(workspace),
     mProject(project),
@@ -85,12 +87,21 @@ AddComponentDialog::AddComponentDialog(workspace::Workspace& workspace,
   mUi->lblCompDescription->hide();
   mUi->lblSymbVar->hide();
   mUi->cbxSymbVar->hide();
-  connect(mUi->edtSearch, &QLineEdit::textChanged, this,
-          &AddComponentDialog::searchEditTextChanged);
-  connect(mUi->treeComponents, &QTreeWidget::currentItemChanged, this,
-          &AddComponentDialog::treeComponents_currentItemChanged);
-  connect(mUi->treeComponents, &QTreeWidget::itemDoubleClicked, this,
-          &AddComponentDialog::treeComponents_itemDoubleClicked);
+  connect(
+      mUi->edtSearch,
+      &QLineEdit::textChanged,
+      this,
+      &AddComponentDialog::searchEditTextChanged);
+  connect(
+      mUi->treeComponents,
+      &QTreeWidget::currentItemChanged,
+      this,
+      &AddComponentDialog::treeComponents_currentItemChanged);
+  connect(
+      mUi->treeComponents,
+      &QTreeWidget::itemDoubleClicked,
+      this,
+      &AddComponentDialog::treeComponents_itemDoubleClicked);
 
   mComponentPreviewScene = new GraphicsScene();
   mUi->viewComponent->setScene(mComponentPreviewScene);
@@ -104,13 +115,16 @@ AddComponentDialog::AddComponentDialog(workspace::Workspace& workspace,
   mGraphicsLayerProvider.reset(new DefaultGraphicsLayerProvider());
 
   const QStringList& localeOrder = mProject.getSettings().getLocaleOrder();
-  mCategoryTreeModel             = new workspace::ComponentCategoryTreeModel(
-      mWorkspace.getLibraryDb(), localeOrder,
+  mCategoryTreeModel = new workspace::ComponentCategoryTreeModel(
+      mWorkspace.getLibraryDb(),
+      localeOrder,
       workspace::CategoryTreeFilter::COMPONENTS);
   mUi->treeCategories->setModel(mCategoryTreeModel);
-  connect(mUi->treeCategories->selectionModel(),
-          &QItemSelectionModel::currentChanged, this,
-          &AddComponentDialog::treeCategories_currentItemChanged);
+  connect(
+      mUi->treeCategories->selectionModel(),
+      &QItemSelectionModel::currentChanged,
+      this,
+      &AddComponentDialog::treeCategories_currentItemChanged);
 
   // Reset GUI to state of nothing selected
   setSelectedComponent(nullptr);
@@ -124,7 +138,7 @@ AddComponentDialog::~AddComponentDialog() noexcept {
   delete mSelectedPackage;
   mSelectedPackage = nullptr;
   delete mSelectedDevice;
-  mSelectedDevice  = nullptr;
+  mSelectedDevice = nullptr;
   mSelectedSymbVar = nullptr;
   delete mSelectedComponent;
   mSelectedComponent = nullptr;
@@ -183,7 +197,8 @@ void AddComponentDialog::searchEditTextChanged(const QString& text) noexcept {
 }
 
 void AddComponentDialog::treeCategories_currentItemChanged(
-    const QModelIndex& current, const QModelIndex& previous) noexcept {
+    const QModelIndex& current,
+    const QModelIndex& previous) noexcept {
   Q_UNUSED(previous);
 
   try {
@@ -196,7 +211,8 @@ void AddComponentDialog::treeCategories_currentItemChanged(
 }
 
 void AddComponentDialog::treeComponents_currentItemChanged(
-    QTreeWidgetItem* current, QTreeWidgetItem* previous) noexcept {
+    QTreeWidgetItem* current,
+    QTreeWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
   try {
     if (current) {
@@ -232,8 +248,9 @@ void AddComponentDialog::treeComponents_currentItemChanged(
   }
 }
 
-void AddComponentDialog::treeComponents_itemDoubleClicked(QTreeWidgetItem* item,
-                                                          int column) noexcept {
+void AddComponentDialog::treeComponents_itemDoubleClicked(
+    QTreeWidgetItem* item,
+    int column) noexcept {
   Q_UNUSED(column);
   if (item && item->parent())
     accept();  // only accept device items (not components)
@@ -291,7 +308,7 @@ void AddComponentDialog::searchComponents(const QString& input) {
 
 AddComponentDialog::SearchResult AddComponentDialog::searchComponentsAndDevices(
     const QString& input) {
-  SearchResult       result;
+  SearchResult result;
   const QStringList& localeOrder = mProject.getSettings().getLocaleOrder();
 
   // add matching devices and their corresponding components
@@ -304,16 +321,18 @@ AddComponentDialog::SearchResult AddComponentDialog::searchComponentsAndDevices(
     if (!devFp.isValid()) continue;
     Uuid cmpUuid = Uuid::createRandom();
     Uuid pkgUuid = Uuid::createRandom();
-    mWorkspace.getLibraryDb().getDeviceMetadata(devFp, &pkgUuid,
-                                                &cmpUuid);  // can throw
+    mWorkspace.getLibraryDb().getDeviceMetadata(
+        devFp,
+        &pkgUuid,
+        &cmpUuid);  // can throw
     FilePath cmpFp =
         mWorkspace.getLibraryDb().getLatestComponent(cmpUuid);  // can throw
     if (!cmpFp.isValid()) continue;
     FilePath pkgFp =
         mWorkspace.getLibraryDb().getLatestPackage(pkgUuid);  // can throw
     SearchResultDevice& resDev = result[cmpFp].devices[devFp];
-    resDev.pkgFp               = pkgFp;
-    resDev.match               = true;
+    resDev.pkgFp = pkgFp;
+    resDev.match = true;
   }
 
   // add matching components and all their devices
@@ -327,19 +346,21 @@ AddComponentDialog::SearchResult AddComponentDialog::searchComponentsAndDevices(
     QSet<Uuid> devices =
         mWorkspace.getLibraryDb().getDevicesOfComponent(cmpUuid);  // can throw
     SearchResultComponent& resCmp = result[cmpFp];
-    resCmp.match                  = true;
+    resCmp.match = true;
     foreach (const Uuid& devUuid, devices) {
       FilePath devFp =
           mWorkspace.getLibraryDb().getLatestDevice(devUuid);  // can throw
       if (!devFp.isValid()) continue;
       if (resCmp.devices.contains(devFp)) continue;
       Uuid pkgUuid = Uuid::createRandom();
-      mWorkspace.getLibraryDb().getDeviceMetadata(devFp, &pkgUuid,
-                                                  nullptr);  // can throw
+      mWorkspace.getLibraryDb().getDeviceMetadata(
+          devFp,
+          &pkgUuid,
+          nullptr);  // can throw
       FilePath pkgFp =
           mWorkspace.getLibraryDb().getLatestPackage(pkgUuid);  // can throw
       SearchResultDevice& resDev = resCmp.devices[devFp];
-      resDev.pkgFp               = pkgFp;
+      resDev.pkgFp = pkgFp;
     }
   }
 
@@ -449,9 +470,10 @@ void AddComponentDialog::setSelectedComponent(const library::Component* cmp) {
       mUi->cbxSymbVar->addItem(text, symbVar.getUuid().toStr());
     }
     if (!cmp->getSymbolVariants().isEmpty()) {
-      mUi->cbxSymbVar->setCurrentIndex(
-          qMax(0, cmp->getSymbolVariantIndexByNorm(
-                      mProject.getSettings().getNormOrder())));
+      mUi->cbxSymbVar->setCurrentIndex(qMax(
+          0,
+          cmp->getSymbolVariantIndexByNorm(
+              mProject.getSettings().getNormOrder())));
     }
   }
 
@@ -481,8 +503,12 @@ void AddComponentDialog::setSelectedSymbVar(
                   symbolFp))));  // TODO: fix memory leak...
       library::SymbolPreviewGraphicsItem* graphicsItem =
           new library::SymbolPreviewGraphicsItem(
-              *mGraphicsLayerProvider, localeOrder, *symbol, mSelectedComponent,
-              symbVar->getUuid(), item.getUuid());
+              *mGraphicsLayerProvider,
+              localeOrder,
+              *symbol,
+              mSelectedComponent,
+              symbVar->getUuid(),
+              item.getUuid());
       graphicsItem->setPos(item.getSymbolPosition().toPxQPointF());
       graphicsItem->setRotation(-item.getSymbolRotation().toDeg());
       mPreviewSymbolGraphicsItems.append(graphicsItem);
@@ -504,9 +530,9 @@ void AddComponentDialog::setSelectedDevice(const library::Device* dev) {
   mSelectedDevice = nullptr;
 
   if (dev) {
-    mSelectedDevice                = dev;
+    mSelectedDevice = dev;
     const QStringList& localeOrder = mProject.getSettings().getLocaleOrder();
-    FilePath           pkgFp       = mWorkspace.getLibraryDb().getLatestPackage(
+    FilePath pkgFp = mWorkspace.getLibraryDb().getLatestPackage(
         mSelectedDevice->getPackageUuid());
     if (pkgFp.isValid()) {
       mSelectedPackage = new library::Package(
@@ -523,8 +549,10 @@ void AddComponentDialog::setSelectedDevice(const library::Device* dev) {
       if (mSelectedPackage->getFootprints().count() > 0) {
         mPreviewFootprintGraphicsItem =
             new library::FootprintPreviewGraphicsItem(
-                *mGraphicsLayerProvider, localeOrder,
-                *mSelectedPackage->getFootprints().first(), mSelectedPackage,
+                *mGraphicsLayerProvider,
+                localeOrder,
+                *mSelectedPackage->getFootprints().first(),
+                mSelectedPackage,
                 mSelectedComponent);
         mDevicePreviewScene->addItem(*mPreviewFootprintGraphicsItem);
         mUi->viewDevice->zoomAll();
@@ -536,7 +564,8 @@ void AddComponentDialog::setSelectedDevice(const library::Device* dev) {
 void AddComponentDialog::accept() noexcept {
   if ((!mSelectedComponent) || (!mSelectedSymbVar)) {
     QMessageBox::information(
-        this, tr("Invalid Selection"),
+        this,
+        tr("Invalid Selection"),
         tr("Please select a component and a symbol variant."));
     return;
   }

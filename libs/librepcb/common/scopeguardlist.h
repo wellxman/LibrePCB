@@ -64,7 +64,8 @@ public:
   ~ScopeGuardList() noexcept {
     if (mActive) {
       for (auto scopeGuard = mScopeGuards.rbegin();
-           scopeGuard != mScopeGuards.rend(); ++scopeGuard) {
+           scopeGuard != mScopeGuards.rend();
+           ++scopeGuard) {
         // skip empty functions
         if (!*scopeGuard) continue;
         try {

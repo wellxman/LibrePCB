@@ -109,38 +109,63 @@ SchematicEditor::SchematicEditor(ProjectEditor& projectEditor, Project& project)
   mUi->menuView->addAction(mErcMsgDock->toggleViewAction());
 
   // connect some actions which are created with the Qt Designer
-  connect(mUi->actionSave_Project, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::saveProject);
+  connect(
+      mUi->actionSave_Project,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::saveProject);
   connect(mUi->actionQuit, &QAction::triggered, this, &SchematicEditor::close);
-  connect(mUi->actionOpenWebsite, &QAction::triggered,
-          []() { QDesktopServices::openUrl(QUrl("https://librepcb.org")); });
+  connect(mUi->actionOpenWebsite, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://librepcb.org"));
+  });
   connect(mUi->actionOnlineDocumentation, &QAction::triggered, []() {
     QDesktopServices::openUrl(QUrl("https://docs.librepcb.org"));
   });
   connect(mUi->actionAbout, &QAction::triggered, qApp, &Application::about);
-  connect(mUi->actionAbout_Qt, &QAction::triggered, qApp,
-          &QApplication::aboutQt);
-  connect(mUi->actionZoom_In, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomIn);
-  connect(mUi->actionZoom_Out, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomOut);
-  connect(mUi->actionZoom_All, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomAll);
-  connect(mUi->actionShow_Control_Panel, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::showControlPanelClicked);
-  connect(mUi->actionShow_Board_Editor, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::showBoardEditor);
-  connect(mUi->actionEditNetclasses, &QAction::triggered,
-          [this]() { mProjectEditor.execNetClassesEditorDialog(this); });
-  connect(mUi->actionProjectSettings, &QAction::triggered,
-          [this]() { mProjectEditor.execProjectSettingsDialog(this); });
-  connect(mUi->actionExportLppz, &QAction::triggered,
-          [this]() { mProjectEditor.execLppzExportDialog(this); });
+  connect(
+      mUi->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
+  connect(
+      mUi->actionZoom_In,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomIn);
+  connect(
+      mUi->actionZoom_Out,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomOut);
+  connect(
+      mUi->actionZoom_All,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomAll);
+  connect(
+      mUi->actionShow_Control_Panel,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::showControlPanelClicked);
+  connect(
+      mUi->actionShow_Board_Editor,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::showBoardEditor);
+  connect(mUi->actionEditNetclasses, &QAction::triggered, [this]() {
+    mProjectEditor.execNetClassesEditorDialog(this);
+  });
+  connect(mUi->actionProjectSettings, &QAction::triggered, [this]() {
+    mProjectEditor.execProjectSettingsDialog(this);
+  });
+  connect(mUi->actionExportLppz, &QAction::triggered, [this]() {
+    mProjectEditor.execLppzExportDialog(this);
+  });
 
   // connect the undo/redo actions with the UndoStack of the project
-  mUndoStackActionGroup.reset(
-      new UndoStackActionGroup(*mUi->actionUndo, *mUi->actionRedo, nullptr,
-                               &mProjectEditor.getUndoStack(), this));
+  mUndoStackActionGroup.reset(new UndoStackActionGroup(
+      *mUi->actionUndo,
+      *mUi->actionRedo,
+      nullptr,
+      &mProjectEditor.getUndoStack(),
+      this));
 
   // build the whole schematic editor finite state machine with all its substate
   // objects
@@ -149,20 +174,25 @@ SchematicEditor::SchematicEditor(ProjectEditor& projectEditor, Project& project)
 
   // connect the "tools" toolbar with the state machine
   mToolsActionGroup.reset(new ExclusiveActionGroup());
-  mToolsActionGroup->addAction(SES_FSM::State::State_Select,
-                               mUi->actionToolSelect);
-  mToolsActionGroup->addAction(SES_FSM::State::State_DrawWire,
-                               mUi->actionToolDrawWire);
-  mToolsActionGroup->addAction(SES_FSM::State::State_AddNetLabel,
-                               mUi->actionToolAddNetLabel);
-  mToolsActionGroup->addAction(SES_FSM::State::State_AddComponent,
-                               mUi->actionToolAddComponent);
+  mToolsActionGroup->addAction(
+      SES_FSM::State::State_Select, mUi->actionToolSelect);
+  mToolsActionGroup->addAction(
+      SES_FSM::State::State_DrawWire, mUi->actionToolDrawWire);
+  mToolsActionGroup->addAction(
+      SES_FSM::State::State_AddNetLabel, mUi->actionToolAddNetLabel);
+  mToolsActionGroup->addAction(
+      SES_FSM::State::State_AddComponent, mUi->actionToolAddComponent);
   mToolsActionGroup->setCurrentAction(mFsm->getCurrentState());
-  connect(mFsm, &SES_FSM::stateChanged, mToolsActionGroup.data(),
-          &ExclusiveActionGroup::setCurrentAction);
-  connect(mToolsActionGroup.data(),
-          &ExclusiveActionGroup::changeRequestTriggered, this,
-          &SchematicEditor::toolActionGroupChangeTriggered);
+  connect(
+      mFsm,
+      &SES_FSM::stateChanged,
+      mToolsActionGroup.data(),
+      &ExclusiveActionGroup::setCurrentAction);
+  connect(
+      mToolsActionGroup.data(),
+      &ExclusiveActionGroup::changeRequestTriggered,
+      this,
+      &SchematicEditor::toolActionGroupChangeTriggered);
 
   // connect the "command" toolbar with the state machine
   connect(mUi->actionCommandAbort, &QAction::triggered, [this]() {
@@ -193,14 +223,20 @@ SchematicEditor::SchematicEditor(ProjectEditor& projectEditor, Project& project)
   });
 
   // setup status bar
-  mUi->statusbar->setFields(StatusBar::AbsolutePosition |
-                            StatusBar::ProgressBar);
+  mUi->statusbar->setFields(
+      StatusBar::AbsolutePosition | StatusBar::ProgressBar);
   mUi->statusbar->setProgressBarTextFormat(tr("Scanning libraries (%p%)"));
-  connect(&mProjectEditor.getWorkspace().getLibraryDb(),
-          &workspace::WorkspaceLibraryDb::scanProgressUpdate, mUi->statusbar,
-          &StatusBar::setProgressBarPercent, Qt::QueuedConnection);
-  connect(mGraphicsView, &GraphicsView::cursorScenePositionChanged,
-          mUi->statusbar, &StatusBar::setAbsoluteCursorPosition);
+  connect(
+      &mProjectEditor.getWorkspace().getLibraryDb(),
+      &workspace::WorkspaceLibraryDb::scanProgressUpdate,
+      mUi->statusbar,
+      &StatusBar::setProgressBarPercent,
+      Qt::QueuedConnection);
+  connect(
+      mGraphicsView,
+      &GraphicsView::cursorScenePositionChanged,
+      mUi->statusbar,
+      &StatusBar::setAbsoluteCursorPosition);
 
   // Restore Window Geometry
   QSettings clientSettings;
@@ -318,10 +354,14 @@ void SchematicEditor::on_actionClose_Project_triggered() {
 }
 
 void SchematicEditor::on_actionNew_Schematic_Page_triggered() {
-  bool    ok   = false;
-  QString name = QInputDialog::getText(this, tr("Add schematic page"),
-                                       tr("Choose a name:"), QLineEdit::Normal,
-                                       tr("New Page"), &ok);
+  bool ok = false;
+  QString name = QInputDialog::getText(
+      this,
+      tr("Add schematic page"),
+      tr("Choose a name:"),
+      QLineEdit::Normal,
+      tr("New Page"),
+      &ok);
   if (!ok) return;
 
   try {
@@ -335,11 +375,13 @@ void SchematicEditor::on_actionNew_Schematic_Page_triggered() {
 
 void SchematicEditor::on_actionGrid_triggered() {
   GridSettingsDialog dialog(*mGridProperties, this);
-  connect(&dialog, &GridSettingsDialog::gridPropertiesChanged,
-          [this](const GridProperties& grid) {
-            *mGridProperties = grid;
-            mGraphicsView->setGridProperties(grid);
-          });
+  connect(
+      &dialog,
+      &GridSettingsDialog::gridPropertiesChanged,
+      [this](const GridProperties& grid) {
+        *mGridProperties = grid;
+        mGraphicsView->setGridProperties(grid);
+      });
   if (dialog.exec()) {
     foreach (Schematic* schematic, mProject.getSchematics())
       schematic->setGridProperties(*mGridProperties);
@@ -392,12 +434,12 @@ void SchematicEditor::on_actionPrint_triggered() {
 
 void SchematicEditor::on_actionPDF_Export_triggered() {
   try {
-    QString projectName =
-        FilePath::cleanFileName(*mProject.getMetadata().getName(),
-                                FilePath::ReplaceSpaces | FilePath::KeepCase);
-    QString projectVersion =
-        FilePath::cleanFileName(mProject.getMetadata().getVersion(),
-                                FilePath::ReplaceSpaces | FilePath::KeepCase);
+    QString projectName = FilePath::cleanFileName(
+        *mProject.getMetadata().getName(),
+        FilePath::ReplaceSpaces | FilePath::KeepCase);
+    QString projectVersion = FilePath::cleanFileName(
+        mProject.getMetadata().getVersion(),
+        FilePath::ReplaceSpaces | FilePath::KeepCase);
     QString relativePath =
         QString("output/%1/%2_Schematics.pdf").arg(projectVersion, projectName);
     FilePath defaultFilePath = mProject.getPath().getPathTo(relativePath);
@@ -424,7 +466,7 @@ void SchematicEditor::on_actionGenerateBom_triggered() {
 
 void SchematicEditor::on_actionAddComp_Resistor_triggered() {
   Uuid componentUuid = Uuid::fromString("ef80cd5e-2689-47ee-8888-31d04fc99174");
-  Uuid symbVarUuid   = Uuid::fromString("a5995314-f535-45d4-8bd8-2d0b8a0dc42a");
+  Uuid symbVarUuid = Uuid::fromString("a5995314-f535-45d4-8bd8-2d0b8a0dc42a");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
@@ -432,7 +474,7 @@ void SchematicEditor::on_actionAddComp_Resistor_triggered() {
 
 void SchematicEditor::on_actionAddComp_BipolarCapacitor_triggered() {
   Uuid componentUuid = Uuid::fromString("d167e0e3-6a92-4b76-b013-77b9c230e5f1");
-  Uuid symbVarUuid   = Uuid::fromString("8cd7b37f-e5fa-4af5-a8dd-d78830bba3af");
+  Uuid symbVarUuid = Uuid::fromString("8cd7b37f-e5fa-4af5-a8dd-d78830bba3af");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
@@ -440,7 +482,7 @@ void SchematicEditor::on_actionAddComp_BipolarCapacitor_triggered() {
 
 void SchematicEditor::on_actionAddComp_UnipolarCapacitor_triggered() {
   Uuid componentUuid = Uuid::fromString("c54375c5-7149-4ded-95c5-7462f7301ee7");
-  Uuid symbVarUuid   = Uuid::fromString("5412add2-af9c-44b8-876d-a0fb7c201897");
+  Uuid symbVarUuid = Uuid::fromString("5412add2-af9c-44b8-876d-a0fb7c201897");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
@@ -448,7 +490,7 @@ void SchematicEditor::on_actionAddComp_UnipolarCapacitor_triggered() {
 
 void SchematicEditor::on_actionAddComp_Inductor_triggered() {
   Uuid componentUuid = Uuid::fromString("506bd124-6062-400e-9078-b38bd7e1aaee");
-  Uuid symbVarUuid   = Uuid::fromString("62a7598c-17fe-41cf-8fa1-4ed274c3adc2");
+  Uuid symbVarUuid = Uuid::fromString("62a7598c-17fe-41cf-8fa1-4ed274c3adc2");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
@@ -456,7 +498,7 @@ void SchematicEditor::on_actionAddComp_Inductor_triggered() {
 
 void SchematicEditor::on_actionAddComp_gnd_triggered() {
   Uuid componentUuid = Uuid::fromString("8076f6be-bfab-4fc1-9772-5d54465dd7e1");
-  Uuid symbVarUuid   = Uuid::fromString("f09ad258-595b-4ee9-a1fc-910804a203ae");
+  Uuid symbVarUuid = Uuid::fromString("f09ad258-595b-4ee9-a1fc-910804a203ae");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
@@ -464,15 +506,15 @@ void SchematicEditor::on_actionAddComp_gnd_triggered() {
 
 void SchematicEditor::on_actionAddComp_vcc_triggered() {
   Uuid componentUuid = Uuid::fromString("58c3c6cd-11eb-4557-aa3f-d3e05874afde");
-  Uuid symbVarUuid   = Uuid::fromString("afb86b45-68ec-47b6-8d96-153d73567228");
+  Uuid symbVarUuid = Uuid::fromString("afb86b45-68ec-47b6-8d96-153d73567228");
   SEE_StartAddComponent* addEvent =
       new SEE_StartAddComponent(componentUuid, symbVarUuid);
   mFsm->processEvent(addEvent, true);
 }
 
 void SchematicEditor::on_actionProjectProperties_triggered() {
-  ProjectPropertiesEditorDialog dialog(mProject.getMetadata(),
-                                       mProjectEditor.getUndoStack(), this);
+  ProjectPropertiesEditorDialog dialog(
+      mProject.getMetadata(), mProjectEditor.getUndoStack(), this);
   dialog.exec();
 }
 

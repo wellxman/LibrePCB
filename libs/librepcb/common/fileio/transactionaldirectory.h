@@ -55,17 +55,19 @@ class TransactionalDirectory final : public FileSystem {
 public:
   // Constructors / Destructor
   TransactionalDirectory(QObject* parent = nullptr);
-  explicit TransactionalDirectory(std::shared_ptr<TransactionalFileSystem> fs,
-                                  const QString& dir    = "",
-                                  QObject*       parent = nullptr) noexcept;
+  explicit TransactionalDirectory(
+      std::shared_ptr<TransactionalFileSystem> fs,
+      const QString& dir = "",
+      QObject* parent = nullptr) noexcept;
   // Note: The "other" parameter must not be a const reference because of
   //       const correctness reasons! A const TransactionalDirectory must
   //       not be convertible to a non-const TransactionalDirectory because
   //       it would allow writing to a file system which should actually be
   //       const.
-  TransactionalDirectory(TransactionalDirectory& other,
-                         const QString&          subdir = "",
-                         QObject*                parent = nullptr) noexcept;
+  TransactionalDirectory(
+      TransactionalDirectory& other,
+      const QString& subdir = "",
+      QObject* parent = nullptr) noexcept;
   virtual ~TransactionalDirectory() noexcept;
 
   // Getters
@@ -77,15 +79,15 @@ public:
     return mFileSystem;
   }
   const QString& getPath() const noexcept { return mPath; }
-  bool           isWritable() const noexcept;
-  bool           isRestoredFromAutosave() const noexcept;
+  bool isWritable() const noexcept;
+  bool isRestoredFromAutosave() const noexcept;
 
   // Inherited from FileSystem
   virtual FilePath getAbsPath(const QString& path = "") const noexcept override;
   virtual QStringList getDirs(const QString& path = "") const noexcept override;
   virtual QStringList getFiles(const QString& path = "") const
       noexcept override;
-  virtual bool       fileExists(const QString& path) const noexcept override;
+  virtual bool fileExists(const QString& path) const noexcept override;
   virtual QByteArray read(const QString& path) const override;
   virtual void write(const QString& path, const QByteArray& content) override;
   virtual void removeFile(const QString& path) override;
@@ -96,14 +98,15 @@ public:
   void moveTo(TransactionalDirectory& dest);
 
 private:  // Methods
-  static void copyDirRecursively(TransactionalFileSystem& srcFs,
-                                 const QString&           srcDir,
-                                 TransactionalFileSystem& dstFs,
-                                 const QString&           dstDir);
+  static void copyDirRecursively(
+      TransactionalFileSystem& srcFs,
+      const QString& srcDir,
+      TransactionalFileSystem& dstFs,
+      const QString& dstDir);
 
 private:  // Data
   std::shared_ptr<TransactionalFileSystem> mFileSystem;
-  QString                                  mPath;
+  QString mPath;
 };
 
 /*******************************************************************************

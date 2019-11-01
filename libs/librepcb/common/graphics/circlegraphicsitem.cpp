@@ -36,9 +36,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CircleGraphicsItem::CircleGraphicsItem(Circle&                         circle,
-                                       const IF_GraphicsLayerProvider& lp,
-                                       QGraphicsItem* parent) noexcept
+CircleGraphicsItem::CircleGraphicsItem(
+    Circle& circle,
+    const IF_GraphicsLayerProvider& lp,
+    QGraphicsItem* parent) noexcept
   : PrimitiveCircleGraphicsItem(parent),
     mCircle(circle),
     mLayerProvider(lp),
@@ -61,8 +62,9 @@ CircleGraphicsItem::~CircleGraphicsItem() noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void CircleGraphicsItem::circleEdited(const Circle& circle,
-                                      Circle::Event event) noexcept {
+void CircleGraphicsItem::circleEdited(
+    const Circle& circle,
+    Circle::Event event) noexcept {
   switch (event) {
     case Circle::Event::LayerNameChanged:
       setLineLayer(mLayerProvider.getLayer(*circle.getLayerName()));

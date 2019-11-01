@@ -81,17 +81,22 @@ BI_Plane::BI_Plane(Board& board, const SExpression& node)
   mNetSignal =
       mBoard.getProject().getCircuit().getNetSignalByUuid(netSignalUuid);
   if (!mNetSignal) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Invalid net signal UUID: \"%1\""))
-                           .arg(netSignalUuid.toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Invalid net signal UUID: \"%1\""))
+            .arg(netSignalUuid.toStr()));
   }
   mOutline = Path(node);
   init();
 }
 
-BI_Plane::BI_Plane(Board& board, const Uuid& uuid,
-                   const GraphicsLayerName& layerName, NetSignal& netsignal,
-                   const Path& outline)
+BI_Plane::BI_Plane(
+    Board& board,
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    NetSignal& netsignal,
+    const Path& outline)
   : BI_Base(board),
     mUuid(uuid),
     mLayerName(layerName),
@@ -114,8 +119,11 @@ void BI_Plane::init() {
   mGraphicsItem->setRotation(Angle::deg0().toDeg());
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BI_Plane::boardAttributesChanged);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BI_Plane::boardAttributesChanged);
 }
 
 BI_Plane::~BI_Plane() noexcept {

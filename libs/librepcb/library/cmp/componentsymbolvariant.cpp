@@ -49,7 +49,9 @@ ComponentSymbolVariant::ComponentSymbolVariant(
 }
 
 ComponentSymbolVariant::ComponentSymbolVariant(
-    const Uuid& uuid, const QString& norm, const ElementName& name_en_US,
+    const Uuid& uuid,
+    const QString& norm,
+    const ElementName& name_en_US,
     const QString& desc_en_US) noexcept
   : onEdited(*this),
     mUuid(uuid),
@@ -89,8 +91,9 @@ bool ComponentSymbolVariant::setNorm(const QString& norm) noexcept {
   return true;
 }
 
-bool ComponentSymbolVariant::setName(const QString&     locale,
-                                     const ElementName& name) noexcept {
+bool ComponentSymbolVariant::setName(
+    const QString& locale,
+    const ElementName& name) noexcept {
   if (mNames.tryGet(locale) == name) {
     return false;
   }
@@ -100,8 +103,9 @@ bool ComponentSymbolVariant::setName(const QString&     locale,
   return true;
 }
 
-bool ComponentSymbolVariant::setDescription(const QString& locale,
-                                            const QString& desc) noexcept {
+bool ComponentSymbolVariant::setDescription(
+    const QString& locale,
+    const QString& desc) noexcept {
   if (mDescriptions.tryGet(locale) == desc) {
     return false;
   }
@@ -176,9 +180,10 @@ ComponentSymbolVariant& ComponentSymbolVariant::operator=(
  ******************************************************************************/
 
 void ComponentSymbolVariant::itemsEdited(
-    const ComponentSymbolVariantItemList& list, int index,
+    const ComponentSymbolVariantItemList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-    ComponentSymbolVariantItemList::Event                    event) noexcept {
+    ComponentSymbolVariantItemList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   Q_UNUSED(item);

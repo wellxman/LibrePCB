@@ -156,7 +156,7 @@ private:  // Methods
    */
   explicit Uuid(const QString& str) noexcept : mUuid(str) {}
 
-private:          // Data
+private:  // Data
   QString mUuid;  ///< Guaranteed to always contain a valid UUID
 };
 
@@ -170,8 +170,9 @@ inline SExpression serializeToSExpression(const Uuid& obj) {
 }
 
 template <>
-inline Uuid deserializeFromSExpression(const SExpression& sexpr,
-                                       bool               throwIfEmpty) {
+inline Uuid deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   return Uuid::fromString(sexpr.getStringOrToken(throwIfEmpty));
 }
 
@@ -185,8 +186,9 @@ inline SExpression serializeToSExpression(const tl::optional<Uuid>& obj) {
 }
 
 template <>
-inline tl::optional<Uuid> deserializeFromSExpression(const SExpression& sexpr,
-                                                     bool throwIfEmpty) {
+inline tl::optional<Uuid> deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   if (str == "none") {
     return tl::nullopt;

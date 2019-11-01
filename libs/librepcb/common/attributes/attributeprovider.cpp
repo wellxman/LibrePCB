@@ -44,8 +44,8 @@ QString AttributeProvider::getAttributeValue(const QString& key) const
  ******************************************************************************/
 
 QString AttributeProvider::getAttributeValue(
-    const QString& key, QVector<const AttributeProvider*>& backtrace) const
-    noexcept {
+    const QString& key,
+    QVector<const AttributeProvider*>& backtrace) const noexcept {
   // priority 1: user defined attributes of this object
   QString value = getUserDefinedAttributeValue(key);
   if (!value.isEmpty()) return value;

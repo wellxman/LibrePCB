@@ -59,14 +59,17 @@ class BES_Select final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_Select(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                      GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit BES_Select(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_Select();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:
   // Private Methods
@@ -74,12 +77,15 @@ private:
   ProcRetVal processSubStateIdleSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processSubStateMoving(BEE_Base* event) noexcept;
   ProcRetVal processSubStateMovingSceneEvent(BEE_Base* event) noexcept;
-  ProcRetVal proccessIdleSceneLeftClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                        Board& board) noexcept;
+  ProcRetVal proccessIdleSceneLeftClick(
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Board& board) noexcept;
   ProcRetVal proccessIdleSceneRightMouseButtonReleased(
-      QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept;
-  ProcRetVal proccessIdleSceneDoubleClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                          Board* board) noexcept;
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Board* board) noexcept;
+  ProcRetVal proccessIdleSceneDoubleClick(
+      QGraphicsSceneMouseEvent* mouseEvent,
+      Board* board) noexcept;
   bool startMovingSelectedItems(Board& board, const Point& startPos) noexcept;
   bool rotateSelectedItems(const Angle& angle) noexcept;
   bool flipSelectedItems(Qt::Orientation orientation) noexcept;
@@ -94,7 +100,7 @@ private:
   // Types
   /// enum for all possible substates
   enum SubState {
-    SubState_Idle,   ///< left mouse button is not pressed (default state)
+    SubState_Idle,  ///< left mouse button is not pressed (default state)
     SubState_Moving  ///< left mouse button is pressed
   };
 

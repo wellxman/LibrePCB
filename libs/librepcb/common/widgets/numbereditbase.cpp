@@ -46,12 +46,17 @@ NumberEditBase::NumberEditBase(QWidget* parent) noexcept
   setSingleStep(tl::nullopt);
   setFocusProxy(mSpinBox.data());
 
-  connect(mSpinBox.data(),
-          static_cast<void (QDoubleSpinBox::*)(double)>(
-              &QDoubleSpinBox::valueChanged),
-          this, &NumberEditBase::spinBoxValueChanged);
-  connect(mSpinBox.data(), &DoubleSpinBox::editingFinished, this,
-          &NumberEditBase::editingFinished);
+  connect(
+      mSpinBox.data(),
+      static_cast<void (QDoubleSpinBox::*)(double)>(
+          &QDoubleSpinBox::valueChanged),
+      this,
+      &NumberEditBase::spinBoxValueChanged);
+  connect(
+      mSpinBox.data(),
+      &DoubleSpinBox::editingFinished,
+      this,
+      &NumberEditBase::editingFinished);
 }
 
 NumberEditBase::~NumberEditBase() noexcept {

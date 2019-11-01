@@ -40,7 +40,8 @@ namespace workspace {
 
 template <typename ElementType>
 CategoryTreeModel<ElementType>::CategoryTreeModel(
-    const WorkspaceLibraryDb& library, const QStringList& localeOrder,
+    const WorkspaceLibraryDb& library,
+    const QStringList& localeOrder,
     CategoryTreeFilter::Flags filter) noexcept
   : QAbstractItemModel(nullptr) {
   mRootItem.reset(new CategoryTreeItem<ElementType>(
@@ -85,11 +86,13 @@ int CategoryTreeModel<ElementType>::rowCount(const QModelIndex& parent) const {
 
 template <typename ElementType>
 QModelIndex CategoryTreeModel<ElementType>::index(
-    int row, int column, const QModelIndex& parent) const {
+    int row,
+    int column,
+    const QModelIndex& parent) const {
   if (parent.isValid() && parent.column() != 0) return QModelIndex();
 
   CategoryTreeItem<ElementType>* parentItem = getItem(parent);
-  CategoryTreeItem<ElementType>* childItem  = parentItem->getChild(row);
+  CategoryTreeItem<ElementType>* childItem = parentItem->getChild(row);
 
   if (childItem)
     return createIndex(row, column, childItem);
@@ -102,7 +105,7 @@ QModelIndex CategoryTreeModel<ElementType>::parent(
     const QModelIndex& index) const {
   if (!index.isValid()) return QModelIndex();
 
-  CategoryTreeItem<ElementType>* childItem  = getItem(index);
+  CategoryTreeItem<ElementType>* childItem = getItem(index);
   CategoryTreeItem<ElementType>* parentItem = childItem->getParent();
 
   if (parentItem == mRootItem.data()) return QModelIndex();
@@ -111,9 +114,10 @@ QModelIndex CategoryTreeModel<ElementType>::parent(
 }
 
 template <typename ElementType>
-QVariant CategoryTreeModel<ElementType>::headerData(int             section,
-                                                    Qt::Orientation orientation,
-                                                    int role) const {
+QVariant CategoryTreeModel<ElementType>::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)) {
     switch (section) {
       case 0:
@@ -124,8 +128,9 @@ QVariant CategoryTreeModel<ElementType>::headerData(int             section,
 }
 
 template <typename ElementType>
-QVariant CategoryTreeModel<ElementType>::data(const QModelIndex& index,
-                                              int                role) const {
+QVariant CategoryTreeModel<ElementType>::data(
+    const QModelIndex& index,
+    int role) const {
   CategoryTreeItem<ElementType>* item = getItem(index);
   return item->data(role);
 }

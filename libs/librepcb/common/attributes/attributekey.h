@@ -49,13 +49,14 @@ struct AttributeKeyVerifier {
   static constexpr auto verify(Value&& val, const Predicate& p) ->
       typename std::decay<Value>::type {
     return p(val)
-               ? std::forward<Value>(val)
-               : (throw RuntimeError(__FILE__, __LINE__,
-                                     QString(QApplication::translate(
-                                                 "AttributeKey",
-                                                 "Invalid attribute key: '%1'"))
-                                         .arg(val)),
-                  std::forward<Value>(val));
+        ? std::forward<Value>(val)
+        : (throw RuntimeError(
+               __FILE__,
+               __LINE__,
+               QString(QApplication::translate(
+                           "AttributeKey", "Invalid attribute key: '%1'"))
+                   .arg(val)),
+           std::forward<Value>(val));
   }
 };
 
@@ -78,9 +79,8 @@ struct AttributeKeyConstraint {
  * The constructor throws an exception if constructed from a QString which is
  * not a valid attribute key according these rules.
  */
-using AttributeKey =
-    type_safe::constrained_type<QString, AttributeKeyConstraint,
-                                AttributeKeyVerifier>;
+using AttributeKey = type_safe::
+    constrained_type<QString, AttributeKeyConstraint, AttributeKeyVerifier>;
 
 inline bool operator==(const AttributeKey& lhs, const QString& rhs) noexcept {
   return (*lhs) == rhs;
@@ -101,8 +101,9 @@ inline SExpression serializeToSExpression(const AttributeKey& obj) {
 }
 
 template <>
-inline AttributeKey deserializeFromSExpression(const SExpression& sexpr,
-                                               bool throwIfEmpty) {
+inline AttributeKey deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   return AttributeKey(sexpr.getStringOrToken(throwIfEmpty));  // can throw
 }
 

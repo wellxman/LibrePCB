@@ -50,9 +50,12 @@ namespace editor {
  ******************************************************************************/
 
 CmdAddSymbolToSchematic::CmdAddSymbolToSchematic(
-    workspace::Workspace& workspace, Schematic& schematic,
-    ComponentInstance& cmpInstance, const Uuid& symbolItem,
-    const Point& position, const Angle& angle) noexcept
+    workspace::Workspace& workspace,
+    Schematic& schematic,
+    ComponentInstance& cmpInstance,
+    const Uuid& symbolItem,
+    const Point& position,
+    const Angle& angle) noexcept
   : UndoCommandGroup(tr("Add symbol")),
     mWorkspace(workspace),
     mSchematic(schematic),
@@ -86,7 +89,8 @@ bool CmdAddSymbolToSchematic::performExecute() {
     FilePath symFp = mWorkspace.getLibraryDb().getLatestSymbol(symbolUuid);
     if (!symFp.isValid()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("The symbol with the UUID \"%1\" does not exist in the "
                      "workspace library!"))
               .arg(symbolUuid.toStr()));
@@ -101,9 +105,12 @@ bool CmdAddSymbolToSchematic::performExecute() {
   }
 
   // create the new symbol (schematic takes ownership)
-  mSymbolInstance =
-      new SI_Symbol(mSchematic, mComponentInstance, mSymbolItemUuid, mPosition,
-                    mAngle);  // can throw
+  mSymbolInstance = new SI_Symbol(
+      mSchematic,
+      mComponentInstance,
+      mSymbolItemUuid,
+      mPosition,
+      mAngle);  // can throw
 
   // add a new symbol instance to the schematic
   execNewChildCmd(new CmdSymbolInstanceAdd(*mSymbolInstance));  // can throw

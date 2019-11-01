@@ -49,9 +49,11 @@ ComponentSymbolVariantItemListEditorWidget::
     mWorkspace(nullptr),
     mLayerProvider(nullptr),
     mOnItemListEditedSlot(
-        *this, &ComponentSymbolVariantItemListEditorWidget::itemListEdited),
-    mOnItemEditedSlot(*this,
-                      &ComponentSymbolVariantItemListEditorWidget::itemEdited) {
+        *this,
+        &ComponentSymbolVariantItemListEditorWidget::itemListEdited),
+    mOnItemEditedSlot(
+        *this,
+        &ComponentSymbolVariantItemListEditorWidget::itemEdited) {
   mView->setShowMoveButtons(true);
   mView->setBrowseButtonColumn(
       ComponentSymbolVariantItemListModel::COLUMN_SYMBOL);
@@ -79,16 +81,31 @@ ComponentSymbolVariantItemListEditorWidget::
   mView->horizontalHeader()->setSectionResizeMode(
       ComponentSymbolVariantItemListModel::COLUMN_ACTIONS,
       QHeaderView::ResizeToContents);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &ComponentSymbolVariantItemListModel::addItem);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &ComponentSymbolVariantItemListModel::removeItem);
-  connect(mView.data(), &EditableTableWidget::btnMoveUpClicked, mModel.data(),
-          &ComponentSymbolVariantItemListModel::moveItemUp);
-  connect(mView.data(), &EditableTableWidget::btnMoveDownClicked, mModel.data(),
-          &ComponentSymbolVariantItemListModel::moveItemDown);
-  connect(mView.data(), &EditableTableWidget::btnBrowseClicked, this,
-          &ComponentSymbolVariantItemListEditorWidget::btnSymbolBrowseClicked);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &ComponentSymbolVariantItemListModel::addItem);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &ComponentSymbolVariantItemListModel::removeItem);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveUpClicked,
+      mModel.data(),
+      &ComponentSymbolVariantItemListModel::moveItemUp);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveDownClicked,
+      mModel.data(),
+      &ComponentSymbolVariantItemListModel::moveItemDown);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnBrowseClicked,
+      this,
+      &ComponentSymbolVariantItemListEditorWidget::btnSymbolBrowseClicked);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -104,15 +121,15 @@ ComponentSymbolVariantItemListEditorWidget::
  ******************************************************************************/
 
 void ComponentSymbolVariantItemListEditorWidget::setReferences(
-    const workspace::Workspace&                       ws,
-    const IF_GraphicsLayerProvider&                   layerProvider,
-    ComponentSymbolVariantItemList&                   items,
+    const workspace::Workspace& ws,
+    const IF_GraphicsLayerProvider& layerProvider,
+    ComponentSymbolVariantItemList& items,
     const std::shared_ptr<const LibraryElementCache>& symbolCache,
-    UndoStack*                                        undoStack) noexcept {
+    UndoStack* undoStack) noexcept {
   mOnItemListEditedSlot.detachAll();
   mOnItemEditedSlot.detachAll();
 
-  mWorkspace     = &ws;
+  mWorkspace = &ws;
   mLayerProvider = &layerProvider;
   mModel->setSymbolsCache(symbolCache);
   mModel->setItemList(&items);
@@ -127,9 +144,10 @@ void ComponentSymbolVariantItemListEditorWidget::setReferences(
  ******************************************************************************/
 
 void ComponentSymbolVariantItemListEditorWidget::itemListEdited(
-    const ComponentSymbolVariantItemList& list, int index,
+    const ComponentSymbolVariantItemList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-    ComponentSymbolVariantItemList::Event                    event) noexcept {
+    ComponentSymbolVariantItemList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   Q_UNUSED(item);
@@ -146,9 +164,10 @@ void ComponentSymbolVariantItemListEditorWidget::itemListEdited(
 }
 
 void ComponentSymbolVariantItemListEditorWidget::itemEdited(
-    const ComponentSymbolVariantItemList& list, int index,
+    const ComponentSymbolVariantItemList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-    ComponentSymbolVariantItem::Event                        event) noexcept {
+    ComponentSymbolVariantItem::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   Q_UNUSED(item);

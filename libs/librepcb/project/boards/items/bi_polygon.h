@@ -58,20 +58,25 @@ class BI_Polygon final : public BI_Base, public SerializableObject {
 
 public:
   // Constructors / Destructor
-  BI_Polygon()                        = delete;
+  BI_Polygon() = delete;
   BI_Polygon(const BI_Polygon& other) = delete;
   BI_Polygon(Board& board, const BI_Polygon& other);
   BI_Polygon(Board& board, const SExpression& node);
   BI_Polygon(Board& board, const Polygon& polygon);
-  BI_Polygon(Board& board, const Uuid& uuid, const GraphicsLayerName& layerName,
-             const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
-             const Path& path);
+  BI_Polygon(
+      Board& board,
+      const Uuid& uuid,
+      const GraphicsLayerName& layerName,
+      const UnsignedLength& lineWidth,
+      bool fill,
+      bool isGrabArea,
+      const Path& path);
   ~BI_Polygon() noexcept;
 
   // Getters
-  Polygon&       getPolygon() noexcept { return *mPolygon; }
+  Polygon& getPolygon() noexcept { return *mPolygon; }
   const Polygon& getPolygon() const noexcept { return *mPolygon; }
-  const Uuid&    getUuid() const
+  const Uuid& getUuid() const
       noexcept;  // convenience function, e.g. for template usage
   bool isSelectable() const noexcept override;
 
@@ -88,9 +93,9 @@ public:
     static Point p(0, 0);
     return p;
   }
-  bool         getIsMirrored() const noexcept override { return false; }
+  bool getIsMirrored() const noexcept override { return false; }
   QPainterPath getGrabAreaScenePx() const noexcept override;
-  void         setSelected(bool selected) noexcept override;
+  void setSelected(bool selected) noexcept override;
 
   // Operator Overloadings
   BI_Polygon& operator=(const BI_Polygon& rhs) = delete;
@@ -103,7 +108,7 @@ private:
   void init();
 
   // General
-  QScopedPointer<Polygon>             mPolygon;
+  QScopedPointer<Polygon> mPolygon;
   QScopedPointer<PolygonGraphicsItem> mGraphicsItem;
 };
 

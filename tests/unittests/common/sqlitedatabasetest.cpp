@@ -57,25 +57,25 @@ protected:
   }
 
   enum ThreadOption {
-    READING        = (0 << 0),
-    WRITING        = (1 << 0),
+    READING = (0 << 0),
+    WRITING = (1 << 0),
     NO_TRANSACTION = (0 << 1),
-    TRANSACTION    = (1 << 1),
+    TRANSACTION = (1 << 1),
   };
 
   struct WorkerResult {
-    qint64  rowCount;
+    qint64 rowCount;
     QString errorMsg;
   };
 
-  static WorkerResult threadWorker(FilePath fp, int options,
-                                   int duration) noexcept {
+  static WorkerResult
+      threadWorker(FilePath fp, int options, int duration) noexcept {
     // increase thread priority because the multithreading tests are time
     // critical
     QThread::currentThread()->setPriority(QThread::TimeCriticalPriority);
 
     try {
-      qint64         count = 0;
+      qint64 count = 0;
       SQLiteDatabase db(fp);
       if (options & TRANSACTION) {
         db.beginTransaction();
@@ -98,13 +98,12 @@ protected:
     }
   }
 
-  QFuture<WorkerResult> startWorkerThread(QThreadPool* pool, int options,
-                                          int duration) noexcept {
-#if (QT_VERSION >=     \
-     QT_VERSION_CHECK( \
-         5, 4, 0))  // QtConcurrent::run(QThreadPool*, ...) requires Qt>=5.4
-    auto future = QtConcurrent::run(pool, threadWorker, mTempDbFilePath,
-                                    options, duration);
+  QFuture<WorkerResult>
+      startWorkerThread(QThreadPool* pool, int options, int duration) noexcept {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))  // QtConcurrent::run(QThreadPool*,
+                                               // ...) requires Qt>=5.4
+    auto future = QtConcurrent::run(
+        pool, threadWorker, mTempDbFilePath, options, duration);
 #else
     if (QThreadPool::globalInstance()->maxThreadCount() <
         pool->maxThreadCount()) {
@@ -123,8 +122,8 @@ protected:
     }
   }
 
-  FilePath                     mTempDir;
-  FilePath                     mTempDbFilePath;
+  FilePath mTempDir;
+  FilePath mTempDbFilePath;
   QList<QFuture<WorkerResult>> mWorkerThreads;
 };
 
@@ -238,7 +237,7 @@ TEST_F(SQLiteDatabaseTest, testConcurrentAccessFromMultipleThreads) {
     QThread::currentThread()->setPriority(QThread::TimeCriticalPriority);
 
     // run worker threads (2 sequential writers and 4 parallel readers)
-    qint64                startTime = QDateTime::currentMSecsSinceEpoch();
+    qint64 startTime = QDateTime::currentMSecsSinceEpoch();
     QFuture<WorkerResult> w1 =
         startWorkerThread(&pool, WRITING | TRANSACTION, 5000);
     QFuture<WorkerResult> r1 =
@@ -275,7 +274,7 @@ TEST_F(SQLiteDatabaseTest, testConcurrentAccessFromMultipleThreads) {
     EXPECT_EQ(rowCount, w1.result().rowCount + w2.result().rowCount);
     EXPECT_GE(duration, 10000);
     if (duration < 14000) {  // this fails sometimes (if OS == Windows)...
-      return;                // success (even on Windows!!!)
+      return;  // success (even on Windows!!!)
     } else {
       std::cout << "Duration too long: " << duration << std::endl;
 

@@ -48,9 +48,11 @@ namespace editor {
  ******************************************************************************/
 
 CmdPasteFootprintItems::CmdPasteFootprintItems(
-    Package& package, Footprint& footprint, FootprintGraphicsItem& graphicsItem,
+    Package& package,
+    Footprint& footprint,
+    FootprintGraphicsItem& graphicsItem,
     std::unique_ptr<FootprintClipboardData> data,
-    const Point&                            posOffset) noexcept
+    const Point& posOffset) noexcept
   : UndoCommandGroup(tr("Paste Footprint Elements")),
     mPackage(package),
     mFootprint(footprint),
@@ -83,14 +85,19 @@ bool CmdPasteFootprintItems::performExecute() {
   //    allow dragging them afterwards.
 
   for (const FootprintPad& pad : mData->getFootprintPads().sortedByUuid()) {
-    Uuid              uuid = pad.getPackagePadUuid();
+    Uuid uuid = pad.getPackagePadUuid();
     CircuitIdentifier name = mData->getPackagePads().get(uuid)->getName();
     std::shared_ptr<PackagePad> newPad = mPackage.getPads().find(*name);
     if (newPad && (!mFootprint.getPads().contains(newPad->getUuid()))) {
       std::shared_ptr<FootprintPad> copy = std::make_shared<FootprintPad>(
-          uuid, pad.getPosition() + mPosOffset, pad.getRotation(),
-          pad.getShape(), pad.getWidth(), pad.getHeight(),
-          pad.getDrillDiameter(), pad.getBoardSide());
+          uuid,
+          pad.getPosition() + mPosOffset,
+          pad.getRotation(),
+          pad.getShape(),
+          pad.getWidth(),
+          pad.getHeight(),
+          pad.getDrillDiameter(),
+          pad.getBoardSide());
       execNewChildCmd(new CmdFootprintPadInsert(mFootprint.getPads(), copy));
       FootprintPadGraphicsItem* item = mGraphicsItem.getPadGraphicsItem(*copy);
       Q_ASSERT(item);
@@ -105,8 +112,12 @@ bool CmdPasteFootprintItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<Circle> copy = std::make_shared<Circle>(
-        uuid, circle.getLayerName(), circle.getLineWidth(), circle.isFilled(),
-        circle.isGrabArea(), circle.getCenter() + mPosOffset,
+        uuid,
+        circle.getLayerName(),
+        circle.getLineWidth(),
+        circle.isFilled(),
+        circle.isGrabArea(),
+        circle.getCenter() + mPosOffset,
         circle.getDiameter());
     execNewChildCmd(new CmdCircleInsert(mFootprint.getCircles(), copy));
     CircleGraphicsItem* item = mGraphicsItem.getCircleGraphicsItem(*copy);
@@ -121,8 +132,11 @@ bool CmdPasteFootprintItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<Polygon> copy = std::make_shared<Polygon>(
-        uuid, polygon.getLayerName(), polygon.getLineWidth(),
-        polygon.isFilled(), polygon.isGrabArea(),
+        uuid,
+        polygon.getLayerName(),
+        polygon.getLineWidth(),
+        polygon.isFilled(),
+        polygon.isGrabArea(),
         polygon.getPath().translated(mPosOffset));
     execNewChildCmd(new CmdPolygonInsert(mFootprint.getPolygons(), copy));
     PolygonGraphicsItem* item = mGraphicsItem.getPolygonGraphicsItem(*copy);
@@ -137,10 +151,18 @@ bool CmdPasteFootprintItems::performExecute() {
       uuid = Uuid::createRandom();
     }
     std::shared_ptr<StrokeText> copy = std::make_shared<StrokeText>(
-        uuid, text.getLayerName(), text.getText(),
-        text.getPosition() + mPosOffset, text.getRotation(), text.getHeight(),
-        text.getStrokeWidth(), text.getLetterSpacing(), text.getLineSpacing(),
-        text.getAlign(), text.getMirrored(), text.getAutoRotate());
+        uuid,
+        text.getLayerName(),
+        text.getText(),
+        text.getPosition() + mPosOffset,
+        text.getRotation(),
+        text.getHeight(),
+        text.getStrokeWidth(),
+        text.getLetterSpacing(),
+        text.getLineSpacing(),
+        text.getAlign(),
+        text.getMirrored(),
+        text.getAutoRotate());
     execNewChildCmd(new CmdStrokeTextInsert(mFootprint.getStrokeTexts(), copy));
     StrokeTextGraphicsItem* item = mGraphicsItem.getTextGraphicsItem(*copy);
     Q_ASSERT(item);

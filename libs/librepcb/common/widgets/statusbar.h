@@ -47,7 +47,7 @@ public:
   // Types
   enum Field {
     AbsolutePosition = 1 << 0,
-    ProgressBar      = 1 << 1,
+    ProgressBar = 1 << 1,
   };
   Q_DECLARE_FLAGS(Fields, Field);
 
@@ -70,11 +70,11 @@ public:
   StatusBar& operator=(const StatusBar& rhs) = delete;
 
 private:  // Data
-  Fields                       mFields;
-  QScopedPointer<QLabel>       mAbsPosXLabel;
-  QScopedPointer<QLabel>       mAbsPosYLabel;
+  Fields mFields;
+  QScopedPointer<QLabel> mAbsPosXLabel;
+  QScopedPointer<QLabel> mAbsPosYLabel;
   QScopedPointer<QProgressBar> mProgressBar;
-  QScopedPointer<QWidget>      mProgressBarPlaceHolder;
+  QScopedPointer<QWidget> mProgressBarPlaceHolder;
 };
 
 /*******************************************************************************

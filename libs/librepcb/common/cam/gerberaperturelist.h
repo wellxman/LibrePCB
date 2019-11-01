@@ -56,16 +56,28 @@ public:
   QString generateString() const noexcept;
 
   // General Methods
-  int  setCircle(const UnsignedLength& dia, const UnsignedLength& hole);
-  int  setRect(const UnsignedLength& w, const UnsignedLength& h,
-               const Angle& rot, const UnsignedLength& hole) noexcept;
-  int  setObround(const UnsignedLength& w, const UnsignedLength& h,
-                  const Angle& rot, const UnsignedLength& hole) noexcept;
-  int  setRegularPolygon(const UnsignedLength& dia, int n, const Angle& rot,
-                         const UnsignedLength& hole) noexcept;
-  int  setOctagon(const UnsignedLength& w, const UnsignedLength& h,
-                  const UnsignedLength& edge, const Angle& rot,
-                  const UnsignedLength& hole) noexcept;
+  int setCircle(const UnsignedLength& dia, const UnsignedLength& hole);
+  int setRect(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
+  int setObround(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
+  int setRegularPolygon(
+      const UnsignedLength& dia,
+      int n,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
+  int setOctagon(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const UnsignedLength& edge,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
   void reset() noexcept;
 
   // Operator Overloadings
@@ -73,38 +85,48 @@ public:
 
 private:
   // Private Methods
-  int  setCurrentAperture(const QString& aperture) noexcept;
+  int setCurrentAperture(const QString& aperture) noexcept;
   void addMacro(const QString& macro) noexcept;
 
   // Aperture Generator Methods
-  static QString generateCircle(const UnsignedLength& dia,
-                                const UnsignedLength& hole) noexcept;
-  static QString generateRect(const UnsignedLength& w, const UnsignedLength& h,
-                              const UnsignedLength& hole) noexcept;
-  static QString generateObround(const UnsignedLength& w,
-                                 const UnsignedLength& h,
-                                 const UnsignedLength& hole) noexcept;
-  static QString generateRegularPolygon(const UnsignedLength& dia, int n,
-                                        const Angle&          rot,
-                                        const UnsignedLength& hole) noexcept;
+  static QString generateCircle(
+      const UnsignedLength& dia,
+      const UnsignedLength& hole) noexcept;
+  static QString generateRect(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const UnsignedLength& hole) noexcept;
+  static QString generateObround(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const UnsignedLength& hole) noexcept;
+  static QString generateRegularPolygon(
+      const UnsignedLength& dia,
+      int n,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
   static QString generateRotatedRectMacro();
   static QString generateRotatedRectMacroWithHole();
   static QString generateRotatedObroundMacro();
   static QString generateRotatedObroundMacroWithHole();
   static QString generateRotatedOctagonMacro();
   static QString generateRotatedOctagonMacroWithHole();
-  static QString generateRotatedRect(const UnsignedLength& w,
-                                     const UnsignedLength& h, const Angle& rot,
-                                     const UnsignedLength& hole) noexcept;
-  static QString generateRotatedObround(const UnsignedLength& w,
-                                        const UnsignedLength& h,
-                                        const Angle&          rot,
-                                        const UnsignedLength& hole) noexcept;
-  static QString generateRotatedOctagon(const UnsignedLength& w,
-                                        const UnsignedLength& h,
-                                        const UnsignedLength& edge,
-                                        const Angle&          rot,
-                                        const UnsignedLength& hole) noexcept;
+  static QString generateRotatedRect(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
+  static QString generateRotatedObround(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
+  static QString generateRotatedOctagon(
+      const UnsignedLength& w,
+      const UnsignedLength& h,
+      const UnsignedLength& edge,
+      const Angle& rot,
+      const UnsignedLength& hole) noexcept;
 
   QList<QString> mApertureMacros;
   QMap<int, QString>

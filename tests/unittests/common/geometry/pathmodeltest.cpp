@@ -52,28 +52,34 @@ protected:
 TEST_F(PathModelTest, testData) {
   PathModel model(nullptr);
   model.setPath(createPopulatedPath());
-  EXPECT_EQ(QVariant::fromValue(Length(1000)),
-            model.data(model.index(2, PathModel::COLUMN_X)));
-  EXPECT_EQ(QVariant::fromValue(Length(2000)),
-            model.data(model.index(2, PathModel::COLUMN_Y)));
-  EXPECT_EQ(QVariant::fromValue(Angle(3)),
-            model.data(model.index(0, PathModel::COLUMN_ANGLE)));
+  EXPECT_EQ(
+      QVariant::fromValue(Length(1000)),
+      model.data(model.index(2, PathModel::COLUMN_X)));
+  EXPECT_EQ(
+      QVariant::fromValue(Length(2000)),
+      model.data(model.index(2, PathModel::COLUMN_Y)));
+  EXPECT_EQ(
+      QVariant::fromValue(Angle(3)),
+      model.data(model.index(0, PathModel::COLUMN_ANGLE)));
 }
 
 TEST_F(PathModelTest, testSetData) {
   PathModel model(nullptr);
   model.setPath(createPopulatedPath());
-  bool r = model.setData(model.index(1, PathModel::COLUMN_X),
-                         QVariant::fromValue(Length(5080000)));
+  bool r = model.setData(
+      model.index(1, PathModel::COLUMN_X),
+      QVariant::fromValue(Length(5080000)));
   EXPECT_TRUE(r);
-  r = model.setData(model.index(1, PathModel::COLUMN_Y),
-                    QVariant::fromValue(Length(1234568)));
+  r = model.setData(
+      model.index(1, PathModel::COLUMN_Y),
+      QVariant::fromValue(Length(1234568)));
   EXPECT_TRUE(r);
-  r = model.setData(model.index(1, PathModel::COLUMN_ANGLE),
-                    QVariant::fromValue(Angle(45000000)));
+  r = model.setData(
+      model.index(1, PathModel::COLUMN_ANGLE),
+      QVariant::fromValue(Angle(45000000)));
   EXPECT_TRUE(r);
 
-  Path expected             = createPopulatedPath();
+  Path expected = createPopulatedPath();
   expected.getVertices()[1] = Vertex(Point(5080000, 1234568), Angle(45000000));
   EXPECT_EQ(expected, model.getPath());
 }

@@ -40,11 +40,11 @@ namespace tests {
  ******************************************************************************/
 
 typedef struct {
-  QUrl       url;
-  QString    destFilename;
-  QString    extractDirname;
+  QUrl url;
+  QString destFilename;
+  QString extractDirname;
   QByteArray sha256;
-  bool       success;
+  bool success;
 } FileDownloadTestData;
 
 /*******************************************************************************
@@ -71,7 +71,7 @@ public:
 
 protected:
   NetworkRequestBaseSignalReceiver mSignalReceiver;
-  static NetworkAccessManager*     sDownloadManager;
+  static NetworkAccessManager* sDownloadManager;
 };
 
 NetworkAccessManager* FileDownloadTest::sDownloadManager = nullptr;
@@ -104,31 +104,61 @@ TEST_P(FileDownloadTest, testDownload) {
   FileDownload* dl = new FileDownload(data.url, getDestination(data));
   dl->setZipExtractionDirectory(getExtractToDir(data));
   dl->setExpectedChecksum(QCryptographicHash::Sha256, data.sha256);
-  QObject::connect(dl, &FileDownload::progressState, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progressState);
-  QObject::connect(dl, &FileDownload::progressPercent, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progressPercent);
-  QObject::connect(dl, &FileDownload::progress, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progress);
-  QObject::connect(dl, &FileDownload::aborted, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::aborted);
-  QObject::connect(dl, &FileDownload::succeeded, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::succeeded);
-  QObject::connect(dl, &FileDownload::errored, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::errored);
-  QObject::connect(dl, &FileDownload::finished, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::finished);
-  QObject::connect(dl, &FileDownload::fileDownloaded, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::fileDownloaded);
-  QObject::connect(dl, &FileDownload::zipFileExtracted, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::zipFileExtracted);
-  QObject::connect(dl, &FileDownload::destroyed, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::destroyed);
+  QObject::connect(
+      dl,
+      &FileDownload::progressState,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progressState);
+  QObject::connect(
+      dl,
+      &FileDownload::progressPercent,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progressPercent);
+  QObject::connect(
+      dl,
+      &FileDownload::progress,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progress);
+  QObject::connect(
+      dl,
+      &FileDownload::aborted,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::aborted);
+  QObject::connect(
+      dl,
+      &FileDownload::succeeded,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::succeeded);
+  QObject::connect(
+      dl,
+      &FileDownload::errored,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::errored);
+  QObject::connect(
+      dl,
+      &FileDownload::finished,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::finished);
+  QObject::connect(
+      dl,
+      &FileDownload::fileDownloaded,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::fileDownloaded);
+  QObject::connect(
+      dl,
+      &FileDownload::zipFileExtracted,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::zipFileExtracted);
+  QObject::connect(
+      dl,
+      &FileDownload::destroyed,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::destroyed);
   dl->start();
 
   // wait until download finished (with timeout)
-  qint64 start       = QDateTime::currentDateTime().toMSecsSinceEpoch();
-  auto   currentTime = []() {
+  qint64 start = QDateTime::currentDateTime().toMSecsSinceEpoch();
+  auto currentTime = []() {
     return QDateTime::currentDateTime().toMSecsSinceEpoch();
   };
   while ((!mSignalReceiver.mDestroyed) && (currentTime() - start < 30000)) {
@@ -139,8 +169,9 @@ TEST_P(FileDownloadTest, testDownload) {
   // check count and parameters of emited signals
   EXPECT_TRUE(mSignalReceiver.mDestroyed) << "Download timed out!";
   EXPECT_GT(mSignalReceiver.mProgressStateCallCount, 0);
-  EXPECT_EQ(mSignalReceiver.mAdvancedProgressCallCount,
-            mSignalReceiver.mSimpleProgressCallCount);
+  EXPECT_EQ(
+      mSignalReceiver.mAdvancedProgressCallCount,
+      mSignalReceiver.mSimpleProgressCallCount);
   EXPECT_EQ(0, mSignalReceiver.mAbortedCallCount);
   EXPECT_EQ(1, mSignalReceiver.mFinishedCallCount);
   EXPECT_EQ(0, mSignalReceiver.mDataReceivedCallCount);
@@ -156,8 +187,8 @@ TEST_P(FileDownloadTest, testDownload) {
     EXPECT_TRUE(mSignalReceiver.mFinishedSuccess);
     EXPECT_EQ(getDestination(data), mSignalReceiver.mDownloadedToFilePath);
     EXPECT_EQ(getExtractToDir(data), mSignalReceiver.mExtractedToFilePath);
-    EXPECT_EQ(data.extractDirname.isNull(),
-              getDestination(data).isExistingFile());
+    EXPECT_EQ(
+        data.extractDirname.isNull(), getDestination(data).isExistingFile());
   } else {
     EXPECT_GE(mSignalReceiver.mSimpleProgressCallCount, 0);
     EXPECT_EQ(0, mSignalReceiver.mSucceededCallCount);

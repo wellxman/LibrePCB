@@ -45,7 +45,8 @@ namespace editor {
  ******************************************************************************/
 
 FootprintClipboardData::FootprintClipboardData(
-    const Uuid& footprintUuid, const PackagePadList& packagePads,
+    const Uuid& footprintUuid,
+    const PackagePadList& packagePads,
     const Point& cursorPos) noexcept
   : mFootprintUuid(footprintUuid),
     mPackagePads(packagePads),
@@ -111,7 +112,7 @@ void FootprintClipboardData::serialize(SExpression& root) const {
 
 QPixmap FootprintClipboardData::generatePixmap(
     const IF_GraphicsLayerProvider& lp) noexcept {
-  GraphicsScene                           scene;
+  GraphicsScene scene;
   QVector<std::shared_ptr<QGraphicsItem>> items;
   for (FootprintPad& pad : mFootprintPads) {
     items.append(std::make_shared<FootprintPadGraphicsItem>(pad, lp));

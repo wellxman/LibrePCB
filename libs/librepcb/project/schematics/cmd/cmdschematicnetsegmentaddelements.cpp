@@ -69,9 +69,13 @@ SI_NetLine* CmdSchematicNetSegmentAddElements::addNetLine(SI_NetLine& netline) {
 }
 
 SI_NetLine* CmdSchematicNetSegmentAddElements::addNetLine(
-    SI_NetLineAnchor& startPoint, SI_NetLineAnchor& endPoint) {
-  SI_NetLine* netline = new SI_NetLine(mNetSegment, startPoint, endPoint,
-                                       UnsignedLength(158750));  // can throw
+    SI_NetLineAnchor& startPoint,
+    SI_NetLineAnchor& endPoint) {
+  SI_NetLine* netline = new SI_NetLine(
+      mNetSegment,
+      startPoint,
+      endPoint,
+      UnsignedLength(158750));  // can throw
   return addNetLine(*netline);
 }
 

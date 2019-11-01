@@ -50,9 +50,13 @@ Polygon::Polygon(const Uuid& uuid, const Polygon& other) noexcept
   mUuid = uuid;
 }
 
-Polygon::Polygon(const Uuid& uuid, const GraphicsLayerName& layerName,
-                 const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
-                 const Path& path) noexcept
+Polygon::Polygon(
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    const UnsignedLength& lineWidth,
+    bool fill,
+    bool isGrabArea,
+    const Path& path) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mLayerName(layerName),

@@ -47,7 +47,8 @@ AttributeUnitComboBox::AttributeUnitComboBox(QWidget* parent) noexcept
   connect(
       mComboBox,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &AttributeUnitComboBox::currentIndexChanged);
+      this,
+      &AttributeUnitComboBox::currentIndexChanged);
 
   setAttributeType(AttrTypeString::instance());
 }
@@ -96,8 +97,9 @@ void AttributeUnitComboBox::setAttributeType(
 
 void AttributeUnitComboBox::setCurrentItem(const AttributeUnit* unit) noexcept {
   int index = mAttributeType->getAvailableUnits().indexOf(unit);
-  Q_ASSERT((index >= 0) ||
-           (mAttributeType->getAvailableUnits().isEmpty() && (!unit)));
+  Q_ASSERT(
+      (index >= 0) ||
+      (mAttributeType->getAvailableUnits().isEmpty() && (!unit)));
   Q_ASSERT(index < mAttributeType->getAvailableUnits().count());
   mComboBox->setCurrentIndex(index);
 }

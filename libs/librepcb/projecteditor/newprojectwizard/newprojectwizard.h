@@ -65,10 +65,11 @@ class NewProjectWizard final : public QWizard {
 
 public:
   // Constructors / Destructor
-  NewProjectWizard()                              = delete;
+  NewProjectWizard() = delete;
   NewProjectWizard(const NewProjectWizard& other) = delete;
-  explicit NewProjectWizard(const workspace::Workspace& ws,
-                            QWidget* parent = nullptr) noexcept;
+  explicit NewProjectWizard(
+      const workspace::Workspace& ws,
+      QWidget* parent = nullptr) noexcept;
   ~NewProjectWizard() noexcept;
 
   // Setters
@@ -81,9 +82,9 @@ public:
   NewProjectWizard& operator=(const NewProjectWizard& rhs) = delete;
 
 private:  // Data
-  const workspace::Workspace&          mWorkspace;
+  const workspace::Workspace& mWorkspace;
   QScopedPointer<Ui::NewProjectWizard> mUi;
-  NewProjectWizardPage_Metadata*       mPageMetadata;
+  NewProjectWizardPage_Metadata* mPageMetadata;
   NewProjectWizardPage_Initialization* mPageInitialization;
   // NewProjectWizardPage_VersionControl* mPageVersionControl;
 };

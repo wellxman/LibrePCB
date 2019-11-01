@@ -49,12 +49,12 @@ namespace project {
 
 // adapted from horizon/kicad
 static QVector<QPair<Point, Point>> kruskalMst(
-    std::vector<delaunay::Edge<qreal>>&    aEdges,
+    std::vector<delaunay::Edge<qreal>>& aEdges,
     std::vector<delaunay::Vector2<qreal>>& aNodes) noexcept {
-  unsigned int nodeNumber      = aNodes.size();
+  unsigned int nodeNumber = aNodes.size();
   unsigned int mstExpectedSize = nodeNumber - 1;
-  unsigned int mstSize         = 0;
-  bool         ratsnestLines   = false;
+  unsigned int mstSize = 0;
+  bool ratsnestLines = false;
 
   // printf("mst nodes : %d edges : %d\n", aNodes.size(), aEdges.size () );
   // The output
@@ -62,10 +62,10 @@ static QVector<QPair<Point, Point>> kruskalMst(
 
   // Set tags for marking cycles
   std::unordered_map<int, int> tags;
-  unsigned int                 tag = 0;
+  unsigned int tag = 0;
 
   for (auto& node : aNodes) {
-    node.tag      = tag;
+    node.tag = tag;
     tags[node.id] = tag++;
   }
 
@@ -76,10 +76,12 @@ static QVector<QPair<Point, Point>> kruskalMst(
   for (unsigned int i = 0; i < nodeNumber; ++i) cycles[i].push_back(i);
 
   // Kruskal algorithm requires edges to be sorted by their weight
-  std::sort(aEdges.begin(), aEdges.end(),
-            [](const delaunay::Edge<qreal>& a, const delaunay::Edge<qreal>& b) {
-              return a.weight > b.weight;
-            });
+  std::sort(
+      aEdges.begin(),
+      aEdges.end(),
+      [](const delaunay::Edge<qreal>& a, const delaunay::Edge<qreal>& b) {
+        return a.weight > b.weight;
+      });
 
   while (mstSize < mstExpectedSize && !aEdges.empty()) {
     auto& dt = aEdges.back();
@@ -126,7 +128,7 @@ static QVector<QPair<Point, Point>> kruskalMst(
         for (auto it = cycles[trgTag].begin(); it != cycles[trgTag].end();
              ++it) {
           tags[aNodes[*it].id] = srcTag;
-          aNodes[*it].tag      = srcTag;
+          aNodes[*it].tag = srcTag;
         }
 
         // Processing a connection, decrease the expected size of the
@@ -150,8 +152,9 @@ static QVector<QPair<Point, Point>> kruskalMst(
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardAirWiresBuilder::BoardAirWiresBuilder(const Board&     board,
-                                           const NetSignal& netsignal) noexcept
+BoardAirWiresBuilder::BoardAirWiresBuilder(
+    const Board& board,
+    const NetSignal& netsignal) noexcept
   : mBoard(board), mNetSignal(netsignal) {
 }
 
@@ -164,16 +167,16 @@ BoardAirWiresBuilder::~BoardAirWiresBuilder() noexcept {
 
 QVector<QPair<Point, Point>> BoardAirWiresBuilder::buildAirWires() const {
   std::vector<delaunay::Vector2<qreal>> points;
-  QHash<const BI_NetLineAnchor*, int>   anchorMap;
-  QHash<int, QString>                   layerMap;
-  std::vector<delaunay::Edge<qreal>>    edges;
+  QHash<const BI_NetLineAnchor*, int> anchorMap;
+  QHash<int, QString> layerMap;
+  std::vector<delaunay::Edge<qreal>> edges;
 
   // pads
   foreach (ComponentSignalInstance* cmpSig, mNetSignal.getComponentSignals()) {
     Q_ASSERT(cmpSig);
     foreach (BI_FootprintPad* pad, cmpSig->getRegisteredFootprintPads()) {
       if (&pad->getBoard() != &mBoard) continue;
-      int   id  = points.size();
+      int id = points.size();
       Point pos = pad->getPosition();
       points.emplace_back(pos.getX().toNm(), pos.getY().toNm(), id);
       anchorMap[pad] = id;
@@ -192,28 +195,30 @@ QVector<QPair<Point, Point>> BoardAirWiresBuilder::buildAirWires() const {
     if (&netsegment->getBoard() != &mBoard) continue;
     foreach (const BI_Via* via, netsegment->getVias()) {
       Q_ASSERT(via);
-      int   id  = points.size();
+      int id = points.size();
       Point pos = via->getPosition();
       points.emplace_back(pos.getX().toNm(), pos.getY().toNm(), id);
       anchorMap[via] = id;
-      layerMap[id]   = QString();  // on all layers
+      layerMap[id] = QString();  // on all layers
     }
     foreach (const BI_NetPoint* netpoint, netsegment->getNetPoints()) {
       Q_ASSERT(netpoint);
       if (const GraphicsLayer* layer = netpoint->getLayerOfLines()) {
-        int   id  = points.size();
+        int id = points.size();
         Point pos = netpoint->getPosition();
         points.emplace_back(pos.getX().toNm(), pos.getY().toNm(), id);
         anchorMap[netpoint] = id;
-        layerMap[id]        = layer->getName();
+        layerMap[id] = layer->getName();
       }
     }
     foreach (const BI_NetLine* netline, netsegment->getNetLines()) {
       Q_ASSERT(netline);
       Q_ASSERT(anchorMap.contains(&netline->getStartPoint()));
       Q_ASSERT(anchorMap.contains(&netline->getEndPoint()));
-      edges.emplace_back(points[anchorMap[&netline->getStartPoint()]],
-                         points[anchorMap[&netline->getEndPoint()]], -1);
+      edges.emplace_back(
+          points[anchorMap[&netline->getStartPoint()]],
+          points[anchorMap[&netline->getEndPoint()]],
+          -1);
     }
   }
 

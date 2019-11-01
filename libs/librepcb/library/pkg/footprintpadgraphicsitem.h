@@ -51,11 +51,12 @@ class FootprintPad;
 class FootprintPadGraphicsItem final : public QGraphicsItem {
 public:
   // Constructors / Destructor
-  FootprintPadGraphicsItem()                                      = delete;
+  FootprintPadGraphicsItem() = delete;
   FootprintPadGraphicsItem(const FootprintPadGraphicsItem& other) = delete;
-  FootprintPadGraphicsItem(FootprintPad&                   pad,
-                           const IF_GraphicsLayerProvider& lp,
-                           QGraphicsItem* parent = nullptr) noexcept;
+  FootprintPadGraphicsItem(
+      FootprintPad& pad,
+      const IF_GraphicsLayerProvider& lp,
+      QGraphicsItem* parent = nullptr) noexcept;
   ~FootprintPadGraphicsItem() noexcept;
 
   // Getters
@@ -70,10 +71,12 @@ public:
   void setSelected(bool selected) noexcept;
 
   // Inherited from QGraphicsItem
-  QRectF       boundingRect() const noexcept override { return QRectF(); }
+  QRectF boundingRect() const noexcept override { return QRectF(); }
   QPainterPath shape() const noexcept override;
-  void         paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-                     QWidget* widget = 0) noexcept override;
+  void paint(
+      QPainter* painter,
+      const QStyleOptionGraphicsItem* option,
+      QWidget* widget = 0) noexcept override;
 
   // Operator Overloadings
   FootprintPadGraphicsItem& operator=(const FootprintPadGraphicsItem& rhs) =
@@ -83,8 +86,8 @@ private:  // Methods
   void updateShape() noexcept;
 
 private:  // Data
-  FootprintPad&                             mPad;
-  const IF_GraphicsLayerProvider&           mLayerProvider;
+  FootprintPad& mPad;
+  const IF_GraphicsLayerProvider& mLayerProvider;
   QScopedPointer<PrimitivePathGraphicsItem> mPathGraphicsItem;
   // QScopedPointer<PrimitiveTextGraphicsItem> mTextGraphicsItem;
 };

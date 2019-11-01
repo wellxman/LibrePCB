@@ -55,31 +55,36 @@ public:
     KeyChanged,
     TypeValueUnitChanged,
   };
-  Signal<Attribute, Event>       onEdited;
+  Signal<Attribute, Event> onEdited;
   typedef Slot<Attribute, Event> OnEditedSlot;
 
   // Constructors / Destructor
   Attribute() = delete;
   Attribute(const Attribute& other) noexcept;
   explicit Attribute(const SExpression& node);
-  Attribute(const AttributeKey& key, const AttributeType& type,
-            const QString& value, const AttributeUnit* unit);
+  Attribute(
+      const AttributeKey& key,
+      const AttributeType& type,
+      const QString& value,
+      const AttributeUnit* unit);
   ~Attribute() noexcept;
 
   // Getters
   const AttributeKey& getKey() const noexcept { return mKey; }
-  const QString&      getName() const noexcept {
+  const QString& getName() const noexcept {
     return *mKey;
   }  // required for SerializableObjectList
   const AttributeType& getType() const noexcept { return *mType; }
   const AttributeUnit* getUnit() const noexcept { return mUnit; }
-  const QString&       getValue() const noexcept { return mValue; }
-  QString              getValueTr(bool showUnit) const noexcept;
+  const QString& getValue() const noexcept { return mValue; }
+  QString getValueTr(bool showUnit) const noexcept;
 
   // Setters
   bool setKey(const AttributeKey& key) noexcept;
-  bool setTypeValueUnit(const AttributeType& type, const QString& value,
-                        const AttributeUnit* unit);
+  bool setTypeValueUnit(
+      const AttributeType& type,
+      const QString& value,
+      const AttributeUnit* unit);
 
   // General Methods
 
@@ -97,9 +102,9 @@ private:  // Methods
   bool checkAttributesValidity() const noexcept;
 
 private:  // Data
-  AttributeKey         mKey;
+  AttributeKey mKey;
   const AttributeType* mType;
-  QString              mValue;
+  QString mValue;
   const AttributeUnit* mUnit;
 };
 
@@ -110,15 +115,18 @@ private:  // Data
 struct AttributeListNameProvider {
   static constexpr const char* tagname = "attribute";
 };
-using AttributeList =
-    SerializableObjectList<Attribute, AttributeListNameProvider,
-                           Attribute::Event>;
-using CmdAttributeInsert =
-    CmdListElementInsert<Attribute, AttributeListNameProvider,
-                         Attribute::Event>;
-using CmdAttributeRemove =
-    CmdListElementRemove<Attribute, AttributeListNameProvider,
-                         Attribute::Event>;
+using AttributeList = SerializableObjectList<
+    Attribute,
+    AttributeListNameProvider,
+    Attribute::Event>;
+using CmdAttributeInsert = CmdListElementInsert<
+    Attribute,
+    AttributeListNameProvider,
+    Attribute::Event>;
+using CmdAttributeRemove = CmdListElementRemove<
+    Attribute,
+    AttributeListNameProvider,
+    Attribute::Event>;
 using CmdAttributesSwap =
     CmdListElementsSwap<Attribute, AttributeListNameProvider, Attribute::Event>;
 

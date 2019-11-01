@@ -35,7 +35,7 @@ namespace tests {
  ******************************************************************************/
 
 typedef struct {
-  bool   valid;
+  bool valid;
   HAlign origHAling;
   VAlign origVAling;
   HAlign mirrHAling;

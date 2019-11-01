@@ -48,8 +48,10 @@ class CmdBoardAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   CmdBoardAdd(Project& project, const ElementName& name) noexcept;
-  CmdBoardAdd(Project& project, const Board& boardToCopy,
-              const ElementName& name) noexcept;
+  CmdBoardAdd(
+      Project& project,
+      const Board& boardToCopy,
+      const ElementName& name) noexcept;
   ~CmdBoardAdd() noexcept;
 
   // Getters
@@ -69,11 +71,11 @@ private:
 
   // Private Member Variables
 
-  Project&     mProject;
+  Project& mProject;
   const Board* mBoardToCopy;
-  ElementName  mName;
-  Board*       mBoard;
-  int          mPageIndex;
+  ElementName mName;
+  Board* mBoard;
+  int mPageIndex;
 };
 
 /*******************************************************************************

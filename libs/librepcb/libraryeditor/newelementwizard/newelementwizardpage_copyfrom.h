@@ -57,42 +57,45 @@ public:
   NewElementWizardPage_CopyFrom() = delete;
   NewElementWizardPage_CopyFrom(const NewElementWizardPage_CopyFrom& other) =
       delete;
-  explicit NewElementWizardPage_CopyFrom(NewElementWizardContext& context,
-                                         QWidget* parent = 0) noexcept;
+  explicit NewElementWizardPage_CopyFrom(
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_CopyFrom() noexcept;
 
   // Getters
   bool validatePage() noexcept override;
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_CopyFrom& operator       =(
+  NewElementWizardPage_CopyFrom& operator=(
       const NewElementWizardPage_CopyFrom& rhs) = delete;
 
 private:  // Methods
-  void       treeView_currentItemChanged(const QModelIndex& current,
-                                         const QModelIndex& previous) noexcept;
-  void       treeView_doubleClicked(const QModelIndex& item) noexcept;
-  void       listWidget_currentItemChanged(QListWidgetItem* current,
-                                           QListWidgetItem* previous) noexcept;
-  void       listWidget_itemDoubleClicked(QListWidgetItem* item) noexcept;
-  void       setSelectedCategory(const tl::optional<Uuid>& uuid) noexcept;
-  void       setSelectedElement(const FilePath& fp) noexcept;
-  void       setCategoryTreeModel(QAbstractItemModel* model) noexcept;
-  FilePath   getCategoryFilePath(const tl::optional<Uuid>& category) const;
+  void treeView_currentItemChanged(
+      const QModelIndex& current,
+      const QModelIndex& previous) noexcept;
+  void treeView_doubleClicked(const QModelIndex& item) noexcept;
+  void listWidget_currentItemChanged(
+      QListWidgetItem* current,
+      QListWidgetItem* previous) noexcept;
+  void listWidget_itemDoubleClicked(QListWidgetItem* item) noexcept;
+  void setSelectedCategory(const tl::optional<Uuid>& uuid) noexcept;
+  void setSelectedElement(const FilePath& fp) noexcept;
+  void setCategoryTreeModel(QAbstractItemModel* model) noexcept;
+  FilePath getCategoryFilePath(const tl::optional<Uuid>& category) const;
   QSet<Uuid> getElementsByCategory(const tl::optional<Uuid>& category) const;
   void getElementMetadata(const Uuid& uuid, FilePath& fp, QString& name) const;
   void initializePage() noexcept override;
   void cleanupPage() noexcept override;
 
 private:  // Data
-  NewElementWizardContext&                          mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_CopyFrom> mUi;
-  QScopedPointer<QAbstractItemModel>                mCategoryTreeModel;
-  bool                                              mIsCategoryElement;
-  tl::optional<Uuid>                                mSelectedCategoryUuid;
-  bool                                              mIsComplete;
+  QScopedPointer<QAbstractItemModel> mCategoryTreeModel;
+  bool mIsCategoryElement;
+  tl::optional<Uuid> mSelectedCategoryUuid;
+  bool mIsComplete;
 };
 
 /*******************************************************************************

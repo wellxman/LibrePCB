@@ -41,8 +41,8 @@ AboutDialog::AboutDialog(QWidget* parent) noexcept
   connect(mUi->btnCopyDetailsToClipboard, &QPushButton::clicked, [this]() {
     QApplication::clipboard()->setText(mUi->txtDetails->toPlainText());
   });
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &AboutDialog::close);
+  connect(
+      mUi->buttonBox, &QDialogButtonBox::clicked, this, &AboutDialog::close);
 
   // Layout
   mUi->tabWidget->setCurrentIndex(0);
@@ -61,8 +61,8 @@ AboutDialog::AboutDialog(QWidget* parent) noexcept
   mUi->textLinks->setText(
       tr("For more information, please check out <a href='%1'>librepcb.org</a> "
          "or our <a href='%2'>GitHub repository</a>.")
-          .arg("https://librepcb.org/",
-               "https://github.com/LibrePCB/LibrePCB"));
+          .arg(
+              "https://librepcb.org/", "https://github.com/LibrePCB/LibrePCB"));
   mUi->textContributeFinancially->setText(
       tr("Support sustainable development of LibrePCB by donating financially "
          "via Patreon, PayPal or Bitcoin. Check out <a href='%1'>%1</a> for "
@@ -108,7 +108,7 @@ AboutDialog::AboutDialog(QWidget* parent) noexcept
  * @param label Pointer to the QLabel instance
  */
 void AboutDialog::formatLabelHeading(QLabel* label) noexcept {
-  int headerMarginTop    = 12;
+  int headerMarginTop = 12;
   int headerMarginBottom = 4;
   label->setContentsMargins(0, headerMarginTop, 0, headerMarginBottom);
 }
@@ -120,8 +120,10 @@ void AboutDialog::formatLabelHeading(QLabel* label) noexcept {
  * @param containsLinks Whether to open links in external application (e.g. web
  * browser)
  */
-void AboutDialog::formatLabelText(QLabel* label, bool selectable,
-                                  bool containsLinks) noexcept {
+void AboutDialog::formatLabelText(
+    QLabel* label,
+    bool selectable,
+    bool containsLinks) noexcept {
   label->setOpenExternalLinks(containsLinks);
   if (selectable) {
     label->setTextInteractionFlags(Qt::TextSelectableByMouse);

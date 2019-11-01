@@ -35,7 +35,8 @@ namespace library {
  ******************************************************************************/
 
 CmdLibraryBaseElementEdit::CmdLibraryBaseElementEdit(
-    LibraryBaseElement& element, const QString& text) noexcept
+    LibraryBaseElement& element,
+    const QString& text) noexcept
   : UndoCommand(text),
     mElement(element),
     mOldNames(element.getNames()),
@@ -59,8 +60,9 @@ CmdLibraryBaseElementEdit::~CmdLibraryBaseElementEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdLibraryBaseElementEdit::setName(const QString&     locale,
-                                        const ElementName& name) noexcept {
+void CmdLibraryBaseElementEdit::setName(
+    const QString& locale,
+    const ElementName& name) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewNames.insert(locale, name);
 }
@@ -71,8 +73,9 @@ void CmdLibraryBaseElementEdit::setNames(
   mNewNames = names;
 }
 
-void CmdLibraryBaseElementEdit::setDescription(const QString& locale,
-                                               const QString& desc) noexcept {
+void CmdLibraryBaseElementEdit::setDescription(
+    const QString& locale,
+    const QString& desc) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewDescriptions.insert(locale, desc);
 }
@@ -83,8 +86,9 @@ void CmdLibraryBaseElementEdit::setDescriptions(
   mNewDescriptions = descriptions;
 }
 
-void CmdLibraryBaseElementEdit::setKeywords(const QString& locale,
-                                            const QString& keywords) noexcept {
+void CmdLibraryBaseElementEdit::setKeywords(
+    const QString& locale,
+    const QString& keywords) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewKeywords.insert(locale, keywords);
 }

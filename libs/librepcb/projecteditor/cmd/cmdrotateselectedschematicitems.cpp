@@ -50,7 +50,8 @@ namespace editor {
  ******************************************************************************/
 
 CmdRotateSelectedSchematicItems::CmdRotateSelectedSchematicItems(
-    Schematic& schematic, const Angle& angle) noexcept
+    Schematic& schematic,
+    const Angle& angle) noexcept
   : UndoCommandGroup(tr("Rotate Schematic Elements")),
     mSchematic(schematic),
     mAngle(angle) {
@@ -74,7 +75,7 @@ bool CmdRotateSelectedSchematicItems::performExecute() {
 
   // find the center of all elements
   Point center = Point(0, 0);
-  int   count  = 0;
+  int count = 0;
   foreach (SI_Symbol* symbol, query->getSymbols()) {
     center += symbol->getPosition();
     ++count;

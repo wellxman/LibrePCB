@@ -39,8 +39,9 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-GraphicsView::GraphicsView(QWidget*                     parent,
-                           IF_GraphicsViewEventHandler* eventHandler) noexcept
+GraphicsView::GraphicsView(
+    QWidget* parent,
+    IF_GraphicsViewEventHandler* eventHandler) noexcept
   : QGraphicsView(parent),
     mEventHandlerObject(eventHandler),
     mScene(nullptr),
@@ -58,8 +59,11 @@ GraphicsView::GraphicsView(QWidget*                     parent,
   setSceneRect(-2000, -2000, 4000, 4000);
 
   mZoomAnimation = new QVariantAnimation();
-  connect(mZoomAnimation, &QVariantAnimation::valueChanged, this,
-          &GraphicsView::zoomAnimationValueChanged);
+  connect(
+      mZoomAnimation,
+      &QVariantAnimation::valueChanged,
+      this,
+      &GraphicsView::zoomAnimationValueChanged);
 
   viewport()->grabGesture(Qt::PinchGesture);
 }
@@ -140,9 +144,10 @@ void GraphicsView::setEventHandlerObject(
  *  General Methods
  ******************************************************************************/
 
-Point GraphicsView::mapGlobalPosToScenePos(const QPoint& globalPosPx,
-                                           bool          boundToView,
-                                           bool mapToGrid) const noexcept {
+Point GraphicsView::mapGlobalPosToScenePos(
+    const QPoint& globalPosPx,
+    bool boundToView,
+    bool mapToGrid) const noexcept {
   QPoint localPosPx = mapFromGlobal(globalPosPx);
   if (boundToView) {
     localPosPx.setX(qBound(0, localPosPx.x(), width()));
@@ -159,17 +164,17 @@ void GraphicsView::handleMouseWheelEvent(
     QGraphicsSceneWheelEvent* event) noexcept {
   if (event->modifiers().testFlag(Qt::ShiftModifier)) {
     // horizontal scrolling
-    horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
-                                    event->delta());
+    horizontalScrollBar()->setValue(
+        horizontalScrollBar()->value() - event->delta());
   } else if (event->modifiers().testFlag(Qt::ControlModifier)) {
     if (event->orientation() == Qt::Horizontal) {
       // horizontal scrolling
-      horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
-                                      event->delta());
+      horizontalScrollBar()->setValue(
+          horizontalScrollBar()->value() - event->delta());
     } else {
       // vertical scrolling
-      verticalScrollBar()->setValue(verticalScrollBar()->value() -
-                                    event->delta());
+      verticalScrollBar()->setValue(
+          verticalScrollBar()->value() - event->delta());
     }
   } else {
     // Zoom to mouse
@@ -241,7 +246,8 @@ bool GraphicsView::eventFilter(QObject* obj, QEvent* event) {
   switch (event->type()) {
     case QEvent::Gesture: {
       QGestureEvent* ge = dynamic_cast<QGestureEvent*>(event);
-      QPinchGesture* pinch_g = dynamic_cast<QPinchGesture*>(ge->gesture(Qt::PinchGesture));
+      QPinchGesture* pinch_g =
+          dynamic_cast<QPinchGesture*>(ge->gesture(Qt::PinchGesture));
       if (pinch_g) {
         scale(pinch_g->scaleFactor(), pinch_g->scaleFactor());
         return true;
@@ -277,10 +283,10 @@ bool GraphicsView::eventFilter(QObject* obj, QEvent* event) {
       Q_ASSERT(e);
       if (e->buttons().testFlag(Qt::MiddleButton) && (!mPanningActive)) {
         QPoint diff = mapFromScene(e->scenePos()) -
-                      mapFromScene(e->buttonDownScenePos(Qt::MiddleButton));
+            mapFromScene(e->buttonDownScenePos(Qt::MiddleButton));
         mPanningActive = true;  // avoid recursive calls (=> stack overflow)
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() -
-                                        diff.x());
+        horizontalScrollBar()->setValue(
+            horizontalScrollBar()->value() - diff.x());
         verticalScrollBar()->setValue(verticalScrollBar()->value() - diff.y());
         mPanningActive = false;
       }
@@ -326,12 +332,12 @@ void GraphicsView::drawBackground(QPainter* painter, const QRectF& rect) {
   painter->setPen(gridPen);
   painter->setBrush(Qt::NoBrush);
   qreal gridIntervalPixels = mGridProperties->getInterval()->toPx();
-  qreal scaleFactor        = width() / rect.width();
+  qreal scaleFactor = width() / rect.width();
   if (gridIntervalPixels * scaleFactor >= (qreal)5) {
     qreal left, right, top, bottom;
-    left   = qFloor(rect.left() / gridIntervalPixels) * gridIntervalPixels;
-    right  = rect.right();
-    top    = rect.top();
+    left = qFloor(rect.left() / gridIntervalPixels) * gridIntervalPixels;
+    right = rect.right();
+    top = rect.top();
     bottom = qFloor(rect.bottom() / gridIntervalPixels) * gridIntervalPixels;
     switch (mGridProperties->getType()) {
       case GridProperties::Type_t::Lines: {
@@ -366,7 +372,7 @@ void GraphicsView::drawForeground(QPainter* painter, const QRectF& rect) {
   if (mOriginCrossVisible) {
     // draw origin cross
     qreal len = Length::fromMm(2.54).toPx();
-    QPen  originPen(foregroundBrush().color());
+    QPen originPen(foregroundBrush().color());
     originPen.setWidth(0);
     painter->setPen(originPen);
     painter->drawLine(QLineF(-len, 0.0, len, 0.0));

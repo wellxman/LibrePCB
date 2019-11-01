@@ -67,11 +67,13 @@ SI_SymbolPin::SI_SymbolPin(SI_Symbol& symbol, const Uuid& pinUuid)
 
   // create ERC messages
   mErcMsgUnconnectedRequiredPin.reset(new ErcMsg(
-      mSchematic.getProject(), *this,
+      mSchematic.getProject(),
+      *this,
       QString("%1/%2")
           .arg(mSymbol.getUuid().toStr())
           .arg(mSymbolPin->getUuid().toStr()),
-      "UnconnectedRequiredPin", ErcMsg::ErcMsgType_t::SchematicError));
+      "UnconnectedRequiredPin",
+      ErcMsg::ErcMsgType_t::SchematicError));
   updateErcMessages();
 }
 
@@ -88,9 +90,10 @@ const Uuid& SI_SymbolPin::getLibPinUuid() const noexcept {
   return mSymbolPin->getUuid();
 }
 
-QString SI_SymbolPin::getDisplayText(bool returnCmpSignalNameIfEmpty,
-                                     bool returnPinNameIfEmpty) const noexcept {
-  QString                       text;
+QString SI_SymbolPin::getDisplayText(
+    bool returnCmpSignalNameIfEmpty,
+    bool returnPinNameIfEmpty) const noexcept {
+  QString text;
   library::CmpSigPinDisplayType displayType =
       mPinSignalMapItem->getDisplayType();
   if (displayType == library::CmpSigPinDisplayType::pinName()) {
@@ -152,9 +155,10 @@ void SI_SymbolPin::addToSchematic() {
     mComponentSignalInstance->registerSymbolPin(*this);  // can throw
   }
   if (getCompSigInstNetSignal()) {
-    mHighlightChangedConnection =
-        connect(getCompSigInstNetSignal(), &NetSignal::highlightedChanged,
-                [this]() { mGraphicsItem->update(); });
+    mHighlightChangedConnection = connect(
+        getCompSigInstNetSignal(), &NetSignal::highlightedChanged, [this]() {
+          mGraphicsItem->update();
+        });
   }
   SI_Base::addToSchematic(mGraphicsItem.data());
   updateErcMessages();
@@ -236,8 +240,8 @@ void SI_SymbolPin::updateErcMessages() noexcept {
           .arg(getDisplayText(true, true))
           .arg(mSymbol.getName()));
 
-  mErcMsgUnconnectedRequiredPin->setVisible(isAddedToSchematic() &&
-                                            isRequired() && (!isUsed()));
+  mErcMsgUnconnectedRequiredPin->setVisible(
+      isAddedToSchematic() && isRequired() && (!isUsed()));
 }
 
 /*******************************************************************************

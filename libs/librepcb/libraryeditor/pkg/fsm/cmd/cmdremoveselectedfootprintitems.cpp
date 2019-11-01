@@ -59,35 +59,37 @@ CmdRemoveSelectedFootprintItems::~CmdRemoveSelectedFootprintItems() noexcept {
 bool CmdRemoveSelectedFootprintItems::performExecute() {
   // remove pins
   foreach (const auto& pad, mContext.currentGraphicsItem->getSelectedPads()) {
-    appendChild(new CmdFootprintPadRemove(mContext.currentFootprint->getPads(),
-                                          &pad->getPad()));
+    appendChild(new CmdFootprintPadRemove(
+        mContext.currentFootprint->getPads(), &pad->getPad()));
   }
 
   // remove circles
-  foreach (const auto& circle,
-           mContext.currentGraphicsItem->getSelectedCircles()) {
-    appendChild(new CmdCircleRemove(mContext.currentFootprint->getCircles(),
-                                    &circle->getCircle()));
+  foreach (
+      const auto& circle, mContext.currentGraphicsItem->getSelectedCircles()) {
+    appendChild(new CmdCircleRemove(
+        mContext.currentFootprint->getCircles(), &circle->getCircle()));
   }
 
   // remove polygons
-  foreach (const auto& polygon,
-           mContext.currentGraphicsItem->getSelectedPolygons()) {
-    appendChild(new CmdPolygonRemove(mContext.currentFootprint->getPolygons(),
-                                     &polygon->getPolygon()));
+  foreach (
+      const auto& polygon,
+      mContext.currentGraphicsItem->getSelectedPolygons()) {
+    appendChild(new CmdPolygonRemove(
+        mContext.currentFootprint->getPolygons(), &polygon->getPolygon()));
   }
 
   // remove texts
-  foreach (const auto& text,
-           mContext.currentGraphicsItem->getSelectedStrokeTexts()) {
+  foreach (
+      const auto& text,
+      mContext.currentGraphicsItem->getSelectedStrokeTexts()) {
     appendChild(new CmdStrokeTextRemove(
         mContext.currentFootprint->getStrokeTexts(), &text->getText()));
   }
 
   // remove holes
   foreach (const auto& hole, mContext.currentGraphicsItem->getSelectedHoles()) {
-    appendChild(new CmdHoleRemove(mContext.currentFootprint->getHoles(),
-                                  &hole->getHole()));
+    appendChild(new CmdHoleRemove(
+        mContext.currentFootprint->getHoles(), &hole->getHole()));
   }
 
   // execute all child commands

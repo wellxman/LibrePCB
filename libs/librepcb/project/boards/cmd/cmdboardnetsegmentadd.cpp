@@ -44,8 +44,9 @@ CmdBoardNetSegmentAdd::CmdBoardNetSegmentAdd(BI_NetSegment& segment) noexcept
     mNetSegment(&segment) {
 }
 
-CmdBoardNetSegmentAdd::CmdBoardNetSegmentAdd(Board&     board,
-                                             NetSignal& netsignal) noexcept
+CmdBoardNetSegmentAdd::CmdBoardNetSegmentAdd(
+    Board& board,
+    NetSignal& netsignal) noexcept
   : UndoCommand(tr("Add net segment")),
     mBoard(board),
     mNetSignal(netsignal),

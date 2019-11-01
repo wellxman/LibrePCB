@@ -36,7 +36,8 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_PackagePads::NewElementWizardPage_PackagePads(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_PackagePads) {

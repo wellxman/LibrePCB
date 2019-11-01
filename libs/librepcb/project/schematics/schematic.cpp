@@ -51,9 +51,11 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Schematic::Schematic(Project&                                project,
-                     std::unique_ptr<TransactionalDirectory> directory,
-                     bool create, const QString& newName)
+Schematic::Schematic(
+    Project& project,
+    std::unique_ptr<TransactionalDirectory> directory,
+    bool create,
+    const QString& newName)
   : QObject(&project),
     AttributeProvider(),
     mProject(project),
@@ -89,7 +91,8 @@ Schematic::Schematic(Project&                                project,
         SI_Symbol* symbol = new SI_Symbol(*this, node);
         if (getSymbolByUuid(symbol->getUuid())) {
           throw RuntimeError(
-              __FILE__, __LINE__,
+              __FILE__,
+              __LINE__,
               QString(tr("There is already a symbol with the UUID \"%1\"!"))
                   .arg(symbol->getUuid().toStr()));
         }
@@ -101,7 +104,8 @@ Schematic::Schematic(Project&                                project,
         SI_NetSegment* netsegment = new SI_NetSegment(*this, node);
         if (getNetSegmentByUuid(netsegment->getUuid())) {
           throw RuntimeError(
-              __FILE__, __LINE__,
+              __FILE__,
+              __LINE__,
               QString(tr("There is already a netsegment with the UUID \"%1\"!"))
                   .arg(netsegment->getUuid().toStr()));
         }
@@ -110,8 +114,11 @@ Schematic::Schematic(Project&                                project,
     }
 
     // emit the "attributesChanged" signal when the project has emited it
-    connect(&mProject, &Project::attributesChanged, this,
-            &Schematic::attributesChanged);
+    connect(
+        &mProject,
+        &Project::attributesChanged,
+        this,
+        &Schematic::attributesChanged);
   } catch (...) {
     // free the allocated memory in the reverse order of their allocation...
     qDeleteAll(mNetSegments);
@@ -252,7 +259,8 @@ void Schematic::addSymbol(SI_Symbol& symbol) {
   // check if there is no symbol with the same uuid in the list
   if (getSymbolByUuid(symbol.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a symbol with the UUID \"%1\"!"))
             .arg(symbol.getUuid().toStr()));
   }
@@ -289,7 +297,8 @@ void Schematic::addNetSegment(SI_NetSegment& netsegment) {
   // check if there is no netsegment with the same uuid in the list
   if (getNetSegmentByUuid(netsegment.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a netsegment with the UUID \"%1\"!"))
             .arg(netsegment.getUuid().toStr()));
   }
@@ -354,8 +363,9 @@ void Schematic::save() {
   if (mIsAddedToProject) {
     // save schematic file
     SExpression doc(serializeToDomElement("librepcb_schematic"));  // can throw
-    mDirectory->write(getFilePath().getFilename(),
-                      doc.toByteArray());  // can throw
+    mDirectory->write(
+        getFilePath().getFilename(),
+        doc.toByteArray());  // can throw
   } else {
     mDirectory->removeDirRecursively();  // can throw
   }
@@ -365,8 +375,10 @@ void Schematic::showInView(GraphicsView& view) noexcept {
   view.setScene(mGraphicsScene.data());
 }
 
-void Schematic::setSelectionRect(const Point& p1, const Point& p2,
-                                 bool updateItems) noexcept {
+void Schematic::setSelectionRect(
+    const Point& p1,
+    const Point& p2,
+    bool updateItems) noexcept {
   mGraphicsScene->setSelectionRect(p1, p2);
   if (updateItems) {
     QRectF rectPx = QRectF(p1.toPxQPointF(), p2.toPxQPointF()).normalized();
@@ -396,9 +408,11 @@ void Schematic::updateAllNetLabelAnchors() noexcept {
 }
 
 void Schematic::renderToQPainter(QPainter& painter) const noexcept {
-  mGraphicsScene->render(&painter, QRectF(),
-                         mGraphicsScene->itemsBoundingRect(),
-                         Qt::KeepAspectRatio);
+  mGraphicsScene->render(
+      &painter,
+      QRectF(),
+      mGraphicsScene->itemsBoundingRect(),
+      Qt::KeepAspectRatio);
 }
 
 std::unique_ptr<SchematicSelectionQuery> Schematic::createSelectionQuery() const
@@ -449,9 +463,10 @@ void Schematic::serialize(SExpression& root) const {
  *  Static Methods
  ******************************************************************************/
 
-Schematic* Schematic::create(Project&                                project,
-                             std::unique_ptr<TransactionalDirectory> directory,
-                             const ElementName&                      name) {
+Schematic* Schematic::create(
+    Project& project,
+    std::unique_ptr<TransactionalDirectory> directory,
+    const ElementName& name) {
   return new Schematic(project, std::move(directory), true, *name);
 }
 

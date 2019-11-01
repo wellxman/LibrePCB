@@ -43,7 +43,8 @@ namespace library {
  ******************************************************************************/
 
 SymbolGraphicsItem::SymbolGraphicsItem(
-    Symbol& symbol, const IF_GraphicsLayerProvider& lp) noexcept
+    Symbol& symbol,
+    const IF_GraphicsLayerProvider& lp) noexcept
   : QGraphicsItem(nullptr), mSymbol(symbol), mLayerProvider(lp) {
   for (SymbolPin& pin : mSymbol.getPins()) {
     addPin(pin);
@@ -91,14 +92,15 @@ TextGraphicsItem* SymbolGraphicsItem::getTextGraphicsItem(
 }
 
 int SymbolGraphicsItem::getItemsAtPosition(
-    const Point& pos, QList<QSharedPointer<SymbolPinGraphicsItem>>* pins,
-    QList<QSharedPointer<CircleGraphicsItem>>*  circles,
+    const Point& pos,
+    QList<QSharedPointer<SymbolPinGraphicsItem>>* pins,
+    QList<QSharedPointer<CircleGraphicsItem>>* circles,
     QList<QSharedPointer<PolygonGraphicsItem>>* polygons,
-    QList<QSharedPointer<TextGraphicsItem>>*    texts) noexcept {
+    QList<QSharedPointer<TextGraphicsItem>>* texts) noexcept {
   int count = 0;
   if (pins) {
-    foreach (const QSharedPointer<SymbolPinGraphicsItem>& item,
-             mPinGraphicsItems) {
+    foreach (
+        const QSharedPointer<SymbolPinGraphicsItem>& item, mPinGraphicsItems) {
       QPointF mappedPos = mapToItem(item.data(), pos.toPxQPointF());
       if (item->shape().contains(mappedPos)) {
         pins->append(item);
@@ -107,8 +109,8 @@ int SymbolGraphicsItem::getItemsAtPosition(
     }
   }
   if (circles) {
-    foreach (const QSharedPointer<CircleGraphicsItem>& item,
-             mCircleGraphicsItems) {
+    foreach (
+        const QSharedPointer<CircleGraphicsItem>& item, mCircleGraphicsItems) {
       QPointF mappedPos = mapToItem(item.data(), pos.toPxQPointF());
       if (item->shape().contains(mappedPos)) {
         circles->append(item);
@@ -117,8 +119,9 @@ int SymbolGraphicsItem::getItemsAtPosition(
     }
   }
   if (polygons) {
-    foreach (const QSharedPointer<PolygonGraphicsItem>& item,
-             mPolygonGraphicsItems) {
+    foreach (
+        const QSharedPointer<PolygonGraphicsItem>& item,
+        mPolygonGraphicsItems) {
       QPointF mappedPos = mapToItem(item.data(), pos.toPxQPointF());
       if (item->shape().contains(mappedPos)) {
         polygons->append(item);
@@ -139,10 +142,10 @@ int SymbolGraphicsItem::getItemsAtPosition(
 }
 
 QList<QSharedPointer<SymbolPinGraphicsItem>>
-SymbolGraphicsItem::getSelectedPins() noexcept {
+    SymbolGraphicsItem::getSelectedPins() noexcept {
   QList<QSharedPointer<SymbolPinGraphicsItem>> pins;
-  foreach (const QSharedPointer<SymbolPinGraphicsItem>& item,
-           mPinGraphicsItems) {
+  foreach (
+      const QSharedPointer<SymbolPinGraphicsItem>& item, mPinGraphicsItems) {
     if (item->isSelected()) {
       pins.append(item);
     }
@@ -151,10 +154,10 @@ SymbolGraphicsItem::getSelectedPins() noexcept {
 }
 
 QList<QSharedPointer<CircleGraphicsItem>>
-SymbolGraphicsItem::getSelectedCircles() noexcept {
+    SymbolGraphicsItem::getSelectedCircles() noexcept {
   QList<QSharedPointer<CircleGraphicsItem>> circles;
-  foreach (const QSharedPointer<CircleGraphicsItem>& item,
-           mCircleGraphicsItems) {
+  foreach (
+      const QSharedPointer<CircleGraphicsItem>& item, mCircleGraphicsItems) {
     if (item->isSelected()) {
       circles.append(item);
     }
@@ -163,10 +166,10 @@ SymbolGraphicsItem::getSelectedCircles() noexcept {
 }
 
 QList<QSharedPointer<PolygonGraphicsItem>>
-SymbolGraphicsItem::getSelectedPolygons() noexcept {
+    SymbolGraphicsItem::getSelectedPolygons() noexcept {
   QList<QSharedPointer<PolygonGraphicsItem>> polygons;
-  foreach (const QSharedPointer<PolygonGraphicsItem>& item,
-           mPolygonGraphicsItems) {
+  foreach (
+      const QSharedPointer<PolygonGraphicsItem>& item, mPolygonGraphicsItems) {
     if (item->isSelected()) {
       polygons.append(item);
     }
@@ -175,7 +178,7 @@ SymbolGraphicsItem::getSelectedPolygons() noexcept {
 }
 
 QList<QSharedPointer<TextGraphicsItem>>
-SymbolGraphicsItem::getSelectedTexts() noexcept {
+    SymbolGraphicsItem::getSelectedTexts() noexcept {
   QList<QSharedPointer<TextGraphicsItem>> texts;
   foreach (const QSharedPointer<TextGraphicsItem>& item, mTextGraphicsItems) {
     if (item->isSelected()) {
@@ -248,18 +251,18 @@ void SymbolGraphicsItem::removeText(Text& text) noexcept {
 void SymbolGraphicsItem::setSelectionRect(const QRectF rect) noexcept {
   QPainterPath path;
   path.addRect(rect);
-  foreach (const QSharedPointer<SymbolPinGraphicsItem>& item,
-           mPinGraphicsItems) {
+  foreach (
+      const QSharedPointer<SymbolPinGraphicsItem>& item, mPinGraphicsItems) {
     QPainterPath mappedPath = mapToItem(item.data(), path);
     item->setSelected(item->shape().intersects(mappedPath));
   }
-  foreach (const QSharedPointer<CircleGraphicsItem>& item,
-           mCircleGraphicsItems) {
+  foreach (
+      const QSharedPointer<CircleGraphicsItem>& item, mCircleGraphicsItems) {
     QPainterPath mappedPath = mapToItem(item.data(), path);
     item->setSelected(item->shape().intersects(mappedPath));
   }
-  foreach (const QSharedPointer<PolygonGraphicsItem>& item,
-           mPolygonGraphicsItems) {
+  foreach (
+      const QSharedPointer<PolygonGraphicsItem>& item, mPolygonGraphicsItems) {
     QPainterPath mappedPath = mapToItem(item.data(), path);
     item->setSelected(item->shape().intersects(mappedPath));
   }
@@ -273,9 +276,10 @@ void SymbolGraphicsItem::setSelectionRect(const QRectF rect) noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SymbolGraphicsItem::paint(QPainter*                       painter,
-                               const QStyleOptionGraphicsItem* option,
-                               QWidget* widget) noexcept {
+void SymbolGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(painter);
   Q_UNUSED(option);
   Q_UNUSED(widget);

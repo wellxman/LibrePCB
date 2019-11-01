@@ -39,8 +39,9 @@ namespace fb = fontobene;
  *  Constructors / Destructor
  ******************************************************************************/
 
-StrokeFont::StrokeFont(const FilePath&   fontFilePath,
-                       const QByteArray& content) noexcept
+StrokeFont::StrokeFont(
+    const FilePath& fontFilePath,
+    const QByteArray& content) noexcept
   : QObject(nullptr), mFilePath(fontFilePath) {
   // load the font in another thread because it takes some time to load it
   qDebug() << "Start loading font" << mFilePath.toNative();
@@ -48,8 +49,11 @@ StrokeFont::StrokeFont(const FilePath&   fontFilePath,
     QTextStream s(content);
     return fb::Font(s);
   });
-  connect(&mWatcher, &QFutureWatcher<fb::Font>::finished, this,
-          &StrokeFont::fontLoaded);
+  connect(
+      &mWatcher,
+      &QFutureWatcher<fb::Font>::finished,
+      this,
+      &StrokeFont::fontLoaded);
   mWatcher.setFuture(mFuture);
 }
 
@@ -74,16 +78,18 @@ Ratio StrokeFont::getLineSpacing() const noexcept {
  *  General Methods
  ******************************************************************************/
 
-QVector<Path> StrokeFont::stroke(const QString&        text,
-                                 const PositiveLength& height,
-                                 const Length&         letterSpacing,
-                                 const Length&         lineSpacing,
-                                 const Alignment& align, Point& bottomLeft,
-                                 Point& topRight) const noexcept {
+QVector<Path> StrokeFont::stroke(
+    const QString& text,
+    const PositiveLength& height,
+    const Length& letterSpacing,
+    const Length& lineSpacing,
+    const Alignment& align,
+    Point& bottomLeft,
+    Point& topRight) const noexcept {
   accessor();  // block until the font is loaded. TODO: abort instead of
                // waiting?
-  QVector<Path>                         paths;
-  Length                                totalWidth;
+  QVector<Path> paths;
+  Length totalWidth;
   QVector<QPair<QVector<Path>, Length>> lines =
       strokeLines(text, height, letterSpacing, totalWidth);
   Length totalHeight = height + lineSpacing * (lines.count() - 1);
@@ -134,8 +140,10 @@ QVector<Path> StrokeFont::stroke(const QString&        text,
 }
 
 QVector<QPair<QVector<Path>, Length>> StrokeFont::strokeLines(
-    const QString& text, const PositiveLength& height,
-    const Length& letterSpacing, Length& width) const noexcept {
+    const QString& text,
+    const PositiveLength& height,
+    const Length& letterSpacing,
+    Length& width) const noexcept {
   QVector<QPair<QVector<Path>, Length>> result;
   foreach (const QString& line, text.split('\n')) {
     QPair<QVector<Path>, Length> pair;
@@ -146,15 +154,16 @@ QVector<QPair<QVector<Path>, Length>> StrokeFont::strokeLines(
   return result;
 }
 
-QVector<Path> StrokeFont::strokeLine(const QString&        text,
-                                     const PositiveLength& height,
-                                     const Length&         letterSpacing,
-                                     Length& width) const noexcept {
+QVector<Path> StrokeFont::strokeLine(
+    const QString& text,
+    const PositiveLength& height,
+    const Length& letterSpacing,
+    Length& width) const noexcept {
   QVector<Path> paths;
-  Length        offset = 0;
-  width                = 0;  // same as offset, but without last letter spacing
+  Length offset = 0;
+  width = 0;  // same as offset, but without last letter spacing
   for (int i = 0; i < text.length(); ++i) {
-    Length        glyphSpacing;
+    Length glyphSpacing;
     QVector<Path> glyphPaths = strokeGlyph(text.at(i), height, glyphSpacing);
     if (!glyphPaths.isEmpty()) {
       Point bottomLeft, topRight;
@@ -165,25 +174,26 @@ QVector<Path> StrokeFont::strokeLine(const QString&        text,
         paths.append(p.translated(Point(offset + shift, Length(0))));
       }
       width = offset + topRight.getX() +
-              shift;  // do *not* count glyph spacing as width!
+          shift;  // do *not* count glyph spacing as width!
       offset = width + glyphSpacing + letterSpacing;
     } else if (glyphSpacing != 0) {
       // it's a whitespace-only glyph -> count additional glyph spacing as width
-      width  = offset + glyphSpacing;
+      width = offset + glyphSpacing;
       offset = width + letterSpacing;
     }
   }
   return paths;
 }
 
-QVector<Path> StrokeFont::strokeGlyph(const QChar&          glyph,
-                                      const PositiveLength& height,
-                                      Length& spacing) const noexcept {
+QVector<Path> StrokeFont::strokeGlyph(
+    const QChar& glyph,
+    const PositiveLength& height,
+    Length& spacing) const noexcept {
   try {
-    qreal                 glyphSpacing = 0;
-    QVector<fb::Polyline> polylines =
-        accessor().getAllPolylinesOfGlyph(glyph.unicode(),
-                                          &glyphSpacing);  // can throw
+    qreal glyphSpacing = 0;
+    QVector<fb::Polyline> polylines = accessor().getAllPolylinesOfGlyph(
+        glyph.unicode(),
+        &glyphSpacing);  // can throw
     spacing = convertLength(height, glyphSpacing);
     return polylines2paths(polylines, height);
   } catch (const fb::Exception& e) {
@@ -228,7 +238,7 @@ const fb::GlyphListAccessor& StrokeFont::accessor() const noexcept {
 
 QVector<Path> StrokeFont::polylines2paths(
     const QVector<fb::Polyline>& polylines,
-    const PositiveLength&        height) noexcept {
+    const PositiveLength& height) noexcept {
   QVector<Path> paths;
   foreach (const fb::Polyline& p, polylines) {
     if (p.isEmpty()) continue;
@@ -237,31 +247,34 @@ QVector<Path> StrokeFont::polylines2paths(
   return paths;
 }
 
-Path StrokeFont::polyline2path(const fb::Polyline&   p,
-                               const PositiveLength& height) noexcept {
+Path StrokeFont::polyline2path(
+    const fb::Polyline& p,
+    const PositiveLength& height) noexcept {
   Path path;
   foreach (const fb::Vertex& v, p) { path.addVertex(convertVertex(v, height)); }
   return path;
 }
 
-Vertex StrokeFont::convertVertex(const fb::Vertex&     v,
-                                 const PositiveLength& height) noexcept {
+Vertex StrokeFont::convertVertex(
+    const fb::Vertex& v,
+    const PositiveLength& height) noexcept {
   return Vertex(
       Point::fromMm(v.scaledX(height->toMm()), v.scaledY(height->toMm())),
       Angle::fromDeg(v.scaledBulge(180)));
 }
 
-Length StrokeFont::convertLength(const PositiveLength& height,
-                                 qreal                 length) const noexcept {
+Length StrokeFont::convertLength(const PositiveLength& height, qreal length)
+    const noexcept {
   return Length(height->toNm() * length / 9);
 }
 
-void StrokeFont::computeBoundingRect(const QVector<Path>& paths,
-                                     Point&               bottomLeft,
-                                     Point&               topRight) noexcept {
+void StrokeFont::computeBoundingRect(
+    const QVector<Path>& paths,
+    Point& bottomLeft,
+    Point& topRight) noexcept {
   QRectF rect = Path::toQPainterPathPx(paths).boundingRect();
-  bottomLeft  = Point::fromPx(rect.bottomLeft());
-  topRight    = Point::fromPx(rect.topRight());
+  bottomLeft = Point::fromPx(rect.bottomLeft());
+  topRight = Point::fromPx(rect.topRight());
 }
 
 /*******************************************************************************

@@ -45,8 +45,12 @@ BoardLayerStack::BoardLayerStack(Board& board, const BoardLayerStack& other)
     addLayer(new GraphicsLayer(*layer));
   }
 
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BoardLayerStack::boardAttributesChanged,
+      Qt::QueuedConnection);
 }
 
 BoardLayerStack::BoardLayerStack(Board& board, const SExpression& node)
@@ -58,8 +62,12 @@ BoardLayerStack::BoardLayerStack(Board& board, const SExpression& node)
 
   setInnerLayerCount(node.getValueByPath<uint>("inner"));
 
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BoardLayerStack::boardAttributesChanged,
+      Qt::QueuedConnection);
 }
 
 BoardLayerStack::BoardLayerStack(Board& board)
@@ -71,8 +79,12 @@ BoardLayerStack::BoardLayerStack(Board& board)
 
   setInnerLayerCount(0);
 
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BoardLayerStack::boardAttributesChanged,
+      Qt::QueuedConnection);
 }
 
 BoardLayerStack::~BoardLayerStack() noexcept {
@@ -220,8 +232,12 @@ void BoardLayerStack::addLayer(const QString& name, bool disable) noexcept {
 }
 
 void BoardLayerStack::addLayer(GraphicsLayer* layer) noexcept {
-  connect(layer, &GraphicsLayer::attributesChanged, this,
-          &BoardLayerStack::layerAttributesChanged, Qt::QueuedConnection);
+  connect(
+      layer,
+      &GraphicsLayer::attributesChanged,
+      this,
+      &BoardLayerStack::layerAttributesChanged,
+      Qt::QueuedConnection);
   mLayers.append(layer);
 }
 

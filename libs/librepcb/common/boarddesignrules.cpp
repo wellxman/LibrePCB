@@ -39,20 +39,20 @@ BoardDesignRules::BoardDesignRules() noexcept
     mDescription(),
     // stop mask
     mStopMaskClearanceRatio(Ratio::percent0()),  // 0%
-    mStopMaskClearanceMin(100000),               // 0.1mm
-    mStopMaskClearanceMax(100000),               // 0.1mm
-    mStopMaskMaxViaDrillDiameter(500000),        // 0.5mm
+    mStopMaskClearanceMin(100000),  // 0.1mm
+    mStopMaskClearanceMax(100000),  // 0.1mm
+    mStopMaskMaxViaDrillDiameter(500000),  // 0.5mm
     // cream mask
     mCreamMaskClearanceRatio(Ratio::percent100() / 10),  // 10%
-    mCreamMaskClearanceMin(0),                           // 0.0mm
-    mCreamMaskClearanceMax(1000000),                     // 1.0mm
+    mCreamMaskClearanceMin(0),  // 0.0mm
+    mCreamMaskClearanceMax(1000000),  // 1.0mm
     // restring
     mRestringPadRatio(Ratio::percent100() / 4),  // 25%
-    mRestringPadMin(250000),                     // 0.25mm
-    mRestringPadMax(2000000),                    // 2.0mm
+    mRestringPadMin(250000),  // 0.25mm
+    mRestringPadMax(2000000),  // 2.0mm
     mRestringViaRatio(Ratio::percent100() / 4),  // 25%
-    mRestringViaMin(200000),                     // 0.2mm
-    mRestringViaMax(2000000)                     // 2.0mm
+    mRestringViaMin(200000),  // 0.2mm
+    mRestringViaMax(2000000)  // 2.0mm
 {
 }
 
@@ -65,7 +65,7 @@ BoardDesignRules::BoardDesignRules(const SExpression& node)
   : BoardDesignRules()  // this loads all default values!
 {
   // general attributes
-  mName        = node.getValueByPath<ElementName>("name");
+  mName = node.getValueByPath<ElementName>("name");
   mDescription = node.getValueByPath<QString>("description");
   // stop mask
   if (const SExpression* e =
@@ -122,8 +122,10 @@ BoardDesignRules::BoardDesignRules(const SExpression& node)
     setRestringPadBounds(mRestringPadMin, mRestringPadMax);
     setRestringViaBounds(mRestringViaMin, mRestringViaMax);
   } catch (const Exception& e) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Invalid design rules: %1")).arg(e.getMsg()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Invalid design rules: %1")).arg(e.getMsg()));
   }
 }
 
@@ -134,47 +136,51 @@ BoardDesignRules::~BoardDesignRules() noexcept {
  *  Setters
  ******************************************************************************/
 
-void BoardDesignRules::setStopMaskClearanceBounds(const UnsignedLength& min,
-                                                  const UnsignedLength& max) {
+void BoardDesignRules::setStopMaskClearanceBounds(
+    const UnsignedLength& min,
+    const UnsignedLength& max) {
   if (max >= min) {
     mStopMaskClearanceMin = min;
     mStopMaskClearanceMax = max;
   } else {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("Stop mask clearance: MAX must be >= MIN"));
+    throw RuntimeError(
+        __FILE__, __LINE__, tr("Stop mask clearance: MAX must be >= MIN"));
   }
 }
 
-void BoardDesignRules::setCreamMaskClearanceBounds(const UnsignedLength& min,
-                                                   const UnsignedLength& max) {
+void BoardDesignRules::setCreamMaskClearanceBounds(
+    const UnsignedLength& min,
+    const UnsignedLength& max) {
   if (max >= min) {
     mCreamMaskClearanceMin = min;
     mCreamMaskClearanceMax = max;
   } else {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("Cream mask clearance: MAX must be >= MIN"));
+    throw RuntimeError(
+        __FILE__, __LINE__, tr("Cream mask clearance: MAX must be >= MIN"));
   }
 }
 
-void BoardDesignRules::setRestringPadBounds(const UnsignedLength& min,
-                                            const UnsignedLength& max) {
+void BoardDesignRules::setRestringPadBounds(
+    const UnsignedLength& min,
+    const UnsignedLength& max) {
   if (max >= min) {
     mRestringPadMin = min;
     mRestringPadMax = max;
   } else {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("Restring pads: MAX must be >= MIN"));
+    throw RuntimeError(
+        __FILE__, __LINE__, tr("Restring pads: MAX must be >= MIN"));
   }
 }
 
-void BoardDesignRules::setRestringViaBounds(const UnsignedLength& min,
-                                            const UnsignedLength& max) {
+void BoardDesignRules::setRestringViaBounds(
+    const UnsignedLength& min,
+    const UnsignedLength& max) {
   if (max >= min) {
     mRestringViaMin = min;
     mRestringViaMax = max;
   } else {
-    throw RuntimeError(__FILE__, __LINE__,
-                       tr("Restring vias: MAX must be >= MIN"));
+    throw RuntimeError(
+        __FILE__, __LINE__, tr("Restring vias: MAX must be >= MIN"));
   }
 }
 
@@ -194,8 +200,8 @@ void BoardDesignRules::serialize(SExpression& root) const {
   root.appendChild("stopmask_clearance_ratio", mStopMaskClearanceRatio, true);
   root.appendChild("stopmask_clearance_min", mStopMaskClearanceMin, true);
   root.appendChild("stopmask_clearance_max", mStopMaskClearanceMax, true);
-  root.appendChild("stopmask_max_via_drill_diameter",
-                   mStopMaskMaxViaDrillDiameter, true);
+  root.appendChild(
+      "stopmask_max_via_drill_diameter", mStopMaskMaxViaDrillDiameter, true);
   // cream mask
   root.appendChild("creammask_clearance_ratio", mCreamMaskClearanceRatio, true);
   root.appendChild("creammask_clearance_min", mCreamMaskClearanceMin, true);
@@ -220,31 +226,33 @@ bool BoardDesignRules::doesViaRequireStopMask(const Length& drillDia) const
 
 UnsignedLength BoardDesignRules::calcStopMaskClearance(
     const Length& padSize) const noexcept {
-  return UnsignedLength(
-      qBound(*mStopMaskClearanceMin,
-             padSize.scaled(mStopMaskClearanceRatio->toNormalized()),
-             *mStopMaskClearanceMax));
+  return UnsignedLength(qBound(
+      *mStopMaskClearanceMin,
+      padSize.scaled(mStopMaskClearanceRatio->toNormalized()),
+      *mStopMaskClearanceMax));
 }
 
 UnsignedLength BoardDesignRules::calcCreamMaskClearance(
     const Length& padSize) const noexcept {
-  return UnsignedLength(
-      qBound(*mCreamMaskClearanceMin,
-             padSize.scaled(mCreamMaskClearanceRatio->toNormalized()),
-             *mCreamMaskClearanceMax));
+  return UnsignedLength(qBound(
+      *mCreamMaskClearanceMin,
+      padSize.scaled(mCreamMaskClearanceRatio->toNormalized()),
+      *mCreamMaskClearanceMax));
 }
 
 UnsignedLength BoardDesignRules::calcPadRestring(const Length& drillDia) const
     noexcept {
   return UnsignedLength(qBound(
-      *mRestringPadMin, drillDia.scaled(mRestringPadRatio->toNormalized()),
+      *mRestringPadMin,
+      drillDia.scaled(mRestringPadRatio->toNormalized()),
       *mRestringPadMax));
 }
 
 UnsignedLength BoardDesignRules::calcViaRestring(const Length& drillDia) const
     noexcept {
   return UnsignedLength(qBound(
-      *mRestringViaMin, drillDia.scaled(mRestringViaRatio->toNormalized()),
+      *mRestringViaMin,
+      drillDia.scaled(mRestringViaRatio->toNormalized()),
       *mRestringViaMax));
 }
 
@@ -255,24 +263,24 @@ UnsignedLength BoardDesignRules::calcViaRestring(const Length& drillDia) const
 BoardDesignRules& BoardDesignRules::operator=(
     const BoardDesignRules& rhs) noexcept {
   // general attributes
-  mName        = rhs.mName;
+  mName = rhs.mName;
   mDescription = rhs.mDescription;
   // stop mask
-  mStopMaskClearanceRatio      = rhs.mStopMaskClearanceRatio;
-  mStopMaskClearanceMin        = rhs.mStopMaskClearanceMin;
-  mStopMaskClearanceMax        = rhs.mStopMaskClearanceMax;
+  mStopMaskClearanceRatio = rhs.mStopMaskClearanceRatio;
+  mStopMaskClearanceMin = rhs.mStopMaskClearanceMin;
+  mStopMaskClearanceMax = rhs.mStopMaskClearanceMax;
   mStopMaskMaxViaDrillDiameter = rhs.mStopMaskMaxViaDrillDiameter;
   // cream mask
   mCreamMaskClearanceRatio = rhs.mCreamMaskClearanceRatio;
-  mCreamMaskClearanceMin   = rhs.mCreamMaskClearanceMin;
-  mCreamMaskClearanceMax   = rhs.mCreamMaskClearanceMax;
+  mCreamMaskClearanceMin = rhs.mCreamMaskClearanceMin;
+  mCreamMaskClearanceMax = rhs.mCreamMaskClearanceMax;
   // restring
   mRestringPadRatio = rhs.mRestringPadRatio;
-  mRestringPadMin   = rhs.mRestringPadMin;
-  mRestringPadMax   = rhs.mRestringPadMax;
+  mRestringPadMin = rhs.mRestringPadMin;
+  mRestringPadMax = rhs.mRestringPadMax;
   mRestringViaRatio = rhs.mRestringViaRatio;
-  mRestringViaMin   = rhs.mRestringViaMin;
-  mRestringViaMax   = rhs.mRestringViaMax;
+  mRestringViaMin = rhs.mRestringViaMin;
+  mRestringViaMax = rhs.mRestringViaMax;
   return *this;
 }
 

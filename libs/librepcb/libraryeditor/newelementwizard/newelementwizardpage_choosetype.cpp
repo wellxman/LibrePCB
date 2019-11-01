@@ -38,24 +38,43 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_ChooseType::NewElementWizardPage_ChooseType(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_ChooseType) {
   mUi->setupUi(this);
   setPixmap(QWizard::WatermarkPixmap, QPixmap(":/img/wizards/watermark.jpg"));
-  connect(mUi->btnComponentCategory, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnComponentCategoryClicked);
-  connect(mUi->btnPackageCategory, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnPackageCategoryClicked);
-  connect(mUi->btnSymbol, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnSymbolClicked);
-  connect(mUi->btnPackage, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnPackageClicked);
-  connect(mUi->btnComponent, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnComponentClicked);
-  connect(mUi->btnDevice, &QToolButton::clicked, this,
-          &NewElementWizardPage_ChooseType::btnDeviceClicked);
+  connect(
+      mUi->btnComponentCategory,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnComponentCategoryClicked);
+  connect(
+      mUi->btnPackageCategory,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnPackageCategoryClicked);
+  connect(
+      mUi->btnSymbol,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnSymbolClicked);
+  connect(
+      mUi->btnPackage,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnPackageClicked);
+  connect(
+      mUi->btnComponent,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnComponentClicked);
+  connect(
+      mUi->btnDevice,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_ChooseType::btnDeviceClicked);
 }
 
 NewElementWizardPage_ChooseType::~NewElementWizardPage_ChooseType() noexcept {

@@ -81,9 +81,9 @@ void BomCsvWriter::writeToFile(const Bom& bom, const FilePath& csvFp) {
 
 QString BomCsvWriter::cleanStr(const QString& str) noexcept {
   QString cleaned = str;
-  cleaned.replace(";", " ");   // semicolon is reserved for separators
+  cleaned.replace(";", " ");  // semicolon is reserved for separators
   cleaned.replace("\n", " ");  // BOM rows shouldn't be multiline
-  return cleaned.trimmed();    // remove leading and trailing whitespaces
+  return cleaned.trimmed();  // remove leading and trailing whitespaces
 }
 
 /*******************************************************************************

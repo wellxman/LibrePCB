@@ -56,23 +56,23 @@ public:
   /// FSM event types
   enum EventType_t {
     // Triggered Actions (SEE_Base objects, no additional parameters)
-    AbortCommand,      ///< abort the currently active command (esc)
-    StartSelect,       ///< start command: select elements
-    StartDrawWire,     ///< start command: draw wire
+    AbortCommand,  ///< abort the currently active command (esc)
+    StartSelect,  ///< start command: select elements
+    StartDrawWire,  ///< start command: draw wire
     StartAddNetLabel,  ///< start command: add netlabel
-    Edit_Copy,         ///< copy the selected elements to clipboard (ctrl+c)
-    Edit_Cut,          ///< cut the selected elements (ctrl+x)
-    Edit_Paste,        ///< paste the elements from the clipboard (ctrl+v)
-    Edit_RotateCCW,    ///< rotate the selected elements 90° CCW (r)
-    Edit_RotateCW,     ///< rotate the selected elements 90° CW (Shift+r)
-    Edit_Mirror,       ///< mirror selected items (horizontally)
-    Edit_Remove,       ///< remove the selected elements
+    Edit_Copy,  ///< copy the selected elements to clipboard (ctrl+c)
+    Edit_Cut,  ///< cut the selected elements (ctrl+x)
+    Edit_Paste,  ///< paste the elements from the clipboard (ctrl+v)
+    Edit_RotateCCW,  ///< rotate the selected elements 90° CCW (r)
+    Edit_RotateCW,  ///< rotate the selected elements 90° CW (Shift+r)
+    Edit_Mirror,  ///< mirror selected items (horizontally)
+    Edit_Remove,  ///< remove the selected elements
     // Redirected QEvent's (SEE_RedirectedQEvent objects, with pointer to a
     // QEvent)
     GraphicsViewEvent,  ///< event from #GraphicsView @see
                         ///< #project#SEE_RedirectedQEvent
     // Special Events (with some additional parameters)
-    StartAddComponent,      ///< @see #project#SEE_StartAddComponent
+    StartAddComponent,  ///< @see #project#SEE_StartAddComponent
     SwitchToSchematicPage,  ///< @see #project#SEE_SwitchToSchematicPage
   };
 
@@ -82,14 +82,14 @@ public:
 
   // Getters
   EventType_t getType() const noexcept { return mType; }
-  bool        isAccepted() const noexcept { return mAccepted; }
+  bool isAccepted() const noexcept { return mAccepted; }
 
   // Setters
   virtual void setAccepted(bool accepted) noexcept { mAccepted = accepted; }
 
 protected:
   EventType_t mType;
-  bool        mAccepted;
+  bool mAccepted;
 };
 
 /*******************************************************************************

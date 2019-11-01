@@ -40,7 +40,8 @@ DevicePadSignalMapItem::DevicePadSignalMapItem(
 }
 
 DevicePadSignalMapItem::DevicePadSignalMapItem(
-    const Uuid& pad, const tl::optional<Uuid>& signal) noexcept
+    const Uuid& pad,
+    const tl::optional<Uuid>& signal) noexcept
   : onEdited(*this), mPadUuid(pad), mSignalUuid(signal) {
 }
 

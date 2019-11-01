@@ -49,7 +49,8 @@ AttributeTypeComboBox::AttributeTypeComboBox(QWidget* parent) noexcept
   connect(
       mComboBox,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &AttributeTypeComboBox::currentIndexChanged);
+      this,
+      &AttributeTypeComboBox::currentIndexChanged);
 }
 
 AttributeTypeComboBox::~AttributeTypeComboBox() noexcept {

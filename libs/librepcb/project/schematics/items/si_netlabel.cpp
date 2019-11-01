@@ -52,8 +52,10 @@ SI_NetLabel::SI_NetLabel(SI_NetSegment& segment, const SExpression& node)
   init();
 }
 
-SI_NetLabel::SI_NetLabel(SI_NetSegment& segment, const Point& position,
-                         const Angle& rotation)
+SI_NetLabel::SI_NetLabel(
+    SI_NetSegment& segment,
+    const Point& position,
+    const Angle& rotation)
   : SI_Base(segment.getSchematic()),
     mNetSegment(segment),
     mUuid(Uuid::createRandom()),
@@ -119,11 +121,13 @@ void SI_NetLabel::addToSchematic() {
     throw LogicError(__FILE__, __LINE__);
   }
   mNameChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::nameChanged,
-              [this]() { mGraphicsItem->updateCacheAndRepaint(); });
-  mHighlightChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+      connect(&getNetSignalOfNetSegment(), &NetSignal::nameChanged, [this]() {
+        mGraphicsItem->updateCacheAndRepaint();
+      });
+  mHighlightChangedConnection = connect(
+      &getNetSignalOfNetSegment(), &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   SI_Base::addToSchematic(mGraphicsItem.data());
   mGraphicsItem->updateCacheAndRepaint();
   updateAnchor();

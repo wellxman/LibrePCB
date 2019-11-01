@@ -80,8 +80,8 @@ private:
   SchematicPagesDock& operator=(const SchematicPagesDock& rhs);
 
   // General
-  Project&                mProject;
-  SchematicEditor&        mEditor;
+  Project& mProject;
+  SchematicEditor& mEditor;
   Ui::SchematicPagesDock* mUi;
 };
 

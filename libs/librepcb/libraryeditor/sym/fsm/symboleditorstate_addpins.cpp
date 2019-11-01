@@ -76,16 +76,22 @@ bool SymbolEditorState_AddPins::entry() noexcept {
   std::unique_ptr<QLineEdit> nameLineEdit(mNameLineEdit);
   nameLineEdit->setMaxLength(20);
   nameLineEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  connect(nameLineEdit.get(), &QLineEdit::textEdited, this,
-          &SymbolEditorState_AddPins::nameLineEditTextChanged);
+  connect(
+      nameLineEdit.get(),
+      &QLineEdit::textEdited,
+      this,
+      &SymbolEditorState_AddPins::nameLineEditTextChanged);
   mContext.commandToolBar.addWidget(std::move(nameLineEdit));
 
   mContext.commandToolBar.addLabel(tr("Length:"), 10);
   std::unique_ptr<UnsignedLengthEdit> edtLength(new UnsignedLengthEdit());
   edtLength->setSingleStep(2.54);  // [mm]
   edtLength->setValue(mLastLength);
-  connect(edtLength.get(), &UnsignedLengthEdit::valueChanged, this,
-          &SymbolEditorState_AddPins::lengthEditValueChanged);
+  connect(
+      edtLength.get(),
+      &UnsignedLengthEdit::valueChanged,
+      this,
+      &SymbolEditorState_AddPins::lengthEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtLength));
 
   Point pos =
@@ -97,7 +103,7 @@ bool SymbolEditorState_AddPins::exit() noexcept {
   // abort command
   try {
     mCurrentGraphicsItem = nullptr;
-    mCurrentPin          = nullptr;
+    mCurrentPin = nullptr;
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();
   } catch (const Exception& e) {
@@ -134,7 +140,7 @@ bool SymbolEditorState_AddPins::processGraphicsSceneLeftMouseButtonPressed(
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentPin          = nullptr;
+    mCurrentPin = nullptr;
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
     return addNextPin(currentPos, currentRot);
@@ -164,14 +170,18 @@ bool SymbolEditorState_AddPins::processRotateCcw() noexcept {
  *  Private Methods
  ******************************************************************************/
 
-bool SymbolEditorState_AddPins::addNextPin(const Point& pos,
-                                           const Angle& rot) noexcept {
+bool SymbolEditorState_AddPins::addNextPin(
+    const Point& pos,
+    const Angle& rot) noexcept {
   try {
     mNameLineEdit->setText(determineNextPinName());
     mContext.undoStack.beginCmdGroup(tr("Add symbol pin"));
-    mCurrentPin = new SymbolPin(Uuid::createRandom(),
-                                CircuitIdentifier(mNameLineEdit->text()), pos,
-                                mLastLength, rot);  // can throw
+    mCurrentPin = new SymbolPin(
+        Uuid::createRandom(),
+        CircuitIdentifier(mNameLineEdit->text()),
+        pos,
+        mLastLength,
+        rot);  // can throw
 
     mContext.undoStack.appendToCmdGroup(new CmdSymbolPinInsert(
         mContext.symbol.getPins(), std::shared_ptr<SymbolPin>(mCurrentPin)));
@@ -184,7 +194,7 @@ bool SymbolEditorState_AddPins::addNextPin(const Point& pos,
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentPin          = nullptr;
+    mCurrentPin = nullptr;
     mEditCmd.reset();
     return false;
   }

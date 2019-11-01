@@ -54,9 +54,11 @@ WSI_ProjectAutosaveInterval::WSI_ProjectAutosaveInterval(
   mSpinBox->setMaximum(60);
   mSpinBox->setValue(mInterval / 60);
   mSpinBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  connect(mSpinBox.data(),
-          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-          &WSI_ProjectAutosaveInterval::spinBoxValueChanged);
+  connect(
+      mSpinBox.data(),
+      static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+      this,
+      &WSI_ProjectAutosaveInterval::spinBoxValueChanged);
 
   // create a QWidget
   mWidget.reset(new QWidget());

@@ -110,7 +110,8 @@ bool CmdRemoveBoardItems::performExecute() {
 
   // remove vias/netlines/netpoints/netsegments
   for (auto it = netSegmentItemsToRemove.begin();
-       it != netSegmentItemsToRemove.end(); ++it) {
+       it != netSegmentItemsToRemove.end();
+       ++it) {
     Q_ASSERT(it.key()->isAddedToBoard());
     bool removeAllVias = (it.value().vias == it.key()->getVias().toSet());
     bool removeAllNetLines =
@@ -179,7 +180,8 @@ bool CmdRemoveBoardItems::performExecute() {
  ******************************************************************************/
 
 void CmdRemoveBoardItems::splitUpNetSegment(
-    BI_NetSegment& netsegment, const NetSegmentItems& itemsToRemove) {
+    BI_NetSegment& netsegment,
+    const NetSegmentItems& itemsToRemove) {
   // determine all resulting sub-netsegments
   QVector<NetSegmentItems> subsegments =
       getNonCohesiveNetSegmentSubSegments(netsegment, itemsToRemove);
@@ -193,8 +195,9 @@ void CmdRemoveBoardItems::splitUpNetSegment(
   }
 }
 
-void CmdRemoveBoardItems::createNewSubNetSegment(BI_NetSegment& netsegment,
-                                                 const NetSegmentItems& items) {
+void CmdRemoveBoardItems::createNewSubNetSegment(
+    BI_NetSegment& netsegment,
+    const NetSegmentItems& items) {
   // create new netsegment
   CmdBoardNetSegmentAdd* cmdAddNetSegment = new CmdBoardNetSegmentAdd(
       netsegment.getBoard(), netsegment.getNetSignal());
@@ -207,9 +210,11 @@ void CmdRemoveBoardItems::createNewSubNetSegment(BI_NetSegment& netsegment,
   // copy vias
   QHash<const BI_NetLineAnchor*, BI_NetLineAnchor*> anchorMap;
   foreach (const BI_Via* via, items.vias) {
-    BI_Via* newVia =
-        cmdAddElements->addVia(via->getPosition(), via->getShape(),
-                               via->getSize(), via->getDrillDiameter());
+    BI_Via* newVia = cmdAddElements->addVia(
+        via->getPosition(),
+        via->getShape(),
+        via->getSize(),
+        via->getDrillDiameter());
     Q_ASSERT(newVia);
     anchorMap.insert(via, newVia);
   }
@@ -239,27 +244,33 @@ void CmdRemoveBoardItems::createNewSubNetSegment(BI_NetSegment& netsegment,
 }
 
 QVector<CmdRemoveBoardItems::NetSegmentItems>
-CmdRemoveBoardItems::getNonCohesiveNetSegmentSubSegments(
-    BI_NetSegment& segment, const NetSegmentItems& removedItems) noexcept {
+    CmdRemoveBoardItems::getNonCohesiveNetSegmentSubSegments(
+        BI_NetSegment& segment,
+        const NetSegmentItems& removedItems) noexcept {
   // only works with segments which are added to board!!!
   Q_ASSERT(segment.isAddedToBoard());
 
   // get all vias and netlines of the segment to keep
-  QSet<BI_Via*>     vias = segment.getVias().toSet() - removedItems.vias;
+  QSet<BI_Via*> vias = segment.getVias().toSet() - removedItems.vias;
   QSet<BI_NetLine*> netlines =
       segment.getNetLines().toSet() - removedItems.netlines;
 
   // find all separate segments of the netsegment
   QVector<NetSegmentItems> segments;
   while (netlines.count() + vias.count() > 0) {
-    NetSegmentItems         seg;
+    NetSegmentItems seg;
     QSet<BI_NetLineAnchor*> processedAnchors;
-    BI_NetLineAnchor*       nextAnchor =
-        netlines.count() > 0 ? &netlines.values().first()->getStartPoint()
-                             : vias.values().first();
-    findAllConnectedNetPointsAndNetLines(*nextAnchor, processedAnchors,
-                                         seg.vias, seg.netpoints, seg.netlines,
-                                         vias, netlines);
+    BI_NetLineAnchor* nextAnchor = netlines.count() > 0
+        ? &netlines.values().first()->getStartPoint()
+        : vias.values().first();
+    findAllConnectedNetPointsAndNetLines(
+        *nextAnchor,
+        processedAnchors,
+        seg.vias,
+        seg.netpoints,
+        seg.netlines,
+        vias,
+        netlines);
     vias -= seg.vias;
     netlines -= seg.netlines;
     segments.append(seg);
@@ -270,9 +281,12 @@ CmdRemoveBoardItems::getNonCohesiveNetSegmentSubSegments(
 }
 
 void CmdRemoveBoardItems::findAllConnectedNetPointsAndNetLines(
-    BI_NetLineAnchor& anchor, QSet<BI_NetLineAnchor*>& processedAnchors,
-    QSet<BI_Via*>& vias, QSet<BI_NetPoint*>& netpoints,
-    QSet<BI_NetLine*>& netlines, QSet<BI_Via*>& availableVias,
+    BI_NetLineAnchor& anchor,
+    QSet<BI_NetLineAnchor*>& processedAnchors,
+    QSet<BI_Via*>& vias,
+    QSet<BI_NetPoint*>& netpoints,
+    QSet<BI_NetLine*>& netlines,
+    QSet<BI_Via*>& availableVias,
     QSet<BI_NetLine*>& availableNetLines) const noexcept {
   Q_ASSERT(!processedAnchors.contains(&anchor));
   processedAnchors.insert(&anchor);
@@ -293,9 +307,14 @@ void CmdRemoveBoardItems::findAllConnectedNetPointsAndNetLines(
       BI_NetLineAnchor* p2 = line->getOtherPoint(anchor);
       Q_ASSERT(p2);
       if (!processedAnchors.contains(p2)) {
-        findAllConnectedNetPointsAndNetLines(*p2, processedAnchors, vias,
-                                             netpoints, netlines, availableVias,
-                                             availableNetLines);
+        findAllConnectedNetPointsAndNetLines(
+            *p2,
+            processedAnchors,
+            vias,
+            netpoints,
+            netlines,
+            availableVias,
+            availableNetLines);
       }
     }
   }

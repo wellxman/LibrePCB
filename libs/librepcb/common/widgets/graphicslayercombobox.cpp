@@ -48,7 +48,8 @@ GraphicsLayerComboBox::GraphicsLayerComboBox(QWidget* parent) noexcept
   connect(
       mComboBox.data(),
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &GraphicsLayerComboBox::currentIndexChanged);
+      this,
+      &GraphicsLayerComboBox::currentIndexChanged);
 }
 
 GraphicsLayerComboBox::~GraphicsLayerComboBox() noexcept {

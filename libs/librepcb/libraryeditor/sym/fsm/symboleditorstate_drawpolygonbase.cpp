@@ -50,7 +50,8 @@ namespace editor {
  ******************************************************************************/
 
 SymbolEditorState_DrawPolygonBase::SymbolEditorState_DrawPolygonBase(
-    const Context& context, Mode mode) noexcept
+    const Context& context,
+    Mode mode) noexcept
   : SymbolEditorState(context),
     mMode(mode),
     mCurrentPolygon(nullptr),
@@ -58,7 +59,7 @@ SymbolEditorState_DrawPolygonBase::SymbolEditorState_DrawPolygonBase(
     mLastLayerName(GraphicsLayer::sSymbolOutlines),  // Most important layer
     mLastLineWidth(200000),  // Typical width according library conventions
     mLastAngle(0),
-    mLastFill(false),                  // Fill is needed very rarely
+    mLastFill(false),  // Fill is needed very rarely
     mLastGrabArea(mode != Mode::LINE)  // Most symbol outlines are grab areas
 {
 }
@@ -85,16 +86,22 @@ bool SymbolEditorState_DrawPolygonBase::entry() noexcept {
   layerComboBox->setLayers(
       mContext.layerProvider.getSchematicGeometryElementLayers());
   layerComboBox->setCurrentLayer(mLastLayerName);
-  connect(layerComboBox.get(), &GraphicsLayerComboBox::currentLayerChanged,
-          this, &SymbolEditorState_DrawPolygonBase::layerComboBoxValueChanged);
+  connect(
+      layerComboBox.get(),
+      &GraphicsLayerComboBox::currentLayerChanged,
+      this,
+      &SymbolEditorState_DrawPolygonBase::layerComboBoxValueChanged);
   mContext.commandToolBar.addWidget(std::move(layerComboBox));
 
   mContext.commandToolBar.addLabel(tr("Line Width:"), 10);
   std::unique_ptr<UnsignedLengthEdit> edtLineWidth(new UnsignedLengthEdit());
   edtLineWidth->setSingleStep(0.1);  // [mm]
   edtLineWidth->setValue(mLastLineWidth);
-  connect(edtLineWidth.get(), &UnsignedLengthEdit::valueChanged, this,
-          &SymbolEditorState_DrawPolygonBase::lineWidthEditValueChanged);
+  connect(
+      edtLineWidth.get(),
+      &UnsignedLengthEdit::valueChanged,
+      this,
+      &SymbolEditorState_DrawPolygonBase::lineWidthEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtLineWidth));
 
   if (mMode != Mode::RECT) {
@@ -102,24 +109,33 @@ bool SymbolEditorState_DrawPolygonBase::entry() noexcept {
     std::unique_ptr<AngleEdit> edtAngle(new AngleEdit());
     edtAngle->setSingleStep(90.0);  // [°]
     edtAngle->setValue(mLastAngle);
-    connect(edtAngle.get(), &AngleEdit::valueChanged, this,
-            &SymbolEditorState_DrawPolygonBase::angleEditValueChanged);
+    connect(
+        edtAngle.get(),
+        &AngleEdit::valueChanged,
+        this,
+        &SymbolEditorState_DrawPolygonBase::angleEditValueChanged);
     mContext.commandToolBar.addWidget(std::move(edtAngle));
   }
 
   if (mMode != Mode::LINE) {
     std::unique_ptr<QCheckBox> fillCheckBox(new QCheckBox(tr("Fill")));
     fillCheckBox->setChecked(mLastFill);
-    connect(fillCheckBox.get(), &QCheckBox::toggled, this,
-            &SymbolEditorState_DrawPolygonBase::fillCheckBoxCheckedChanged);
+    connect(
+        fillCheckBox.get(),
+        &QCheckBox::toggled,
+        this,
+        &SymbolEditorState_DrawPolygonBase::fillCheckBoxCheckedChanged);
     mContext.commandToolBar.addWidget(std::move(fillCheckBox), 10);
   }
 
   if (mMode != Mode::LINE) {
     std::unique_ptr<QCheckBox> grabAreaCheckBox(new QCheckBox(tr("Grab Area")));
     grabAreaCheckBox->setChecked(mLastGrabArea);
-    connect(grabAreaCheckBox.get(), &QCheckBox::toggled, this,
-            &SymbolEditorState_DrawPolygonBase::grabAreaCheckBoxCheckedChanged);
+    connect(
+        grabAreaCheckBox.get(),
+        &QCheckBox::toggled,
+        this,
+        &SymbolEditorState_DrawPolygonBase::grabAreaCheckBoxCheckedChanged);
     mContext.commandToolBar.addWidget(std::move(grabAreaCheckBox));
   }
 
@@ -202,9 +218,13 @@ bool SymbolEditorState_DrawPolygonBase::start(const Point& pos) noexcept {
     // add polygon
     mSegmentStartPos = pos;
     mContext.undoStack.beginCmdGroup(tr("Add symbol polygon"));
-    mCurrentPolygon.reset(new Polygon(Uuid::createRandom(), mLastLayerName,
-                                      mLastLineWidth, mLastFill, mLastGrabArea,
-                                      path));
+    mCurrentPolygon.reset(new Polygon(
+        Uuid::createRandom(),
+        mLastLayerName,
+        mLastLineWidth,
+        mLastFill,
+        mLastGrabArea,
+        path));
     mContext.undoStack.appendToCmdGroup(
         new CmdPolygonInsert(mContext.symbol.getPolygons(), mCurrentPolygon));
     mEditCmd.reset(new CmdPolygonEdit(*mCurrentPolygon));
@@ -263,7 +283,7 @@ bool SymbolEditorState_DrawPolygonBase::updateCurrentPosition(
     const Point& pos) noexcept {
   if ((!mCurrentPolygon) || (!mEditCmd)) return false;
   QVector<Vertex> vertices = mCurrentPolygon->getPath().getVertices();
-  int             count    = vertices.count();
+  int count = vertices.count();
   if (mMode == Mode::RECT) {
     Q_ASSERT(count >= 5);
     vertices[count - 4].setPos(

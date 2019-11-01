@@ -48,14 +48,18 @@ ComponentSymbolVariantItem::ComponentSymbolVariantItem(
     mIsRequired(other.mIsRequired),
     mSuffix(other.mSuffix),
     mPinSignalMap(other.mPinSignalMap),
-    mOnPinSignalMapEditedSlot(*this,
-                              &ComponentSymbolVariantItem::pinSignalMapEdited) {
+    mOnPinSignalMapEditedSlot(
+        *this,
+        &ComponentSymbolVariantItem::pinSignalMapEdited) {
   mPinSignalMap.onEdited.attach(mOnPinSignalMapEditedSlot);
 }
 
 ComponentSymbolVariantItem::ComponentSymbolVariantItem(
-    const Uuid& uuid, const Uuid& symbolUuid, const Point& symbolPos,
-    const Angle& symbolRotation, bool isRequired,
+    const Uuid& uuid,
+    const Uuid& symbolUuid,
+    const Point& symbolPos,
+    const Angle& symbolRotation,
+    bool isRequired,
     const ComponentSymbolVariantItemSuffix& suffix) noexcept
   : onEdited(*this),
     mUuid(uuid),
@@ -64,8 +68,9 @@ ComponentSymbolVariantItem::ComponentSymbolVariantItem(
     mSymbolRot(symbolRotation),
     mIsRequired(isRequired),
     mSuffix(suffix),
-    mOnPinSignalMapEditedSlot(*this,
-                              &ComponentSymbolVariantItem::pinSignalMapEdited) {
+    mOnPinSignalMapEditedSlot(
+        *this,
+        &ComponentSymbolVariantItem::pinSignalMapEdited) {
   mPinSignalMap.onEdited.attach(mOnPinSignalMapEditedSlot);
 }
 
@@ -78,8 +83,9 @@ ComponentSymbolVariantItem::ComponentSymbolVariantItem(const SExpression& node)
     mIsRequired(node.getValueByPath<bool>("required")),
     mSuffix(node.getValueByPath<ComponentSymbolVariantItemSuffix>("suffix")),
     mPinSignalMap(node),
-    mOnPinSignalMapEditedSlot(*this,
-                              &ComponentSymbolVariantItem::pinSignalMapEdited) {
+    mOnPinSignalMapEditedSlot(
+        *this,
+        &ComponentSymbolVariantItem::pinSignalMapEdited) {
   mPinSignalMap.onEdited.attach(mOnPinSignalMapEditedSlot);
 }
 
@@ -191,9 +197,10 @@ ComponentSymbolVariantItem& ComponentSymbolVariantItem::operator=(
  ******************************************************************************/
 
 void ComponentSymbolVariantItem::pinSignalMapEdited(
-    const ComponentPinSignalMap& map, int index,
+    const ComponentPinSignalMap& map,
+    int index,
     const std::shared_ptr<const ComponentPinSignalMapItem>& item,
-    ComponentPinSignalMap::Event                            event) noexcept {
+    ComponentPinSignalMap::Event event) noexcept {
   Q_UNUSED(map);
   Q_UNUSED(index);
   Q_UNUSED(item);

@@ -81,8 +81,11 @@ void BI_StrokeText::init() {
   updateGraphicsItems();
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BI_StrokeText::boardAttributesChanged);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BI_StrokeText::boardAttributesChanged);
 }
 
 BI_StrokeText::~BI_StrokeText() noexcept {
@@ -110,8 +113,8 @@ void BI_StrokeText::updateGraphicsItems() noexcept {
 
   // show anchor line only if there is a footprint and the text is selected
   if (mFootprint && isSelected()) {
-    mAnchorGraphicsItem->setLine(mText->getPosition(),
-                                 mFootprint->getPosition());
+    mAnchorGraphicsItem->setLine(
+        mText->getPosition(), mFootprint->getPosition());
     mAnchorGraphicsItem->setLayer(
         mBoard.getLayerStack().getLayer(*mText->getLayerName()));
   } else {
@@ -179,8 +182,9 @@ void BI_StrokeText::boardAttributesChanged() {
  *  Private Methods
  ******************************************************************************/
 
-void BI_StrokeText::strokeTextEdited(const StrokeText& text,
-                                     StrokeText::Event event) noexcept {
+void BI_StrokeText::strokeTextEdited(
+    const StrokeText& text,
+    StrokeText::Event event) noexcept {
   Q_UNUSED(text);
   switch (event) {
     case StrokeText::Event::LayerNameChanged:

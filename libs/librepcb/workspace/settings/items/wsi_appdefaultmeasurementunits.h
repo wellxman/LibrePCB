@@ -72,7 +72,7 @@ public:
   void serialize(SExpression& root) const override;
 
   // Operator Overloadings
-  WSI_AppDefaultMeasurementUnits& operator       =(
+  WSI_AppDefaultMeasurementUnits& operator=(
       const WSI_AppDefaultMeasurementUnits& rhs) = delete;
 
 private:  // Methods

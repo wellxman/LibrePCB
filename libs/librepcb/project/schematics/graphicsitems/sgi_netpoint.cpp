@@ -52,7 +52,7 @@ SGI_NetPoint::SGI_NetPoint(SI_NetPoint& netpoint) noexcept
   Q_ASSERT(mLayer);
 
   if (sBoundingRect.isNull()) {
-    qreal radius  = Length(600000).toPx();
+    qreal radius = Length(600000).toPx();
     sBoundingRect = QRectF(-radius, -radius, 2 * radius, 2 * radius);
   }
 
@@ -71,9 +71,10 @@ void SGI_NetPoint::updateCacheAndRepaint() noexcept {
 
   prepareGeometryChange();
   mIsVisibleJunction = mNetPoint.isVisibleJunction();
-  mIsOpenLineEnd     = mNetPoint.isOpenLineEnd();
-  setZValue(mIsVisibleJunction ? Schematic::ZValue_VisibleNetPoints
-                               : Schematic::ZValue_HiddenNetPoints);
+  mIsOpenLineEnd = mNetPoint.isOpenLineEnd();
+  setZValue(
+      mIsVisibleJunction ? Schematic::ZValue_VisibleNetPoints
+                         : Schematic::ZValue_HiddenNetPoints);
   update();
 }
 
@@ -81,16 +82,17 @@ void SGI_NetPoint::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SGI_NetPoint::paint(QPainter*                       painter,
-                         const QStyleOptionGraphicsItem* option,
-                         QWidget*                        widget) {
+void SGI_NetPoint::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);
 
   const bool deviceIsPrinter =
       (dynamic_cast<QPrinter*>(painter->device()) != 0);
   bool highlight = mNetPoint.isSelected() ||
-                   mNetPoint.getNetSignalOfNetSegment().isHighlighted();
+      mNetPoint.getNetSignalOfNetSegment().isHighlighted();
 
   if (mLayer->isVisible() && mIsVisibleJunction) {
     painter->setPen(Qt::NoPen);
@@ -99,10 +101,10 @@ void SGI_NetPoint::paint(QPainter*                       painter,
   } else if (mLayer->isVisible() && mIsOpenLineEnd && !deviceIsPrinter) {
     painter->setPen(QPen(mLayer->getColor(highlight), 0));
     painter->setBrush(Qt::NoBrush);
-    painter->drawLine(sBoundingRect.topLeft() / 2,
-                      sBoundingRect.bottomRight() / 2);
-    painter->drawLine(sBoundingRect.topRight() / 2,
-                      sBoundingRect.bottomLeft() / 2);
+    painter->drawLine(
+        sBoundingRect.topLeft() / 2, sBoundingRect.bottomRight() / 2);
+    painter->drawLine(
+        sBoundingRect.topRight() / 2, sBoundingRect.bottomLeft() / 2);
   }
 
 #ifdef QT_DEBUG

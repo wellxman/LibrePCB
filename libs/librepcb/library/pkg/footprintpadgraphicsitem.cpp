@@ -42,7 +42,8 @@ namespace library {
  ******************************************************************************/
 
 FootprintPadGraphicsItem::FootprintPadGraphicsItem(
-    FootprintPad& pad, const IF_GraphicsLayerProvider& lp,
+    FootprintPad& pad,
+    const IF_GraphicsLayerProvider& lp,
     QGraphicsItem* parent) noexcept
   : QGraphicsItem(parent),
     mPad(pad),
@@ -112,9 +113,10 @@ QPainterPath FootprintPadGraphicsItem::shape() const noexcept {
   return mPathGraphicsItem->shape();
 }
 
-void FootprintPadGraphicsItem::paint(QPainter*                       painter,
-                                     const QStyleOptionGraphicsItem* option,
-                                     QWidget* widget) noexcept {
+void FootprintPadGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(painter);
   Q_UNUSED(option);
   Q_UNUSED(widget);

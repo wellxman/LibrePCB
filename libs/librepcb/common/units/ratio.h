@@ -245,7 +245,7 @@ public:
   constexpr bool operator==(qint32 rhs) const { return mPpm == rhs; }
   constexpr bool operator!=(const Ratio& rhs) const { return mPpm != rhs.mPpm; }
   constexpr bool operator!=(qint32 rhs) const { return mPpm != rhs; }
-  explicit       operator bool() const { return mPpm != 0; }
+  explicit operator bool() const { return mPpm != 0; }
 
 private:
   // Private Static Functions
@@ -279,8 +279,9 @@ inline SExpression serializeToSExpression(const Ratio& obj) {
 }
 
 template <>
-inline Ratio deserializeFromSExpression(const SExpression& sexpr,
-                                        bool               throwIfEmpty) {
+inline Ratio deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   return Ratio::fromNormalized(str);
 }
@@ -308,8 +309,8 @@ struct UnsignedRatioVerifier {
   static constexpr auto verify(Value&& val, const Predicate& p) ->
       typename std::decay<Value>::type {
     return p(val) ? std::forward<Value>(val)
-                  : (throw RuntimeError(__FILE__, __LINE__,
-                                        Ratio::tr("Value must be >= 0!")),
+                  : (throw RuntimeError(
+                         __FILE__, __LINE__, Ratio::tr("Value must be >= 0!")),
                      std::forward<Value>(val));
   }
 };
@@ -325,9 +326,8 @@ struct UnsignedRatioConstraint {
  * The constructor throws an exception if constructed from a librepcb::Ratio
  * object with a negative value!
  */
-using UnsignedRatio =
-    type_safe::constrained_type<Ratio, UnsignedRatioConstraint,
-                                UnsignedRatioVerifier>;
+using UnsignedRatio = type_safe::
+    constrained_type<Ratio, UnsignedRatioConstraint, UnsignedRatioVerifier>;
 
 template <>
 inline SExpression serializeToSExpression(const UnsignedRatio& obj) {
@@ -335,14 +335,16 @@ inline SExpression serializeToSExpression(const UnsignedRatio& obj) {
 }
 
 template <>
-inline UnsignedRatio deserializeFromSExpression(const SExpression& sexpr,
-                                                bool throwIfEmpty) {
+inline UnsignedRatio deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   return UnsignedRatio(Ratio::fromNormalized(str));
 }
 
-inline QDataStream& operator<<(QDataStream&         stream,
-                               const UnsignedRatio& ratio) {
+inline QDataStream& operator<<(
+    QDataStream& stream,
+    const UnsignedRatio& ratio) {
   stream << ratio->toNormalizedString();
   return stream;
 }

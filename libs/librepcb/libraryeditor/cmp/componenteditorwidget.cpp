@@ -48,9 +48,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-ComponentEditorWidget::ComponentEditorWidget(const Context&  context,
-                                             const FilePath& fp,
-                                             QWidget*        parent)
+ComponentEditorWidget::ComponentEditorWidget(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : EditorWidgetBase(context, fp, parent), mUi(new Ui::ComponentEditorWidget) {
   mUi->setupUi(this);
   mUi->lstMessages->setHandler(this);
@@ -61,57 +62,92 @@ ComponentEditorWidget::ComponentEditorWidget(const Context&  context,
   mCategoriesEditorWidget.reset(
       new ComponentCategoryListEditorWidget(mContext.workspace, this));
   mCategoriesEditorWidget->setRequiresMinimumOneEntry(true);
-  int                   row;
+  int row;
   QFormLayout::ItemRole role;
   mUi->formLayout->getWidgetPosition(mUi->lblCategories, &row, &role);
-  mUi->formLayout->setWidget(row, QFormLayout::FieldRole,
-                             mCategoriesEditorWidget.data());
+  mUi->formLayout->setWidget(
+      row, QFormLayout::FieldRole, mCategoriesEditorWidget.data());
 
   // Load element.
   mComponent.reset(new Component(std::unique_ptr<TransactionalDirectory>(
       new TransactionalDirectory(mFileSystem))));  // can throw
-  mUi->signalEditorWidget->setReferences(mUndoStack.data(),
-                                         &mComponent->getSignals());
+  mUi->signalEditorWidget->setReferences(
+      mUndoStack.data(), &mComponent->getSignals());
   mUi->symbolVariantsEditorWidget->setReferences(
       mUndoStack.data(), &mComponent->getSymbolVariants(), this);
   updateMetadata();
 
   // Load attribute editor.
-  mUi->attributesEditorWidget->setReferences(mUndoStack.data(),
-                                             &mComponent->getAttributes());
+  mUi->attributesEditorWidget->setReferences(
+      mUndoStack.data(), &mComponent->getAttributes());
 
   // Show "interface broken" warning when related properties are modified.
   memorizeComponentInterface();
   setupInterfaceBrokenWarningWidget(*mUi->interfaceBrokenWarningWidget);
-  connect(mUi->cbxSchematicOnly, &QCheckBox::toggled, this,
-          &ComponentEditorWidget::undoStackStateModified);
+  connect(
+      mUi->cbxSchematicOnly,
+      &QCheckBox::toggled,
+      this,
+      &ComponentEditorWidget::undoStackStateModified);
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &ComponentEditorWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &ComponentEditorWidget::updateMetadata);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mCategoriesEditorWidget.data(),
-          &ComponentCategoryListEditorWidget::edited, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->cbxSchematicOnly, &QCheckBox::clicked, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtPrefix, &QLineEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
-  connect(mUi->edtDefaultValue, &PlainTextEdit::editingFinished, this,
-          &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mCategoriesEditorWidget.data(),
+      &ComponentCategoryListEditorWidget::edited,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxSchematicOnly,
+      &QCheckBox::clicked,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtPrefix,
+      &QLineEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDefaultValue,
+      &PlainTextEdit::editingFinished,
+      this,
+      &ComponentEditorWidget::commitMetadata);
 }
 
 ComponentEditorWidget::~ComponentEditorWidget() noexcept {
@@ -134,7 +170,7 @@ bool ComponentEditorWidget::save() noexcept {
 
   // Save element.
   try {
-    mComponent->save();   // can throw
+    mComponent->save();  // can throw
     mFileSystem->save();  // can throw
     memorizeComponentInterface();
     return EditorWidgetBase::save();
@@ -202,15 +238,15 @@ QString ComponentEditorWidget::commitMetadata() noexcept {
 
 bool ComponentEditorWidget::openComponentSymbolVariantEditor(
     ComponentSymbolVariant& variant) noexcept {
-  ComponentSymbolVariantEditDialog dialog(mContext.workspace, *mComponent,
-                                          variant);
+  ComponentSymbolVariantEditDialog dialog(
+      mContext.workspace, *mComponent, variant);
   return (dialog.exec() == QDialog::Accepted);
 }
 
 void ComponentEditorWidget::memorizeComponentInterface() noexcept {
   mOriginalIsSchematicOnly = mComponent->isSchematicOnly();
-  mOriginalSignalUuids     = mComponent->getSignals().getUuidSet();
-  mOriginalSymbolVariants  = mComponent->getSymbolVariants();
+  mOriginalSignalUuids = mComponent->getSignals().getUuidSet();
+  mOriginalSymbolVariants = mComponent->getSymbolVariants();
 }
 
 bool ComponentEditorWidget::isInterfaceBroken() const noexcept {
@@ -281,8 +317,13 @@ void ComponentEditorWidget::fixMsg(const MsgMissingComponentDefaultValue& msg) {
   QString question =
       tr("Is this rather a (manufacturer-)specific component than a generic "
          "component?");
-  int answer = QMessageBox::question(this, title, question, QMessageBox::Cancel,
-                                     QMessageBox::Yes, QMessageBox::No);
+  int answer = QMessageBox::question(
+      this,
+      title,
+      question,
+      QMessageBox::Cancel,
+      QMessageBox::Yes,
+      QMessageBox::No);
   if (answer == QMessageBox::Yes) {
     mUi->edtDefaultValue->setPlainText("{{PARTNUMBER or DEVICE or COMPONENT}}");
     commitMetadata();
@@ -296,15 +337,16 @@ template <>
 void ComponentEditorWidget::fixMsg(const MsgMissingSymbolVariant& msg) {
   Q_UNUSED(msg);
   std::shared_ptr<ComponentSymbolVariant> symbVar =
-      std::make_shared<ComponentSymbolVariant>(Uuid::createRandom(), "",
-                                               ElementName("default"), "");
+      std::make_shared<ComponentSymbolVariant>(
+          Uuid::createRandom(), "", ElementName("default"), "");
   mUndoStack->execCmd(new CmdComponentSymbolVariantInsert(
       mComponent->getSymbolVariants(), symbVar));
 }
 
 template <typename MessageType>
 bool ComponentEditorWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -315,7 +357,8 @@ bool ComponentEditorWidget::fixMsgHelper(
 }
 
 bool ComponentEditorWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingCategories>(msg, applyFix)) return true;

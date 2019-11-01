@@ -36,9 +36,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-PolygonGraphicsItem::PolygonGraphicsItem(Polygon& polygon,
-                                         const IF_GraphicsLayerProvider& lp,
-                                         QGraphicsItem* parent) noexcept
+PolygonGraphicsItem::PolygonGraphicsItem(
+    Polygon& polygon,
+    const IF_GraphicsLayerProvider& lp,
+    QGraphicsItem* parent) noexcept
   : PrimitivePathGraphicsItem(parent),
     mPolygon(polygon),
     mLayerProvider(lp),
@@ -60,8 +61,9 @@ PolygonGraphicsItem::~PolygonGraphicsItem() noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void PolygonGraphicsItem::polygonEdited(const Polygon& polygon,
-                                        Polygon::Event event) noexcept {
+void PolygonGraphicsItem::polygonEdited(
+    const Polygon& polygon,
+    Polygon::Event event) noexcept {
   switch (event) {
     case Polygon::Event::LayerNameChanged:
       setLineLayer(mLayerProvider.getLayer(*polygon.getLayerName()));

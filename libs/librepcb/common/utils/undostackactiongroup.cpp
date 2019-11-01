@@ -36,19 +36,22 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-UndoStackActionGroup::UndoStackActionGroup(QAction& undo, QAction& redo,
-                                           QAction* save, UndoStack* stack,
-                                           QWidget* msgBoxParent) noexcept
+UndoStackActionGroup::UndoStackActionGroup(
+    QAction& undo,
+    QAction& redo,
+    QAction* save,
+    UndoStack* stack,
+    QWidget* msgBoxParent) noexcept
   : QObject(nullptr),
     mUndo(undo),
     mRedo(redo),
     mSave(save),
     mStack(nullptr),
     mMsgBoxParent(msgBoxParent) {
-  connect(&mUndo, &QAction::triggered, this,
-          &UndoStackActionGroup::undoTriggered);
-  connect(&mRedo, &QAction::triggered, this,
-          &UndoStackActionGroup::redoTriggered);
+  connect(
+      &mUndo, &QAction::triggered, this, &UndoStackActionGroup::undoTriggered);
+  connect(
+      &mRedo, &QAction::triggered, this, &UndoStackActionGroup::redoTriggered);
   registerToStack(stack);
 }
 
@@ -106,21 +109,21 @@ void UndoStackActionGroup::registerToStack(UndoStack* stack) noexcept {
         connect(stack, &UndoStack::undoTextChanged, &mUndo, &QAction::setText));
     mUndo.setText(stack->getUndoText());
 
-    mConnections.append(connect(stack, &UndoStack::canUndoChanged, &mUndo,
-                                &QAction::setEnabled));
+    mConnections.append(connect(
+        stack, &UndoStack::canUndoChanged, &mUndo, &QAction::setEnabled));
     mUndo.setEnabled(stack->canUndo());
 
     mConnections.append(
         connect(stack, &UndoStack::redoTextChanged, &mRedo, &QAction::setText));
     mRedo.setText(stack->getRedoText());
 
-    mConnections.append(connect(stack, &UndoStack::canRedoChanged, &mRedo,
-                                &QAction::setEnabled));
+    mConnections.append(connect(
+        stack, &UndoStack::canRedoChanged, &mRedo, &QAction::setEnabled));
     mRedo.setEnabled(stack->canRedo());
 
     if (mSave) {
-      mConnections.append(connect(stack, &UndoStack::cleanChanged, mSave,
-                                  &QAction::setDisabled));
+      mConnections.append(connect(
+          stack, &UndoStack::cleanChanged, mSave, &QAction::setDisabled));
       mSave->setDisabled(stack->isClean());
     }
   }

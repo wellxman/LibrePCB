@@ -51,8 +51,8 @@ public:
 
   // General Methods
   QList<QStringList> toStringList(const Bom& bom) noexcept;
-  QString            toString(const Bom& bom) noexcept;
-  void               writeToFile(const Bom& bom, const FilePath& csvFp);
+  QString toString(const Bom& bom) noexcept;
+  void writeToFile(const Bom& bom, const FilePath& csvFp);
 
   // Operator Overloadings
   BomCsvWriter& operator=(const BomCsvWriter& rhs) = delete;

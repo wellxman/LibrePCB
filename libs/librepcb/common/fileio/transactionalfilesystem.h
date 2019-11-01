@@ -65,17 +65,19 @@ class TransactionalFileSystem final : public FileSystem {
 
 public:
   enum class RestoreMode {
-    NO,     ///< Do not restore the backup
-    YES,    ///< Restore backup if available
-    ASK,    ///< Ask (with QMessageBox) whether to restore or not
+    NO,  ///< Do not restore the backup
+    YES,  ///< Restore backup if available
+    ASK,  ///< Ask (with QMessageBox) whether to restore or not
     ABORT,  ///< Throw a RuntimeError if a backup exists
   };
 
   // Constructors / Destructor
   TransactionalFileSystem() = delete;
-  TransactionalFileSystem(const FilePath& filepath, bool writable = false,
-                          RestoreMode restoreMode = RestoreMode::NO,
-                          QObject*    parent      = nullptr);
+  TransactionalFileSystem(
+      const FilePath& filepath,
+      bool writable = false,
+      RestoreMode restoreMode = RestoreMode::NO,
+      QObject* parent = nullptr);
   TransactionalFileSystem(const TransactionalFileSystem& other) = delete;
   virtual ~TransactionalFileSystem() noexcept;
 
@@ -88,7 +90,7 @@ public:
   virtual QStringList getDirs(const QString& path = "") const noexcept override;
   virtual QStringList getFiles(const QString& path = "") const
       noexcept override;
-  virtual bool       fileExists(const QString& path) const noexcept override;
+  virtual bool fileExists(const QString& path) const noexcept override;
   virtual QByteArray read(const QString& path) const override;
   virtual void write(const QString& path, const QByteArray& content) override;
   virtual void removeFile(const QString& path) override;
@@ -102,18 +104,22 @@ public:
 
   // Static Methods
   static std::shared_ptr<TransactionalFileSystem> open(
-      const FilePath& filepath, bool writable,
-      RestoreMode restoreMode = RestoreMode::NO, QObject* parent = nullptr) {
-    return std::make_shared<TransactionalFileSystem>(filepath, writable,
-                                                     restoreMode, parent);
+      const FilePath& filepath,
+      bool writable,
+      RestoreMode restoreMode = RestoreMode::NO,
+      QObject* parent = nullptr) {
+    return std::make_shared<TransactionalFileSystem>(
+        filepath, writable, restoreMode, parent);
   }
   static std::shared_ptr<TransactionalFileSystem> openRO(
-      const FilePath& filepath, RestoreMode restoreMode = RestoreMode::NO,
+      const FilePath& filepath,
+      RestoreMode restoreMode = RestoreMode::NO,
       QObject* parent = nullptr) {
     return open(filepath, false, restoreMode, parent);
   }
   static std::shared_ptr<TransactionalFileSystem> openRW(
-      const FilePath& filepath, RestoreMode restoreMode = RestoreMode::NO,
+      const FilePath& filepath,
+      RestoreMode restoreMode = RestoreMode::NO,
       QObject* parent = nullptr) {
     return open(filepath, true, restoreMode, parent);
   }
@@ -121,23 +127,25 @@ public:
 
 private:  // Methods
   bool isRemoved(const QString& path) const noexcept;
-  void exportDirToZip(QuaZipFile& file, const FilePath& zipFp,
-                      const QString& dir) const;
+  void exportDirToZip(
+      QuaZipFile& file,
+      const FilePath& zipFp,
+      const QString& dir) const;
   void saveDiff(const QString& type) const;
   void loadDiff(const FilePath& fp);
   void removeDiff(const QString& type);
   void discardChanges() noexcept;
 
 private:  // Data
-  FilePath      mFilePath;
-  bool          mIsWritable;
+  FilePath mFilePath;
+  bool mIsWritable;
   DirectoryLock mLock;
-  bool          mRestoredFromAutosave;
+  bool mRestoredFromAutosave;
 
   // File system modifications
   QHash<QString, QByteArray> mModifiedFiles;
-  QSet<QString>              mRemovedFiles;
-  QSet<QString>              mRemovedDirs;
+  QSet<QString> mRemovedFiles;
+  QSet<QString> mRemovedDirs;
 };
 
 /*******************************************************************************

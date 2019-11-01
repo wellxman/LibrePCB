@@ -67,10 +67,10 @@ public:
   // Types
 
   struct Context {
-    workspace::Workspace&           workspace;
+    workspace::Workspace& workspace;
     const IF_GraphicsLayerProvider& layerProvider;
-    bool                            elementIsNewlyCreated;
-    bool                            readOnly;
+    bool elementIsNewlyCreated;
+    bool readOnly;
   };
 
   enum Tool {
@@ -90,16 +90,18 @@ public:
   };
 
   // Constructors / Destructor
-  EditorWidgetBase()                              = delete;
+  EditorWidgetBase() = delete;
   EditorWidgetBase(const EditorWidgetBase& other) = delete;
-  explicit EditorWidgetBase(const Context& context, const FilePath& fp,
-                            QWidget* parent = nullptr);
+  explicit EditorWidgetBase(
+      const Context& context,
+      const FilePath& fp,
+      QWidget* parent = nullptr);
   virtual ~EditorWidgetBase() noexcept;
 
   // Getters
   const FilePath& getFilePath() const noexcept { return mFilePath; }
-  bool            isDirty() const noexcept { return !mUndoStack->isClean(); }
-  virtual bool    hasGraphicalEditor() const noexcept { return false; }
+  bool isDirty() const noexcept { return !mUndoStack->isClean(); }
+  virtual bool hasGraphicalEditor() const noexcept { return false; }
 
   // Setters
   virtual void setUndoStackActionGroup(UndoStackActionGroup* group) noexcept;
@@ -124,27 +126,28 @@ public slots:
   virtual bool editGridProperties() noexcept { return false; }
 
 protected:  // Methods
-  void         setupInterfaceBrokenWarningWidget(QWidget& widget) noexcept;
-  void         setupErrorNotificationWidget(QWidget& widget) noexcept;
+  void setupInterfaceBrokenWarningWidget(QWidget& widget) noexcept;
+  void setupErrorNotificationWidget(QWidget& widget) noexcept;
   virtual bool isInterfaceBroken() const noexcept = 0;
   virtual bool toolChangeRequested(Tool newTool) noexcept {
     Q_UNUSED(newTool);
     return false;
   }
-  virtual bool       runChecks(LibraryElementCheckMessageList& msgs) const = 0;
-  void               undoStackStateModified() noexcept;
+  virtual bool runChecks(LibraryElementCheckMessageList& msgs) const = 0;
+  void undoStackStateModified() noexcept;
   const QStringList& getLibLocaleOrder() const noexcept;
-  QString            getWorkspaceSettingsUserName() noexcept;
+  QString getWorkspaceSettingsUserName() noexcept;
 
 private slots:
   void updateCheckMessages() noexcept;
 
 private:  // Methods
-  void         toolActionGroupChangeTriggered(const QVariant& newTool) noexcept;
-  void         undoStackCleanChanged(bool clean) noexcept;
-  void         scheduleLibraryElementChecks() noexcept;
+  void toolActionGroupChangeTriggered(const QVariant& newTool) noexcept;
+  void undoStackCleanChanged(bool clean) noexcept;
+  void scheduleLibraryElementChecks() noexcept;
   virtual bool processCheckMessage(
-      std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) = 0;
+      std::shared_ptr<const LibraryElementCheckMessage> msg,
+      bool applyFix) = 0;
   bool libraryElementCheckFixAvailable(
       std::shared_ptr<const LibraryElementCheckMessage> msg) noexcept override;
   void libraryElementCheckFixRequested(
@@ -160,14 +163,14 @@ signals:
   void cursorPositionChanged(const Point& pos);
 
 protected:  // Data
-  Context                                  mContext;
-  FilePath                                 mFilePath;
+  Context mContext;
+  FilePath mFilePath;
   std::shared_ptr<TransactionalFileSystem> mFileSystem;
-  QScopedPointer<UndoStack>                mUndoStack;
-  UndoStackActionGroup*                    mUndoStackActionGroup;
-  ExclusiveActionGroup*                    mToolsActionGroup;
-  QScopedPointer<ToolBarProxy>             mCommandToolBarProxy;
-  bool                                     mIsInterfaceBroken;
+  QScopedPointer<UndoStack> mUndoStack;
+  UndoStackActionGroup* mUndoStackActionGroup;
+  ExclusiveActionGroup* mToolsActionGroup;
+  QScopedPointer<ToolBarProxy> mCommandToolBarProxy;
+  bool mIsInterfaceBroken;
 };
 
 /*******************************************************************************

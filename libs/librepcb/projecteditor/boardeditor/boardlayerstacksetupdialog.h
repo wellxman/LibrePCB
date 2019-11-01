@@ -55,10 +55,12 @@ class BoardLayerStackSetupDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  BoardLayerStackSetupDialog()                                        = delete;
+  BoardLayerStackSetupDialog() = delete;
   BoardLayerStackSetupDialog(const BoardLayerStackSetupDialog& other) = delete;
-  BoardLayerStackSetupDialog(BoardLayerStack& layerStack, UndoStack& undoStack,
-                             QWidget* parent) noexcept;
+  BoardLayerStackSetupDialog(
+      BoardLayerStack& layerStack,
+      UndoStack& undoStack,
+      QWidget* parent) noexcept;
   ~BoardLayerStackSetupDialog() noexcept;
 
   // Operator Overloadings
@@ -71,8 +73,8 @@ private:  // Methods
   bool applyChanges() noexcept;
 
 private:  // Data
-  BoardLayerStack&                               mLayerStack;
-  UndoStack&                                     mUndoStack;
+  BoardLayerStack& mLayerStack;
+  UndoStack& mUndoStack;
   QScopedPointer<Ui::BoardLayerStackSetupDialog> mUi;
 };
 

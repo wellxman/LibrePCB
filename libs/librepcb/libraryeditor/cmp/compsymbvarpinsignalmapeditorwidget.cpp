@@ -55,7 +55,7 @@ CompSymbVarPinSignalMapEditorWidget::CompSymbVarPinSignalMapEditorWidget(
   mView->setEditTriggers(QAbstractItemView::AllEditTriggers);
   mView->setSortingEnabled(true);
   mView->setWordWrap(false);  // avoid too high cells due to word wrap
-  mView->verticalHeader()->setVisible(false);          // no content
+  mView->verticalHeader()->setVisible(false);  // no content
   mView->verticalHeader()->setMinimumSectionSize(10);  // more compact rows
   mView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   mView->horizontalHeader()->setSectionResizeMode(
@@ -66,12 +66,12 @@ CompSymbVarPinSignalMapEditorWidget::CompSymbVarPinSignalMapEditorWidget(
       ComponentPinSignalMapModel::COLUMN_SIGNAL, QHeaderView::Stretch);
   mView->horizontalHeader()->setSectionResizeMode(
       ComponentPinSignalMapModel::COLUMN_DISPLAY, QHeaderView::Stretch);
-  mView->setItemDelegateForColumn(ComponentPinSignalMapModel::COLUMN_SIGNAL,
-                                  new ComboBoxDelegate(this));
-  mView->setItemDelegateForColumn(ComponentPinSignalMapModel::COLUMN_DISPLAY,
-                                  new ComboBoxDelegate(this));
-  mView->sortByColumn(ComponentPinSignalMapModel::COLUMN_PIN,
-                      Qt::AscendingOrder);
+  mView->setItemDelegateForColumn(
+      ComponentPinSignalMapModel::COLUMN_SIGNAL, new ComboBoxDelegate(this));
+  mView->setItemDelegateForColumn(
+      ComponentPinSignalMapModel::COLUMN_DISPLAY, new ComboBoxDelegate(this));
+  mView->sortByColumn(
+      ComponentPinSignalMapModel::COLUMN_PIN, Qt::AscendingOrder);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -79,8 +79,11 @@ CompSymbVarPinSignalMapEditorWidget::CompSymbVarPinSignalMapEditorWidget(
   layout->addWidget(mView.data());
   QPushButton* btn =
       new QPushButton(tr("Automatically assign all signals by name"), this);
-  connect(btn, &QPushButton::clicked, mModel.data(),
-          &ComponentPinSignalMapModel::autoAssignSignals);
+  connect(
+      btn,
+      &QPushButton::clicked,
+      mModel.data(),
+      &ComponentPinSignalMapModel::autoAssignSignals);
   layout->addWidget(btn);
 }
 
@@ -93,9 +96,10 @@ CompSymbVarPinSignalMapEditorWidget::
  ******************************************************************************/
 
 void CompSymbVarPinSignalMapEditorWidget::setReferences(
-    ComponentSymbolVariant*                           variant,
+    ComponentSymbolVariant* variant,
     const std::shared_ptr<const LibraryElementCache>& symbolCache,
-    const ComponentSignalList* sigs, UndoStack* undoStack) noexcept {
+    const ComponentSignalList* sigs,
+    UndoStack* undoStack) noexcept {
   mModel->setUndoStack(undoStack);
   mModel->setSymbolsCache(symbolCache);
   mModel->setSignalList(sigs);

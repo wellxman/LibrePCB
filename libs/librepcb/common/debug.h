@@ -67,12 +67,12 @@ public:
     Nothing = 0,  ///< nothing
     Fatal =
         10,  ///< fatal errors [qFatal()] --> this will quit the application!
-    Critical  = 20,  ///< errors [qCritical()]
+    Critical = 20,  ///< errors [qCritical()]
     Exception = 30,  ///< throwed exceptions of (sub)class Exception
-    Warning   = 40,  ///< warnings [qWarning()]
-    Info      = 50,  ///< info messages [qInfo()]
+    Warning = 40,  ///< warnings [qWarning()]
+    Info = 50,  ///< info messages [qInfo()]
     DebugMsg =
-        60,     ///< irrelevant debug messages (a lot of messages!) [qDebug()]
+        60,  ///< irrelevant debug messages (a lot of messages!) [qDebug()]
     All = 100,  ///< all
   };
 
@@ -132,8 +132,8 @@ public:
    * @param file      The source file (use the macro __FILE__)
    * @param line      The line number (use the macro __LINE__)
    */
-  void print(DebugLevel_t level, const QString& msg, const char* file,
-             int line);
+  void
+      print(DebugLevel_t level, const QString& msg, const char* file, int line);
 
   // Static methods
 
@@ -166,18 +166,20 @@ private:
    * This method is registered as the message handler for Qt's debug functions.
    * This is done by the function qInstallMessageHandler() in Debug::Debug().
    */
-  static void messageHandler(QtMsgType type, const QMessageLogContext& context,
-                             const QString& msg);
+  static void messageHandler(
+      QtMsgType type,
+      const QMessageLogContext& context,
+      const QString& msg);
 
   // General Attributes
   DebugLevel_t
       mDebugLevelStderr;  ///< the current debug level for the stderr output
   DebugLevel_t
-               mDebugLevelLogFile;  ///< the current debug level for the log file
-  QTextStream* mStderrStream;       ///< the stream to stderr
-  FilePath     mLogFilepath;        ///< the filepath for the log file
-  QFile*       mLogFile;            ///< NULL if file logging is disabled
-  QMutex       mMutex;              ///< for thread safety
+      mDebugLevelLogFile;  ///< the current debug level for the log file
+  QTextStream* mStderrStream;  ///< the stream to stderr
+  FilePath mLogFilepath;  ///< the filepath for the log file
+  QFile* mLogFile;  ///< NULL if file logging is disabled
+  QMutex mMutex;  ///< for thread safety
 };
 
 /*******************************************************************************

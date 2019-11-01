@@ -57,10 +57,16 @@ BoardSideSelectorWidget::BoardSideSelectorWidget(QWidget* parent) noexcept
   mBtnTop->setFixedWidth(32);
   mBtnBottom->setFixedWidth(32);
 
-  connect(mBtnTop, &QToolButton::toggled, this,
-          &BoardSideSelectorWidget::btnTopToggled);
-  connect(mBtnBottom, &QToolButton::toggled, this,
-          &BoardSideSelectorWidget::btnBottomToggled);
+  connect(
+      mBtnTop,
+      &QToolButton::toggled,
+      this,
+      &BoardSideSelectorWidget::btnTopToggled);
+  connect(
+      mBtnBottom,
+      &QToolButton::toggled,
+      this,
+      &BoardSideSelectorWidget::btnBottomToggled);
 }
 
 BoardSideSelectorWidget::~BoardSideSelectorWidget() noexcept {

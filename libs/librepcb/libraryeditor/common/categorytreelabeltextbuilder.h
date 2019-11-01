@@ -58,9 +58,10 @@ public:
   CategoryTreeLabelTextBuilder() = delete;
   CategoryTreeLabelTextBuilder(const CategoryTreeLabelTextBuilder& other) =
       delete;
-  CategoryTreeLabelTextBuilder(const workspace::WorkspaceLibraryDb& db,
-                               const QStringList&                   localeOrder,
-                               QLabel& label) noexcept;
+  CategoryTreeLabelTextBuilder(
+      const workspace::WorkspaceLibraryDb& db,
+      const QStringList& localeOrder,
+      QLabel& label) noexcept;
   ~CategoryTreeLabelTextBuilder() noexcept;
 
   // Setters
@@ -75,26 +76,27 @@ public:
   void setErrorText(const QString& error) noexcept;
 
   // General Methods
-  bool updateText(const tl::optional<Uuid>& category,
-                  const QString&            lastLine = QString()) noexcept;
+  bool updateText(
+      const tl::optional<Uuid>& category,
+      const QString& lastLine = QString()) noexcept;
 
   // Operator Overloadings
-  CategoryTreeLabelTextBuilder& operator       =(
+  CategoryTreeLabelTextBuilder& operator=(
       const CategoryTreeLabelTextBuilder& rhs) = delete;
 
 private:  // Methods
   bool updateText(const QList<Uuid>& uuids, const QString& lastLine) noexcept;
   void setText(const QStringList& lines) noexcept;
-  FilePath    getLatestCategory(const Uuid& category) const;
+  FilePath getLatestCategory(const Uuid& category) const;
   QList<Uuid> getCategoryParents(const Uuid& category) const;
 
 private:  // Data
   const workspace::WorkspaceLibraryDb& mDb;
-  const QStringList&                   mLocaleOrder;
-  QLabel&                              mLabel;
-  bool                                 mHighlightLastLine;
-  tl::optional<Uuid>                   mEndlessRecursionUuid;
-  bool                                 mOneLine;
+  const QStringList& mLocaleOrder;
+  QLabel& mLabel;
+  bool mHighlightLastLine;
+  tl::optional<Uuid> mEndlessRecursionUuid;
+  bool mOneLine;
 };
 
 typedef CategoryTreeLabelTextBuilder<library::ComponentCategory>

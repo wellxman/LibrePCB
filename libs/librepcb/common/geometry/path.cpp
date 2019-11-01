@@ -80,11 +80,15 @@ const QPainterPath& Path::toQPainterPathPx(bool close) const noexcept {
                 .abs()
                 .toPx();
         QPointF diffPx = v0.getPos().toPxQPointF() - centerPx;
-        qreal   startAngleDeg =
+        qreal startAngleDeg =
             -qRadiansToDegrees(qAtan2(diffPx.y(), diffPx.x()));
-        mPainterPathPx.arcTo(centerPx.x() - radiusPx, centerPx.y() - radiusPx,
-                             radiusPx * 2, radiusPx * 2, startAngleDeg,
-                             v0.getAngle().toDeg());
+        mPainterPathPx.arcTo(
+            centerPx.x() - radiusPx,
+            centerPx.y() - radiusPx,
+            radiusPx * 2,
+            radiusPx * 2,
+            startAngleDeg,
+            v0.getAngle().toDeg());
       }
     }
   }
@@ -151,8 +155,10 @@ void Path::insertVertex(int index, const Vertex& vertex) noexcept {
   invalidatePainterPath();
 }
 
-void Path::insertVertex(int index, const Point& pos,
-                        const Angle& angle) noexcept {
+void Path::insertVertex(
+    int index,
+    const Point& pos,
+    const Angle& angle) noexcept {
   insertVertex(index, Vertex(pos, angle));
 }
 
@@ -175,7 +181,7 @@ void Path::serialize(SExpression& root) const {
  ******************************************************************************/
 
 Path& Path::operator=(const Path& rhs) noexcept {
-  mVertices      = rhs.mVertices;
+  mVertices = rhs.mVertices;
   mPainterPathPx = rhs.mPainterPathPx;
   return *this;
 }
@@ -192,9 +198,10 @@ Path Path::circle(const PositiveLength& diameter) noexcept {
   return obround(diameter, diameter);
 }
 
-Path Path::obround(const PositiveLength& width,
-                   const PositiveLength& height) noexcept {
-  Path   p;
+Path Path::obround(
+    const PositiveLength& width,
+    const PositiveLength& height) noexcept {
+  Path p;
   Length rx = width / 2;
   Length ry = height / 2;
   if (width > height) {
@@ -218,10 +225,12 @@ Path Path::obround(const PositiveLength& width,
   return p;
 }
 
-Path Path::obround(const Point& p1, const Point& p2,
-                   const PositiveLength& width) noexcept {
+Path Path::obround(
+    const Point& p1,
+    const Point& p2,
+    const PositiveLength& width) noexcept {
   Point diff = p2 - p1;
-  Path  p    = obround(UnsignedLength(diff.getLength()) + width, width);
+  Path p = obround(UnsignedLength(diff.getLength()) + width, width);
   p.rotate(Angle::fromRad(qAtan2(diff.getY().toMm(), diff.getX().toMm())));
   p.translate((p1 + p2) / 2);
   return p;
@@ -237,9 +246,10 @@ Path Path::rect(const Point& p1, const Point& p2) noexcept {
   return p;
 }
 
-Path Path::centeredRect(const PositiveLength& width,
-                        const PositiveLength& height) noexcept {
-  Path   p;
+Path Path::centeredRect(
+    const PositiveLength& width,
+    const PositiveLength& height) noexcept {
+  Path p;
   Length rx = width / 2;
   Length ry = height / 2;
   p.addVertex(Point(-rx, ry));
@@ -250,12 +260,13 @@ Path Path::centeredRect(const PositiveLength& width,
   return p;
 }
 
-Path Path::octagon(const PositiveLength& width,
-                   const PositiveLength& height) noexcept {
-  Path   p;
+Path Path::octagon(
+    const PositiveLength& width,
+    const PositiveLength& height) noexcept {
+  Path p;
   Length rx = width / 2;
   Length ry = height / 2;
-  Length a  = Length::fromMm(qMin(rx, ry).toMm() * (2 - qSqrt(2)));
+  Length a = Length::fromMm(qMin(rx, ry).toMm() * (2 - qSqrt(2)));
   p.addVertex(Point(rx, ry - a));
   p.addVertex(Point(rx - a, ry));
   p.addVertex(Point(a - rx, ry));
@@ -268,8 +279,11 @@ Path Path::octagon(const PositiveLength& width,
   return p;
 }
 
-Path Path::flatArc(const Point& p1, const Point& p2, const Angle& angle,
-                   const PositiveLength& maxTolerance) noexcept {
+Path Path::flatArc(
+    const Point& p1,
+    const Point& p2,
+    const Angle& angle,
+    const PositiveLength& maxTolerance) noexcept {
   // return straight line if radius is smaller than half of the allowed
   // tolerance
   Length radiusAbs = Toolbox::arcRadius(p1, p2, angle).abs();
@@ -279,15 +293,17 @@ Path Path::flatArc(const Point& p1, const Point& p2, const Angle& angle,
 
   // calculate how many lines we need to create
   qreal radiusAbsNm = static_cast<qreal>(radiusAbs.toNm());
-  qreal y = qBound(qreal(0.0), static_cast<qreal>(maxTolerance->toNm()),
-                   radiusAbsNm / qreal(4));
+  qreal y = qBound(
+      qreal(0.0),
+      static_cast<qreal>(maxTolerance->toNm()),
+      radiusAbsNm / qreal(4));
   qreal stepsPerRad =
       qMin(qreal(0.5) / qAcos(1 - y / radiusAbsNm), radiusAbsNm / qreal(2));
   int steps = qCeil(stepsPerRad * angle.abs().toRad());
 
   // some other very complex calculations...
   qreal angleDelta = angle.toMicroDeg() / (qreal)steps;
-  Point center     = Toolbox::arcCenter(p1, p2, angle);
+  Point center = Toolbox::arcCenter(p1, p2, angle);
 
   // create line segments
   Path p;

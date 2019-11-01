@@ -72,7 +72,7 @@ public:
   void serialize(SExpression& root) const override;
 
   // Operator Overloadings
-  WSI_ProjectAutosaveInterval& operator       =(
+  WSI_ProjectAutosaveInterval& operator=(
       const WSI_ProjectAutosaveInterval& rhs) = delete;
 
 private:  // Methods
@@ -90,7 +90,7 @@ private:  // Data
   uint mIntervalTmp;
 
   // Widgets
-  QScopedPointer<QWidget>  mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QSpinBox> mSpinBox;
 };
 

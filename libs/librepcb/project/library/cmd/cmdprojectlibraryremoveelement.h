@@ -46,8 +46,9 @@ template <typename ElementType>
 class CmdProjectLibraryRemoveElement final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdProjectLibraryRemoveElement(ProjectLibrary& library,
-                                 ElementType&    element) noexcept;
+  CmdProjectLibraryRemoveElement(
+      ProjectLibrary& library,
+      ElementType& element) noexcept;
   ~CmdProjectLibraryRemoveElement() noexcept;
 
 private:
@@ -68,7 +69,7 @@ private:
   void removeElement();
 
   ProjectLibrary& mLibrary;
-  ElementType&    mElement;
+  ElementType& mElement;
 };
 
 /*******************************************************************************

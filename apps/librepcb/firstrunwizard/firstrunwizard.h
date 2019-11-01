@@ -60,9 +60,9 @@ public:
   ~FirstRunWizard() noexcept;
 
   // Getters
-  bool     getCreateNewWorkspace() const noexcept;
+  bool getCreateNewWorkspace() const noexcept;
   FilePath getWorkspaceFilePath() const noexcept;
-  QString  getNewWorkspaceUserName() const noexcept;
+  QString getNewWorkspaceUserName() const noexcept;
 
   // Inherited from QWizard
   int nextId() const override;

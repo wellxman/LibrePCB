@@ -65,8 +65,11 @@ void BoardLayersDock::setActiveBoard(Board* board) {
   mActiveBoard = board;
 
   if (mActiveBoard) {
-    mActiveBoardConnection = connect(mActiveBoard, &Board::attributesChanged,
-                                     this, &BoardLayersDock::updateListWidget);
+    mActiveBoardConnection = connect(
+        mActiveBoard,
+        &Board::attributesChanged,
+        this,
+        &BoardLayersDock::updateListWidget);
   }
 
   updateListWidget();
@@ -78,8 +81,8 @@ void BoardLayersDock::setActiveBoard(Board* board) {
 
 void BoardLayersDock::on_listWidget_itemChanged(QListWidgetItem* item) {
   if (!mActiveBoard) return;
-  QString        layerName = item->data(Qt::UserRole).toString();
-  GraphicsLayer* layer     = mActiveBoard->getLayerStack().getLayer(layerName);
+  QString layerName = item->data(Qt::UserRole).toString();
+  GraphicsLayer* layer = mActiveBoard->getLayerStack().getLayer(layerName);
   if (!layer) return;
   layer->setVisible(item->checkState() == Qt::Checked);
 }
@@ -131,7 +134,7 @@ void BoardLayersDock::updateListWidget() noexcept {
     mUi->listWidget->clear();
   }
   for (int i = 0; i < layerNames.count(); i++) {
-    QString        layerName = layerNames.at(i);
+    QString layerName = layerNames.at(i);
     GraphicsLayer* layer = mActiveBoard->getLayerStack().getLayer(layerName);
     Q_ASSERT(layer);
     QListWidgetItem* item = nullptr;

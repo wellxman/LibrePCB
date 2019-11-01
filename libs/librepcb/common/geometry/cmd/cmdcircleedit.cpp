@@ -60,15 +60,17 @@ CmdCircleEdit::~CmdCircleEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdCircleEdit::setLayerName(const GraphicsLayerName& name,
-                                 bool                     immediate) noexcept {
+void CmdCircleEdit::setLayerName(
+    const GraphicsLayerName& name,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLayerName = name;
   if (immediate) mCircle.setLayerName(mNewLayerName);
 }
 
-void CmdCircleEdit::setLineWidth(const UnsignedLength& width,
-                                 bool                  immediate) noexcept {
+void CmdCircleEdit::setLineWidth(
+    const UnsignedLength& width,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLineWidth = width;
   if (immediate) mCircle.setLineWidth(mNewLineWidth);
@@ -86,8 +88,9 @@ void CmdCircleEdit::setIsGrabArea(bool grabArea, bool immediate) noexcept {
   if (immediate) mCircle.setIsGrabArea(mNewIsGrabArea);
 }
 
-void CmdCircleEdit::setDiameter(const PositiveLength& dia,
-                                bool                  immediate) noexcept {
+void CmdCircleEdit::setDiameter(
+    const PositiveLength& dia,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewDiameter = dia;
   if (immediate) mCircle.setDiameter(mNewDiameter);
@@ -105,8 +108,10 @@ void CmdCircleEdit::translate(const Point& deltaPos, bool immediate) noexcept {
   if (immediate) mCircle.setCenter(mNewCenter);
 }
 
-void CmdCircleEdit::rotate(const Angle& angle, const Point& center,
-                           bool immediate) noexcept {
+void CmdCircleEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewCenter.rotate(angle, center);
   if (immediate) {

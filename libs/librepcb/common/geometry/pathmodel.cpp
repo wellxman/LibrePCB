@@ -56,8 +56,8 @@ void PathModel::setPath(const Path& path) noexcept {
 
 void PathModel::addItem(const QVariant& editData) noexcept {
   Q_UNUSED(editData);
-  beginInsertRows(QModelIndex(), mPath.getVertices().count(),
-                  mPath.getVertices().count());
+  beginInsertRows(
+      QModelIndex(), mPath.getVertices().count(), mPath.getVertices().count());
   mPath.addVertex(mNewVertex);
   endInsertRows();
 }
@@ -175,8 +175,10 @@ QVariant PathModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-QVariant PathModel::headerData(int section, Qt::Orientation orientation,
-                               int role) const {
+QVariant PathModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -199,8 +201,8 @@ QVariant PathModel::headerData(int section, Qt::Orientation orientation,
       } else {
         return tr("New:");
       }
-    } else if ((role == Qt::ToolTipRole) &&
-               (section == mPath.getVertices().count())) {
+    } else if (
+        (role == Qt::ToolTipRole) && (section == mPath.getVertices().count())) {
       return tr("Add a new vertex");
     } else if (role == Qt::TextAlignmentRole) {
       return QVariant(Qt::AlignRight | Qt::AlignVCenter);
@@ -226,8 +228,10 @@ Qt::ItemFlags PathModel::flags(const QModelIndex& index) const {
   return f;
 }
 
-bool PathModel::setData(const QModelIndex& index, const QVariant& value,
-                        int role) {
+bool PathModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   try {
     Vertex* vertex = nullptr;
     if ((index.row() >= 0) && (index.row() < mPath.getVertices().count())) {

@@ -53,21 +53,24 @@ class SES_DrawWire final : public SES_Base {
 
 public:
   // Constructors / Destructor
-  explicit SES_DrawWire(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                        GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit SES_DrawWire(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~SES_DrawWire();
 
   // General Methods
   ProcRetVal process(SEE_Base* event) noexcept override;
-  bool       entry(SEE_Base* event) noexcept override;
-  bool       exit(SEE_Base* event) noexcept override;
+  bool entry(SEE_Base* event) noexcept override;
+  bool exit(SEE_Base* event) noexcept override;
 
 private:
   // Private Types
 
   /// Internal FSM States (substates)
   enum SubState {
-    SubState_Idle,                ///< idle state [initial state]
+    SubState_Idle,  ///< idle state [initial state]
     SubState_PositioningNetPoint  ///< in this state, an undo command is active!
   };
 
@@ -77,12 +80,12 @@ private:
    * @note The first item must have the value 0!
    */
   enum WireMode {
-    WireMode_HV = 0,    ///< horizontal - vertical [default]
-    WireMode_VH,        ///< vertical - horizontal
-    WireMode_9045,      ///< 90° - 45°
-    WireMode_4590,      ///< 45° - 90°
+    WireMode_HV = 0,  ///< horizontal - vertical [default]
+    WireMode_VH,  ///< vertical - horizontal
+    WireMode_9045,  ///< 90° - 45°
+    WireMode_4590,  ///< 45° - 90°
     WireMode_Straight,  ///< straight
-    WireMode_COUNT      ///< count of wire modes
+    WireMode_COUNT  ///< count of wire modes
   };
 
   // Private Methods
@@ -90,18 +93,24 @@ private:
   ProcRetVal processSubStatePositioning(SEE_Base* event) noexcept;
   ProcRetVal processIdleSceneEvent(SEE_Base* event) noexcept;
   ProcRetVal processPositioningSceneEvent(SEE_Base* event) noexcept;
-  bool       startPositioning(Schematic& schematic, const Point& pos,
-                              SI_NetPoint* fixedPoint = nullptr) noexcept;
-  bool       addNextNetPoint(Schematic& schematic, const Point& pos) noexcept;
-  bool       abortPositioning(bool showErrMsgBox) noexcept;
+  bool startPositioning(
+      Schematic& schematic,
+      const Point& pos,
+      SI_NetPoint* fixedPoint = nullptr) noexcept;
+  bool addNextNetPoint(Schematic& schematic, const Point& pos) noexcept;
+  bool abortPositioning(bool showErrMsgBox) noexcept;
   SI_SymbolPin* findSymbolPin(Schematic& schematic, const Point& pos) const
       noexcept;
-  SI_NetPoint* findNetPoint(Schematic& schematic, const Point& pos,
-                            SI_NetPoint* except = nullptr) const noexcept;
-  SI_NetLine*  findNetLine(Schematic& schematic, const Point& pos,
-                           SI_NetLine* except = nullptr) const noexcept;
-  void         updateNetpointPositions(const Point& cursorPos) noexcept;
-  void         updateWireModeActionsCheckedState() noexcept;
+  SI_NetPoint* findNetPoint(
+      Schematic& schematic,
+      const Point& pos,
+      SI_NetPoint* except = nullptr) const noexcept;
+  SI_NetLine* findNetLine(
+      Schematic& schematic,
+      const Point& pos,
+      SI_NetLine* except = nullptr) const noexcept;
+  void updateNetpointPositions(const Point& cursorPos) noexcept;
+  void updateWireModeActionsCheckedState() noexcept;
   Point calcMiddlePointPos(const Point& p1, const Point p2, WireMode mode) const
       noexcept;
 
@@ -109,17 +118,17 @@ private:
   SubState mSubState;  ///< the current substate
   WireMode mWireMode;  ///< the current wire mode
   SI_NetLineAnchor*
-               mFixedStartAnchor;  ///< the fixed anchor (start point of the line)
-  SI_NetLine*  mPositioningNetLine1;   ///< line between fixed point and p1
+      mFixedStartAnchor;  ///< the fixed anchor (start point of the line)
+  SI_NetLine* mPositioningNetLine1;  ///< line between fixed point and p1
   SI_NetPoint* mPositioningNetPoint1;  ///< the first netpoint to place
-  SI_NetLine*  mPositioningNetLine2;   ///< line between p1 and p2
+  SI_NetLine* mPositioningNetLine2;  ///< line between p1 and p2
   SI_NetPoint* mPositioningNetPoint2;  ///< the second netpoint to place
 
   // Widgets for the command toolbar
   QHash<WireMode, QAction*> mWireModeActions;
-  QList<QAction*>           mActionSeparators;
-  QLabel*                   mWidthLabel;
-  QComboBox*                mWidthComboBox;
+  QList<QAction*> mActionSeparators;
+  QLabel* mWidthLabel;
+  QComboBox* mWidthComboBox;
 };
 
 /*******************************************************************************

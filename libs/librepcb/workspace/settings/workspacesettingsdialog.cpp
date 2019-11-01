@@ -46,10 +46,11 @@ WorkspaceSettingsDialog::WorkspaceSettingsDialog(WorkspaceSettings& settings)
   // Add all settings widgets
 
   // tab: general
-  mUi->generalLayout->addRow(mSettings.getUser().getLabelText(),
-                             mSettings.getUser().getWidget());
-  mUi->generalLayout->addRow(mSettings.getAppLocale().getLabelText(),
-                             mSettings.getAppLocale().getWidget());
+  mUi->generalLayout->addRow(
+      mSettings.getUser().getLabelText(), mSettings.getUser().getWidget());
+  mUi->generalLayout->addRow(
+      mSettings.getAppLocale().getLabelText(),
+      mSettings.getAppLocale().getWidget());
   mUi->generalLayout->addRow(
       mSettings.getAppDefMeasUnits().getLengthUnitLabelText(),
       mSettings.getAppDefMeasUnits().getLengthUnitComboBox());
@@ -63,18 +64,20 @@ WorkspaceSettingsDialog::WorkspaceSettingsDialog(WorkspaceSettings& settings)
       mSettings.getAppearance().getUseOpenGlWidget());
 
   // tab: library
-  mUi->libraryLayout->addRow(mSettings.getLibLocaleOrder().getLabelText(),
-                             mSettings.getLibLocaleOrder().getWidget());
-  mUi->libraryLayout->addRow(mSettings.getLibNormOrder().getLabelText(),
-                             mSettings.getLibNormOrder().getWidget());
+  mUi->libraryLayout->addRow(
+      mSettings.getLibLocaleOrder().getLabelText(),
+      mSettings.getLibLocaleOrder().getWidget());
+  mUi->libraryLayout->addRow(
+      mSettings.getLibNormOrder().getLabelText(),
+      mSettings.getLibNormOrder().getWidget());
 
   // tab: repositories
   mUi->repositoriesLayout->addWidget(mSettings.getRepositories().getWidget());
 
   // tab: debug tools
 #ifdef QT_DEBUG
-  mUi->tabWidget->addTab(mSettings.getDebugTools().getWidget(),
-                         tr("Debug Tools"));
+  mUi->tabWidget->addTab(
+      mSettings.getDebugTools().getWidget(), tr("Debug Tools"));
 #endif
 
   // load the window geometry
@@ -90,8 +93,8 @@ WorkspaceSettingsDialog::WorkspaceSettingsDialog(WorkspaceSettings& settings)
 WorkspaceSettingsDialog::~WorkspaceSettingsDialog() {
   // save the window geometry
   QSettings clientSettings;
-  clientSettings.setValue("workspace_settings_dialog/window_geometry",
-                          saveGeometry());
+  clientSettings.setValue(
+      "workspace_settings_dialog/window_geometry", saveGeometry());
 
   // Remove all settings widgets from the dialog (important for memory
   // management!)
@@ -164,7 +167,8 @@ void WorkspaceSettingsDialog::on_buttonBox_clicked(QAbstractButton* button) {
 
     case QDialogButtonBox::ResetRole: {
       int answer = QMessageBox::question(
-          this, tr("Restore default settings"),
+          this,
+          tr("Restore default settings"),
           tr("Are you sure to reset all settings to their default values?\n"
              "After applying you cannot undo this change."));
       if (answer == QMessageBox::Yes) mSettings.restoreDefaults();

@@ -49,7 +49,7 @@ class PackageEditorState_Select final : public PackageEditorState {
 
 public:
   // Constructors / Destructor
-  PackageEditorState_Select()                                       = delete;
+  PackageEditorState_Select() = delete;
   PackageEditorState_Select(const PackageEditorState_Select& other) = delete;
   explicit PackageEditorState_Select(Context& context) noexcept;
   ~PackageEditorState_Select() noexcept;
@@ -95,8 +95,8 @@ private:  // Methods
 
 private:  // Types / Data
   enum class SubState { IDLE, SELECTING, MOVING, PASTING };
-  SubState                                      mState;
-  Point                                         mStartPos;
+  SubState mState;
+  Point mStartPos;
   QScopedPointer<CmdDragSelectedFootprintItems> mCmdDragSelectedItems;
 };
 

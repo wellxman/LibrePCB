@@ -47,16 +47,21 @@ NetworkRequestBase::NetworkRequestBase(const QUrl& url) noexcept
 
   // set initial HTTP header fields
   mRequest.setHeader(QNetworkRequest::UserAgentHeader, getUserAgent());
-  mRequest.setRawHeader("X-LibrePCB-AppVersion",
-                        qApp->applicationVersion().toUtf8());
-  mRequest.setRawHeader("X-LibrePCB-GitRevision",
-                        qApp->getGitRevision().toUtf8());
-  mRequest.setRawHeader("X-LibrePCB-FileFormatVersion",
-                        qApp->getFileFormatVersion().toStr().toUtf8());
+  mRequest.setRawHeader(
+      "X-LibrePCB-AppVersion", qApp->applicationVersion().toUtf8());
+  mRequest.setRawHeader(
+      "X-LibrePCB-GitRevision", qApp->getGitRevision().toUtf8());
+  mRequest.setRawHeader(
+      "X-LibrePCB-FileFormatVersion",
+      qApp->getFileFormatVersion().toStr().toUtf8());
 
   // create queued connection to let executeRequest() execute in download thread
-  connect(this, &NetworkRequestBase::startRequested, this,
-          &NetworkRequestBase::executeRequest, Qt::QueuedConnection);
+  connect(
+      this,
+      &NetworkRequestBase::startRequested,
+      this,
+      &NetworkRequestBase::executeRequest,
+      Qt::QueuedConnection);
 }
 
 NetworkRequestBase::~NetworkRequestBase() noexcept {
@@ -71,8 +76,9 @@ NetworkRequestBase::~NetworkRequestBase() noexcept {
  *  Public Methods
  ******************************************************************************/
 
-void NetworkRequestBase::setHeaderField(const QByteArray& name,
-                                        const QByteArray& value) noexcept {
+void NetworkRequestBase::setHeaderField(
+    const QByteArray& name,
+    const QByteArray& value) noexcept {
   Q_ASSERT(QThread::currentThread() != NetworkAccessManager::instance());
   Q_ASSERT(!mStarted);
   mRequest.setRawHeader(name, value);
@@ -142,18 +148,32 @@ void NetworkRequestBase::executeRequest() noexcept {
   }
 
   // connect to signals of reply
-  connect(mReply.data(), &QNetworkReply::readyRead, this,
-          &NetworkRequestBase::replyReadyReadSlot);
-  connect(mReply.data(),
-          static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(
-              &QNetworkReply::error),
-          this, &NetworkRequestBase::replyErrorSlot);
-  connect(mReply.data(), &QNetworkReply::sslErrors, this,
-          &NetworkRequestBase::replySslErrorsSlot);
-  connect(mReply.data(), &QNetworkReply::downloadProgress, this,
-          &NetworkRequestBase::replyDownloadProgressSlot);
-  connect(mReply.data(), &QNetworkReply::finished, this,
-          &NetworkRequestBase::replyFinishedSlot);
+  connect(
+      mReply.data(),
+      &QNetworkReply::readyRead,
+      this,
+      &NetworkRequestBase::replyReadyReadSlot);
+  connect(
+      mReply.data(),
+      static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(
+          &QNetworkReply::error),
+      this,
+      &NetworkRequestBase::replyErrorSlot);
+  connect(
+      mReply.data(),
+      &QNetworkReply::sslErrors,
+      this,
+      &NetworkRequestBase::replySslErrorsSlot);
+  connect(
+      mReply.data(),
+      &QNetworkReply::downloadProgress,
+      this,
+      &NetworkRequestBase::replyDownloadProgressSlot);
+  connect(
+      mReply.data(),
+      &QNetworkReply::finished,
+      this,
+      &NetworkRequestBase::replyFinishedSlot);
 }
 
 void NetworkRequestBase::replyReadyReadSlot() noexcept {
@@ -177,8 +197,9 @@ void NetworkRequestBase::replySslErrorsSlot(
   finalize(QString(tr("SSL errors occured:\n\n%1")).arg(errorsList.join("\n")));
 }
 
-void NetworkRequestBase::replyDownloadProgressSlot(qint64 bytesReceived,
-                                                   qint64 bytesTotal) noexcept {
+void NetworkRequestBase::replyDownloadProgressSlot(
+    qint64 bytesReceived,
+    qint64 bytesTotal) noexcept {
   Q_ASSERT(QThread::currentThread() == NetworkAccessManager::instance());
   if (mAborted || mErrored || mFinished) return;
   if (mReply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid())
@@ -284,10 +305,10 @@ void NetworkRequestBase::finalize(const QString& errorMsg) noexcept {
  ******************************************************************************/
 
 QString NetworkRequestBase::formatFileSize(qint64 bytes) noexcept {
-  qreal               num = bytes;
-  QStringList         list({"KB", "MB", "GB", "TB"});
+  qreal num = bytes;
+  QStringList list({"KB", "MB", "GB", "TB"});
   QStringListIterator i(list);
-  QString             unit("Bytes");
+  QString unit("Bytes");
   while (num >= 1024.0 && i.hasNext()) {
     unit = i.next();
     num /= 1024;
@@ -304,10 +325,11 @@ QString NetworkRequestBase::getUserAgent() noexcept {
     details << QSysInfo::currentCpuArchitecture();
 #endif
     details << QLocale::system().name();
-    userAgent =
-        QString("LibrePCB/%1 (%2) Qt/%3")
-            .arg(qApp->applicationVersion(),
-                 details.join("; ").remove("(").remove(")"), qVersion());
+    userAgent = QString("LibrePCB/%1 (%2) Qt/%3")
+                    .arg(
+                        qApp->applicationVersion(),
+                        details.join("; ").remove("(").remove(")"),
+                        qVersion());
   }
   return userAgent;
 }

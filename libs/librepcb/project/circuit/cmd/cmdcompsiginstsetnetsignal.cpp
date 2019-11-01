@@ -37,7 +37,8 @@ namespace project {
  ******************************************************************************/
 
 CmdCompSigInstSetNetSignal::CmdCompSigInstSetNetSignal(
-    ComponentSignalInstance& cmpSigInstance, NetSignal* netsignal) noexcept
+    ComponentSignalInstance& cmpSigInstance,
+    NetSignal* netsignal) noexcept
   : UndoCommand(tr("Change component signal net")),
     mComponentSignalInstance(cmpSigInstance),
     mNetSignal(netsignal),

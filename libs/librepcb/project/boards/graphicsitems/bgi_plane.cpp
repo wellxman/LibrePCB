@@ -92,8 +92,10 @@ void BGI_Plane::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void BGI_Plane::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-                      QWidget* widget) {
+void BGI_Plane::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(widget);
 
   const bool selected = mPlane.isSelected();

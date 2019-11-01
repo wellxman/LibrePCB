@@ -49,8 +49,9 @@ class MsgWrongSymbolTextLayer final : public LibraryElementCheckMessage {
 public:
   // Constructors / Destructor
   MsgWrongSymbolTextLayer() = delete;
-  MsgWrongSymbolTextLayer(std::shared_ptr<const Text> text,
-                          const QString& expectedLayerName) noexcept;
+  MsgWrongSymbolTextLayer(
+      std::shared_ptr<const Text> text,
+      const QString& expectedLayerName) noexcept;
   MsgWrongSymbolTextLayer(const MsgWrongSymbolTextLayer& other) noexcept
     : LibraryElementCheckMessage(other),
       mText(other.mText),
@@ -63,7 +64,7 @@ public:
 
 private:
   std::shared_ptr<const Text> mText;
-  QString                     mExpectedLayerName;
+  QString mExpectedLayerName;
 };
 
 /*******************************************************************************

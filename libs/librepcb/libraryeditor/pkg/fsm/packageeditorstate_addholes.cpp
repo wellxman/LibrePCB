@@ -76,8 +76,11 @@ bool PackageEditorState_AddHoles::entry() noexcept {
   std::unique_ptr<PositiveLengthEdit> edtDiameter(new PositiveLengthEdit());
   edtDiameter->setSingleStep(0.1);  // [mm]
   edtDiameter->setValue(mLastDiameter);
-  connect(edtDiameter.get(), &PositiveLengthEdit::valueChanged, this,
-          &PackageEditorState_AddHoles::diameterEditValueChanged);
+  connect(
+      edtDiameter.get(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &PackageEditorState_AddHoles::diameterEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtDiameter));
 
   Point pos =
@@ -132,9 +135,9 @@ bool PackageEditorState_AddHoles::startAddHole(const Point& pos) noexcept {
     mStartPos = pos;
     mContext.undoStack.beginCmdGroup(tr("Add hole"));
     mCurrentHole = new Hole(Uuid::createRandom(), pos, mLastDiameter);
-    mContext.undoStack.appendToCmdGroup(
-        new CmdHoleInsert(mContext.currentFootprint->getHoles(),
-                          std::shared_ptr<Hole>(mCurrentHole)));
+    mContext.undoStack.appendToCmdGroup(new CmdHoleInsert(
+        mContext.currentFootprint->getHoles(),
+        std::shared_ptr<Hole>(mCurrentHole)));
     mEditCmd.reset(new CmdHoleEdit(*mCurrentHole));
     mCurrentGraphicsItem =
         mContext.currentGraphicsItem->getHoleGraphicsItem(*mCurrentHole);
@@ -144,7 +147,7 @@ bool PackageEditorState_AddHoles::startAddHole(const Point& pos) noexcept {
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentHole         = nullptr;
+    mCurrentHole = nullptr;
     mEditCmd.reset();
     return false;
   }
@@ -159,7 +162,7 @@ bool PackageEditorState_AddHoles::finishAddHole(const Point& pos) noexcept {
     mEditCmd->setPosition(pos, true);
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentHole         = nullptr;
+    mCurrentHole = nullptr;
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
     return true;
@@ -173,7 +176,7 @@ bool PackageEditorState_AddHoles::abortAddHole() noexcept {
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentHole         = nullptr;
+    mCurrentHole = nullptr;
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();
     return true;

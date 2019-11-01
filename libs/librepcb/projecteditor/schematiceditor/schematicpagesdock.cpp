@@ -46,8 +46,9 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SchematicPagesDock::SchematicPagesDock(Project&         project,
-                                       SchematicEditor& editor)
+SchematicPagesDock::SchematicPagesDock(
+    Project& project,
+    SchematicEditor& editor)
   : QDockWidget(0),
     mProject(project),
     mEditor(editor),
@@ -58,12 +59,21 @@ SchematicPagesDock::SchematicPagesDock(Project&         project,
   for (int i = 0; i < mProject.getSchematics().count(); i++) schematicAdded(i);
 
   // connect signals/slots
-  connect(&mEditor, &SchematicEditor::activeSchematicChanged, this,
-          &SchematicPagesDock::activeSchematicChanged);
-  connect(&mProject, &Project::schematicAdded, this,
-          &SchematicPagesDock::schematicAdded);
-  connect(&mProject, &Project::schematicRemoved, this,
-          &SchematicPagesDock::schematicRemoved);
+  connect(
+      &mEditor,
+      &SchematicEditor::activeSchematicChanged,
+      this,
+      &SchematicPagesDock::activeSchematicChanged);
+  connect(
+      &mProject,
+      &Project::schematicAdded,
+      this,
+      &SchematicPagesDock::schematicAdded);
+  connect(
+      &mProject,
+      &Project::schematicRemoved,
+      this,
+      &SchematicPagesDock::schematicRemoved);
 
   // select the current schematic page
   mUi->listWidget->setCurrentRow(mEditor.getActiveSchematicIndex());
@@ -113,10 +123,14 @@ void SchematicPagesDock::schematicRemoved(int oldIndex) {
  ******************************************************************************/
 
 void SchematicPagesDock::on_btnNewSchematic_clicked() {
-  bool    ok   = false;
-  QString name = QInputDialog::getText(this, tr("Add schematic page"),
-                                       tr("Choose a name:"), QLineEdit::Normal,
-                                       tr("New Page"), &ok);
+  bool ok = false;
+  QString name = QInputDialog::getText(
+      this,
+      tr("Add schematic page"),
+      tr("Choose a name:"),
+      QLineEdit::Normal,
+      tr("New Page"),
+      &ok);
 
   if (!ok) return;
 

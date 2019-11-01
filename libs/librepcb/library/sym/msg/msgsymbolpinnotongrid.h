@@ -50,8 +50,9 @@ class MsgSymbolPinNotOnGrid final : public LibraryElementCheckMessage {
 public:
   // Constructors / Destructor
   MsgSymbolPinNotOnGrid() = delete;
-  MsgSymbolPinNotOnGrid(std::shared_ptr<const SymbolPin> pin,
-                        const PositiveLength&            gridInterval) noexcept;
+  MsgSymbolPinNotOnGrid(
+      std::shared_ptr<const SymbolPin> pin,
+      const PositiveLength& gridInterval) noexcept;
   MsgSymbolPinNotOnGrid(const MsgSymbolPinNotOnGrid& other) noexcept
     : LibraryElementCheckMessage(other),
       mPin(other.mPin),
@@ -68,7 +69,7 @@ public:
 
 private:
   std::shared_ptr<const SymbolPin> mPin;
-  PositiveLength                   mGridInterval;
+  PositiveLength mGridInterval;
 };
 
 /*******************************************************************************

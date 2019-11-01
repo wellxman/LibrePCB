@@ -41,25 +41,47 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_EnterMetadata::NewElementWizardPage_EnterMetadata(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_EnterMetadata) {
   mUi->setupUi(this);
-  connect(mUi->edtName, &QLineEdit::textChanged, this,
-          &NewElementWizardPage_EnterMetadata::edtNameTextChanged);
-  connect(mUi->edtDescription, &QPlainTextEdit::textChanged, this,
-          &NewElementWizardPage_EnterMetadata::edtDescriptionTextChanged);
-  connect(mUi->edtKeywords, &QLineEdit::textChanged, this,
-          &NewElementWizardPage_EnterMetadata::edtKeywordsTextChanged);
-  connect(mUi->edtAuthor, &QLineEdit::textChanged, this,
-          &NewElementWizardPage_EnterMetadata::edtAuthorTextChanged);
-  connect(mUi->edtVersion, &QLineEdit::textChanged, this,
-          &NewElementWizardPage_EnterMetadata::edtVersionTextChanged);
-  connect(mUi->btnChooseCategory, &QToolButton::clicked, this,
-          &NewElementWizardPage_EnterMetadata::btnChooseCategoryClicked);
-  connect(mUi->btnResetCategory, &QToolButton::clicked, this,
-          &NewElementWizardPage_EnterMetadata::btnResetCategoryClicked);
+  connect(
+      mUi->edtName,
+      &QLineEdit::textChanged,
+      this,
+      &NewElementWizardPage_EnterMetadata::edtNameTextChanged);
+  connect(
+      mUi->edtDescription,
+      &QPlainTextEdit::textChanged,
+      this,
+      &NewElementWizardPage_EnterMetadata::edtDescriptionTextChanged);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::textChanged,
+      this,
+      &NewElementWizardPage_EnterMetadata::edtKeywordsTextChanged);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::textChanged,
+      this,
+      &NewElementWizardPage_EnterMetadata::edtAuthorTextChanged);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::textChanged,
+      this,
+      &NewElementWizardPage_EnterMetadata::edtVersionTextChanged);
+  connect(
+      mUi->btnChooseCategory,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_EnterMetadata::btnChooseCategoryClicked);
+  connect(
+      mUi->btnResetCategory,
+      &QToolButton::clicked,
+      this,
+      &NewElementWizardPage_EnterMetadata::btnResetCategoryClicked);
 }
 
 NewElementWizardPage_EnterMetadata::
@@ -202,8 +224,8 @@ void NewElementWizardPage_EnterMetadata::updateCategoryTreeLabel() noexcept {
 
 void NewElementWizardPage_EnterMetadata::initializePage() noexcept {
   QWizardPage::initializePage();
-  mUi->edtName->setText(mContext.mElementName ? **mContext.mElementName
-                                              : QString());
+  mUi->edtName->setText(
+      mContext.mElementName ? **mContext.mElementName : QString());
   mUi->edtDescription->setPlainText(mContext.mElementDescription);
   mUi->edtKeywords->setText(mContext.mElementKeywords);
   mUi->edtAuthor->setText(mContext.mElementAuthor);

@@ -50,7 +50,8 @@ class CmdNetSignalAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   CmdNetSignalAdd(
-      Circuit& circuit, NetClass& netclass,
+      Circuit& circuit,
+      NetClass& netclass,
       const tl::optional<CircuitIdentifier>& name = tl::nullopt) noexcept;
   ~CmdNetSignalAdd() noexcept;
 
@@ -71,10 +72,10 @@ private:
 
   // Private Member Variables
 
-  Circuit&                        mCircuit;
-  NetClass&                       mNetClass;
+  Circuit& mCircuit;
+  NetClass& mNetClass;
   tl::optional<CircuitIdentifier> mName;
-  NetSignal*                      mNetSignal;
+  NetSignal* mNetSignal;
 };
 
 /*******************************************************************************

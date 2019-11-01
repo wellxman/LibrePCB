@@ -71,71 +71,82 @@ CmdFootprintPadEdit::~CmdFootprintPadEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdFootprintPadEdit::setPackagePadUuid(const Uuid& pad,
-                                            bool        immediate) noexcept {
+void CmdFootprintPadEdit::setPackagePadUuid(
+    const Uuid& pad,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPackagePadUuid = pad;
   if (immediate) mPad.setPackagePadUuid(mNewPackagePadUuid);
 }
 
-void CmdFootprintPadEdit::setBoardSide(FootprintPad::BoardSide side,
-                                       bool immediate) noexcept {
+void CmdFootprintPadEdit::setBoardSide(
+    FootprintPad::BoardSide side,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewBoardSide = side;
   if (immediate) mPad.setBoardSide(mNewBoardSide);
 }
 
-void CmdFootprintPadEdit::setShape(FootprintPad::Shape shape,
-                                   bool                immediate) noexcept {
+void CmdFootprintPadEdit::setShape(
+    FootprintPad::Shape shape,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewShape = shape;
   if (immediate) mPad.setShape(mNewShape);
 }
 
-void CmdFootprintPadEdit::setWidth(const PositiveLength& width,
-                                   bool                  immediate) noexcept {
+void CmdFootprintPadEdit::setWidth(
+    const PositiveLength& width,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewWidth = width;
   if (immediate) mPad.setWidth(mNewWidth);
 }
 
-void CmdFootprintPadEdit::setHeight(const PositiveLength& height,
-                                    bool                  immediate) noexcept {
+void CmdFootprintPadEdit::setHeight(
+    const PositiveLength& height,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewHeight = height;
   if (immediate) mPad.setHeight(mNewHeight);
 }
 
-void CmdFootprintPadEdit::setDrillDiameter(const UnsignedLength& dia,
-                                           bool immediate) noexcept {
+void CmdFootprintPadEdit::setDrillDiameter(
+    const UnsignedLength& dia,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewDrillDiameter = dia;
   if (immediate) mPad.setDrillDiameter(mNewDrillDiameter);
 }
 
-void CmdFootprintPadEdit::setPosition(const Point& pos,
-                                      bool         immediate) noexcept {
+void CmdFootprintPadEdit::setPosition(
+    const Point& pos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos = pos;
   if (immediate) mPad.setPosition(mNewPos);
 }
 
-void CmdFootprintPadEdit::translate(const Point& deltaPos,
-                                    bool         immediate) noexcept {
+void CmdFootprintPadEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos += deltaPos;
   if (immediate) mPad.setPosition(mNewPos);
 }
 
-void CmdFootprintPadEdit::setRotation(const Angle& angle,
-                                      bool         immediate) noexcept {
+void CmdFootprintPadEdit::setRotation(
+    const Angle& angle,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewRotation = angle;
   if (immediate) mPad.setRotation(mNewRotation);
 }
 
-void CmdFootprintPadEdit::rotate(const Angle& angle, const Point& center,
-                                 bool immediate) noexcept {
+void CmdFootprintPadEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos.rotate(angle, center);
   mNewRotation += angle;

@@ -93,14 +93,18 @@ void ComponentSignalListModel::addSignal(const QVariant& editData) noexcept {
         new UndoCommandGroup(tr("Add component signal(s)")));
     foreach (const QString& name, Toolbox::expandRangesInString(mNewName)) {
       std::shared_ptr<ComponentSignal> sig = std::make_shared<ComponentSignal>(
-          Uuid::createRandom(), validateNameOrThrow(name),
-          SignalRole::passive(), mNewForcedNetName, mNewIsRequired, false,
+          Uuid::createRandom(),
+          validateNameOrThrow(name),
+          SignalRole::passive(),
+          mNewForcedNetName,
+          mNewIsRequired,
+          false,
           false);
       cmd->appendChild(new CmdComponentSignalInsert(*mSignalList, sig));
     }
     execCmd(cmd.take());
-    mNewName          = QString();
-    mNewIsRequired    = false;
+    mNewName = QString();
+    mNewIsRequired = false;
     mNewForcedNetName = QString();
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
@@ -139,8 +143,8 @@ int ComponentSignalListModel::columnCount(const QModelIndex& parent) const {
   return 0;
 }
 
-QVariant ComponentSignalListModel::data(const QModelIndex& index,
-                                        int                role) const {
+QVariant ComponentSignalListModel::data(const QModelIndex& index, int role)
+    const {
   if (!index.isValid() || !mSignalList) {
     return QVariant();
   }
@@ -148,8 +152,8 @@ QVariant ComponentSignalListModel::data(const QModelIndex& index,
   std::shared_ptr<ComponentSignal> item = mSignalList->value(index.row());
   switch (index.column()) {
     case COLUMN_NAME: {
-      QString name     = item ? *item->getName() : mNewName;
-      bool    showHint = (!item) && mNewName.isEmpty();
+      QString name = item ? *item->getName() : mNewName;
+      bool showHint = (!item) && mNewName.isEmpty();
       QString hint =
           tr("Signal name (may contain ranges like \"%1\")").arg("1..5");
       switch (role) {
@@ -211,9 +215,10 @@ QVariant ComponentSignalListModel::data(const QModelIndex& index,
   return QVariant();
 }
 
-QVariant ComponentSignalListModel::headerData(int             section,
-                                              Qt::Orientation orientation,
-                                              int             role) const {
+QVariant ComponentSignalListModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -257,8 +262,10 @@ Qt::ItemFlags ComponentSignalListModel::flags(const QModelIndex& index) const {
   return f;
 }
 
-bool ComponentSignalListModel::setData(const QModelIndex& index,
-                                       const QVariant& value, int role) {
+bool ComponentSignalListModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mSignalList) {
     return false;
   }
@@ -270,7 +277,7 @@ bool ComponentSignalListModel::setData(const QModelIndex& index,
       cmd.reset(new CmdComponentSignalEdit(*item));
     }
     if ((index.column() == COLUMN_NAME) && role == Qt::EditRole) {
-      QString name        = value.toString().trimmed();
+      QString name = value.toString().trimmed();
       QString cleanedName = cleanCircuitIdentifier(name);
       if (cmd) {
         if (cleanedName != item->getName()) {
@@ -284,16 +291,16 @@ bool ComponentSignalListModel::setData(const QModelIndex& index,
           mNewName = name;  // contains ranges -> keep them!
         }
       }
-    } else if ((index.column() == COLUMN_ISREQUIRED) &&
-               role == Qt::CheckStateRole) {
+    } else if (
+        (index.column() == COLUMN_ISREQUIRED) && role == Qt::CheckStateRole) {
       bool required = value.toInt() == Qt::Checked;
       if (cmd) {
         cmd->setIsRequired(required);
       } else {
         mNewIsRequired = required;
       }
-    } else if ((index.column() == COLUMN_FORCEDNETNAME) &&
-               role == Qt::EditRole) {
+    } else if (
+        (index.column() == COLUMN_FORCEDNETNAME) && role == Qt::EditRole) {
       QString forcedNetName = cleanForcedNetName(value.toString());
       if (cmd) {
         cmd->setForcedNetName(forcedNetName);
@@ -320,9 +327,10 @@ bool ComponentSignalListModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void ComponentSignalListModel::signalListEdited(
-    const ComponentSignalList& list, int index,
+    const ComponentSignalList& list,
+    int index,
     const std::shared_ptr<const ComponentSignal>& signal,
-    ComponentSignalList::Event                    event) noexcept {
+    ComponentSignalList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(signal);
   switch (event) {
@@ -357,7 +365,8 @@ CircuitIdentifier ComponentSignalListModel::validateNameOrThrow(
     const QString& name) const {
   if (mSignalList && mSignalList->contains(name)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a signal with the name \"%1\"."))
             .arg(name));
   }
@@ -370,8 +379,12 @@ QString ComponentSignalListModel::cleanForcedNetName(
   // allowed to have attribute placeholders in a forced net name. Also remove
   // spaces because they must not be replaced by underscores inside {{ and }}.
   return Toolbox::cleanUserInputString(
-      name, QRegularExpression("[^-a-zA-Z0-9_+/!?@#$\\{\\}]"), true, false,
-      false, "");
+      name,
+      QRegularExpression("[^-a-zA-Z0-9_+/!?@#$\\{\\}]"),
+      true,
+      false,
+      false,
+      "");
 }
 
 /*******************************************************************************

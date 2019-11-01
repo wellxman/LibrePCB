@@ -53,9 +53,10 @@ using workspace::WorkspaceLibraryDb;
  *  Constructors / Destructor
  ******************************************************************************/
 
-ProjectLibraryUpdater::ProjectLibraryUpdater(workspace::Workspace& ws,
-                                             const FilePath&       project,
-                                             ControlPanel&         cp) noexcept
+ProjectLibraryUpdater::ProjectLibraryUpdater(
+    workspace::Workspace& ws,
+    const FilePath& project,
+    ControlPanel& cp) noexcept
   : QMainWindow(nullptr),
     mWorkspace(ws),
     mProjectFilePath(project),
@@ -64,8 +65,11 @@ ProjectLibraryUpdater::ProjectLibraryUpdater(workspace::Workspace& ws,
   mUi->setupUi(this);
   mUi->btnUpdate->setText(
       mUi->btnUpdate->text().arg(mProjectFilePath.getBasename()));
-  connect(mUi->btnUpdate, &QPushButton::clicked, this,
-          &ProjectLibraryUpdater::btnUpdateClicked);
+  connect(
+      mUi->btnUpdate,
+      &QPushButton::clicked,
+      this,
+      &ProjectLibraryUpdater::btnUpdateClicked);
 }
 
 ProjectLibraryUpdater::~ProjectLibraryUpdater() {
@@ -80,7 +84,7 @@ void ProjectLibraryUpdater::btnUpdateClicked() {
   mUi->log->clear();
 
   // close project if it is currently open
-  bool                            abort = false;
+  bool abort = false;
   project::editor::ProjectEditor* editor =
       mControlPanel.getOpenProject(mProjectFilePath);
   if (editor) {
@@ -114,20 +118,23 @@ void ProjectLibraryUpdater::btnUpdateClicked() {
       try {
         log(QString(tr("Open project %1..."))
                 .arg(prettyPath(mProjectFilePath)));
-        Project project(std::unique_ptr<TransactionalDirectory>(
-                            new TransactionalDirectory(fs)),
-                        mProjectFilePath.getFilename());
+        Project project(
+            std::unique_ptr<TransactionalDirectory>(
+                new TransactionalDirectory(fs)),
+            mProjectFilePath.getFilename());
         log(QString(tr("Save project %1..."))
                 .arg(prettyPath(mProjectFilePath)));
         project.save();  // force updating library elements file format
-        fs->save();      // can throw
+        fs->save();  // can throw
       } catch (const Exception& e) {
         // something is broken -> discard modifications in file system
         log(QString(tr("[ERROR] %1")).arg(e.getMsg()));
-        throw RuntimeError(__FILE__, __LINE__,
-                           tr("Failed to update library elements! Probably "
-                              "there were breaking "
-                              "changes in some library elements."));
+        throw RuntimeError(
+            __FILE__,
+            __LINE__,
+            tr("Failed to update library elements! Probably "
+               "there were breaking "
+               "changes in some library elements."));
       }
       log(tr("[SUCCESS] All library elements updated."));
     } catch (const Exception& e) {
@@ -163,14 +170,15 @@ QString ProjectLibraryUpdater::prettyPath(const FilePath& fp) const noexcept {
 }
 
 void ProjectLibraryUpdater::updateElements(
-    std::shared_ptr<TransactionalFileSystem> fs, const QString& type,
+    std::shared_ptr<TransactionalFileSystem> fs,
+    const QString& type,
     FilePath (workspace::WorkspaceLibraryDb::*getter)(const Uuid&) const) {
   QString dirpath = "library/" % type;
   foreach (const QString& dirname, fs->getDirs(dirpath)) {
     tl::optional<Uuid> uuid = Uuid::tryFromString(dirname);
-    FilePath           src =
+    FilePath src =
         uuid ? (mWorkspace.getLibraryDb().*getter)(*uuid) : FilePath();
-    QString                dst = dirpath % "/" % dirname;
+    QString dst = dirpath % "/" % dirname;
     TransactionalDirectory dstDir(fs, dst);
     if (src.isValid() && (!dstDir.getFiles().isEmpty())) {
       log(QString(tr("Update %1...")).arg(dst));

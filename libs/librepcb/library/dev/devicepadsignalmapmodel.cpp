@@ -83,8 +83,8 @@ void DevicePadSignalMapModel::setSignalList(
     const ComponentSignalList& list) noexcept {
   mSignals = list;
   updateComboBoxItems();
-  emit dataChanged(index(0, COLUMN_SIGNAL),
-                   index(rowCount() - 1, COLUMN_SIGNAL));
+  emit dataChanged(
+      index(0, COLUMN_SIGNAL), index(rowCount() - 1, COLUMN_SIGNAL));
 }
 
 void DevicePadSignalMapModel::setPadList(const PackagePadList& list) noexcept {
@@ -110,8 +110,8 @@ int DevicePadSignalMapModel::columnCount(const QModelIndex& parent) const {
   return 0;
 }
 
-QVariant DevicePadSignalMapModel::data(const QModelIndex& index,
-                                       int                role) const {
+QVariant DevicePadSignalMapModel::data(const QModelIndex& index, int role)
+    const {
   if (!index.isValid() || !mPadSignalMap) {
     return QVariant();
   }
@@ -124,8 +124,8 @@ QVariant DevicePadSignalMapModel::data(const QModelIndex& index,
 
   switch (index.column()) {
     case COLUMN_PAD: {
-      Uuid                              uuid = item->getPadUuid();
-      std::shared_ptr<const PackagePad> pad  = mPads.find(uuid);
+      Uuid uuid = item->getPadUuid();
+      std::shared_ptr<const PackagePad> pad = mPads.find(uuid);
       switch (role) {
         case Qt::DisplayRole:
           return pad ? *pad->getName() : uuid.toStr();
@@ -136,7 +136,7 @@ QVariant DevicePadSignalMapModel::data(const QModelIndex& index,
       }
     }
     case COLUMN_SIGNAL: {
-      tl::optional<Uuid>                     uuid = item->getSignalUuid();
+      tl::optional<Uuid> uuid = item->getSignalUuid();
       std::shared_ptr<const ComponentSignal> sig =
           uuid ? mSignals.find(*uuid) : nullptr;
       switch (role) {
@@ -160,9 +160,10 @@ QVariant DevicePadSignalMapModel::data(const QModelIndex& index,
   return QVariant();
 }
 
-QVariant DevicePadSignalMapModel::headerData(int             section,
-                                             Qt::Orientation orientation,
-                                             int             role) const {
+QVariant DevicePadSignalMapModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -202,8 +203,10 @@ Qt::ItemFlags DevicePadSignalMapModel::flags(const QModelIndex& index) const {
   return f;
 }
 
-bool DevicePadSignalMapModel::setData(const QModelIndex& index,
-                                      const QVariant& value, int role) {
+bool DevicePadSignalMapModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mPadSignalMap) {
     return false;
   }
@@ -231,9 +234,10 @@ bool DevicePadSignalMapModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void DevicePadSignalMapModel::padSignalMapEdited(
-    const DevicePadSignalMap& map, int index,
+    const DevicePadSignalMap& map,
+    int index,
     const std::shared_ptr<const DevicePadSignalMapItem>& item,
-    DevicePadSignalMap::Event                            event) noexcept {
+    DevicePadSignalMap::Event event) noexcept {
   Q_UNUSED(map);
   Q_UNUSED(item);
   switch (event) {
@@ -274,11 +278,14 @@ void DevicePadSignalMapModel::updateComboBoxItems() noexcept {
   collator.setCaseSensitivity(Qt::CaseInsensitive);
   collator.setIgnorePunctuation(false);
   collator.setNumericMode(true);
-  std::sort(mComboBoxItems.begin(), mComboBoxItems.end(),
-            [&collator](const QPair<QString, QVariant>& lhs,
-                        const QPair<QString, QVariant>& rhs) {
-              return collator(lhs.first, rhs.first);
-            });
+  std::sort(
+      mComboBoxItems.begin(),
+      mComboBoxItems.end(),
+      [&collator](
+          const QPair<QString, QVariant>& lhs,
+          const QPair<QString, QVariant>& rhs) {
+        return collator(lhs.first, rhs.first);
+      });
   mComboBoxItems.insert(
       0, qMakePair(QString("(%1)").arg(tr("unconnected")), QVariant()));
 }

@@ -70,9 +70,9 @@ private:  // Methods
   void spinBoxValueChanged(double value) noexcept override;
 
 private:  // Data
-  Length     mMinValue;
-  Length     mMaxValue;
-  Length     mValue;
+  Length mMinValue;
+  Length mMaxValue;
+  Length mValue;
   LengthUnit mUnit;
 };
 

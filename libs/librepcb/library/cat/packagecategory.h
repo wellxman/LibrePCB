@@ -45,12 +45,15 @@ class PackageCategory final : public LibraryCategory {
 
 public:
   // Constructors / Destructor
-  PackageCategory()                             = delete;
+  PackageCategory() = delete;
   PackageCategory(const PackageCategory& other) = delete;
-  PackageCategory(const Uuid& uuid, const Version& version,
-                  const QString& author, const ElementName& name_en_US,
-                  const QString& description_en_US,
-                  const QString& keywords_en_US);
+  PackageCategory(
+      const Uuid& uuid,
+      const Version& version,
+      const QString& author,
+      const ElementName& name_en_US,
+      const QString& description_en_US,
+      const QString& keywords_en_US);
   explicit PackageCategory(std::unique_ptr<TransactionalDirectory> directory);
   ~PackageCategory() noexcept;
 

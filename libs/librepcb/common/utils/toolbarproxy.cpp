@@ -118,8 +118,9 @@ QAction* ToolBarProxy::addLabel(const QString& text, int indent) noexcept {
   return addWidget(std::move(label));
 }
 
-QAction* ToolBarProxy::addWidget(std::unique_ptr<QWidget> widget,
-                                 int                      indent) noexcept {
+QAction* ToolBarProxy::addWidget(
+    std::unique_ptr<QWidget> widget,
+    int indent) noexcept {
   Q_ASSERT(widget);
   Q_ASSERT((widget->parent() == nullptr) || (widget->parent() == this));
 

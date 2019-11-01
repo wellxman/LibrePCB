@@ -79,8 +79,8 @@ void ComponentSymbolVariantItemListModel::setItemList(
 void ComponentSymbolVariantItemListModel::setSymbolsCache(
     const std::shared_ptr<const LibraryElementCache>& cache) noexcept {
   mSymbolsCache = cache;
-  emit dataChanged(index(0, COLUMN_SYMBOL),
-                   index(rowCount() - 1, COLUMN_SYMBOL));
+  emit dataChanged(
+      index(0, COLUMN_SYMBOL), index(rowCount() - 1, COLUMN_SYMBOL));
 }
 
 void ComponentSymbolVariantItemListModel::setUndoStack(
@@ -109,14 +109,19 @@ void ComponentSymbolVariantItemListModel::addItem(
         mSymbolsCache->getSymbol(*mNewSymbolUuid);
     if (!symbol) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("Symbol '%1' not found in workspace library!"))
               .arg(mNewSymbolUuid->toStr()));
     }
     std::shared_ptr<ComponentSymbolVariantItem> item =
         std::make_shared<ComponentSymbolVariantItem>(
-            Uuid::createRandom(), *mNewSymbolUuid, mNewPosition, mNewRotation,
-            mNewIsRequired, ComponentSymbolVariantItemSuffix(mNewSuffix));
+            Uuid::createRandom(),
+            *mNewSymbolUuid,
+            mNewPosition,
+            mNewRotation,
+            mNewIsRequired,
+            ComponentSymbolVariantItemSuffix(mNewSuffix));
     item->getPinSignalMap() =
         ComponentPinSignalMapHelpers::create(symbol->getPins().getUuidSet());
     execCmd(new CmdComponentSymbolVariantItemInsert(*mItemList, item));
@@ -147,8 +152,8 @@ void ComponentSymbolVariantItemListModel::moveItemUp(
   }
 
   try {
-    Uuid uuid  = Uuid::fromString(editData.toString());
-    int  index = mItemList->indexOf(uuid);
+    Uuid uuid = Uuid::fromString(editData.toString());
+    int index = mItemList->indexOf(uuid);
     if ((index >= 1) && (index < mItemList->count())) {
       execCmd(
           new CmdComponentSymbolVariantItemsSwap(*mItemList, index, index - 1));
@@ -165,8 +170,8 @@ void ComponentSymbolVariantItemListModel::moveItemDown(
   }
 
   try {
-    Uuid uuid  = Uuid::fromString(editData.toString());
-    int  index = mItemList->indexOf(uuid);
+    Uuid uuid = Uuid::fromString(editData.toString());
+    int index = mItemList->indexOf(uuid);
     if ((index >= 0) && (index < mItemList->count() - 1)) {
       execCmd(
           new CmdComponentSymbolVariantItemsSwap(*mItemList, index, index + 1));
@@ -177,7 +182,8 @@ void ComponentSymbolVariantItemListModel::moveItemDown(
 }
 
 void ComponentSymbolVariantItemListModel::changeSymbol(
-    const QVariant& editData, const Uuid& symbol) noexcept {
+    const QVariant& editData,
+    const Uuid& symbol) noexcept {
   if (!mItemList || !mSymbolsCache) {
     return;
   }
@@ -186,7 +192,8 @@ void ComponentSymbolVariantItemListModel::changeSymbol(
     std::shared_ptr<const Symbol> sym = mSymbolsCache->getSymbol(symbol);
     if (!sym) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("Symbol '%1' not found in workspace library!"))
               .arg(symbol.toStr()));
     }
@@ -201,8 +208,9 @@ void ComponentSymbolVariantItemListModel::changeSymbol(
       execCmd(cmd.take());
     } else {
       mNewSymbolUuid = symbol;
-      emit dataChanged(index(rowCount() - 1, COLUMN_SYMBOL),
-                       index(rowCount() - 1, COLUMN_SYMBOL));
+      emit dataChanged(
+          index(rowCount() - 1, COLUMN_SYMBOL),
+          index(rowCount() - 1, COLUMN_SYMBOL));
     }
   } catch (const Exception& e) {
     QMessageBox::critical(0, tr("Error"), e.getMsg());
@@ -229,8 +237,9 @@ int ComponentSymbolVariantItemListModel::columnCount(
   return 0;
 }
 
-QVariant ComponentSymbolVariantItemListModel::data(const QModelIndex& index,
-                                                   int role) const {
+QVariant ComponentSymbolVariantItemListModel::data(
+    const QModelIndex& index,
+    int role) const {
   if (!index.isValid() || !mItemList) {
     return QVariant();
   }
@@ -254,8 +263,8 @@ QVariant ComponentSymbolVariantItemListModel::data(const QModelIndex& index,
       }
       QString name = symbol ? *symbol->getNames().getDefaultValue()
                             : (uuid ? uuid->toStr() : QString());
-      bool    showHint = (!item) && (!mNewSymbolUuid);
-      QString hint     = tr("Choose symbol...");
+      bool showHint = (!item) && (!mNewSymbolUuid);
+      QString hint = tr("Choose symbol...");
       switch (role) {
         case Qt::DisplayRole:
           return showHint ? hint : name;
@@ -291,8 +300,8 @@ QVariant ComponentSymbolVariantItemListModel::data(const QModelIndex& index,
           return required ? Qt::Checked : Qt::Unchecked;
         case Qt::ToolTipRole:
           return required
-                     ? tr("Placing this symbol in schematics is mandatory.")
-                     : tr("Placing this symbol in schematics is optional");
+              ? tr("Placing this symbol in schematics is mandatory.")
+              : tr("Placing this symbol in schematics is optional");
         default:
           return QVariant();
       }
@@ -326,8 +335,8 @@ QVariant ComponentSymbolVariantItemListModel::data(const QModelIndex& index,
     case COLUMN_ROTATION: {
       switch (role) {
         case Qt::DisplayRole:
-          return QString("%1°").arg(item ? item->getSymbolRotation().toDeg()
-                                         : mNewRotation.toDeg());
+          return QString("%1°").arg(
+              item ? item->getSymbolRotation().toDeg() : mNewRotation.toDeg());
         case Qt::EditRole:
           return item ? item->getSymbolRotation().toDeg()
                       : mNewRotation.toDeg();
@@ -351,7 +360,9 @@ QVariant ComponentSymbolVariantItemListModel::data(const QModelIndex& index,
 }
 
 QVariant ComponentSymbolVariantItemListModel::headerData(
-    int section, Qt::Orientation orientation, int role) const {
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if (orientation == Qt::Horizontal) {
     if (role == Qt::DisplayRole) {
       switch (section) {
@@ -400,16 +411,18 @@ Qt::ItemFlags ComponentSymbolVariantItemListModel::flags(
   Qt::ItemFlags f = QAbstractTableModel::flags(index);
   if (index.isValid() && (index.column() == COLUMN_ISREQUIRED)) {
     f |= Qt::ItemIsUserCheckable;
-  } else if (index.isValid() && (index.column() >= COLUMN_SUFFIX) &&
-             (index.column() <= COLUMN_ROTATION)) {
+  } else if (
+      index.isValid() && (index.column() >= COLUMN_SUFFIX) &&
+      (index.column() <= COLUMN_ROTATION)) {
     f |= Qt::ItemIsEditable;
   }
   return f;
 }
 
-bool ComponentSymbolVariantItemListModel::setData(const QModelIndex& index,
-                                                  const QVariant&    value,
-                                                  int                role) {
+bool ComponentSymbolVariantItemListModel::setData(
+    const QModelIndex& index,
+    const QVariant& value,
+    int role) {
   if (!mItemList) {
     return false;
   }
@@ -428,8 +441,8 @@ bool ComponentSymbolVariantItemListModel::setData(const QModelIndex& index,
       } else {
         mNewSuffix = suffix;
       }
-    } else if ((index.column() == COLUMN_ISREQUIRED) &&
-               role == Qt::CheckStateRole) {
+    } else if (
+        (index.column() == COLUMN_ISREQUIRED) && role == Qt::CheckStateRole) {
       bool required = value.toInt() == Qt::Checked;
       if (cmd) {
         cmd->setIsRequired(required);
@@ -479,9 +492,10 @@ bool ComponentSymbolVariantItemListModel::setData(const QModelIndex& index,
  ******************************************************************************/
 
 void ComponentSymbolVariantItemListModel::itemListEdited(
-    const ComponentSymbolVariantItemList& list, int index,
+    const ComponentSymbolVariantItemList& list,
+    int index,
     const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-    ComponentSymbolVariantItemList::Event                    event) noexcept {
+    ComponentSymbolVariantItemList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(item);
   switch (event) {

@@ -94,13 +94,17 @@ BoardEditor::BoardEditor(ProjectEditor& projectEditor, Project& project)
 
   // Add Dock Widgets
   mUnplacedComponentsDock = new UnplacedComponentsDock(mProjectEditor);
-  connect(mUnplacedComponentsDock,
-          &UnplacedComponentsDock::unplacedComponentsCountChanged, this,
-          &BoardEditor::unplacedComponentsCountChanged);
-  connect(mUnplacedComponentsDock, &UnplacedComponentsDock::addDeviceTriggered,
-          [this](ComponentInstance& cmp, const Uuid& dev, const Uuid& fpt) {
-            mFsm->processEvent(new BEE_StartAddDevice(cmp, dev, fpt), true);
-          });
+  connect(
+      mUnplacedComponentsDock,
+      &UnplacedComponentsDock::unplacedComponentsCountChanged,
+      this,
+      &BoardEditor::unplacedComponentsCountChanged);
+  connect(
+      mUnplacedComponentsDock,
+      &UnplacedComponentsDock::addDeviceTriggered,
+      [this](ComponentInstance& cmp, const Uuid& dev, const Uuid& fpt) {
+        mFsm->processEvent(new BEE_StartAddDevice(cmp, dev, fpt), true);
+      });
   addDockWidget(Qt::RightDockWidgetArea, mUnplacedComponentsDock, Qt::Vertical);
   mBoardLayersDock = new BoardLayersDock(*this);
   addDockWidget(Qt::RightDockWidgetArea, mBoardLayersDock, Qt::Vertical);
@@ -131,42 +135,70 @@ BoardEditor::BoardEditor(ProjectEditor& projectEditor, Project& project)
   for (int i = 0; i < mProject.getBoards().count(); i++) boardAdded(i);
   connect(&mProject, &Project::boardAdded, this, &BoardEditor::boardAdded);
   connect(&mProject, &Project::boardRemoved, this, &BoardEditor::boardRemoved);
-  connect(&mBoardListActionGroup, &QActionGroup::triggered, this,
-          &BoardEditor::boardListActionGroupTriggered);
+  connect(
+      &mBoardListActionGroup,
+      &QActionGroup::triggered,
+      this,
+      &BoardEditor::boardListActionGroupTriggered);
 
   // connect some actions which are created with the Qt Designer
-  connect(mUi->actionProjectSave, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::saveProject);
+  connect(
+      mUi->actionProjectSave,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::saveProject);
   connect(mUi->actionQuit, &QAction::triggered, this, &BoardEditor::close);
-  connect(mUi->actionOpenWebsite, &QAction::triggered,
-          []() { QDesktopServices::openUrl(QUrl("https://librepcb.org")); });
+  connect(mUi->actionOpenWebsite, &QAction::triggered, []() {
+    QDesktopServices::openUrl(QUrl("https://librepcb.org"));
+  });
   connect(mUi->actionOnlineDocumentation, &QAction::triggered, []() {
     QDesktopServices::openUrl(QUrl("https://docs.librepcb.org"));
   });
   connect(mUi->actionAbout, &QAction::triggered, qApp, &Application::about);
-  connect(mUi->actionAboutQt, &QAction::triggered, qApp,
-          &QApplication::aboutQt);
-  connect(mUi->actionZoomIn, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomIn);
-  connect(mUi->actionZoomOut, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomOut);
-  connect(mUi->actionZoomAll, &QAction::triggered, mGraphicsView,
-          &GraphicsView::zoomAll);
-  connect(mUi->actionShowControlPanel, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::showControlPanelClicked);
-  connect(mUi->actionShowSchematicEditor, &QAction::triggered, &mProjectEditor,
-          &ProjectEditor::showSchematicEditor);
-  connect(mUi->actionEditNetClasses, &QAction::triggered,
-          [this]() { mProjectEditor.execNetClassesEditorDialog(this); });
-  connect(mUi->actionProjectSettings, &QAction::triggered,
-          [this]() { mProjectEditor.execProjectSettingsDialog(this); });
-  connect(mUi->actionExportLppz, &QAction::triggered,
-          [this]() { mProjectEditor.execLppzExportDialog(this); });
+  connect(
+      mUi->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
+  connect(
+      mUi->actionZoomIn,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomIn);
+  connect(
+      mUi->actionZoomOut,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomOut);
+  connect(
+      mUi->actionZoomAll,
+      &QAction::triggered,
+      mGraphicsView,
+      &GraphicsView::zoomAll);
+  connect(
+      mUi->actionShowControlPanel,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::showControlPanelClicked);
+  connect(
+      mUi->actionShowSchematicEditor,
+      &QAction::triggered,
+      &mProjectEditor,
+      &ProjectEditor::showSchematicEditor);
+  connect(mUi->actionEditNetClasses, &QAction::triggered, [this]() {
+    mProjectEditor.execNetClassesEditorDialog(this);
+  });
+  connect(mUi->actionProjectSettings, &QAction::triggered, [this]() {
+    mProjectEditor.execProjectSettingsDialog(this);
+  });
+  connect(mUi->actionExportLppz, &QAction::triggered, [this]() {
+    mProjectEditor.execLppzExportDialog(this);
+  });
 
   // connect the undo/redo actions with the UndoStack of the project
-  mUndoStackActionGroup.reset(
-      new UndoStackActionGroup(*mUi->actionUndo, *mUi->actionRedo, nullptr,
-                               &mProjectEditor.getUndoStack(), this));
+  mUndoStackActionGroup.reset(new UndoStackActionGroup(
+      *mUi->actionUndo,
+      *mUi->actionRedo,
+      nullptr,
+      &mProjectEditor.getUndoStack(),
+      this));
 
   // build the whole board editor finite state machine with all its substate
   // objects
@@ -175,26 +207,31 @@ BoardEditor::BoardEditor(ProjectEditor& projectEditor, Project& project)
 
   // connect the "tools" toolbar with the state machine
   mToolsActionGroup.reset(new ExclusiveActionGroup());
-  mToolsActionGroup->addAction(BES_FSM::State::State_Select,
-                               mUi->actionToolSelect);
-  mToolsActionGroup->addAction(BES_FSM::State::State_DrawTrace,
-                               mUi->actionToolDrawTrace);
-  mToolsActionGroup->addAction(BES_FSM::State::State_AddVia,
-                               mUi->actionToolAddVia);
-  mToolsActionGroup->addAction(BES_FSM::State::State_DrawPolygon,
-                               mUi->actionToolDrawPolygon);
-  mToolsActionGroup->addAction(BES_FSM::State::State_DrawPlane,
-                               mUi->actionToolAddPlane);
-  mToolsActionGroup->addAction(BES_FSM::State::State_AddStrokeText,
-                               mUi->actionToolAddText);
-  mToolsActionGroup->addAction(BES_FSM::State::State_AddHole,
-                               mUi->actionToolAddHole);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_Select, mUi->actionToolSelect);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_DrawTrace, mUi->actionToolDrawTrace);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_AddVia, mUi->actionToolAddVia);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_DrawPolygon, mUi->actionToolDrawPolygon);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_DrawPlane, mUi->actionToolAddPlane);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_AddStrokeText, mUi->actionToolAddText);
+  mToolsActionGroup->addAction(
+      BES_FSM::State::State_AddHole, mUi->actionToolAddHole);
   mToolsActionGroup->setCurrentAction(mFsm->getCurrentState());
-  connect(mFsm, &BES_FSM::stateChanged, mToolsActionGroup.data(),
-          &ExclusiveActionGroup::setCurrentAction);
-  connect(mToolsActionGroup.data(),
-          &ExclusiveActionGroup::changeRequestTriggered, this,
-          &BoardEditor::toolActionGroupChangeTriggered);
+  connect(
+      mFsm,
+      &BES_FSM::stateChanged,
+      mToolsActionGroup.data(),
+      &ExclusiveActionGroup::setCurrentAction);
+  connect(
+      mToolsActionGroup.data(),
+      &ExclusiveActionGroup::changeRequestTriggered,
+      this,
+      &BoardEditor::toolActionGroupChangeTriggered);
 
   // connect the "command" toolbar with the state machine
   connect(mUi->actionCommandAbort, &QAction::triggered, [this]() {
@@ -228,14 +265,20 @@ BoardEditor::BoardEditor(ProjectEditor& projectEditor, Project& project)
   });
 
   // setup status bar
-  mUi->statusbar->setFields(StatusBar::AbsolutePosition |
-                            StatusBar::ProgressBar);
+  mUi->statusbar->setFields(
+      StatusBar::AbsolutePosition | StatusBar::ProgressBar);
   mUi->statusbar->setProgressBarTextFormat(tr("Scanning libraries (%p%)"));
-  connect(&mProjectEditor.getWorkspace().getLibraryDb(),
-          &workspace::WorkspaceLibraryDb::scanProgressUpdate, mUi->statusbar,
-          &StatusBar::setProgressBarPercent, Qt::QueuedConnection);
-  connect(mGraphicsView, &GraphicsView::cursorScenePositionChanged,
-          mUi->statusbar, &StatusBar::setAbsoluteCursorPosition);
+  connect(
+      &mProjectEditor.getWorkspace().getLibraryDb(),
+      &workspace::WorkspaceLibraryDb::scanProgressUpdate,
+      mUi->statusbar,
+      &StatusBar::setProgressBarPercent,
+      Qt::QueuedConnection);
+  connect(
+      mGraphicsView,
+      &GraphicsView::cursorScenePositionChanged,
+      mUi->statusbar,
+      &StatusBar::setAbsoluteCursorPosition);
 
   // Restore Window Geometry
   QSettings clientSettings;
@@ -288,8 +331,11 @@ void BoardEditor::setActiveBoardIndex(int index) noexcept {
     if (mActiveBoard) {
       // stop airwire rebuild on every project modification (for performance
       // reasons)
-      disconnect(&mProjectEditor.getUndoStack(), &UndoStack::stateModified,
-                 mActiveBoard.data(), &Board::triggerAirWiresRebuild);
+      disconnect(
+          &mProjectEditor.getUndoStack(),
+          &UndoStack::stateModified,
+          mActiveBoard.data(),
+          &Board::triggerAirWiresRebuild);
       // save current view scene rect
       mActiveBoard->saveViewSceneRect(mGraphicsView->getVisibleSceneRect());
     }
@@ -301,8 +347,11 @@ void BoardEditor::setActiveBoardIndex(int index) noexcept {
       mGraphicsView->setGridProperties(mActiveBoard->getGridProperties());
       // force airwire rebuild immediately and on every project modification
       mActiveBoard->triggerAirWiresRebuild();
-      connect(&mProjectEditor.getUndoStack(), &UndoStack::stateModified,
-              mActiveBoard.data(), &Board::triggerAirWiresRebuild);
+      connect(
+          &mProjectEditor.getUndoStack(),
+          &UndoStack::stateModified,
+          mActiveBoard.data(),
+          &Board::triggerAirWiresRebuild);
     } else {
       mGraphicsView->setScene(nullptr);
     }
@@ -351,7 +400,7 @@ void BoardEditor::boardAdded(int newIndex) {
   if (!board) return;
 
   QAction* actionBefore = mBoardListActions.value(newIndex - 1);
-  QAction* newAction    = new QAction(*board->getName(), this);
+  QAction* newAction = new QAction(*board->getName(), this);
   newAction->setCheckable(true);
   mUi->menuBoard->insertAction(actionBefore, newAction);
   mBoardListActions.insert(newIndex, newAction);
@@ -378,10 +427,14 @@ void BoardEditor::on_actionProjectClose_triggered() {
 }
 
 void BoardEditor::on_actionNewBoard_triggered() {
-  bool    ok = false;
-  QString name =
-      QInputDialog::getText(this, tr("Add New Board"), tr("Choose a name:"),
-                            QLineEdit::Normal, tr("new_board"), &ok);
+  bool ok = false;
+  QString name = QInputDialog::getText(
+      this,
+      tr("Add New Board"),
+      tr("Choose a name:"),
+      QLineEdit::Normal,
+      tr("new_board"),
+      &ok);
   if (!ok) return;
 
   try {
@@ -398,10 +451,14 @@ void BoardEditor::on_actionCopyBoard_triggered() {
   Board* board = getActiveBoard();
   if (!board) return;
 
-  bool    ok   = false;
+  bool ok = false;
   QString name = QInputDialog::getText(
-      this, tr("Copy Board"), tr("Choose a name:"), QLineEdit::Normal,
-      QString(tr("copy_of_%1")).arg(*board->getName()), &ok);
+      this,
+      tr("Copy Board"),
+      tr("Choose a name:"),
+      QLineEdit::Normal,
+      QString(tr("copy_of_%1")).arg(*board->getName()),
+      &ok);
   if (!ok) return;
 
   try {
@@ -419,7 +476,8 @@ void BoardEditor::on_actionRemoveBoard_triggered() {
   if (!board) return;
 
   QMessageBox::StandardButton btn = QMessageBox::question(
-      this, tr("Remove board"),
+      this,
+      tr("Remove board"),
       QString(tr("Are you really sure to remove the board \"%1\"?"))
           .arg(*board->getName()));
   if (btn != QMessageBox::Yes) return;
@@ -435,10 +493,12 @@ void BoardEditor::on_actionGrid_triggered() {
   Board* board = getActiveBoard();
   if (board) {
     GridSettingsDialog dialog(board->getGridProperties(), this);
-    connect(&dialog, &GridSettingsDialog::gridPropertiesChanged,
-            [this](const GridProperties& grid) {
-              mGraphicsView->setGridProperties(grid);
-            });
+    connect(
+        &dialog,
+        &GridSettingsDialog::gridPropertiesChanged,
+        [this](const GridProperties& grid) {
+          mGraphicsView->setGridProperties(grid);
+        });
     if (dialog.exec()) {
       foreach (Board* board, mProject.getBoards())
         board->setGridProperties(dialog.getGrid());
@@ -450,8 +510,8 @@ void BoardEditor::on_actionGrid_triggered() {
 
 void BoardEditor::on_actionExportAsPdf_triggered() {
   try {
-    QString filename = FileDialog::getSaveFileName(this, tr("PDF Export"),
-                                                   QDir::homePath(), "*.pdf");
+    QString filename = FileDialog::getSaveFileName(
+        this, tr("PDF Export"), QDir::homePath(), "*.pdf");
     if (filename.isEmpty()) return;
     if (!filename.endsWith(".pdf")) filename.append(".pdf");
     // FilePath filepath(filename);
@@ -476,8 +536,8 @@ void BoardEditor::on_actionGenerateBom_triggered() {
 }
 
 void BoardEditor::on_actionProjectProperties_triggered() {
-  ProjectPropertiesEditorDialog dialog(mProject.getMetadata(),
-                                       mProjectEditor.getUndoStack(), this);
+  ProjectPropertiesEditorDialog dialog(
+      mProject.getMetadata(), mProjectEditor.getUndoStack(), this);
   dialog.exec();
 }
 
@@ -491,8 +551,8 @@ void BoardEditor::on_actionLayerStackSetup_triggered() {
   if (!board) return;
 
   try {
-    BoardLayerStackSetupDialog dialog(board->getLayerStack(),
-                                      mProjectEditor.getUndoStack(), this);
+    BoardLayerStackSetupDialog dialog(
+        board->getLayerStack(), mProjectEditor.getUndoStack(), this);
     dialog.exec();
   } catch (Exception& e) {
     QMessageBox::warning(this, tr("Error"), e.getMsg());
@@ -504,14 +564,16 @@ void BoardEditor::on_actionModifyDesignRules_triggered() {
   if (!board) return;
 
   try {
-    BoardDesignRules       originalRules = board->getDesignRules();
+    BoardDesignRules originalRules = board->getDesignRules();
     BoardDesignRulesDialog dialog(board->getDesignRules(), this);
-    connect(&dialog, &BoardDesignRulesDialog::rulesChanged,
-            [&](const BoardDesignRules& rules) {
-              board->getDesignRules() = rules;
-              emit board->attributesChanged();
-            });
-    int result              = dialog.exec();
+    connect(
+        &dialog,
+        &BoardDesignRulesDialog::rulesChanged,
+        [&](const BoardDesignRules& rules) {
+          board->getDesignRules() = rules;
+          emit board->attributesChanged();
+        });
+    int result = dialog.exec();
     board->getDesignRules() = originalRules;  // important hack ;)
     if (result == QDialog::Accepted) {
       CmdBoardDesignRulesModify* cmd =

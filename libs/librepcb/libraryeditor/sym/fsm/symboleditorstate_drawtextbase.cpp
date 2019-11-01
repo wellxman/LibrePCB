@@ -49,7 +49,8 @@ namespace editor {
  ******************************************************************************/
 
 SymbolEditorState_DrawTextBase::SymbolEditorState_DrawTextBase(
-    const Context& context, Mode mode) noexcept
+    const Context& context,
+    Mode mode) noexcept
   : SymbolEditorState(context),
     mMode(mode),
     mCurrentText(nullptr),
@@ -81,8 +82,11 @@ bool SymbolEditorState_DrawTextBase::entry() noexcept {
     layerComboBox->setLayers(
         mContext.layerProvider.getSchematicGeometryElementLayers());
     layerComboBox->setCurrentLayer(mLastLayerName);
-    connect(layerComboBox.get(), &GraphicsLayerComboBox::currentLayerChanged,
-            this, &SymbolEditorState_DrawTextBase::layerComboBoxValueChanged);
+    connect(
+        layerComboBox.get(),
+        &GraphicsLayerComboBox::currentLayerChanged,
+        this,
+        &SymbolEditorState_DrawTextBase::layerComboBoxValueChanged);
     mContext.commandToolBar.addWidget(std::move(layerComboBox));
 
     mContext.commandToolBar.addLabel(tr("Text:"), 10);
@@ -97,8 +101,11 @@ bool SymbolEditorState_DrawTextBase::entry() noexcept {
     textComboBox->addItem("{{VERSION}}");
     textComboBox->addItem("{{PAGE_X_OF_Y}}");
     textComboBox->setCurrentIndex(textComboBox->findText(mLastText));
-    connect(textComboBox.get(), &QComboBox::currentTextChanged, this,
-            &SymbolEditorState_DrawTextBase::textComboBoxValueChanged);
+    connect(
+        textComboBox.get(),
+        &QComboBox::currentTextChanged,
+        this,
+        &SymbolEditorState_DrawTextBase::textComboBoxValueChanged);
     mContext.commandToolBar.addWidget(std::move(textComboBox));
   } else {
     resetToDefaultParameters();
@@ -108,8 +115,11 @@ bool SymbolEditorState_DrawTextBase::entry() noexcept {
   std::unique_ptr<PositiveLengthEdit> edtHeight(new PositiveLengthEdit());
   edtHeight->setSingleStep(0.5);  // [mm]
   edtHeight->setValue(mLastHeight);
-  connect(edtHeight.get(), &PositiveLengthEdit::valueChanged, this,
-          &SymbolEditorState_DrawTextBase::heightEditValueChanged);
+  connect(
+      edtHeight.get(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &SymbolEditorState_DrawTextBase::heightEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtHeight));
 
   Point pos =
@@ -190,8 +200,14 @@ bool SymbolEditorState_DrawTextBase::startAddText(const Point& pos) noexcept {
   try {
     mStartPos = pos;
     mContext.undoStack.beginCmdGroup(tr("Add symbol text"));
-    mCurrentText = new Text(Uuid::createRandom(), mLastLayerName, mLastText,
-                            pos, mLastRotation, mLastHeight, getAlignment());
+    mCurrentText = new Text(
+        Uuid::createRandom(),
+        mLastLayerName,
+        mLastText,
+        pos,
+        mLastRotation,
+        mLastHeight,
+        getAlignment());
     mContext.undoStack.appendToCmdGroup(new CmdTextInsert(
         mContext.symbol.getTexts(), std::shared_ptr<Text>(mCurrentText)));
     mEditCmd.reset(new CmdTextEdit(*mCurrentText));
@@ -203,7 +219,7 @@ bool SymbolEditorState_DrawTextBase::startAddText(const Point& pos) noexcept {
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mEditCmd.reset();
     return false;
   }
@@ -218,7 +234,7 @@ bool SymbolEditorState_DrawTextBase::finishAddText(const Point& pos) noexcept {
     mEditCmd->setPosition(pos, true);
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
     return true;
@@ -232,7 +248,7 @@ bool SymbolEditorState_DrawTextBase::abortAddText() noexcept {
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mCurrentText         = nullptr;
+    mCurrentText = nullptr;
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();
     return true;
@@ -247,20 +263,20 @@ void SymbolEditorState_DrawTextBase::resetToDefaultParameters() noexcept {
     case Mode::NAME:
       // Set all properties according library conventions
       mLastLayerName = GraphicsLayerName(GraphicsLayer::sSymbolNames);
-      mLastHeight    = PositiveLength(2500000);
-      mLastText      = "{{NAME}}";
+      mLastHeight = PositiveLength(2500000);
+      mLastText = "{{NAME}}";
       break;
     case Mode::VALUE:
       // Set all properties according library conventions
       mLastLayerName = GraphicsLayerName(GraphicsLayer::sSymbolValues);
-      mLastHeight    = PositiveLength(2500000);
-      mLastText      = "{{VALUE}}";
+      mLastHeight = PositiveLength(2500000);
+      mLastText = "{{VALUE}}";
       break;
     default:
       // Set properties to something reasonable
       mLastLayerName = GraphicsLayerName(GraphicsLayer::sSymbolOutlines);
-      mLastHeight    = PositiveLength(2500000);
-      mLastText      = "Text";  // Non-empty to avoid invisible graphics item
+      mLastHeight = PositiveLength(2500000);
+      mLastText = "Text";  // Non-empty to avoid invisible graphics item
       break;
   }
 }

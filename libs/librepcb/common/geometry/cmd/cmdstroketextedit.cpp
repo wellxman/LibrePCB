@@ -72,8 +72,9 @@ CmdStrokeTextEdit::~CmdStrokeTextEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdStrokeTextEdit::setLayerName(const GraphicsLayerName& name,
-                                     bool immediate) noexcept {
+void CmdStrokeTextEdit::setLayerName(
+    const GraphicsLayerName& name,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLayerName = name;
   if (immediate) mText.setLayerName(mNewLayerName);
@@ -85,36 +86,41 @@ void CmdStrokeTextEdit::setText(const QString& text, bool immediate) noexcept {
   if (immediate) mText.setText(mNewText);
 }
 
-void CmdStrokeTextEdit::setHeight(const PositiveLength& height,
-                                  bool                  immediate) noexcept {
+void CmdStrokeTextEdit::setHeight(
+    const PositiveLength& height,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewHeight = height;
   if (immediate) mText.setHeight(mNewHeight);
 }
 
-void CmdStrokeTextEdit::setStrokeWidth(const UnsignedLength& strokeWidth,
-                                       bool immediate) noexcept {
+void CmdStrokeTextEdit::setStrokeWidth(
+    const UnsignedLength& strokeWidth,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewStrokeWidth = strokeWidth;
   if (immediate) mText.setStrokeWidth(mNewStrokeWidth);
 }
 
-void CmdStrokeTextEdit::setLetterSpacing(const StrokeTextSpacing& spacing,
-                                         bool immediate) noexcept {
+void CmdStrokeTextEdit::setLetterSpacing(
+    const StrokeTextSpacing& spacing,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLetterSpacing = spacing;
   if (immediate) mText.setLetterSpacing(mNewLetterSpacing);
 }
 
-void CmdStrokeTextEdit::setLineSpacing(const StrokeTextSpacing& spacing,
-                                       bool immediate) noexcept {
+void CmdStrokeTextEdit::setLineSpacing(
+    const StrokeTextSpacing& spacing,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLineSpacing = spacing;
   if (immediate) mText.setLineSpacing(mNewLineSpacing);
 }
 
-void CmdStrokeTextEdit::setAlignment(const Alignment& align,
-                                     bool             immediate) noexcept {
+void CmdStrokeTextEdit::setAlignment(
+    const Alignment& align,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewAlign = align;
   if (immediate) mText.setAlign(mNewAlign);
@@ -132,20 +138,23 @@ void CmdStrokeTextEdit::translate(const Point& delta, bool immediate) noexcept {
   if (immediate) mText.setPosition(mNewPosition);
 }
 
-void CmdStrokeTextEdit::setRotation(const Angle& angle,
-                                    bool         immediate) noexcept {
+void CmdStrokeTextEdit::setRotation(
+    const Angle& angle,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewRotation = angle;
   if (immediate) mText.setRotation(mNewRotation);
 }
 
-void CmdStrokeTextEdit::rotate(const Angle& angle, const Point& center,
-                               bool immediate) noexcept {
+void CmdStrokeTextEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPosition.rotate(angle, center);
   mNewRotation += mNewMirrored
-                      ? -angle
-                      : angle;  // mirror --> rotation direction is inverted!
+      ? -angle
+      : angle;  // mirror --> rotation direction is inverted!
   if (immediate) {
     mText.setPosition(mNewPosition);
     mText.setRotation(mNewRotation);
@@ -158,8 +167,10 @@ void CmdStrokeTextEdit::setMirrored(bool mirrored, bool immediate) noexcept {
   if (immediate) mText.setMirrored(mNewMirrored);
 }
 
-void CmdStrokeTextEdit::mirror(const Point& center, Qt::Orientation orientation,
-                               bool immediate) noexcept {
+void CmdStrokeTextEdit::mirror(
+    const Point& center,
+    Qt::Orientation orientation,
+    bool immediate) noexcept {
   setLayerName(
       GraphicsLayerName(GraphicsLayer::getMirroredLayerName(*mNewLayerName)),
       immediate);
@@ -167,8 +178,9 @@ void CmdStrokeTextEdit::mirror(const Point& center, Qt::Orientation orientation,
   setPosition(mNewPosition.mirrored(orientation, center), immediate);
 }
 
-void CmdStrokeTextEdit::setAutoRotate(bool autoRotate,
-                                      bool immediate) noexcept {
+void CmdStrokeTextEdit::setAutoRotate(
+    bool autoRotate,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewAutoRotate = autoRotate;
   if (immediate) mText.setAutoRotate(mNewAutoRotate);

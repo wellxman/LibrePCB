@@ -37,9 +37,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-HoleGraphicsItem::HoleGraphicsItem(Hole&                           hole,
-                                   const IF_GraphicsLayerProvider& lp,
-                                   QGraphicsItem* parent) noexcept
+HoleGraphicsItem::HoleGraphicsItem(
+    Hole& hole,
+    const IF_GraphicsLayerProvider& lp,
+    QGraphicsItem* parent) noexcept
   : PrimitiveCircleGraphicsItem(parent),
     mHole(hole),
     mLayerProvider(lp),
@@ -53,8 +54,8 @@ HoleGraphicsItem::HoleGraphicsItem(Hole&                           hole,
   // add origin cross
   mOriginCrossGraphicsItem.reset(new OriginCrossGraphicsItem(this));
   mOriginCrossGraphicsItem->setRotation(Angle::deg45());
-  mOriginCrossGraphicsItem->setSize(positiveToUnsigned(mHole.getDiameter()) +
-                                    UnsignedLength(500000));
+  mOriginCrossGraphicsItem->setSize(
+      positiveToUnsigned(mHole.getDiameter()) + UnsignedLength(500000));
   mOriginCrossGraphicsItem->setLayer(
       mLayerProvider.getLayer(GraphicsLayer::sTopReferences));
 
@@ -71,23 +72,24 @@ HoleGraphicsItem::~HoleGraphicsItem() noexcept {
 
 QPainterPath HoleGraphicsItem::shape() const noexcept {
   return PrimitiveCircleGraphicsItem::shape() +
-         mOriginCrossGraphicsItem->shape();
+      mOriginCrossGraphicsItem->shape();
 }
 
 /*******************************************************************************
  *  Private Methods
  ******************************************************************************/
 
-void HoleGraphicsItem::holeEdited(const Hole& hole,
-                                  Hole::Event event) noexcept {
+void HoleGraphicsItem::holeEdited(
+    const Hole& hole,
+    Hole::Event event) noexcept {
   switch (event) {
     case Hole::Event::PositionChanged:
       setPosition(hole.getPosition());
       break;
     case Hole::Event::DiameterChanged:
       setDiameter(positiveToUnsigned(hole.getDiameter()));
-      mOriginCrossGraphicsItem->setSize(positiveToUnsigned(hole.getDiameter()) +
-                                        UnsignedLength(500000));
+      mOriginCrossGraphicsItem->setSize(
+          positiveToUnsigned(hole.getDiameter()) + UnsignedLength(500000));
       break;
     default:
       qWarning() << "Unhandled switch-case in HoleGraphicsItem::holeEdited()";
@@ -95,8 +97,9 @@ void HoleGraphicsItem::holeEdited(const Hole& hole,
   }
 }
 
-QVariant HoleGraphicsItem::itemChange(GraphicsItemChange change,
-                                      const QVariant&    value) noexcept {
+QVariant HoleGraphicsItem::itemChange(
+    GraphicsItemChange change,
+    const QVariant& value) noexcept {
   if (change == ItemSelectedChange && mOriginCrossGraphicsItem) {
     mOriginCrossGraphicsItem->setSelected(value.toBool());
   }

@@ -51,27 +51,28 @@ class SES_AddNetLabel final : public SES_Base {
 
 public:
   // Constructors / Destructor
-  explicit SES_AddNetLabel(SchematicEditor&     editor,
-                           Ui::SchematicEditor& editorUi,
-                           GraphicsView&        editorGraphicsView,
-                           UndoStack&           undoStack);
+  explicit SES_AddNetLabel(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~SES_AddNetLabel();
 
   // General Methods
   ProcRetVal process(SEE_Base* event) noexcept override;
-  bool       entry(SEE_Base* event) noexcept override;
-  bool       exit(SEE_Base* event) noexcept override;
+  bool entry(SEE_Base* event) noexcept override;
+  bool exit(SEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(SEE_Base* event) noexcept;
-  bool       addLabel(Schematic& schematic, const Point& pos) noexcept;
-  bool       updateLabel(const Point& pos) noexcept;
-  bool       fixLabel(const Point& pos) noexcept;
+  bool addLabel(Schematic& schematic, const Point& pos) noexcept;
+  bool updateLabel(const Point& pos) noexcept;
+  bool fixLabel(const Point& pos) noexcept;
 
   // General Attributes
-  bool                      mUndoCmdActive;
-  SI_NetLabel*              mCurrentNetLabel;
+  bool mUndoCmdActive;
+  SI_NetLabel* mCurrentNetLabel;
   CmdSchematicNetLabelEdit* mEditCmd;
 };
 

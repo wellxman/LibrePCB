@@ -45,8 +45,11 @@ namespace editor {
  ******************************************************************************/
 
 CmdAddComponentToCircuit::CmdAddComponentToCircuit(
-    workspace::Workspace& workspace, Project& project, const Uuid& component,
-    const Uuid& symbolVariant, const tl::optional<Uuid>& defaultDevice) noexcept
+    workspace::Workspace& workspace,
+    Project& project,
+    const Uuid& component,
+    const Uuid& symbolVariant,
+    const tl::optional<Uuid>& defaultDevice) noexcept
   : UndoCommandGroup(tr("Add component")),
     mWorkspace(workspace),
     mProject(project),
@@ -81,7 +84,8 @@ bool CmdAddComponentToCircuit::performExecute() {
         mWorkspace.getLibraryDb().getLatestComponent(mComponentUuid);
     if (!cmpFp.isValid()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("The component with the UUID \"%1\" does not exist in the "
                      "workspace library!"))
               .arg(mComponentUuid.toStr()));

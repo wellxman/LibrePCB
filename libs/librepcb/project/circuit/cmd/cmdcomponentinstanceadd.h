@@ -53,7 +53,9 @@ class CmdComponentInstanceAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   CmdComponentInstanceAdd(
-      Circuit& circuit, const Uuid& cmp, const Uuid& symbVar,
+      Circuit& circuit,
+      const Uuid& cmp,
+      const Uuid& symbVar,
       const tl::optional<Uuid>& defaultDevice = tl::nullopt) noexcept;
   ~CmdComponentInstanceAdd() noexcept;
 
@@ -77,9 +79,9 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  Circuit&           mCircuit;
-  Uuid               mComponentUuid;
-  Uuid               mSymbVarUuid;
+  Circuit& mCircuit;
+  Uuid mComponentUuid;
+  Uuid mSymbVarUuid;
   tl::optional<Uuid> mDefaultDeviceUuid;
 
   /// @brief The created component instance

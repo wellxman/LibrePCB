@@ -82,17 +82,19 @@ SGI_NetLabel::~SGI_NetLabel() noexcept {
 void SGI_NetLabel::updateCacheAndRepaint() noexcept {
   prepareGeometryChange();
 
-  mRotate180 = (mNetLabel.getRotation().mappedTo180deg() <= -Angle::deg90() ||
-                mNetLabel.getRotation().mappedTo180deg() > Angle::deg90());
+  mRotate180 =
+      (mNetLabel.getRotation().mappedTo180deg() <= -Angle::deg90() ||
+       mNetLabel.getRotation().mappedTo180deg() > Angle::deg90());
 
   mStaticText.setText(*mNetLabel.getNetSignalOfNetSegment().getName());
   mStaticText.prepare(QTransform(), mFont);
   mTextOrigin.setX(mRotate180 ? -mStaticText.size().width() : 0);
   mTextOrigin.setY(mRotate180 ? 0 : -mStaticText.size().height());
-  mStaticText.prepare(QTransform()
-                          .rotate(mRotate180 ? 180 : 0)
-                          .translate(mTextOrigin.x(), mTextOrigin.y()),
-                      mFont);
+  mStaticText.prepare(
+      QTransform()
+          .rotate(mRotate180 ? 180 : 0)
+          .translate(mTextOrigin.x(), mTextOrigin.y()),
+      mFont);
 
   QRectF rect =
       QRectF(0, 0, mStaticText.size().width(), -mStaticText.size().height())
@@ -105,24 +107,25 @@ void SGI_NetLabel::updateCacheAndRepaint() noexcept {
 }
 
 void SGI_NetLabel::setAnchor(const Point& pos) noexcept {
-  mAnchorGraphicsItem->setLine(Point(),
-                               Point::fromPx(mapFromScene(pos.toPxQPointF())));
+  mAnchorGraphicsItem->setLine(
+      Point(), Point::fromPx(mapFromScene(pos.toPxQPointF())));
 }
 
 /*******************************************************************************
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void SGI_NetLabel::paint(QPainter*                       painter,
-                         const QStyleOptionGraphicsItem* option,
-                         QWidget*                        widget) {
+void SGI_NetLabel::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(widget);
   bool deviceIsPrinter = (dynamic_cast<QPrinter*>(painter->device()) != 0);
   const qreal lod =
       option->levelOfDetailFromTransform(painter->worldTransform());
 
   bool highlight = mNetLabel.isSelected() ||
-                   mNetLabel.getNetSignalOfNetSegment().isHighlighted();
+      mNetLabel.getNetSignalOfNetSegment().isHighlighted();
 
   GraphicsLayer* layer = getLayer(GraphicsLayer::sSchematicReferences);
   Q_ASSERT(layer);

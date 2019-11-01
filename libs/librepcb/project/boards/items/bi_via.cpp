@@ -60,8 +60,12 @@ BI_Via::BI_Via(BI_NetSegment& netsegment, const SExpression& node)
   init();
 }
 
-BI_Via::BI_Via(BI_NetSegment& netsegment, const Point& position, Shape shape,
-               const PositiveLength& size, const PositiveLength& drillDiameter)
+BI_Via::BI_Via(
+    BI_NetSegment& netsegment,
+    const Point& position,
+    Shape shape,
+    const PositiveLength& size,
+    const PositiveLength& drillDiameter)
   : BI_Base(netsegment.getBoard()),
     mNetSegment(netsegment),
     mUuid(Uuid::createRandom()),
@@ -78,8 +82,11 @@ void BI_Via::init() {
   mGraphicsItem->setPos(mPosition.toPxQPointF());
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BI_Via::boardAttributesChanged);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BI_Via::boardAttributesChanged);
 }
 
 BI_Via::~BI_Via() noexcept {
@@ -124,8 +131,8 @@ Path BI_Via::getSceneOutline(const Length& expansion) const noexcept {
 QPainterPath BI_Via::toQPainterPathPx(const Length& expansion) const noexcept {
   QPainterPath p = getOutline(expansion).toQPainterPathPx();
   p.setFillRule(Qt::OddEvenFill);  // important to subtract the hole!
-  p.addEllipse(QPointF(0, 0), mDrillDiameter->toPx() / 2,
-               mDrillDiameter->toPx() / 2);
+  p.addEllipse(
+      QPointF(0, 0), mDrillDiameter->toPx() / 2, mDrillDiameter->toPx() / 2);
   return p;
 }
 
@@ -173,9 +180,10 @@ void BI_Via::addToBoard() {
   if (isAddedToBoard() || isUsed()) {
     throw LogicError(__FILE__, __LINE__);
   }
-  mHighlightChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+  mHighlightChangedConnection = connect(
+      &getNetSignalOfNetSegment(), &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   BI_Base::addToBoard(mGraphicsItem.data());
   mBoard.scheduleAirWiresRebuild(&getNetSignalOfNetSegment());
 }

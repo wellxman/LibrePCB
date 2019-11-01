@@ -100,10 +100,10 @@ bool PackageEditorState_Select::processGraphicsSceneLeftMouseButtonPressed(
       mStartPos = Point::fromPx(e.scenePos());
       // get items under cursor
       QList<QSharedPointer<FootprintPadGraphicsItem>> pads;
-      QList<QSharedPointer<CircleGraphicsItem>>       circles;
-      QList<QSharedPointer<PolygonGraphicsItem>>      polygons;
-      QList<QSharedPointer<StrokeTextGraphicsItem>>   texts;
-      QList<QSharedPointer<HoleGraphicsItem>>         holes;
+      QList<QSharedPointer<CircleGraphicsItem>> circles;
+      QList<QSharedPointer<PolygonGraphicsItem>> polygons;
+      QList<QSharedPointer<StrokeTextGraphicsItem>> texts;
+      QList<QSharedPointer<HoleGraphicsItem>> holes;
       int count = mContext.currentGraphicsItem->getItemsAtPosition(
           mStartPos, &pads, &circles, &polygons, &texts, &holes);
       if (count == 0) {
@@ -186,8 +186,8 @@ bool PackageEditorState_Select::processGraphicsSceneLeftMouseButtonReleased(
         try {
           mContext.undoStack.execCmd(mCmdDragSelectedItems.take());
         } catch (const Exception& e) {
-          QMessageBox::critical(&mContext.editorWidget, tr("Error"),
-                                e.getMsg());
+          QMessageBox::critical(
+              &mContext.editorWidget, tr("Error"), e.getMsg());
         }
       }
       mState = SubState::IDLE;
@@ -327,7 +327,7 @@ bool PackageEditorState_Select::processAbortCommand() noexcept {
 bool PackageEditorState_Select::openContextMenuAtPos(
     const Point& pos) noexcept {
   // build the context menu
-  QMenu    menu;
+  QMenu menu;
   QAction* aRotateCCW =
       menu.addAction(QIcon(":/img/actions/rotate_left.png"), tr("Rotate"));
   QAction* aRemove =
@@ -351,20 +351,23 @@ bool PackageEditorState_Select::openContextMenuAtPos(
 bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     const Point& pos) noexcept {
   QList<QSharedPointer<FootprintPadGraphicsItem>> pads;
-  QList<QSharedPointer<CircleGraphicsItem>>       circles;
-  QList<QSharedPointer<PolygonGraphicsItem>>      polygons;
-  QList<QSharedPointer<StrokeTextGraphicsItem>>   texts;
-  QList<QSharedPointer<HoleGraphicsItem>>         holes;
-  mContext.currentGraphicsItem->getItemsAtPosition(pos, &pads, &circles,
-                                                   &polygons, &texts, &holes);
+  QList<QSharedPointer<CircleGraphicsItem>> circles;
+  QList<QSharedPointer<PolygonGraphicsItem>> polygons;
+  QList<QSharedPointer<StrokeTextGraphicsItem>> texts;
+  QList<QSharedPointer<HoleGraphicsItem>> holes;
+  mContext.currentGraphicsItem->getItemsAtPosition(
+      pos, &pads, &circles, &polygons, &texts, &holes);
 
   if (pads.count() > 0) {
     FootprintPadGraphicsItem* item =
         dynamic_cast<FootprintPadGraphicsItem*>(pads.first().data());
     Q_ASSERT(item);
     FootprintPadPropertiesDialog dialog(
-        mContext.package, *mContext.currentFootprint, item->getPad(),
-        mContext.undoStack, &mContext.editorWidget);
+        mContext.package,
+        *mContext.currentFootprint,
+        item->getPad(),
+        mContext.undoStack,
+        &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (texts.count() > 0) {
@@ -372,7 +375,8 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<StrokeTextGraphicsItem*>(texts.first().data());
     Q_ASSERT(item);
     StrokeTextPropertiesDialog dialog(
-        item->getText(), mContext.undoStack,
+        item->getText(),
+        mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -382,7 +386,8 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<PolygonGraphicsItem*>(polygons.first().data());
     Q_ASSERT(item);
     PolygonPropertiesDialog dialog(
-        item->getPolygon(), mContext.undoStack,
+        item->getPolygon(),
+        mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -392,7 +397,8 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<CircleGraphicsItem*>(circles.first().data());
     Q_ASSERT(item);
     CirclePropertiesDialog dialog(
-        item->getCircle(), mContext.undoStack,
+        item->getCircle(),
+        mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
         &mContext.editorWidget);
     dialog.exec();
@@ -401,8 +407,8 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     HoleGraphicsItem* item =
         dynamic_cast<HoleGraphicsItem*>(holes.first().data());
     Q_ASSERT(item);
-    HolePropertiesDialog dialog(item->getHole(), mContext.undoStack,
-                                &mContext.editorWidget);
+    HolePropertiesDialog dialog(
+        item->getHole(), mContext.undoStack, &mContext.editorWidget);
     dialog.exec();
     return true;
   } else {
@@ -418,33 +424,40 @@ bool PackageEditorState_Select::copySelectedItemsToClipboard() noexcept {
   try {
     Point cursorPos = mContext.graphicsView.mapGlobalPosToScenePos(
         QCursor::pos(), true, false);
-    FootprintClipboardData data(mContext.currentFootprint->getUuid(),
-                                mContext.package.getPads(), cursorPos);
-    foreach (const QSharedPointer<FootprintPadGraphicsItem>& pad,
-             mContext.currentGraphicsItem->getSelectedPads()) {
+    FootprintClipboardData data(
+        mContext.currentFootprint->getUuid(),
+        mContext.package.getPads(),
+        cursorPos);
+    foreach (
+        const QSharedPointer<FootprintPadGraphicsItem>& pad,
+        mContext.currentGraphicsItem->getSelectedPads()) {
       Q_ASSERT(pad);
       data.getFootprintPads().append(
           std::make_shared<FootprintPad>(pad->getPad()));
     }
-    foreach (const QSharedPointer<CircleGraphicsItem>& circle,
-             mContext.currentGraphicsItem->getSelectedCircles()) {
+    foreach (
+        const QSharedPointer<CircleGraphicsItem>& circle,
+        mContext.currentGraphicsItem->getSelectedCircles()) {
       Q_ASSERT(circle);
       data.getCircles().append(std::make_shared<Circle>(circle->getCircle()));
     }
-    foreach (const QSharedPointer<PolygonGraphicsItem>& polygon,
-             mContext.currentGraphicsItem->getSelectedPolygons()) {
+    foreach (
+        const QSharedPointer<PolygonGraphicsItem>& polygon,
+        mContext.currentGraphicsItem->getSelectedPolygons()) {
       Q_ASSERT(polygon);
       data.getPolygons().append(
           std::make_shared<Polygon>(polygon->getPolygon()));
     }
-    foreach (const QSharedPointer<StrokeTextGraphicsItem>& text,
-             mContext.currentGraphicsItem->getSelectedStrokeTexts()) {
+    foreach (
+        const QSharedPointer<StrokeTextGraphicsItem>& text,
+        mContext.currentGraphicsItem->getSelectedStrokeTexts()) {
       Q_ASSERT(text);
       data.getStrokeTexts().append(
           std::make_shared<StrokeText>(text->getText()));
     }
-    foreach (const QSharedPointer<HoleGraphicsItem>& hole,
-             mContext.currentGraphicsItem->getSelectedHoles()) {
+    foreach (
+        const QSharedPointer<HoleGraphicsItem>& hole,
+        mContext.currentGraphicsItem->getSelectedHoles()) {
       Q_ASSERT(hole);
       data.getHoles().append(std::make_shared<Hole>(hole->getHole()));
     }
@@ -466,8 +479,8 @@ bool PackageEditorState_Select::pasteFromClipboard() noexcept {
     }
 
     // update cursor position
-    mStartPos = mContext.graphicsView.mapGlobalPosToScenePos(QCursor::pos(),
-                                                             true, false);
+    mStartPos = mContext.graphicsView.mapGlobalPosToScenePos(
+        QCursor::pos(), true, false);
 
     // get footprint items and abort if there are no items
     std::unique_ptr<FootprintClipboardData> data =
@@ -486,8 +499,11 @@ bool PackageEditorState_Select::pasteFromClipboard() noexcept {
     Point offset =
         (mStartPos - data->getCursorPos()).mappedToGrid(getGridInterval());
     QScopedPointer<CmdPasteFootprintItems> cmd(new CmdPasteFootprintItems(
-        mContext.package, *mContext.currentFootprint,
-        *mContext.currentGraphicsItem, std::move(data), offset));
+        mContext.package,
+        *mContext.currentFootprint,
+        *mContext.currentGraphicsItem,
+        std::move(data),
+        offset));
     if (mContext.undoStack.appendToCmdGroup(cmd.take())) {  // can throw
       // start moving the selected items
       mCmdDragSelectedItems.reset(new CmdDragSelectedFootprintItems(mContext));
@@ -525,8 +541,9 @@ bool PackageEditorState_Select::removeSelectedItems() noexcept {
   return true;  // TODO: return false if no items were selected
 }
 
-void PackageEditorState_Select::setSelectionRect(const Point& p1,
-                                                 const Point& p2) noexcept {
+void PackageEditorState_Select::setSelectionRect(
+    const Point& p1,
+    const Point& p2) noexcept {
   mContext.graphicsScene.setSelectionRect(p1, p2);
   mContext.currentGraphicsItem->setSelectionRect(
       QRectF(p1.toPxQPointF(), p2.toPxQPointF()));

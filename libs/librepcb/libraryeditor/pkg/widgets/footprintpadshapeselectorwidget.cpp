@@ -62,12 +62,21 @@ FootprintPadShapeSelectorWidget::FootprintPadShapeSelectorWidget(
   mBtnRect->setFixedWidth(32);
   mBtnOctagon->setFixedWidth(32);
 
-  connect(mBtnRound, &QToolButton::clicked, this,
-          &FootprintPadShapeSelectorWidget::btnRoundToggled);
-  connect(mBtnRect, &QToolButton::clicked, this,
-          &FootprintPadShapeSelectorWidget::btnRectToggled);
-  connect(mBtnOctagon, &QToolButton::clicked, this,
-          &FootprintPadShapeSelectorWidget::btnOctagonToggled);
+  connect(
+      mBtnRound,
+      &QToolButton::clicked,
+      this,
+      &FootprintPadShapeSelectorWidget::btnRoundToggled);
+  connect(
+      mBtnRect,
+      &QToolButton::clicked,
+      this,
+      &FootprintPadShapeSelectorWidget::btnRectToggled);
+  connect(
+      mBtnOctagon,
+      &QToolButton::clicked,
+      this,
+      &FootprintPadShapeSelectorWidget::btnOctagonToggled);
 }
 
 FootprintPadShapeSelectorWidget::~FootprintPadShapeSelectorWidget() noexcept {

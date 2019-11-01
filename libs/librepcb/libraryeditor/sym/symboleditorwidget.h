@@ -65,10 +65,12 @@ class SymbolEditorWidget final : public EditorWidgetBase,
 
 public:
   // Constructors / Destructor
-  SymbolEditorWidget()                                = delete;
+  SymbolEditorWidget() = delete;
   SymbolEditorWidget(const SymbolEditorWidget& other) = delete;
-  SymbolEditorWidget(const Context& context, const FilePath& fp,
-                     QWidget* parent = nullptr);
+  SymbolEditorWidget(
+      const Context& context,
+      const FilePath& fp,
+      QWidget* parent = nullptr);
   ~SymbolEditorWidget() noexcept;
 
   // Getters
@@ -95,7 +97,7 @@ public slots:
   bool editGridProperties() noexcept override;
 
 private:  // Methods
-  void    updateMetadata() noexcept;
+  void updateMetadata() noexcept;
   QString commitMetadata() noexcept;
   /// @copydoc librepcb::IF_GraphicsViewEventHandler::graphicsViewEventHandler()
   bool graphicsViewEventHandler(QEvent* event) noexcept override;
@@ -105,19 +107,20 @@ private:  // Methods
   template <typename MessageType>
   void fixMsg(const MessageType& msg);
   template <typename MessageType>
-  bool fixMsgHelper(std::shared_ptr<const LibraryElementCheckMessage> msg,
-                    bool                                              applyFix);
+  bool fixMsgHelper(
+      std::shared_ptr<const LibraryElementCheckMessage> msg,
+      bool applyFix);
   bool processCheckMessage(
       std::shared_ptr<const LibraryElementCheckMessage> msg,
-      bool                                              applyFix) override;
+      bool applyFix) override;
 
 private:  // Data
-  QScopedPointer<Ui::SymbolEditorWidget>            mUi;
+  QScopedPointer<Ui::SymbolEditorWidget> mUi;
   QScopedPointer<ComponentCategoryListEditorWidget> mCategoriesEditorWidget;
-  QScopedPointer<GraphicsScene>                     mGraphicsScene;
-  QScopedPointer<Symbol>                            mSymbol;
-  QScopedPointer<SymbolGraphicsItem>                mGraphicsItem;
-  QScopedPointer<SymbolEditorFsm>                   mFsm;
+  QScopedPointer<GraphicsScene> mGraphicsScene;
+  QScopedPointer<Symbol> mSymbol;
+  QScopedPointer<SymbolGraphicsItem> mGraphicsItem;
+  QScopedPointer<SymbolEditorFsm> mFsm;
 
   // broken interface detection
   QSet<Uuid> mOriginalSymbolPinUuids;

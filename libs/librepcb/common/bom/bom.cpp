@@ -43,8 +43,9 @@ Bom::~Bom() noexcept {
  *  General Methods
  ******************************************************************************/
 
-void Bom::addItem(const QString&     designator,
-                  const QStringList& attributes) noexcept {
+void Bom::addItem(
+    const QString& designator,
+    const QStringList& attributes) noexcept {
   Q_ASSERT(attributes.count() == mColumns.count());
 
   bool itemAdded = false;
@@ -64,11 +65,13 @@ void Bom::addItem(const QString&     designator,
   collator.setCaseSensitivity(Qt::CaseInsensitive);
   collator.setIgnorePunctuation(false);
   collator.setNumericMode(true);
-  std::sort(mItems.begin(), mItems.end(),
-            [&collator](const BomItem& lhs, const BomItem& rhs) {
-              return collator(lhs.getDesignators().first(),
-                              rhs.getDesignators().first());
-            });
+  std::sort(
+      mItems.begin(),
+      mItems.end(),
+      [&collator](const BomItem& lhs, const BomItem& rhs) {
+        return collator(
+            lhs.getDesignators().first(), rhs.getDesignators().first());
+      });
 }
 
 /*******************************************************************************

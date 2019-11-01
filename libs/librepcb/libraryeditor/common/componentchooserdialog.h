@@ -67,11 +67,12 @@ class ComponentChooserDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  ComponentChooserDialog()                                    = delete;
+  ComponentChooserDialog() = delete;
   ComponentChooserDialog(const ComponentChooserDialog& other) = delete;
-  ComponentChooserDialog(const workspace::Workspace&     ws,
-                         const IF_GraphicsLayerProvider* layerProvider,
-                         QWidget* parent = nullptr) noexcept;
+  ComponentChooserDialog(
+      const workspace::Workspace& ws,
+      const IF_GraphicsLayerProvider* layerProvider,
+      QWidget* parent = nullptr) noexcept;
   ~ComponentChooserDialog() noexcept;
 
   // Getters
@@ -84,10 +85,12 @@ public:
 
 private:  // Methods
   void searchEditTextChanged(const QString& text) noexcept;
-  void treeCategories_currentItemChanged(const QModelIndex& current,
-                                         const QModelIndex& previous) noexcept;
-  void listComponents_currentItemChanged(QListWidgetItem* current,
-                                         QListWidgetItem* previous) noexcept;
+  void treeCategories_currentItemChanged(
+      const QModelIndex& current,
+      const QModelIndex& previous) noexcept;
+  void listComponents_currentItemChanged(
+      QListWidgetItem* current,
+      QListWidgetItem* previous) noexcept;
   void listComponents_itemDoubleClicked(QListWidgetItem* item) noexcept;
   void searchComponents(const QString& input);
   void setSelectedCategory(const tl::optional<Uuid>& uuid) noexcept;
@@ -97,17 +100,17 @@ private:  // Methods
   const QStringList& localeOrder() const noexcept;
 
 private:  // Data
-  const workspace::Workspace&                mWorkspace;
-  const IF_GraphicsLayerProvider*            mLayerProvider;
+  const workspace::Workspace& mWorkspace;
+  const IF_GraphicsLayerProvider* mLayerProvider;
   QScopedPointer<Ui::ComponentChooserDialog> mUi;
-  QScopedPointer<QAbstractItemModel>         mCategoryTreeModel;
-  tl::optional<Uuid>                         mSelectedCategoryUuid;
-  tl::optional<Uuid>                         mSelectedComponentUuid;
+  QScopedPointer<QAbstractItemModel> mCategoryTreeModel;
+  tl::optional<Uuid> mSelectedCategoryUuid;
+  tl::optional<Uuid> mSelectedComponentUuid;
 
   // preview
-  QScopedPointer<Component>                         mComponent;
-  QScopedPointer<GraphicsScene>                     mGraphicsScene;
-  QList<std::shared_ptr<Symbol>>                    mSymbols;
+  QScopedPointer<Component> mComponent;
+  QScopedPointer<GraphicsScene> mGraphicsScene;
+  QList<std::shared_ptr<Symbol>> mSymbols;
   QList<std::shared_ptr<SymbolPreviewGraphicsItem>> mSymbolGraphicsItems;
 };
 

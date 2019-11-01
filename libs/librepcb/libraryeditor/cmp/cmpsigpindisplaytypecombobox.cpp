@@ -43,15 +43,16 @@ CmpSigPinDisplayTypeComboBox::CmpSigPinDisplayTypeComboBox(
   layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(mComboBox);
 
-  foreach (const CmpSigPinDisplayType& role,
-           CmpSigPinDisplayType::getAllTypes()) {
+  foreach (
+      const CmpSigPinDisplayType& role, CmpSigPinDisplayType::getAllTypes()) {
     mComboBox->addItem(role.getNameTr());
   }
   mComboBox->setCurrentIndex(0);
   connect(
       mComboBox,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &CmpSigPinDisplayTypeComboBox::currentIndexChanged);
+      this,
+      &CmpSigPinDisplayTypeComboBox::currentIndexChanged);
 }
 
 CmpSigPinDisplayTypeComboBox::~CmpSigPinDisplayTypeComboBox() noexcept {

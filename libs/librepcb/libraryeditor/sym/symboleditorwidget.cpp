@@ -61,8 +61,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SymbolEditorWidget::SymbolEditorWidget(const Context&  context,
-                                       const FilePath& fp, QWidget* parent)
+SymbolEditorWidget::SymbolEditorWidget(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : EditorWidgetBase(context, fp, parent),
     mUi(new Ui::SymbolEditorWidget),
     mGraphicsScene(new GraphicsScene()) {
@@ -72,19 +74,22 @@ SymbolEditorWidget::SymbolEditorWidget(const Context&  context,
   mUi->graphicsView->setUseOpenGl(
       mContext.workspace.getSettings().getAppearance().getUseOpenGl());
   mUi->graphicsView->setScene(mGraphicsScene.data());
-  connect(mUi->graphicsView, &GraphicsView::cursorScenePositionChanged, this,
-          &SymbolEditorWidget::cursorPositionChanged);
+  connect(
+      mUi->graphicsView,
+      &GraphicsView::cursorScenePositionChanged,
+      this,
+      &SymbolEditorWidget::cursorPositionChanged);
   setWindowIcon(QIcon(":/img/library/symbol.png"));
 
   // Insert category list editor widget.
   mCategoriesEditorWidget.reset(
       new ComponentCategoryListEditorWidget(mContext.workspace, this));
   mCategoriesEditorWidget->setRequiresMinimumOneEntry(true);
-  int                   row;
+  int row;
   QFormLayout::ItemRole role;
   mUi->formLayout->getWidgetPosition(mUi->lblCategories, &row, &role);
-  mUi->formLayout->setWidget(row, QFormLayout::FieldRole,
-                             mCategoriesEditorWidget.data());
+  mUi->formLayout->setWidget(
+      row, QFormLayout::FieldRole, mCategoriesEditorWidget.data());
 
   // Load element.
   mSymbol.reset(new Symbol(std::unique_ptr<TransactionalDirectory>(
@@ -96,25 +101,48 @@ SymbolEditorWidget::SymbolEditorWidget(const Context&  context,
   setupInterfaceBrokenWarningWidget(*mUi->interfaceBrokenWarningWidget);
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &SymbolEditorWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &SymbolEditorWidget::updateMetadata);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &SymbolEditorWidget::commitMetadata);
-  connect(mCategoriesEditorWidget.data(),
-          &ComponentCategoryListEditorWidget::edited, this,
-          &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &SymbolEditorWidget::commitMetadata);
+  connect(
+      mCategoriesEditorWidget.data(),
+      &ComponentCategoryListEditorWidget::edited,
+      this,
+      &SymbolEditorWidget::commitMetadata);
 
   // Load graphics items recursively.
   mGraphicsItem.reset(new SymbolGraphicsItem(*mSymbol, mContext.layerProvider));
@@ -122,10 +150,14 @@ SymbolEditorWidget::SymbolEditorWidget(const Context&  context,
   mUi->graphicsView->zoomAll();
 
   // Load finite state machine (FSM).
-  SymbolEditorFsm::Context fsmContext{
-      *this,           *mUndoStack,          mContext.layerProvider,
-      *mGraphicsScene, *mUi->graphicsView,   *mSymbol,
-      *mGraphicsItem,  *mCommandToolBarProxy};
+  SymbolEditorFsm::Context fsmContext{*this,
+                                      *mUndoStack,
+                                      mContext.layerProvider,
+                                      *mGraphicsScene,
+                                      *mUi->graphicsView,
+                                      *mSymbol,
+                                      *mGraphicsItem,
+                                      *mCommandToolBarProxy};
   mFsm.reset(new SymbolEditorFsm(fsmContext));
 
   // Last but not least, connect the graphics scene events with the FSM.
@@ -142,8 +174,11 @@ SymbolEditorWidget::~SymbolEditorWidget() noexcept {
 void SymbolEditorWidget::setToolsActionGroup(
     ExclusiveActionGroup* group) noexcept {
   if (mToolsActionGroup) {
-    disconnect(mFsm.data(), &SymbolEditorFsm::toolChanged, mToolsActionGroup,
-               &ExclusiveActionGroup::setCurrentAction);
+    disconnect(
+        mFsm.data(),
+        &SymbolEditorFsm::toolChanged,
+        mToolsActionGroup,
+        &ExclusiveActionGroup::setCurrentAction);
   }
 
   EditorWidgetBase::setToolsActionGroup(group);
@@ -159,8 +194,11 @@ void SymbolEditorWidget::setToolsActionGroup(
     mToolsActionGroup->setActionEnabled(Tool::DRAW_CIRCLE, true);
     mToolsActionGroup->setActionEnabled(Tool::DRAW_TEXT, true);
     mToolsActionGroup->setCurrentAction(mFsm->getCurrentTool());
-    connect(mFsm.data(), &SymbolEditorFsm::toolChanged, mToolsActionGroup,
-            &ExclusiveActionGroup::setCurrentAction);
+    connect(
+        mFsm.data(),
+        &SymbolEditorFsm::toolChanged,
+        mToolsActionGroup,
+        &ExclusiveActionGroup::setCurrentAction);
   }
 }
 
@@ -178,7 +216,7 @@ bool SymbolEditorWidget::save() noexcept {
 
   // Save element.
   try {
-    mSymbol->save();      // can throw
+    mSymbol->save();  // can throw
     mFileSystem->save();  // can throw
     mOriginalSymbolPinUuids = mSymbol->getPins().getUuidSet();
     return EditorWidgetBase::save();
@@ -233,8 +271,11 @@ bool SymbolEditorWidget::abortCommand() noexcept {
 
 bool SymbolEditorWidget::editGridProperties() noexcept {
   GridSettingsDialog dialog(mUi->graphicsView->getGridProperties(), this);
-  connect(&dialog, &GridSettingsDialog::gridPropertiesChanged,
-          mUi->graphicsView, &GraphicsView::setGridProperties);
+  connect(
+      &dialog,
+      &GridSettingsDialog::gridPropertiesChanged,
+      mUi->graphicsView,
+      &GraphicsView::setGridProperties);
   if (dialog.exec()) {
     mUi->graphicsView->setGridProperties(dialog.getGrid());
   }
@@ -424,7 +465,8 @@ void SymbolEditorWidget::fixMsg(const MsgSymbolPinNotOnGrid& msg) {
 
 template <typename MessageType>
 bool SymbolEditorWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -435,7 +477,8 @@ bool SymbolEditorWidget::fixMsgHelper(
 }
 
 bool SymbolEditorWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingCategories>(msg, applyFix)) return true;

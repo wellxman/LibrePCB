@@ -87,7 +87,7 @@ Application::Application(int& argc, char** argv) noexcept
       QLocale(QLocale::C)
           .toDate(QString(__DATE__).simplified(), QLatin1String("MMM d yyyy"));
   QTime buildTime = QTime::fromString(__TIME__, Qt::TextDate);
-  mBuildDate      = QDateTime(buildDate, buildTime);
+  mBuildDate = QDateTime(buildDate, buildTime);
 
   // check git revision
   if (mGitRevision.isEmpty()) {
@@ -106,7 +106,7 @@ Application::Application(int& argc, char** argv) noexcept
 
   // determine the path to the resources directory (e.g. /usr/share/librepcb)
   FilePath buildOutputDirPath(BUILD_OUTPUT_DIRECTORY);
-  bool     runningFromBuildOutput =
+  bool runningFromBuildOutput =
       executableFilePath.isLocatedInDir(buildOutputDirPath);
   if (runningFromBuildOutput) {
     // The executable is located inside the build output directory, so we assume
@@ -140,7 +140,7 @@ Application::Application(int& argc, char** argv) noexcept
   fontsDir.setNameFilters({"*.ttf", "*.otf"});
   foreach (const QFileInfo& info, fontsDir.entryInfoList()) {
     QString fp = info.absoluteFilePath();
-    int     id = QFontDatabase::addApplicationFont(fp);
+    int id = QFontDatabase::addApplicationFont(fp);
     if (id < 0) {
       qCritical() << "Failed to load font" << fp;
     }
@@ -160,7 +160,8 @@ Application::Application(int& argc, char** argv) noexcept
 
   // load all stroke fonts
   TransactionalFileSystem strokeFontsDir(
-      getResourcesFilePath("fontobene"), false,
+      getResourcesFilePath("fontobene"),
+      false,
       TransactionalFileSystem::RestoreMode::NO);
   mStrokeFontPool.reset(new StrokeFontPool(strokeFontsDir));
   getDefaultStrokeFont();  // ensure that the default font is available (aborts
@@ -216,7 +217,7 @@ Application* Application::instance() noexcept {
  ******************************************************************************/
 
 void Application::about() noexcept {
-  QWidget*    parent = QApplication::activeWindow();
+  QWidget* parent = QApplication::activeWindow();
   AboutDialog aboutDialog(parent);
   aboutDialog.exec();
 }

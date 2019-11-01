@@ -47,21 +47,23 @@ class BES_FSM final : public BES_Base {
 public:
   /// FSM States
   enum State {
-    State_NoState,        ///< no state active
-    State_Select,         ///< @see #project#BES_Select
-    State_DrawTrace,      ///< @see #project#BES_DrawTrace
-    State_DrawPolygon,    ///< @see librepcb#project#BES_DrawPolygon
+    State_NoState,  ///< no state active
+    State_Select,  ///< @see #project#BES_Select
+    State_DrawTrace,  ///< @see #project#BES_DrawTrace
+    State_DrawPolygon,  ///< @see librepcb#project#BES_DrawPolygon
     State_AddStrokeText,  ///< @see librepcb#project#BES_AddStrokeText
-    State_AddHole,        ///< @see librepcb#project#BES_AddHole
-    State_AddVia,         ///< @see librepcb#project#BES_AddVia
-    State_AddDevice,      ///< @see librepcb#project#BES_AddDevice
-    State_DrawPlane,      ///< @see #project#BES_DrawPlane
+    State_AddHole,  ///< @see librepcb#project#BES_AddHole
+    State_AddVia,  ///< @see librepcb#project#BES_AddVia
+    State_AddDevice,  ///< @see librepcb#project#BES_AddDevice
+    State_DrawPlane,  ///< @see #project#BES_DrawPlane
   };
 
   // Constructors / Destructor
-  explicit BES_FSM(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                   GraphicsView& editorGraphicsView,
-                   UndoStack&    undoStack) noexcept;
+  explicit BES_FSM(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack) noexcept;
   ~BES_FSM() noexcept;
 
   // Getters
@@ -76,12 +78,12 @@ signals:
 private:
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept;
-  State      processEventFromChild(
-           BEE_Base* event) noexcept;  ///< returns the next state
+  State processEventFromChild(
+      BEE_Base* event) noexcept;  ///< returns the next state
 
   // Attributes
-  State                   mCurrentState;
-  State                   mPreviousState;
+  State mCurrentState;
+  State mPreviousState;
   QHash<State, BES_Base*> mSubStates;
 };
 

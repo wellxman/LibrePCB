@@ -84,30 +84,38 @@ public:
   virtual void serialize(SExpression& root) const = 0;
 
   template <typename T>
-  static void serializeObjectContainer(SExpression& root, const T& container,
-                                       const QString& itemName) {
+  static void serializeObjectContainer(
+      SExpression& root,
+      const T& container,
+      const QString& itemName) {
     for (const auto& object : container) {
-      root.appendChild(object.serializeToDomElement(itemName),
-                       true);  // can throw
+      root.appendChild(
+          object.serializeToDomElement(itemName),
+          true);  // can throw
     }
   }
 
   template <typename T>
-  static void serializePointerContainer(SExpression& root, const T& container,
-                                        const QString& itemName) {
+  static void serializePointerContainer(
+      SExpression& root,
+      const T& container,
+      const QString& itemName) {
     for (const auto& pointer : container) {
-      root.appendChild(pointer->serializeToDomElement(itemName),
-                       true);  // can throw
+      root.appendChild(
+          pointer->serializeToDomElement(itemName),
+          true);  // can throw
     }
   }
 
   template <typename T>
-  static void serializePointerContainerUuidSorted(SExpression&   root,
-                                                  const T&       container,
-                                                  const QString& itemName) {
+  static void serializePointerContainerUuidSorted(
+      SExpression& root,
+      const T& container,
+      const QString& itemName) {
     T copy = container;
     std::sort(
-        copy.begin(), copy.end(),
+        copy.begin(),
+        copy.end(),
         [](const typename T::value_type& a, const typename T::value_type& b) {
           return a->getUuid() < b->getUuid();
         });
@@ -118,8 +126,9 @@ public:
 // Make sure that the SerializableObject class does not contain any data (except
 // the vptr). Otherwise it could introduce issues when using multiple
 // inheritance.
-static_assert(sizeof(SerializableObject) == sizeof(void*),
-              "SerializableObject must not contain any data!");
+static_assert(
+    sizeof(SerializableObject) == sizeof(void*),
+    "SerializableObject must not contain any data!");
 
 /*******************************************************************************
  *  End of File

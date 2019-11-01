@@ -80,7 +80,7 @@ void Debug::setDebugLevelLogFile(DebugLevel_t level) {
       (level != DebugLevel_t::Nothing)) {
     // enable logging to file
     QDir().mkpath(mLogFilepath.getParentDir().toStr());
-    mLogFile     = new QFile(mLogFilepath.toStr());
+    mLogFile = new QFile(mLogFilepath.toStr());
     bool success = mLogFile->open(QFile::WriteOnly);
     if (success) {
       mDebugLevelLogFile = level;  // activate logging to file immediately!
@@ -91,8 +91,9 @@ void Debug::setDebugLevelLogFile(DebugLevel_t level) {
       delete mLogFile;
       mLogFile = 0;
     }
-  } else if ((mDebugLevelLogFile != DebugLevel_t::Nothing) &&
-             (level == DebugLevel_t::Nothing) && (mLogFile)) {
+  } else if (
+      (mDebugLevelLogFile != DebugLevel_t::Nothing) &&
+      (level == DebugLevel_t::Nothing) && (mLogFile)) {
     // disable logging to file
     mLogFile->close();
     delete mLogFile;
@@ -114,8 +115,11 @@ const FilePath& Debug::getLogFilepath() const {
   return mLogFilepath;
 }
 
-void Debug::print(DebugLevel_t level, const QString& msg, const char* file,
-                  int line) {
+void Debug::print(
+    DebugLevel_t level,
+    const QString& msg,
+    const char* file,
+    int line) {
   QMutexLocker locker(&mMutex);
 
   if ((mDebugLevelStderr < level) &&
@@ -168,12 +172,14 @@ void Debug::print(DebugLevel_t level, const QString& msg, const char* file,
  *  The message handler for qDebug(), qWarning(), qCritical() and qFatal()
  ******************************************************************************/
 
-void Debug::messageHandler(QtMsgType type, const QMessageLogContext& context,
-                           const QString& msg) {
+void Debug::messageHandler(
+    QtMsgType type,
+    const QMessageLogContext& context,
+    const QString& msg) {
   switch (type) {
     case QtDebugMsg:
-      instance()->print(DebugLevel_t::DebugMsg, msg, context.file,
-                        context.line);
+      instance()->print(
+          DebugLevel_t::DebugMsg, msg, context.file, context.line);
       break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     case QtInfoMsg:
@@ -185,8 +191,8 @@ void Debug::messageHandler(QtMsgType type, const QMessageLogContext& context,
       break;
 
     case QtCriticalMsg:
-      instance()->print(DebugLevel_t::Critical, msg, context.file,
-                        context.line);
+      instance()->print(
+          DebugLevel_t::Critical, msg, context.file, context.line);
       break;
 
     case QtFatalMsg:
@@ -195,9 +201,11 @@ void Debug::messageHandler(QtMsgType type, const QMessageLogContext& context,
 
     default:
       Q_ASSERT(false);
-      instance()->print(DebugLevel_t::Critical,
-                        QString("unhandled case: %1").arg(type), __FILE__,
-                        __LINE__);
+      instance()->print(
+          DebugLevel_t::Critical,
+          QString("unhandled case: %1").arg(type),
+          __FILE__,
+          __LINE__);
       break;
   }
 }

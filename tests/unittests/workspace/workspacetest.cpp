@@ -50,7 +50,7 @@ protected:
   WorkspaceTest() {
     // the whitespaces in the path are there to make the test even stronger ;)
     mWsDir = FilePath::getRandomTempPath().getPathTo("test workspace dir");
-    mVersionFile  = mWsDir.getPathTo(".librepcb-workspace");
+    mVersionFile = mWsDir.getPathTo(".librepcb-workspace");
     mProjectsPath = mWsDir.getPathTo("projects");
     mMetadataPath =
         mWsDir.getPathTo("v" % qApp->getFileFormatVersion().toStr());
@@ -119,8 +119,9 @@ TEST_F(WorkspaceTest, testGetFileFormatVersionsOfWorkspace) {
   Workspace::createNewWorkspace(mWsDir);
   EXPECT_TRUE(Workspace::getFileFormatVersionsOfWorkspace(mWsDir).isEmpty());
   Workspace ws(mWsDir);
-  EXPECT_EQ(QList<Version>{qApp->getFileFormatVersion()},
-            Workspace::getFileFormatVersionsOfWorkspace(mWsDir));
+  EXPECT_EQ(
+      QList<Version>{qApp->getFileFormatVersion()},
+      Workspace::getFileFormatVersionsOfWorkspace(mWsDir));
 }
 
 TEST_F(WorkspaceTest, testGetHighestFileFormatVersionOfWorkspace) {
@@ -130,8 +131,9 @@ TEST_F(WorkspaceTest, testGetHighestFileFormatVersionOfWorkspace) {
   EXPECT_FALSE(
       Workspace::getHighestFileFormatVersionOfWorkspace(mWsDir).has_value());
   Workspace ws(mWsDir);
-  EXPECT_EQ(qApp->getFileFormatVersion(),
-            Workspace::getHighestFileFormatVersionOfWorkspace(mWsDir));
+  EXPECT_EQ(
+      qApp->getFileFormatVersion(),
+      Workspace::getHighestFileFormatVersionOfWorkspace(mWsDir));
 }
 
 /*******************************************************************************

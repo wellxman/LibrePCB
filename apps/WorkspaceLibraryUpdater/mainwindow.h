@@ -39,15 +39,16 @@ private slots:
 
 private:
   template <typename ElementType>
-  void updateElements(std::shared_ptr<librepcb::TransactionalFileSystem> fs,
-                      const librepcb::library::Library& lib) noexcept;
+  void updateElements(
+      std::shared_ptr<librepcb::TransactionalFileSystem> fs,
+      const librepcb::library::Library& lib) noexcept;
 
   // Attributes
   Ui::MainWindow* ui;
-  QString         lastDir;
-  int             elementCount;
-  int             ignoreCount;
-  int             errorCount;
+  QString lastDir;
+  int elementCount;
+  int ignoreCount;
+  int errorCount;
 };
 
 #endif  // MAINWINDOW_H

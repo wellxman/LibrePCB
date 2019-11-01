@@ -65,27 +65,31 @@ public:
     CirclesEdited,
     TextsEdited,
   };
-  Signal<Symbol, Event>       onEdited;
+  Signal<Symbol, Event> onEdited;
   typedef Slot<Symbol, Event> OnEditedSlot;
 
   // Constructors / Destructor
-  Symbol()                    = delete;
+  Symbol() = delete;
   Symbol(const Symbol& other) = delete;
-  Symbol(const Uuid& uuid, const Version& version, const QString& author,
-         const ElementName& name_en_US, const QString& description_en_US,
-         const QString& keywords_en_US);
+  Symbol(
+      const Uuid& uuid,
+      const Version& version,
+      const QString& author,
+      const ElementName& name_en_US,
+      const QString& description_en_US,
+      const QString& keywords_en_US);
   explicit Symbol(std::unique_ptr<TransactionalDirectory> directory);
   ~Symbol() noexcept;
 
   // Getters: Geometry
-  SymbolPinList&       getPins() noexcept { return mPins; }
+  SymbolPinList& getPins() noexcept { return mPins; }
   const SymbolPinList& getPins() const noexcept { return mPins; }
-  PolygonList&         getPolygons() noexcept { return mPolygons; }
-  const PolygonList&   getPolygons() const noexcept { return mPolygons; }
-  CircleList&          getCircles() noexcept { return mCircles; }
-  const CircleList&    getCircles() const noexcept { return mCircles; }
-  TextList&            getTexts() noexcept { return mTexts; }
-  const TextList&      getTexts() const noexcept { return mTexts; }
+  PolygonList& getPolygons() noexcept { return mPolygons; }
+  const PolygonList& getPolygons() const noexcept { return mPolygons; }
+  CircleList& getCircles() noexcept { return mCircles; }
+  const CircleList& getCircles() const noexcept { return mCircles; }
+  TextList& getTexts() noexcept { return mTexts; }
+  const TextList& getTexts() const noexcept { return mTexts; }
 
   // General Methods
   virtual LibraryElementCheckMessageList runChecks() const override;
@@ -104,34 +108,42 @@ public:
   }
 
 private:  // Methods
-  void pinsEdited(const SymbolPinList& list, int index,
-                  const std::shared_ptr<const SymbolPin>& pin,
-                  SymbolPinList::Event                    event) noexcept;
-  void polygonsEdited(const PolygonList& list, int index,
-                      const std::shared_ptr<const Polygon>& polygon,
-                      PolygonList::Event                    event) noexcept;
-  void circlesEdited(const CircleList& list, int index,
-                     const std::shared_ptr<const Circle>& circle,
-                     CircleList::Event                    event) noexcept;
-  void textsEdited(const TextList& list, int index,
-                   const std::shared_ptr<const Text>& text,
-                   TextList::Event                    event) noexcept;
+  void pinsEdited(
+      const SymbolPinList& list,
+      int index,
+      const std::shared_ptr<const SymbolPin>& pin,
+      SymbolPinList::Event event) noexcept;
+  void polygonsEdited(
+      const PolygonList& list,
+      int index,
+      const std::shared_ptr<const Polygon>& polygon,
+      PolygonList::Event event) noexcept;
+  void circlesEdited(
+      const CircleList& list,
+      int index,
+      const std::shared_ptr<const Circle>& circle,
+      CircleList::Event event) noexcept;
+  void textsEdited(
+      const TextList& list,
+      int index,
+      const std::shared_ptr<const Text>& text,
+      TextList::Event event) noexcept;
   /// @copydoc librepcb::SerializableObject::serialize()
   void serialize(SExpression& root) const override;
 
 private:  // Data
   SymbolPinList mPins;
-  PolygonList   mPolygons;
-  CircleList    mCircles;
-  TextList      mTexts;
+  PolygonList mPolygons;
+  CircleList mCircles;
+  TextList mTexts;
 
   SymbolGraphicsItem* mRegisteredGraphicsItem;
 
   // Slots
   SymbolPinList::OnEditedSlot mPinsEditedSlot;
-  PolygonList::OnEditedSlot   mPolygonsEditedSlot;
-  CircleList::OnEditedSlot    mCirclesEditedSlot;
-  TextList::OnEditedSlot      mTextsEditedSlot;
+  PolygonList::OnEditedSlot mPolygonsEditedSlot;
+  CircleList::OnEditedSlot mCirclesEditedSlot;
+  TextList::OnEditedSlot mTextsEditedSlot;
 };
 
 /*******************************************************************************

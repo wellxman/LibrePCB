@@ -64,27 +64,30 @@ class SymbolChooserDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  SymbolChooserDialog()                                 = delete;
+  SymbolChooserDialog() = delete;
   SymbolChooserDialog(const SymbolChooserDialog& other) = delete;
-  SymbolChooserDialog(const workspace::Workspace&     ws,
-                      const IF_GraphicsLayerProvider& layerProvider,
-                      QWidget* parent = nullptr) noexcept;
+  SymbolChooserDialog(
+      const workspace::Workspace& ws,
+      const IF_GraphicsLayerProvider& layerProvider,
+      QWidget* parent = nullptr) noexcept;
   ~SymbolChooserDialog() noexcept;
 
   // Getters
   tl::optional<Uuid> getSelectedSymbolUuid() const noexcept;
-  QString            getSelectedSymbolNameTr() const noexcept;
-  QString            getSelectedSymbolDescriptionTr() const noexcept;
+  QString getSelectedSymbolNameTr() const noexcept;
+  QString getSelectedSymbolDescriptionTr() const noexcept;
 
   // Operator Overloadings
   SymbolChooserDialog& operator=(const SymbolChooserDialog& rhs) = delete;
 
 private:  // Methods
   void searchEditTextChanged(const QString& text) noexcept;
-  void treeCategories_currentItemChanged(const QModelIndex& current,
-                                         const QModelIndex& previous) noexcept;
-  void listSymbols_currentItemChanged(QListWidgetItem* current,
-                                      QListWidgetItem* previous) noexcept;
+  void treeCategories_currentItemChanged(
+      const QModelIndex& current,
+      const QModelIndex& previous) noexcept;
+  void listSymbols_currentItemChanged(
+      QListWidgetItem* current,
+      QListWidgetItem* previous) noexcept;
   void listSymbols_itemDoubleClicked(QListWidgetItem* item) noexcept;
   void searchSymbols(const QString& input);
   void setSelectedCategory(const tl::optional<Uuid>& uuid) noexcept;
@@ -93,14 +96,14 @@ private:  // Methods
   const QStringList& localeOrder() const noexcept;
 
 private:  // Data
-  const workspace::Workspace&             mWorkspace;
-  const IF_GraphicsLayerProvider&         mLayerProvider;
+  const workspace::Workspace& mWorkspace;
+  const IF_GraphicsLayerProvider& mLayerProvider;
   QScopedPointer<Ui::SymbolChooserDialog> mUi;
-  QScopedPointer<QAbstractItemModel>      mCategoryTreeModel;
-  QScopedPointer<GraphicsScene>           mPreviewScene;
-  tl::optional<Uuid>                      mSelectedCategoryUuid;
-  QScopedPointer<Symbol>                  mSelectedSymbol;
-  QScopedPointer<SymbolGraphicsItem>      mGraphicsItem;
+  QScopedPointer<QAbstractItemModel> mCategoryTreeModel;
+  QScopedPointer<GraphicsScene> mPreviewScene;
+  tl::optional<Uuid> mSelectedCategoryUuid;
+  QScopedPointer<Symbol> mSelectedSymbol;
+  QScopedPointer<SymbolGraphicsItem> mGraphicsItem;
 };
 
 /*******************************************************************************

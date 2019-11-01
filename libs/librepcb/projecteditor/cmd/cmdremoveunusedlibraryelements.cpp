@@ -60,11 +60,12 @@ CmdRemoveUnusedLibraryElements::~CmdRemoveUnusedLibraryElements() noexcept {
 bool CmdRemoveUnusedLibraryElements::performExecute() {
   // get all used elements
   QSet<const library::Component*> usedComponents;
-  QSet<const library::Device*>    usedDevices;
-  QSet<const library::Package*>   usedPackages;
-  QSet<const library::Symbol*>    usedSymbols;
-  foreach (const ComponentInstance* ci,
-           mProject.getCircuit().getComponentInstances()) {
+  QSet<const library::Device*> usedDevices;
+  QSet<const library::Package*> usedPackages;
+  QSet<const library::Symbol*> usedSymbols;
+  foreach (
+      const ComponentInstance* ci,
+      mProject.getCircuit().getComponentInstances()) {
     Q_ASSERT(ci);
     usedComponents.insert(&ci->getLibComponent());
   }

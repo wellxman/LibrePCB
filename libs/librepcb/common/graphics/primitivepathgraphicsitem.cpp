@@ -112,9 +112,10 @@ void PrimitivePathGraphicsItem::setFillLayer(
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void PrimitivePathGraphicsItem::paint(QPainter*                       painter,
-                                      const QStyleOptionGraphicsItem* option,
-                                      QWidget* widget) noexcept {
+void PrimitivePathGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   if (option->state.testFlag(QStyle::State_Selected)) {
     painter->setPen(mPenHighlighted);
@@ -131,7 +132,8 @@ void PrimitivePathGraphicsItem::paint(QPainter*                       painter,
  ******************************************************************************/
 
 void PrimitivePathGraphicsItem::layerEdited(
-    const GraphicsLayer& layer, GraphicsLayer::Event event) noexcept {
+    const GraphicsLayer& layer,
+    GraphicsLayer::Event event) noexcept {
   switch (event) {
     case GraphicsLayer::Event::ColorChanged:
     case GraphicsLayer::Event::HighlightColorChanged:
@@ -181,8 +183,8 @@ void PrimitivePathGraphicsItem::updateColors() noexcept {
 
 void PrimitivePathGraphicsItem::updateBoundingRectAndShape() noexcept {
   prepareGeometryChange();
-  mShape        = Toolbox::shapeFromPath(mPainterPath, mPen, mBrush,
-                                  UnsignedLength(200000));
+  mShape = Toolbox::shapeFromPath(
+      mPainterPath, mPen, mBrush, UnsignedLength(200000));
   mBoundingRect = mShape.controlPointRect();
   update();
 }

@@ -43,7 +43,7 @@ namespace librepcb {
 class CmdPolygonEdit final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdPolygonEdit()                            = delete;
+  CmdPolygonEdit() = delete;
   CmdPolygonEdit(const CmdPolygonEdit& other) = delete;
   explicit CmdPolygonEdit(Polygon& polygon) noexcept;
   ~CmdPolygonEdit() noexcept;
@@ -56,8 +56,10 @@ public:
   void setPath(const Path& path, bool immediate) noexcept;
   void translate(const Point& deltaPos, bool immediate) noexcept;
   void rotate(const Angle& angle, const Point& center, bool immediate) noexcept;
-  void mirror(const Point& center, Qt::Orientation orientation,
-              bool immediate) noexcept;
+  void mirror(
+      const Point& center,
+      Qt::Orientation orientation,
+      bool immediate) noexcept;
 
   // Operator Overloadings
   CmdPolygonEdit& operator=(const CmdPolygonEdit& rhs) = delete;
@@ -82,14 +84,14 @@ private:
   // General Attributes
   GraphicsLayerName mOldLayerName;
   GraphicsLayerName mNewLayerName;
-  UnsignedLength    mOldLineWidth;
-  UnsignedLength    mNewLineWidth;
-  bool              mOldIsFilled;
-  bool              mNewIsFilled;
-  bool              mOldIsGrabArea;
-  bool              mNewIsGrabArea;
-  Path              mOldPath;
-  Path              mNewPath;
+  UnsignedLength mOldLineWidth;
+  UnsignedLength mNewLineWidth;
+  bool mOldIsFilled;
+  bool mNewIsFilled;
+  bool mOldIsGrabArea;
+  bool mNewIsGrabArea;
+  Path mOldPath;
+  Path mNewPath;
 };
 
 /*******************************************************************************

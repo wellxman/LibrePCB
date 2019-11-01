@@ -53,15 +53,17 @@ CmdSchematicNetPointEdit::~CmdSchematicNetPointEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdSchematicNetPointEdit::setPosition(const Point& pos,
-                                           bool         immediate) noexcept {
+void CmdSchematicNetPointEdit::setPosition(
+    const Point& pos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos = pos;
   if (immediate) mNetPoint.setPosition(mNewPos);
 }
 
-void CmdSchematicNetPointEdit::translate(const Point& deltaPos,
-                                         bool         immediate) noexcept {
+void CmdSchematicNetPointEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos += deltaPos;
   if (immediate) mNetPoint.setPosition(mNewPos);

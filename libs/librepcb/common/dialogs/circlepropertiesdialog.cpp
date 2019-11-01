@@ -36,24 +36,28 @@
  ******************************************************************************/
 namespace librepcb {
 
-CirclePropertiesDialog::CirclePropertiesDialog(Circle&               circle,
-                                               UndoStack&            undoStack,
-                                               QList<GraphicsLayer*> layers,
-                                               QWidget* parent) noexcept
+CirclePropertiesDialog::CirclePropertiesDialog(
+    Circle& circle,
+    UndoStack& undoStack,
+    QList<GraphicsLayer*> layers,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mCircle(circle),
     mUndoStack(undoStack),
     mUi(new Ui::CirclePropertiesDialog) {
   mUi->setupUi(this);
   mUi->edtLineWidth->setSingleStep(0.1);  // [mm]
-  mUi->edtDiameter->setSingleStep(0.1);   // [mm]
+  mUi->edtDiameter->setSingleStep(0.1);  // [mm]
 
   foreach (const GraphicsLayer* layer, layers) {
     mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());
   }
 
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &CirclePropertiesDialog::buttonBoxClicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &CirclePropertiesDialog::buttonBoxClicked);
 
   // load circle attributes
   selectLayerNameInCombobox(*mCircle.getLayerName());
@@ -105,8 +109,8 @@ bool CirclePropertiesDialog::applyChanges() noexcept {
     cmd->setIsGrabArea(mUi->cbxIsGrabArea->isChecked(), false);
     cmd->setLineWidth(mUi->edtLineWidth->getValue(), false);
     cmd->setDiameter(mUi->edtDiameter->getValue(), false);
-    cmd->setCenter(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                   false);
+    cmd->setCenter(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     mUndoStack.execCmd(cmd.take());
     return true;
   } catch (const Exception& e) {

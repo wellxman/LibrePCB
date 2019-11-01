@@ -48,8 +48,9 @@ namespace manager {
  *  Constructors / Destructor
  ******************************************************************************/
 
-LibraryManager::LibraryManager(workspace::Workspace& ws,
-                               QWidget*              parent) noexcept
+LibraryManager::LibraryManager(
+    workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : QMainWindow(parent),
     mWorkspace(ws),
     mUi(new Ui::LibraryManager),
@@ -57,18 +58,26 @@ LibraryManager::LibraryManager(workspace::Workspace& ws,
     mSelectedLibrary() {
   mUi->setupUi(this);
   connect(mUi->btnClose, &QPushButton::clicked, this, &QMainWindow::close);
-  connect(mUi->lstLibraries, &QListWidget::currentItemChanged, this,
-          &LibraryManager::currentListItemChanged);
+  connect(
+      mUi->lstLibraries,
+      &QListWidget::currentItemChanged,
+      this,
+      &LibraryManager::currentListItemChanged);
 
   mAddLibraryWidget.reset(new AddLibraryWidget(mWorkspace));
   mUi->verticalLayout->insertWidget(0, mAddLibraryWidget.data());
-  connect(mAddLibraryWidget.data(), &AddLibraryWidget::libraryAdded, this,
-          &LibraryManager::libraryAddedSlot);
+  connect(
+      mAddLibraryWidget.data(),
+      &AddLibraryWidget::libraryAdded,
+      this,
+      &LibraryManager::libraryAddedSlot);
 
   updateLibraryList();
-  connect(&mWorkspace.getLibraryDb(),
-          &workspace::WorkspaceLibraryDb::scanLibraryListUpdated, this,
-          &LibraryManager::updateLibraryList);
+  connect(
+      &mWorkspace.getLibraryDb(),
+      &workspace::WorkspaceLibraryDb::scanLibraryListUpdated,
+      this,
+      &LibraryManager::updateLibraryList);
 
   // Restore Window Geometry
   QSettings clientSettings;
@@ -134,15 +143,21 @@ void LibraryManager::updateLibraryList() noexcept {
     foreach (const FilePath& libDir, libraries) {
       QString name, description, keywords;
       mWorkspace.getLibraryDb().getElementTranslations<Library>(
-          libDir, mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
-          &name, &description, &keywords);  // can throw
+          libDir,
+          mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
+          &name,
+          &description,
+          &keywords);  // can throw
       QPixmap icon;
       mWorkspace.getLibraryDb().getLibraryMetadata(libDir, &icon);  // can throw
 
       LibraryListWidgetItem* widget = new LibraryListWidgetItem(
           mWorkspace, libDir, name, description, icon);
-      connect(widget, &LibraryListWidgetItem::openLibraryEditorTriggered, this,
-              &LibraryManager::openLibraryEditorTriggered);
+      connect(
+          widget,
+          &LibraryListWidgetItem::openLibraryEditorTriggered,
+          this,
+          &LibraryManager::openLibraryEditorTriggered);
       widgets.append(widget);
     }
   } catch (const Exception& e) {
@@ -170,7 +185,8 @@ void LibraryManager::updateLibraryList() noexcept {
 }
 
 void LibraryManager::currentListItemChanged(
-    QListWidgetItem* current, QListWidgetItem* previous) noexcept {
+    QListWidgetItem* current,
+    QListWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
 
   if (mCurrentWidget) {
@@ -187,10 +203,13 @@ void LibraryManager::currentListItemChanged(
       try {
         LibraryInfoWidget* widget = new LibraryInfoWidget(
             mWorkspace, item->getLibraryFilePath());  // can throw
-        connect(widget, &LibraryInfoWidget::openLibraryEditorTriggered, this,
-                &LibraryManager::openLibraryEditorTriggered);
+        connect(
+            widget,
+            &LibraryInfoWidget::openLibraryEditorTriggered,
+            this,
+            &LibraryManager::openLibraryEditorTriggered);
         mUi->verticalLayout->insertWidget(0, widget);
-        mCurrentWidget   = widget;
+        mCurrentWidget = widget;
         mSelectedLibrary = item->getLibraryFilePath();
       } catch (const Exception& e) {
         QMessageBox::critical(this, tr("Error"), e.getMsg());
@@ -216,8 +235,9 @@ void LibraryManager::libraryAddedSlot(const FilePath& libDir) noexcept {
  *  Static Methods
  ******************************************************************************/
 
-bool LibraryManager::widgetsLessThan(const LibraryListWidgetItem* a,
-                                     const LibraryListWidgetItem* b) noexcept {
+bool LibraryManager::widgetsLessThan(
+    const LibraryListWidgetItem* a,
+    const LibraryListWidgetItem* b) noexcept {
   Q_ASSERT(a && b);
   if (!a->isRemoteLibrary() && b->isRemoteLibrary()) {
     return true;

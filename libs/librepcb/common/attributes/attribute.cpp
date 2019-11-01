@@ -53,8 +53,11 @@ Attribute::Attribute(const SExpression& node)
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
 }
 
-Attribute::Attribute(const AttributeKey& key, const AttributeType& type,
-                     const QString& value, const AttributeUnit* unit)
+Attribute::Attribute(
+    const AttributeKey& key,
+    const AttributeType& type,
+    const QString& value,
+    const AttributeUnit* unit)
   : onEdited(*this), mKey(key), mType(&type), mValue(value), mUnit(unit) {
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
 }
@@ -84,23 +87,25 @@ bool Attribute::setKey(const AttributeKey& key) noexcept {
   return true;
 }
 
-bool Attribute::setTypeValueUnit(const AttributeType& type,
-                                 const QString&       value,
-                                 const AttributeUnit* unit) {
+bool Attribute::setTypeValueUnit(
+    const AttributeType& type,
+    const QString& value,
+    const AttributeUnit* unit) {
   if ((&type == mType) && (value == mValue) && (unit == mUnit)) {
     return false;
   }
 
   if ((!type.isUnitAvailable(unit)) || (!type.isValueValid(value))) {
     throw LogicError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString("%1,%2,%3")
             .arg(type.getName(), value, unit ? unit->getName() : "-"));
   }
 
-  mType  = &type;
+  mType = &type;
   mValue = value;
-  mUnit  = unit;
+  mUnit = unit;
   onEdited.notify(Event::TypeValueUnitChanged);
   return true;
 }

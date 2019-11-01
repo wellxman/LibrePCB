@@ -48,14 +48,26 @@ NewProjectWizardPage_Initialization::NewProjectWizardPage_Initialization(
   setPixmap(QWizard::WatermarkPixmap, QPixmap(":/img/wizards/watermark.jpg"));
 
   // signal/slot connections
-  connect(mUi->cbxAddSchematic, &QGroupBox::toggled, this,
-          &NewProjectWizardPage_Initialization::completeChanged);
-  connect(mUi->cbxAddBoard, &QGroupBox::toggled, this,
-          &NewProjectWizardPage_Initialization::completeChanged);
-  connect(mUi->edtSchematicName, &QLineEdit::textChanged, this,
-          &NewProjectWizardPage_Initialization::schematicNameChanged);
-  connect(mUi->edtBoardName, &QLineEdit::textChanged, this,
-          &NewProjectWizardPage_Initialization::boardNameChanged);
+  connect(
+      mUi->cbxAddSchematic,
+      &QGroupBox::toggled,
+      this,
+      &NewProjectWizardPage_Initialization::completeChanged);
+  connect(
+      mUi->cbxAddBoard,
+      &QGroupBox::toggled,
+      this,
+      &NewProjectWizardPage_Initialization::completeChanged);
+  connect(
+      mUi->edtSchematicName,
+      &QLineEdit::textChanged,
+      this,
+      &NewProjectWizardPage_Initialization::schematicNameChanged);
+  connect(
+      mUi->edtBoardName,
+      &QLineEdit::textChanged,
+      this,
+      &NewProjectWizardPage_Initialization::boardNameChanged);
 
   // insert values
   mUi->edtSchematicName->setText(

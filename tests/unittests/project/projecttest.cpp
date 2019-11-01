@@ -45,7 +45,7 @@ protected:
 
   ProjectTest() {
     // the whitespaces in the path are there to make the test even stronger ;)
-    mProjectDir  = FilePath::getRandomTempPath().getPathTo("test project dir");
+    mProjectDir = FilePath::getRandomTempPath().getPathTo("test project dir");
     mProjectFile = mProjectDir.getPathTo("test project.lpp");
   }
 
@@ -72,15 +72,18 @@ TEST_F(ProjectTest, testCreateCloseOpen) {
       Project::create(createDir(), mProjectFile.getFilename()));
   EXPECT_EQ(mProjectFile, project->getFilepath());
   EXPECT_EQ(mProjectDir, project->getPath());
-  EXPECT_EQ(mProjectFile.getCompleteBasename(),
-            project->getMetadata().getName());
+  EXPECT_EQ(
+      mProjectFile.getCompleteBasename(), project->getMetadata().getName());
   EXPECT_EQ("Unknown", project->getMetadata().getAuthor());
   EXPECT_EQ(QString("v1"), project->getMetadata().getVersion());
-  EXPECT_NEAR(datetime.toMSecsSinceEpoch(),
-              project->getMetadata().getCreated().toMSecsSinceEpoch(), 5000);
-  EXPECT_NEAR(datetime.toMSecsSinceEpoch(),
-              project->getMetadata().getLastModified().toMSecsSinceEpoch(),
-              5000);
+  EXPECT_NEAR(
+      datetime.toMSecsSinceEpoch(),
+      project->getMetadata().getCreated().toMSecsSinceEpoch(),
+      5000);
+  EXPECT_NEAR(
+      datetime.toMSecsSinceEpoch(),
+      project->getMetadata().getLastModified().toMSecsSinceEpoch(),
+      5000);
   EXPECT_EQ(0, project->getSchematics().count());
   EXPECT_EQ(0, project->getBoards().count());
 
@@ -102,15 +105,18 @@ TEST_F(ProjectTest, testCreateCloseOpen) {
   project.reset(new Project(createDir(), mProjectFile.getFilename()));
   EXPECT_EQ(mProjectFile, project->getFilepath());
   EXPECT_EQ(mProjectDir, project->getPath());
-  EXPECT_EQ(mProjectFile.getCompleteBasename(),
-            project->getMetadata().getName());
+  EXPECT_EQ(
+      mProjectFile.getCompleteBasename(), project->getMetadata().getName());
   EXPECT_EQ("Unknown", project->getMetadata().getAuthor());
   EXPECT_EQ(QString("v1"), project->getMetadata().getVersion());
-  EXPECT_NEAR(datetime.toMSecsSinceEpoch(),
-              project->getMetadata().getCreated().toMSecsSinceEpoch(), 5000);
-  EXPECT_NEAR(datetime.toMSecsSinceEpoch(),
-              project->getMetadata().getLastModified().toMSecsSinceEpoch(),
-              5000);
+  EXPECT_NEAR(
+      datetime.toMSecsSinceEpoch(),
+      project->getMetadata().getCreated().toMSecsSinceEpoch(),
+      5000);
+  EXPECT_NEAR(
+      datetime.toMSecsSinceEpoch(),
+      project->getMetadata().getLastModified().toMSecsSinceEpoch(),
+      5000);
   EXPECT_EQ(0, project->getSchematics().count());
   EXPECT_EQ(0, project->getBoards().count());
 }
@@ -146,16 +152,19 @@ TEST_F(ProjectTest, testIfLastModifiedDateTimeIsUpdatedOnSave) {
 
   // check if datetime has not changed
   QThread::msleep(1000);
-  EXPECT_EQ(datetimeAfterCreating,
-            project->getMetadata().getLastModified().toMSecsSinceEpoch());
+  EXPECT_EQ(
+      datetimeAfterCreating,
+      project->getMetadata().getLastModified().toMSecsSinceEpoch());
 
   // save project and verify that datetime has changed
   QThread::msleep(1000);
   project->save();
   qint64 datetimeAfterSaving =
       project->getMetadata().getLastModified().toMSecsSinceEpoch();
-  EXPECT_NEAR(QDateTime::currentMSecsSinceEpoch(), datetimeAfterSaving,
-              1000);  // +/- 1s
+  EXPECT_NEAR(
+      QDateTime::currentMSecsSinceEpoch(),
+      datetimeAfterSaving,
+      1000);  // +/- 1s
   EXPECT_NE(datetimeAfterCreating, datetimeAfterSaving);
 }
 
@@ -166,8 +175,8 @@ TEST_F(ProjectTest, testSettersGetters) {
 
   // set properties
   ElementName name("test name 1234");
-  QString     author  = "test author 1234";
-  QString     version = "test version 1234";
+  QString author = "test author 1234";
+  QString version = "test version 1234";
   project->getMetadata().setName(name);
   project->getMetadata().setAuthor(author);
   project->getMetadata().setVersion(version);

@@ -52,8 +52,8 @@ ComponentSymbolVariantListWidget::ComponentSymbolVariantListWidget(
   mView->setShowEditButton(true);
   mView->setShowMoveButtons(true);
   // don't use double click as edit trigger because it opens the dialog!
-  mView->setEditTriggers(QAbstractItemView::EditKeyPressed |
-                         QAbstractItemView::AnyKeyPressed);
+  mView->setEditTriggers(
+      QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
   mView->setModel(mModel.data());
   mView->horizontalHeader()->setSectionResizeMode(
       ComponentSymbolVariantListModel::COLUMN_NAME, QHeaderView::Stretch);
@@ -68,18 +68,36 @@ ComponentSymbolVariantListWidget::ComponentSymbolVariantListWidget(
   mView->horizontalHeader()->setSectionResizeMode(
       ComponentSymbolVariantListModel::COLUMN_ACTIONS,
       QHeaderView::ResizeToContents);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &ComponentSymbolVariantListModel::addSymbolVariant);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &ComponentSymbolVariantListModel::removeSymbolVariant);
-  connect(mView.data(), &EditableTableWidget::btnMoveUpClicked, mModel.data(),
-          &ComponentSymbolVariantListModel::moveSymbolVariantUp);
-  connect(mView.data(), &EditableTableWidget::btnMoveDownClicked, mModel.data(),
-          &ComponentSymbolVariantListModel::moveSymbolVariantDown);
-  connect(mView.data(), &EditableTableWidget::btnEditClicked, this,
-          &ComponentSymbolVariantListWidget::btnEditClicked);
-  connect(mView.data(), &EditableTableWidget::doubleClicked, this,
-          &ComponentSymbolVariantListWidget::viewDoubleClicked);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &ComponentSymbolVariantListModel::addSymbolVariant);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &ComponentSymbolVariantListModel::removeSymbolVariant);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveUpClicked,
+      mModel.data(),
+      &ComponentSymbolVariantListModel::moveSymbolVariantUp);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveDownClicked,
+      mModel.data(),
+      &ComponentSymbolVariantListModel::moveSymbolVariantDown);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnEditClicked,
+      this,
+      &ComponentSymbolVariantListWidget::btnEditClicked);
+  connect(
+      mView.data(),
+      &EditableTableWidget::doubleClicked,
+      this,
+      &ComponentSymbolVariantListWidget::viewDoubleClicked);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -94,13 +112,14 @@ ComponentSymbolVariantListWidget::~ComponentSymbolVariantListWidget() noexcept {
  ******************************************************************************/
 
 void ComponentSymbolVariantListWidget::setReferences(
-    UndoStack* undoStack, ComponentSymbolVariantList* list,
+    UndoStack* undoStack,
+    ComponentSymbolVariantList* list,
     IF_ComponentSymbolVariantEditorProvider* editorProvider) noexcept {
   mModel->setSymbolVariantList(list);
   mModel->setUndoStack(undoStack);
   mSymbolVariantList = list;
-  mUndoStack         = undoStack;
-  mEditorProvider    = editorProvider;
+  mUndoStack = undoStack;
+  mEditorProvider = editorProvider;
 }
 
 /*******************************************************************************
@@ -129,7 +148,7 @@ void ComponentSymbolVariantListWidget::viewDoubleClicked(
 
 void ComponentSymbolVariantListWidget::editVariant(const Uuid& uuid) noexcept {
   try {
-    auto                   variant = mSymbolVariantList->get(uuid);
+    auto variant = mSymbolVariantList->get(uuid);
     ComponentSymbolVariant copy(*variant);
     if (mEditorProvider->openComponentSymbolVariantEditor(copy)) {
       QScopedPointer<CmdComponentSymbolVariantEdit> cmd(
@@ -141,8 +160,8 @@ void ComponentSymbolVariantListWidget::editVariant(const Uuid& uuid) noexcept {
       mUndoStack->execCmd(cmd.take());
     }
   } catch (const Exception& e) {
-    QMessageBox::critical(this, tr("Could not edit symbol variant"),
-                          e.getMsg());
+    QMessageBox::critical(
+        this, tr("Could not edit symbol variant"), e.getMsg());
   }
 }
 

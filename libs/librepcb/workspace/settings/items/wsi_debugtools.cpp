@@ -45,7 +45,8 @@ WSI_DebugTools::WSI_DebugTools(const SExpression& node) : WSI_Base() {
   layout->addWidget(
       new QLabel(
           tr("Warning: Some of these settings may only work in DEBUG mode!")),
-      0, 0);
+      0,
+      0);
 #endif
 
   // stretch the last row

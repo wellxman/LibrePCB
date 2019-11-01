@@ -36,12 +36,24 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Device::Device(const Uuid& uuid, const Version& version, const QString& author,
-               const ElementName& name_en_US, const QString& description_en_US,
-               const QString& keywords_en_US, const Uuid& component,
-               const Uuid& package)
-  : LibraryElement(getShortElementName(), getLongElementName(), uuid, version,
-                   author, name_en_US, description_en_US, keywords_en_US),
+Device::Device(
+    const Uuid& uuid,
+    const Version& version,
+    const QString& author,
+    const ElementName& name_en_US,
+    const QString& description_en_US,
+    const QString& keywords_en_US,
+    const Uuid& component,
+    const Uuid& package)
+  : LibraryElement(
+        getShortElementName(),
+        getLongElementName(),
+        uuid,
+        version,
+        author,
+        name_en_US,
+        description_en_US,
+        keywords_en_US),
     mComponentUuid(component),
     mPackageUuid(package),
     mAttributes(),
@@ -49,8 +61,10 @@ Device::Device(const Uuid& uuid, const Version& version, const QString& author,
 }
 
 Device::Device(std::unique_ptr<TransactionalDirectory> directory)
-  : LibraryElement(std::move(directory), getShortElementName(),
-                   getLongElementName()),
+  : LibraryElement(
+        std::move(directory),
+        getShortElementName(),
+        getLongElementName()),
     mComponentUuid(mLoadingFileDocument.getValueByPath<Uuid>("component")),
     mPackageUuid(mLoadingFileDocument.getValueByPath<Uuid>("package")),
     mAttributes(mLoadingFileDocument),

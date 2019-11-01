@@ -39,8 +39,10 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardContext::NewElementWizardContext(
-    const workspace::Workspace& ws, Library& lib,
-    const IF_GraphicsLayerProvider& lp, QObject* parent) noexcept
+    const workspace::Workspace& ws,
+    Library& lib,
+    const IF_GraphicsLayerProvider& lp,
+    QObject* parent) noexcept
   : QObject(parent),
     mWorkspace(ws),
     mLibrary(lib),
@@ -71,8 +73,8 @@ void NewElementWizardContext::reset(ElementType newType) noexcept {
   mElementName = tl::nullopt;
   mElementDescription.clear();
   mElementKeywords.clear();
-  mElementAuthor       = mWorkspace.getSettings().getUser().getName();
-  mElementVersion      = Version::fromString("0.1");
+  mElementAuthor = mWorkspace.getSettings().getUser().getName();
+  mElementVersion = Version::fromString("0.1");
   mElementCategoryUuid = tl::nullopt;
 
   // symbol
@@ -95,11 +97,12 @@ void NewElementWizardContext::reset(ElementType newType) noexcept {
 
   // device
   mDeviceComponentUuid = tl::nullopt;
-  mDevicePackageUuid   = tl::nullopt;
+  mDevicePackageUuid = tl::nullopt;
 }
 
-void NewElementWizardContext::copyElement(ElementType     type,
-                                          const FilePath& fp) {
+void NewElementWizardContext::copyElement(
+    ElementType type,
+    const FilePath& fp) {
   mElementType = type;
 
   std::unique_ptr<TransactionalDirectory> dir(
@@ -138,9 +141,9 @@ void NewElementWizardContext::copyElement(ElementType     type,
     }
   }
 
-  mElementName        = element->getNames().getDefaultValue();
+  mElementName = element->getNames().getDefaultValue();
   mElementDescription = element->getDescriptions().getDefaultValue();
-  mElementKeywords    = element->getKeywords().getDefaultValue();
+  mElementKeywords = element->getKeywords().getDefaultValue();
   if (const LibraryCategory* category =
           dynamic_cast<const LibraryCategory*>(element.data())) {
     mElementCategoryUuid = category->getParentUuid();
@@ -162,31 +165,45 @@ void NewElementWizardContext::copyElement(ElementType     type,
       mSymbolPins.clear();
       for (const SymbolPin& pin : symbol->getPins()) {
         mSymbolPins.append(std::make_shared<SymbolPin>(
-            Uuid::createRandom(), pin.getName(), pin.getPosition(),
-            pin.getLength(), pin.getRotation()));
+            Uuid::createRandom(),
+            pin.getName(),
+            pin.getPosition(),
+            pin.getLength(),
+            pin.getRotation()));
       }
       // copy polygons but generate new UUIDs
       mSymbolPolygons.clear();
       for (const Polygon& polygon : symbol->getPolygons()) {
         mSymbolPolygons.append(std::make_shared<Polygon>(
-            Uuid::createRandom(), polygon.getLayerName(),
-            polygon.getLineWidth(), polygon.isFilled(), polygon.isGrabArea(),
+            Uuid::createRandom(),
+            polygon.getLayerName(),
+            polygon.getLineWidth(),
+            polygon.isFilled(),
+            polygon.isGrabArea(),
             polygon.getPath()));
       }
       // copy circles but generate new UUIDs
       mSymbolCircles.clear();
       for (const Circle& circle : symbol->getCircles()) {
         mSymbolCircles.append(std::make_shared<Circle>(
-            Uuid::createRandom(), circle.getLayerName(), circle.getLineWidth(),
-            circle.isFilled(), circle.isGrabArea(), circle.getCenter(),
+            Uuid::createRandom(),
+            circle.getLayerName(),
+            circle.getLineWidth(),
+            circle.isFilled(),
+            circle.isGrabArea(),
+            circle.getCenter(),
             circle.getDiameter()));
       }
       // copy texts but generate new UUIDs
       mSymbolTexts.clear();
       for (const Text& text : symbol->getTexts()) {
         mSymbolTexts.append(std::make_shared<Text>(
-            Uuid::createRandom(), text.getLayerName(), text.getText(),
-            text.getPosition(), text.getRotation(), text.getHeight(),
+            Uuid::createRandom(),
+            text.getLayerName(),
+            text.getText(),
+            text.getPosition(),
+            text.getRotation(),
+            text.getHeight(),
             text.getAlign()));
       }
       break;
@@ -209,36 +226,56 @@ void NewElementWizardContext::copyElement(ElementType     type,
       for (const Footprint& footprint : package->getFootprints()) {
         // don't copy translations as they would need to be adjusted anyway
         std::shared_ptr<Footprint> newFootprint(new Footprint(
-            Uuid::createRandom(), footprint.getNames().getDefaultValue(),
+            Uuid::createRandom(),
+            footprint.getNames().getDefaultValue(),
             footprint.getDescriptions().getDefaultValue()));
         // copy pads but generate new UUIDs
         for (const FootprintPad& pad : footprint.getPads()) {
           newFootprint->getPads().append(std::make_shared<FootprintPad>(
-              *padUuidMap.find(pad.getUuid()), pad.getPosition(),
-              pad.getRotation(), pad.getShape(), pad.getWidth(),
-              pad.getHeight(), pad.getDrillDiameter(), pad.getBoardSide()));
+              *padUuidMap.find(pad.getUuid()),
+              pad.getPosition(),
+              pad.getRotation(),
+              pad.getShape(),
+              pad.getWidth(),
+              pad.getHeight(),
+              pad.getDrillDiameter(),
+              pad.getBoardSide()));
         }
         // copy polygons but generate new UUIDs
         for (const Polygon& polygon : footprint.getPolygons()) {
           newFootprint->getPolygons().append(std::make_shared<Polygon>(
-              Uuid::createRandom(), polygon.getLayerName(),
-              polygon.getLineWidth(), polygon.isFilled(), polygon.isGrabArea(),
+              Uuid::createRandom(),
+              polygon.getLayerName(),
+              polygon.getLineWidth(),
+              polygon.isFilled(),
+              polygon.isGrabArea(),
               polygon.getPath()));
         }
         // copy circles but generate new UUIDs
         for (const Circle& circle : footprint.getCircles()) {
           newFootprint->getCircles().append(std::make_shared<Circle>(
-              Uuid::createRandom(), circle.getLayerName(),
-              circle.getLineWidth(), circle.isFilled(), circle.isGrabArea(),
-              circle.getCenter(), circle.getDiameter()));
+              Uuid::createRandom(),
+              circle.getLayerName(),
+              circle.getLineWidth(),
+              circle.isFilled(),
+              circle.isGrabArea(),
+              circle.getCenter(),
+              circle.getDiameter()));
         }
         // copy stroke texts but generate new UUIDs
         for (const StrokeText& text : footprint.getStrokeTexts()) {
           newFootprint->getStrokeTexts().append(std::make_shared<StrokeText>(
-              Uuid::createRandom(), text.getLayerName(), text.getText(),
-              text.getPosition(), text.getRotation(), text.getHeight(),
-              text.getStrokeWidth(), text.getLetterSpacing(),
-              text.getLineSpacing(), text.getAlign(), text.getMirrored(),
+              Uuid::createRandom(),
+              text.getLayerName(),
+              text.getText(),
+              text.getPosition(),
+              text.getRotation(),
+              text.getHeight(),
+              text.getStrokeWidth(),
+              text.getLetterSpacing(),
+              text.getLineSpacing(),
+              text.getAlign(),
+              text.getMirrored(),
               text.getAutoRotate()));
         }
         // copy holes but generate new UUIDs
@@ -255,9 +292,9 @@ void NewElementWizardContext::copyElement(ElementType     type,
       const Component* component = dynamic_cast<Component*>(element.data());
       Q_ASSERT(component);
       mComponentSchematicOnly = component->isSchematicOnly();
-      mComponentAttributes    = component->getAttributes();
-      mComponentDefaultValue  = component->getDefaultValue();
-      mComponentPrefixes      = component->getPrefixes();
+      mComponentAttributes = component->getAttributes();
+      mComponentDefaultValue = component->getDefaultValue();
+      mComponentPrefixes = component->getPrefixes();
       // copy signals but generate new UUIDs
       QHash<Uuid, Uuid> signalUuidMap;
       mComponentSignals.clear();
@@ -265,8 +302,12 @@ void NewElementWizardContext::copyElement(ElementType     type,
         Uuid newUuid = Uuid::createRandom();
         signalUuidMap.insert(signal.getUuid(), newUuid);
         mComponentSignals.append(std::make_shared<ComponentSignal>(
-            newUuid, signal.getName(), signal.getRole(),
-            signal.getForcedNetName(), signal.isRequired(), signal.isNegated(),
+            newUuid,
+            signal.getName(),
+            signal.getRole(),
+            signal.getForcedNetName(),
+            signal.isRequired(),
+            signal.isNegated(),
             signal.isClock()));
       }
       // copy symbol variants but generate new UUIDs
@@ -274,16 +315,20 @@ void NewElementWizardContext::copyElement(ElementType     type,
       for (const ComponentSymbolVariant& var : component->getSymbolVariants()) {
         // don't copy translations as they would need to be adjusted anyway
         std::shared_ptr<ComponentSymbolVariant> copy(new ComponentSymbolVariant(
-            Uuid::createRandom(), var.getNorm(),
+            Uuid::createRandom(),
+            var.getNorm(),
             var.getNames().getDefaultValue(),
             var.getDescriptions().getDefaultValue()));
         // copy items
         for (const ComponentSymbolVariantItem& item : var.getSymbolItems()) {
           std::shared_ptr<ComponentSymbolVariantItem> itemCopy(
               new ComponentSymbolVariantItem(
-                  Uuid::createRandom(), item.getSymbolUuid(),
-                  item.getSymbolPosition(), item.getSymbolRotation(),
-                  item.isRequired(), item.getSuffix()));
+                  Uuid::createRandom(),
+                  item.getSymbolUuid(),
+                  item.getSymbolPosition(),
+                  item.getSymbolRotation(),
+                  item.isRequired(),
+                  item.getSuffix()));
           // copy pin-signal-map
           for (const ComponentPinSignalMapItem& map : item.getPinSignalMap()) {
             tl::optional<Uuid> signal = map.getSignalUuid();
@@ -305,8 +350,8 @@ void NewElementWizardContext::copyElement(ElementType     type,
       const Device* device = dynamic_cast<Device*>(element.data());
       Q_ASSERT(device);
       mDeviceComponentUuid = device->getComponentUuid();
-      mDevicePackageUuid   = device->getPackageUuid();
-      mDevicePadSignalMap  = device->getPadSignalMap();
+      mDevicePackageUuid = device->getPackageUuid();
+      mDevicePadSignalMap = device->getPadSignalMap();
       break;
     }
 
@@ -325,9 +370,13 @@ void NewElementWizardContext::createLibraryElement() {
 
   switch (mElementType) {
     case NewElementWizardContext::ElementType::ComponentCategory: {
-      ComponentCategory element(Uuid::createRandom(), *mElementVersion,
-                                mElementAuthor, *mElementName,
-                                mElementDescription, mElementKeywords);
+      ComponentCategory element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords);
       element.setParentUuid(mElementCategoryUuid);
       TransactionalDirectory dir(
           mLibrary.getDirectory(),
@@ -337,9 +386,13 @@ void NewElementWizardContext::createLibraryElement() {
       break;
     }
     case NewElementWizardContext::ElementType::PackageCategory: {
-      PackageCategory element(Uuid::createRandom(), *mElementVersion,
-                              mElementAuthor, *mElementName,
-                              mElementDescription, mElementKeywords);
+      PackageCategory element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords);
       element.setParentUuid(mElementCategoryUuid);
       TransactionalDirectory dir(
           mLibrary.getDirectory(),
@@ -349,44 +402,60 @@ void NewElementWizardContext::createLibraryElement() {
       break;
     }
     case NewElementWizardContext::ElementType::Symbol: {
-      Symbol element(Uuid::createRandom(), *mElementVersion, mElementAuthor,
-                     *mElementName, mElementDescription, mElementKeywords);
+      Symbol element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords);
       element.setCategories(categories);
-      element.getPins()     = mSymbolPins;
+      element.getPins() = mSymbolPins;
       element.getPolygons() = mSymbolPolygons;
-      element.getCircles()  = mSymbolCircles;
-      element.getTexts()    = mSymbolTexts;
-      TransactionalDirectory dir(mLibrary.getDirectory(),
-                                 mLibrary.getElementsDirectoryName<Symbol>());
+      element.getCircles() = mSymbolCircles;
+      element.getTexts() = mSymbolTexts;
+      TransactionalDirectory dir(
+          mLibrary.getDirectory(), mLibrary.getElementsDirectoryName<Symbol>());
       element.moveIntoParentDirectory(dir);
       mOutputDirectory = element.getDirectory().getAbsPath();
       break;
     }
     case NewElementWizardContext::ElementType::Package: {
-      Package element(Uuid::createRandom(), *mElementVersion, mElementAuthor,
-                      *mElementName, mElementDescription, mElementKeywords);
+      Package element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords);
       element.setCategories(categories);
-      element.getPads()       = mPackagePads;
+      element.getPads() = mPackagePads;
       element.getFootprints() = mPackageFootprints;
       if (element.getFootprints().isEmpty()) {
         element.getFootprints().append(std::make_shared<Footprint>(
             Uuid::createRandom(), ElementName("default"), ""));
       }
-      TransactionalDirectory dir(mLibrary.getDirectory(),
-                                 mLibrary.getElementsDirectoryName<Package>());
+      TransactionalDirectory dir(
+          mLibrary.getDirectory(),
+          mLibrary.getElementsDirectoryName<Package>());
       element.moveIntoParentDirectory(dir);
       mOutputDirectory = element.getDirectory().getAbsPath();
       break;
     }
     case NewElementWizardContext::ElementType::Component: {
-      Component element(Uuid::createRandom(), *mElementVersion, mElementAuthor,
-                        *mElementName, mElementDescription, mElementKeywords);
+      Component element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords);
       element.setCategories(categories);
       element.setIsSchematicOnly(mComponentSchematicOnly);
       element.getAttributes() = mComponentAttributes;
       element.setDefaultValue(mComponentDefaultValue);
       element.setPrefixes(mComponentPrefixes);
-      element.getSignals()        = mComponentSignals;
+      element.getSignals() = mComponentSignals;
       element.getSymbolVariants() = mComponentSymbolVariants;
       TransactionalDirectory dir(
           mLibrary.getDirectory(),
@@ -398,13 +467,19 @@ void NewElementWizardContext::createLibraryElement() {
     case NewElementWizardContext::ElementType::Device: {
       if (!mDeviceComponentUuid) throw LogicError(__FILE__, __LINE__);
       if (!mDevicePackageUuid) throw LogicError(__FILE__, __LINE__);
-      Device element(Uuid::createRandom(), *mElementVersion, mElementAuthor,
-                     *mElementName, mElementDescription, mElementKeywords,
-                     *mDeviceComponentUuid, *mDevicePackageUuid);
+      Device element(
+          Uuid::createRandom(),
+          *mElementVersion,
+          mElementAuthor,
+          *mElementName,
+          mElementDescription,
+          mElementKeywords,
+          *mDeviceComponentUuid,
+          *mDevicePackageUuid);
       element.setCategories(categories);
       element.getPadSignalMap() = mDevicePadSignalMap;
-      TransactionalDirectory dir(mLibrary.getDirectory(),
-                                 mLibrary.getElementsDirectoryName<Device>());
+      TransactionalDirectory dir(
+          mLibrary.getDirectory(), mLibrary.getElementsDirectoryName<Device>());
       element.moveIntoParentDirectory(dir);
       mOutputDirectory = element.getDirectory().getAbsPath();
       break;

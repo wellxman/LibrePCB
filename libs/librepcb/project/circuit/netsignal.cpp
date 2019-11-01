@@ -54,18 +54,22 @@ NetSignal::NetSignal(Circuit& circuit, const SExpression& node)
     mHasAutoName(node.getValueByPath<bool>("auto")),
     mNetClass(nullptr) {
   Uuid netclassUuid = node.getValueByPath<Uuid>("netclass");
-  mNetClass         = circuit.getNetClassByUuid(netclassUuid);
+  mNetClass = circuit.getNetClassByUuid(netclassUuid);
   if (!mNetClass) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Invalid netclass UUID: \"%1\"")).arg(netclassUuid.toStr()));
   }
 
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
 }
 
-NetSignal::NetSignal(Circuit& circuit, NetClass& netclass,
-                     const CircuitIdentifier& name, bool autoName)
+NetSignal::NetSignal(
+    Circuit& circuit,
+    NetClass& netclass,
+    const CircuitIdentifier& name,
+    bool autoName)
   : QObject(&circuit),
     mCircuit(circuit),
     mIsAddedToCircuit(false),
@@ -112,12 +116,13 @@ bool NetSignal::isNameForced() const noexcept {
  *  Setters
  ******************************************************************************/
 
-void NetSignal::setName(const CircuitIdentifier& name,
-                        bool                     isAutoName) noexcept {
+void NetSignal::setName(
+    const CircuitIdentifier& name,
+    bool isAutoName) noexcept {
   if ((name == mName) && (isAutoName == mHasAutoName)) {
     return;
   }
-  mName        = name;
+  mName = name;
   mHasAutoName = isAutoName;
   updateErcMessages();
   emit nameChanged(mName);
@@ -148,10 +153,12 @@ void NetSignal::removeFromCircuit() {
     throw LogicError(__FILE__, __LINE__);
   }
   if (isUsed()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The net signal \"%1\" cannot be removed "
-                                  "because it is still in use!"))
-                           .arg(*mName));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The net signal \"%1\" cannot be removed "
+                   "because it is still in use!"))
+            .arg(*mName));
   }
   mNetClass->unregisterNetSignal(*this);  // can throw
   mIsAddedToCircuit = false;
@@ -252,9 +259,13 @@ bool NetSignal::checkAttributesValidity() const noexcept {
 void NetSignal::updateErcMessages() noexcept {
   if (mIsAddedToCircuit && (!isUsed())) {
     if (!mErcMsgUnusedNetSignal) {
-      mErcMsgUnusedNetSignal.reset(
-          new ErcMsg(mCircuit.getProject(), *this, mUuid.toStr(), "Unused",
-                     ErcMsg::ErcMsgType_t::CircuitError, QString()));
+      mErcMsgUnusedNetSignal.reset(new ErcMsg(
+          mCircuit.getProject(),
+          *this,
+          mUuid.toStr(),
+          "Unused",
+          ErcMsg::ErcMsgType_t::CircuitError,
+          QString()));
     }
     mErcMsgUnusedNetSignal->setMsg(
         QString(tr("Unused net signal: \"%1\"")).arg(*mName));
@@ -266,8 +277,11 @@ void NetSignal::updateErcMessages() noexcept {
   if (mIsAddedToCircuit && (mRegisteredComponentSignals.count() < 2)) {
     if (!mErcMsgConnectedToLessThanTwoPins) {
       mErcMsgConnectedToLessThanTwoPins.reset(new ErcMsg(
-          mCircuit.getProject(), *this, mUuid.toStr(),
-          "ConnectedToLessThanTwoPins", ErcMsg::ErcMsgType_t::CircuitWarning));
+          mCircuit.getProject(),
+          *this,
+          mUuid.toStr(),
+          "ConnectedToLessThanTwoPins",
+          ErcMsg::ErcMsgType_t::CircuitWarning));
     }
     mErcMsgConnectedToLessThanTwoPins->setMsg(
         QString(tr("Net signal connected to less than two pins: \"%1\""))

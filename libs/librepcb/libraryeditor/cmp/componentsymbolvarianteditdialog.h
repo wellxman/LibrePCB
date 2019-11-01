@@ -69,14 +69,15 @@ public:
   ComponentSymbolVariantEditDialog() = delete;
   ComponentSymbolVariantEditDialog(
       const ComponentSymbolVariantEditDialog& other) = delete;
-  ComponentSymbolVariantEditDialog(const workspace::Workspace& ws,
-                                   const Component&            cmp,
-                                   ComponentSymbolVariant&     symbVar,
-                                   QWidget* parent = nullptr) noexcept;
+  ComponentSymbolVariantEditDialog(
+      const workspace::Workspace& ws,
+      const Component& cmp,
+      ComponentSymbolVariant& symbVar,
+      QWidget* parent = nullptr) noexcept;
   ~ComponentSymbolVariantEditDialog() noexcept;
 
   // Operator Overloadings
-  ComponentSymbolVariantEditDialog& operator       =(
+  ComponentSymbolVariantEditDialog& operator=(
       const ComponentSymbolVariantEditDialog& rhs) = delete;
 
 private:  // Methods
@@ -84,16 +85,16 @@ private:  // Methods
   void updateGraphicsItems() noexcept;
 
 private:  // Data
-  const workspace::Workspace&                          mWorkspace;
-  const Component&                                     mComponent;
-  ComponentSymbolVariant&                              mOriginalSymbVar;
-  ComponentSymbolVariant                               mSymbVar;
-  QScopedPointer<GraphicsScene>                        mGraphicsScene;
-  QScopedPointer<DefaultGraphicsLayerProvider>         mGraphicsLayerProvider;
-  std::shared_ptr<LibraryElementCache>                 mLibraryElementCache;
+  const workspace::Workspace& mWorkspace;
+  const Component& mComponent;
+  ComponentSymbolVariant& mOriginalSymbVar;
+  ComponentSymbolVariant mSymbVar;
+  QScopedPointer<GraphicsScene> mGraphicsScene;
+  QScopedPointer<DefaultGraphicsLayerProvider> mGraphicsLayerProvider;
+  std::shared_ptr<LibraryElementCache> mLibraryElementCache;
   QScopedPointer<Ui::ComponentSymbolVariantEditDialog> mUi;
 
-  QList<std::shared_ptr<Symbol>>             mSymbols;
+  QList<std::shared_ptr<Symbol>> mSymbols;
   QList<std::shared_ptr<SymbolGraphicsItem>> mGraphicsItems;
 };
 

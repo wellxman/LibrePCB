@@ -49,10 +49,11 @@ class BoardDesignRulesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  BoardDesignRulesDialog()                                    = delete;
+  BoardDesignRulesDialog() = delete;
   BoardDesignRulesDialog(const BoardDesignRulesDialog& other) = delete;
-  explicit BoardDesignRulesDialog(const BoardDesignRules& rules,
-                                  QWidget*                parent = 0);
+  explicit BoardDesignRulesDialog(
+      const BoardDesignRules& rules,
+      QWidget* parent = 0);
   ~BoardDesignRulesDialog();
 
   // Getters
@@ -76,7 +77,7 @@ private:
   void applyRules() noexcept;
 
   Ui::BoardDesignRulesDialog* mUi;
-  BoardDesignRules            mDesignRules;
+  BoardDesignRules mDesignRules;
 };
 
 /*******************************************************************************

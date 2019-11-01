@@ -63,24 +63,27 @@ public:
     LengthChanged,
     RotationChanged,
   };
-  Signal<SymbolPin, Event>       onEdited;
+  Signal<SymbolPin, Event> onEdited;
   typedef Slot<SymbolPin, Event> OnEditedSlot;
 
   // Constructors / Destructor
   SymbolPin() = delete;
   SymbolPin(const SymbolPin& other) noexcept;
-  SymbolPin(const Uuid& uuid, const CircuitIdentifier& name,
-            const Point& position, const UnsignedLength& length,
-            const Angle& rotation) noexcept;
+  SymbolPin(
+      const Uuid& uuid,
+      const CircuitIdentifier& name,
+      const Point& position,
+      const UnsignedLength& length,
+      const Angle& rotation) noexcept;
   explicit SymbolPin(const SExpression& node);
   ~SymbolPin() noexcept;
 
   // Getters
-  const Uuid&              getUuid() const noexcept { return mUuid; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
   const CircuitIdentifier& getName() const noexcept { return mName; }
-  const Point&             getPosition() const noexcept { return mPosition; }
-  const UnsignedLength&    getLength() const noexcept { return mLength; }
-  const Angle&             getRotation() const noexcept { return mRotation; }
+  const Point& getPosition() const noexcept { return mPosition; }
+  const UnsignedLength& getLength() const noexcept { return mLength; }
+  const Angle& getRotation() const noexcept { return mRotation; }
 
   // Setters
   bool setPosition(const Point& pos) noexcept;
@@ -103,11 +106,11 @@ public:
   SymbolPin& operator=(const SymbolPin& rhs) noexcept;
 
 private:  // Data
-  Uuid              mUuid;
+  Uuid mUuid;
   CircuitIdentifier mName;
-  Point             mPosition;
-  UnsignedLength    mLength;
-  Angle             mRotation;
+  Point mPosition;
+  UnsignedLength mLength;
+  Angle mRotation;
 
   SymbolPinGraphicsItem* mRegisteredGraphicsItem;
 };
@@ -119,15 +122,18 @@ private:  // Data
 struct SymbolPinListNameProvider {
   static constexpr const char* tagname = "pin";
 };
-using SymbolPinList =
-    SerializableObjectList<SymbolPin, SymbolPinListNameProvider,
-                           SymbolPin::Event>;
-using CmdSymbolPinInsert =
-    CmdListElementInsert<SymbolPin, SymbolPinListNameProvider,
-                         SymbolPin::Event>;
-using CmdSymbolPinRemove =
-    CmdListElementRemove<SymbolPin, SymbolPinListNameProvider,
-                         SymbolPin::Event>;
+using SymbolPinList = SerializableObjectList<
+    SymbolPin,
+    SymbolPinListNameProvider,
+    SymbolPin::Event>;
+using CmdSymbolPinInsert = CmdListElementInsert<
+    SymbolPin,
+    SymbolPinListNameProvider,
+    SymbolPin::Event>;
+using CmdSymbolPinRemove = CmdListElementRemove<
+    SymbolPin,
+    SymbolPinListNameProvider,
+    SymbolPin::Event>;
 using CmdSymbolPinsSwap =
     CmdListElementsSwap<SymbolPin, SymbolPinListNameProvider, SymbolPin::Event>;
 

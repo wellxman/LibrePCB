@@ -38,20 +38,32 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Component::Component(const Uuid& uuid, const Version& version,
-                     const QString& author, const ElementName& name_en_US,
-                     const QString& description_en_US,
-                     const QString& keywords_en_US)
-  : LibraryElement(getShortElementName(), getLongElementName(), uuid, version,
-                   author, name_en_US, description_en_US, keywords_en_US),
+Component::Component(
+    const Uuid& uuid,
+    const Version& version,
+    const QString& author,
+    const ElementName& name_en_US,
+    const QString& description_en_US,
+    const QString& keywords_en_US)
+  : LibraryElement(
+        getShortElementName(),
+        getLongElementName(),
+        uuid,
+        version,
+        author,
+        name_en_US,
+        description_en_US,
+        keywords_en_US),
     mSchematicOnly(false),
     mDefaultValue(),
     mPrefixes(ComponentPrefix("")) {
 }
 
 Component::Component(std::unique_ptr<TransactionalDirectory> directory)
-  : LibraryElement(std::move(directory), getShortElementName(),
-                   getLongElementName()),
+  : LibraryElement(
+        std::move(directory),
+        getShortElementName(),
+        getLongElementName()),
     mSchematicOnly(false),
     mDefaultValue(),
     mPrefixes(ComponentPrefix("")) {
@@ -59,7 +71,7 @@ Component::Component(std::unique_ptr<TransactionalDirectory> directory)
   mSchematicOnly = mLoadingFileDocument.getValueByPath<bool>("schematic_only");
   mAttributes.loadFromSExpression(mLoadingFileDocument);  // can throw
   mDefaultValue = mLoadingFileDocument.getValueByPath<QString>("default_value");
-  mPrefixes     = NormDependentPrefixMap(mLoadingFileDocument);
+  mPrefixes = NormDependentPrefixMap(mLoadingFileDocument);
   mSignals.loadFromSExpression(mLoadingFileDocument);
   mSymbolVariants.loadFromSExpression(mLoadingFileDocument);
 
@@ -73,9 +85,10 @@ Component::~Component() noexcept {
  *  Convenience Methods
  ******************************************************************************/
 
-std::shared_ptr<ComponentSignal> Component::getSignalOfPin(const Uuid& symbVar,
-                                                           const Uuid& item,
-                                                           const Uuid& pin) {
+std::shared_ptr<ComponentSignal> Component::getSignalOfPin(
+    const Uuid& symbVar,
+    const Uuid& item,
+    const Uuid& pin) {
   tl::optional<Uuid> sig = getSymbVarItem(symbVar, item)
                                ->getPinSignalMap()
                                .get(pin)
@@ -88,7 +101,9 @@ std::shared_ptr<ComponentSignal> Component::getSignalOfPin(const Uuid& symbVar,
 }
 
 std::shared_ptr<const ComponentSignal> Component::getSignalOfPin(
-    const Uuid& symbVar, const Uuid& item, const Uuid& pin) const {
+    const Uuid& symbVar,
+    const Uuid& item,
+    const Uuid& pin) const {
   tl::optional<Uuid> sig = getSymbVarItem(symbVar, item)
                                ->getPinSignalMap()
                                .get(pin)
@@ -114,12 +129,14 @@ int Component::getSymbolVariantIndexByNorm(const QStringList& normOrder) const
 }
 
 std::shared_ptr<ComponentSymbolVariantItem> Component::getSymbVarItem(
-    const Uuid& symbVar, const Uuid& item) {
+    const Uuid& symbVar,
+    const Uuid& item) {
   return mSymbolVariants.get(symbVar)->getSymbolItems().get(item);  // can throw
 }
 
 std::shared_ptr<const ComponentSymbolVariantItem> Component::getSymbVarItem(
-    const Uuid& symbVar, const Uuid& item) const {
+    const Uuid& symbVar,
+    const Uuid& item) const {
   return mSymbolVariants.get(symbVar)->getSymbolItems().get(item);  // can throw
 }
 

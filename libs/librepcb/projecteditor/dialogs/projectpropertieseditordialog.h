@@ -60,12 +60,14 @@ public:
   ProjectPropertiesEditorDialog() = delete;
   ProjectPropertiesEditorDialog(const ProjectPropertiesEditorDialog& other) =
       delete;
-  ProjectPropertiesEditorDialog(ProjectMetadata& metadata, UndoStack& undoStack,
-                                QWidget* parent) noexcept;
+  ProjectPropertiesEditorDialog(
+      ProjectMetadata& metadata,
+      UndoStack& undoStack,
+      QWidget* parent) noexcept;
   ~ProjectPropertiesEditorDialog() noexcept;
 
   // Operator Overloadings
-  ProjectPropertiesEditorDialog& operator       =(
+  ProjectPropertiesEditorDialog& operator=(
       const ProjectPropertiesEditorDialog& rhs) = delete;
 
 private:  // Methods
@@ -74,9 +76,9 @@ private:  // Methods
   bool applyChanges() noexcept;
 
 private:  // Data
-  ProjectMetadata&                                  mMetadata;
-  UndoStack&                                        mUndoStack;
-  AttributeList                                     mAttributes;
+  ProjectMetadata& mMetadata;
+  UndoStack& mUndoStack;
+  AttributeList mAttributes;
   QScopedPointer<Ui::ProjectPropertiesEditorDialog> mUi;
 };
 

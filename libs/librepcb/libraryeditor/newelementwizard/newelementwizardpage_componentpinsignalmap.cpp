@@ -40,8 +40,9 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_ComponentPinSignalMap::
-    NewElementWizardPage_ComponentPinSignalMap(NewElementWizardContext& context,
-                                               QWidget* parent) noexcept
+    NewElementWizardPage_ComponentPinSignalMap(
+        NewElementWizardContext& context,
+        QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_ComponentPinSignalMap) {
@@ -80,7 +81,8 @@ void NewElementWizardPage_ComponentPinSignalMap::initializePage() noexcept {
       mSymbolVariantList.value(0).get(),
       std::make_shared<LibraryElementCache>(
           mContext.getWorkspace().getLibraryDb()),
-      &mContext.mComponentSignals, nullptr);
+      &mContext.mComponentSignals,
+      nullptr);
 }
 
 void NewElementWizardPage_ComponentPinSignalMap::cleanupPage() noexcept {

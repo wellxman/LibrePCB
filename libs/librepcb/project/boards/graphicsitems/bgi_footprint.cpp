@@ -73,7 +73,7 @@ void BGI_Footprint::updateCacheAndRepaint() noexcept {
   prepareGeometryChange();
 
   mBoundingRect = QRectF();
-  mShape        = QPainterPath();
+  mShape = QPainterPath();
 
   // set Z value
   if (mFootprint.getIsMirrored())
@@ -85,7 +85,7 @@ void BGI_Footprint::updateCacheAndRepaint() noexcept {
   layer = getLayer(GraphicsLayer::sTopReferences);
   if (layer) {
     if (layer->isVisible()) {
-      qreal  width = Length(700000).toPx();
+      qreal width = Length(700000).toPx();
       QRectF crossRect(-width, -width, 2 * width, 2 * width);
       mBoundingRect = mBoundingRect.united(crossRect);
       mShape.addRect(crossRect);
@@ -99,7 +99,7 @@ void BGI_Footprint::updateCacheAndRepaint() noexcept {
     if (!layer->isVisible()) continue;
 
     QPainterPath polygonPath = polygon.getPath().toQPainterPathPx();
-    qreal        w           = polygon.getLineWidth()->toPx() / 2;
+    qreal w = polygon.getLineWidth()->toPx() / 2;
     mBoundingRect =
         mBoundingRect.united(polygonPath.boundingRect().adjusted(-w, -w, w, w));
     if (!polygon.isGrabArea()) continue;
@@ -120,15 +120,16 @@ void BGI_Footprint::updateCacheAndRepaint() noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void BGI_Footprint::paint(QPainter*                       painter,
-                          const QStyleOptionGraphicsItem* option,
-                          QWidget*                        widget) {
+void BGI_Footprint::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) {
   Q_UNUSED(option);
   Q_UNUSED(widget);
 
-  const GraphicsLayer* layer    = 0;
-  const bool           selected = mFootprint.isSelected();
-  const bool           deviceIsPrinter =
+  const GraphicsLayer* layer = 0;
+  const bool selected = mFootprint.isSelected();
+  const bool deviceIsPrinter =
       (dynamic_cast<QPrinter*>(painter->device()) != 0);
 
   // draw all polygons
@@ -139,9 +140,12 @@ void BGI_Footprint::paint(QPainter*                       painter,
     if (!layer->isVisible()) continue;
 
     // set pen
-    painter->setPen(QPen(layer->getColor(selected),
-                         polygon.getLineWidth()->toPx(), Qt::SolidLine,
-                         Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(
+        layer->getColor(selected),
+        polygon.getLineWidth()->toPx(),
+        Qt::SolidLine,
+        Qt::RoundCap,
+        Qt::RoundJoin));
 
     // set brush
     if ((!polygon.isFilled()) || (!polygon.getPath().isClosed())) {
@@ -171,9 +175,12 @@ void BGI_Footprint::paint(QPainter*                       painter,
     if (!layer->isVisible()) continue;
 
     // set pen
-    painter->setPen(QPen(layer->getColor(selected),
-                         circle.getLineWidth()->toPx(), Qt::SolidLine,
-                         Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(
+        layer->getColor(selected),
+        circle.getLineWidth()->toPx(),
+        Qt::SolidLine,
+        Qt::RoundCap,
+        Qt::RoundJoin));
 
     // set brush
     if (!circle.isFilled()) {
@@ -192,9 +199,10 @@ void BGI_Footprint::paint(QPainter*                       painter,
     }
 
     // draw circle
-    painter->drawEllipse(circle.getCenter().toPxQPointF(),
-                         circle.getDiameter()->toPx() / 2,
-                         circle.getDiameter()->toPx() / 2);
+    painter->drawEllipse(
+        circle.getCenter().toPxQPointF(),
+        circle.getDiameter()->toPx() / 2,
+        circle.getDiameter()->toPx() / 2);
     // TODO: rotation
   }
 

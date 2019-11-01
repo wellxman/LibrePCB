@@ -38,8 +38,9 @@ namespace workspace {
  *  Constructors / Destructor
  ******************************************************************************/
 
-ProjectTreeModel::ProjectTreeModel(const Workspace& workspace,
-                                   QObject*         parent) noexcept
+ProjectTreeModel::ProjectTreeModel(
+    const Workspace& workspace,
+    QObject* parent) noexcept
   : QFileSystemModel(parent) {
   setIconProvider(new FileIconProvider());
   setRootPath(workspace.getProjectsPath().toStr());
@@ -52,8 +53,10 @@ ProjectTreeModel::~ProjectTreeModel() noexcept {
  *  Inherited Methods
  ******************************************************************************/
 
-QVariant ProjectTreeModel::headerData(int section, Qt::Orientation orientation,
-                                      int role) const {
+QVariant ProjectTreeModel::headerData(
+    int section,
+    Qt::Orientation orientation,
+    int role) const {
   if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal) &&
       (section == 0)) {
     return QString("Workspace Projects");

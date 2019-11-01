@@ -56,10 +56,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SES_AddComponent::SES_AddComponent(SchematicEditor&     editor,
-                                   Ui::SchematicEditor& editorUi,
-                                   GraphicsView&        editorGraphicsView,
-                                   UndoStack&           undoStack)
+SES_AddComponent::SES_AddComponent(
+    SchematicEditor& editor,
+    Ui::SchematicEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : SES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mIsUndoCmdActive(false),
     mAddComponentDialog(nullptr),
@@ -152,7 +153,8 @@ bool SES_AddComponent::entry(SEE_Base* event) noexcept {
     return false;
   } catch (Exception& exc) {
     QMessageBox::critical(
-        &mEditor, tr("Error"),
+        &mEditor,
+        tr("Error"),
         QString(tr("Could not add component:\n\n%1")).arg(exc.getMsg()));
     if (mIsUndoCmdActive) abortCommand(false);
     delete mAddComponentDialog;
@@ -177,8 +179,8 @@ bool SES_AddComponent::entry(SEE_Base* event) noexcept {
   // add the attribute text edit to the toolbar
   mAttributeValueEdit = new QLineEdit();
   mAttributeValueEdit->setClearButtonEnabled(true);
-  mAttributeValueEdit->setSizePolicy(QSizePolicy::Preferred,
-                                     QSizePolicy::Fixed);
+  mAttributeValueEdit->setSizePolicy(
+      QSizePolicy::Preferred, QSizePolicy::Fixed);
   mAttributeValueEditAction =
       mEditorUi.commandToolbar->addWidget(mAttributeValueEdit);
 
@@ -192,12 +194,21 @@ bool SES_AddComponent::entry(SEE_Base* event) noexcept {
   updateValueToolbar();
   updateAttributeToolbar();
   setFocusToToolbar();
-  connect(mValueComboBox, &QComboBox::currentTextChanged, this,
-          &SES_AddComponent::valueChanged);
-  connect(mAttributeValueEdit, &QLineEdit::textChanged, this,
-          &SES_AddComponent::attributeChanged);
-  connect(mAttributeUnitComboBox, &AttributeUnitComboBox::currentItemChanged,
-          this, &SES_AddComponent::attributeChanged);
+  connect(
+      mValueComboBox,
+      &QComboBox::currentTextChanged,
+      this,
+      &SES_AddComponent::valueChanged);
+  connect(
+      mAttributeValueEdit,
+      &QLineEdit::textChanged,
+      this,
+      &SES_AddComponent::attributeChanged);
+  connect(
+      mAttributeUnitComboBox,
+      &AttributeUnitComboBox::currentItemChanged,
+      this,
+      &SES_AddComponent::attributeChanged);
 
   return true;
 }
@@ -215,7 +226,7 @@ bool SES_AddComponent::exit(SEE_Base* event) noexcept {
 
   // Remove actions / widgets from the "command" toolbar
   mAttributeUnitComboBoxAction = nullptr;
-  mAttributeValueEditAction    = nullptr;
+  mAttributeValueEditAction = nullptr;
   delete mAttributeUnitComboBox;
   mAttributeUnitComboBox = nullptr;
   delete mAttributeValueEdit;
@@ -285,9 +296,11 @@ SES_Base::ProcRetVal SES_AddComponent::processSceneEvent(
             if (currentSymbVarItem) {
               // create the next symbol instance and add it to the schematic
               CmdAddSymbolToSchematic* cmd = new CmdAddSymbolToSchematic(
-                  mWorkspace, *schematic,
+                  mWorkspace,
+                  *schematic,
                   mCurrentSymbolToPlace->getComponentInstance(),
-                  currentSymbVarItem->getUuid(), pos);
+                  currentSymbVarItem->getUuid(),
+                  pos);
               mUndoStack.appendToCmdGroup(cmd);
               mCurrentSymbolToPlace = cmd->getSymbolInstance();
               Q_ASSERT(mCurrentSymbolToPlace);
@@ -309,8 +322,8 @@ SES_Base::ProcRetVal SES_AddComponent::processSceneEvent(
               mUndoStack.commitCmdGroup();
               mIsUndoCmdActive = false;
               abortCommand(false);  // reset attributes
-              startAddingComponent(componentUuid, symbVarUuid,
-                                   defaultDeviceUuid, true);
+              startAddingComponent(
+                  componentUuid, symbVarUuid, defaultDeviceUuid, true);
               return ForceStayInState;
             }
           } catch (Exception& e) {
@@ -366,10 +379,11 @@ SES_Base::ProcRetVal SES_AddComponent::processSceneEvent(
   return PassToParentState;
 }
 
-void SES_AddComponent::startAddingComponent(const tl::optional<Uuid>& cmp,
-                                            const tl::optional<Uuid>& symbVar,
-                                            const tl::optional<Uuid>& dev,
-                                            bool keepValue) {
+void SES_AddComponent::startAddingComponent(
+    const tl::optional<Uuid>& cmp,
+    const tl::optional<Uuid>& symbVar,
+    const tl::optional<Uuid>& dev,
+    bool keepValue) {
   Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) throw LogicError(__FILE__, __LINE__);
@@ -382,8 +396,8 @@ void SES_AddComponent::startAddingComponent(const tl::optional<Uuid>& cmp,
 
     if (cmp && symbVar) {
       // add selected component to circuit
-      auto* cmd = new CmdAddComponentToCircuit(mWorkspace, mProject, *cmp,
-                                               *symbVar, dev);
+      auto* cmd = new CmdAddComponentToCircuit(
+          mWorkspace, mProject, *cmp, *symbVar, dev);
       mUndoStack.appendToCmdGroup(cmd);
       mCurrentComponent = cmd->getComponentInstance();
     } else {
@@ -400,7 +414,8 @@ void SES_AddComponent::startAddingComponent(const tl::optional<Uuid>& cmp,
 
       // add selected component to circuit
       auto cmd = new CmdAddComponentToCircuit(
-          mWorkspace, mProject,
+          mWorkspace,
+          mProject,
           *mAddComponentDialog->getSelectedComponentUuid(),
           *mAddComponentDialog->getSelectedSymbVarUuid(),
           mAddComponentDialog->getSelectedDeviceUuid());
@@ -428,16 +443,21 @@ void SES_AddComponent::startAddingComponent(const tl::optional<Uuid>& cmp,
             .value(mCurrentSymbVarItemIndex)
             .get();
     if (!currentSymbVarItem) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("The component with the UUID \"%1\" does "
-                                    "not have any symbol."))
-                             .arg(mCurrentComponent->getUuid().toStr()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("The component with the UUID \"%1\" does "
+                     "not have any symbol."))
+              .arg(mCurrentComponent->getUuid().toStr()));
     }
     Point pos =
         mEditorGraphicsView.mapGlobalPosToScenePos(QCursor::pos(), true, true);
-    CmdAddSymbolToSchematic* cmd2 =
-        new CmdAddSymbolToSchematic(mWorkspace, *schematic, *mCurrentComponent,
-                                    currentSymbVarItem->getUuid(), pos);
+    CmdAddSymbolToSchematic* cmd2 = new CmdAddSymbolToSchematic(
+        mWorkspace,
+        *schematic,
+        *mCurrentComponent,
+        currentSymbVarItem->getUuid(),
+        pos);
     mUndoStack.appendToCmdGroup(cmd2);
     mCurrentSymbolToPlace = cmd2->getSymbolInstance();
     Q_ASSERT(mCurrentSymbolToPlace);
@@ -472,9 +492,9 @@ bool SES_AddComponent::abortCommand(bool showErrMsgBox) noexcept {
     }
 
     // reset attributes, go back to idle state
-    mCurrentComponent        = nullptr;
+    mCurrentComponent = nullptr;
     mCurrentSymbVarItemIndex = -1;
-    mCurrentSymbolToPlace    = nullptr;
+    mCurrentSymbolToPlace = nullptr;
     return true;
   } catch (Exception& e) {
     if (showErrMsgBox) QMessageBox::critical(&mEditor, tr("Error"), e.getMsg());
@@ -486,8 +506,8 @@ std::shared_ptr<const Attribute> SES_AddComponent::getToolbarAttribute() const
     noexcept {
   Q_ASSERT(mCurrentComponent);
   QString value = mCurrentComponent->getValue();
-  QString key   = QString(value).remove("{{").remove("}}").trimmed();
-  auto    attr  = mCurrentComponent->getAttributes().find(key);
+  QString key = QString(value).remove("{{").remove("}}").trimmed();
+  auto attr = mCurrentComponent->getAttributes().find(key);
   if (attr && value.startsWith("{{") && value.endsWith("}}")) {
     return attr;
   } else {
@@ -505,11 +525,11 @@ void SES_AddComponent::attributeChanged() noexcept {
   Q_ASSERT(mCurrentComponent);
   std::shared_ptr<const Attribute> selected = getToolbarAttribute();
   if (!selected) return;
-  AttributeList              attributes = mCurrentComponent->getAttributes();
-  std::shared_ptr<Attribute> attribute  = attributes.find(*selected->getKey());
+  AttributeList attributes = mCurrentComponent->getAttributes();
+  std::shared_ptr<Attribute> attribute = attributes.find(*selected->getKey());
   if (!attribute) return;
-  const AttributeType& type  = attribute->getType();
-  QString              value = toMultiLine(mAttributeValueEdit->text());
+  const AttributeType& type = attribute->getType();
+  QString value = toMultiLine(mAttributeValueEdit->text());
   if (const AttributeUnit* unit = type.tryExtractUnitFromValue(value)) {
     // avoid recursion by blocking signals from combobox
     const bool wasBlocked = mAttributeUnitComboBox->blockSignals(true);

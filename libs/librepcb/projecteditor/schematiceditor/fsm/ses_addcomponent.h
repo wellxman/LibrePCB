@@ -65,52 +65,54 @@ class SES_AddComponent final : public SES_Base {
 
 public:
   // Constructors / Destructor
-  explicit SES_AddComponent(SchematicEditor&     editor,
-                            Ui::SchematicEditor& editorUi,
-                            GraphicsView&        editorGraphicsView,
-                            UndoStack&           undoStack);
+  explicit SES_AddComponent(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~SES_AddComponent();
 
   // General Methods
   ProcRetVal process(SEE_Base* event) noexcept override;
-  bool       entry(SEE_Base* event) noexcept override;
-  bool       exit(SEE_Base* event) noexcept override;
+  bool entry(SEE_Base* event) noexcept override;
+  bool exit(SEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(SEE_Base* event) noexcept;
-  void       startAddingComponent(const tl::optional<Uuid>& cmp = tl::nullopt,
-                                  const tl::optional<Uuid>& symbVar = tl::nullopt,
-                                  const tl::optional<Uuid>& dev = tl::nullopt,
-                                  bool                      keepValue = false);
-  bool       abortCommand(bool showErrMsgBox) noexcept;
+  void startAddingComponent(
+      const tl::optional<Uuid>& cmp = tl::nullopt,
+      const tl::optional<Uuid>& symbVar = tl::nullopt,
+      const tl::optional<Uuid>& dev = tl::nullopt,
+      bool keepValue = false);
+  bool abortCommand(bool showErrMsgBox) noexcept;
   std::shared_ptr<const Attribute> getToolbarAttribute() const noexcept;
-  void                             valueChanged(QString text) noexcept;
-  void                             attributeChanged() noexcept;
-  void                             updateValueToolbar() noexcept;
-  void                             updateAttributeToolbar() noexcept;
-  void                             setFocusToToolbar() noexcept;
-  static QString                   toSingleLine(const QString& text) noexcept;
-  static QString                   toMultiLine(const QString& text) noexcept;
+  void valueChanged(QString text) noexcept;
+  void attributeChanged() noexcept;
+  void updateValueToolbar() noexcept;
+  void updateAttributeToolbar() noexcept;
+  void setFocusToToolbar() noexcept;
+  static QString toSingleLine(const QString& text) noexcept;
+  static QString toMultiLine(const QString& text) noexcept;
 
   // Attributes
-  bool                mIsUndoCmdActive;
+  bool mIsUndoCmdActive;
   AddComponentDialog* mAddComponentDialog;
-  Angle               mLastAngle;
+  Angle mLastAngle;
 
   // information about the current component/symbol to place
-  ComponentInstance*     mCurrentComponent;
-  int                    mCurrentSymbVarItemIndex;
-  SI_Symbol*             mCurrentSymbolToPlace;
+  ComponentInstance* mCurrentComponent;
+  int mCurrentSymbVarItemIndex;
+  SI_Symbol* mCurrentSymbolToPlace;
   CmdSymbolInstanceEdit* mCurrentSymbolEditCommand;
 
   // Widgets for the command toolbar
-  QLabel*                mValueLabel;
-  QComboBox*             mValueComboBox;
-  QLineEdit*             mAttributeValueEdit;
-  QAction*               mAttributeValueEditAction;
+  QLabel* mValueLabel;
+  QComboBox* mValueComboBox;
+  QLineEdit* mAttributeValueEdit;
+  QAction* mAttributeValueEditAction;
   AttributeUnitComboBox* mAttributeUnitComboBox;
-  QAction*               mAttributeUnitComboBoxAction;
+  QAction* mAttributeUnitComboBoxAction;
 };
 
 /*******************************************************************************

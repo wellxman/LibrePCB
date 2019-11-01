@@ -35,15 +35,16 @@ namespace librepcb {
  *  Public Methods
  ******************************************************************************/
 
-QString AttributeSubstitutor::substitute(QString                  str,
-                                         const AttributeProvider* ap,
-                                         FilterFunction filter) noexcept {
-  int           startPos           = 0;
-  int           length             = 0;
-  int           outerVariableStart = -1;
-  int           outerVariableEnd   = -1;  // counted from end of string
-  QString       value;
-  QStringList   keys;
+QString AttributeSubstitutor::substitute(
+    QString str,
+    const AttributeProvider* ap,
+    FilterFunction filter) noexcept {
+  int startPos = 0;
+  int length = 0;
+  int outerVariableStart = -1;
+  int outerVariableEnd = -1;  // counted from end of string
+  QString value;
+  QStringList keys;
   QSet<QString> keyBacktrace;  // avoid endless recursion
   while (searchVariablesInText(str, startPos, startPos, length, keys)) {
     if (filter && (startPos + length > str.length() - outerVariableEnd)) {
@@ -51,7 +52,7 @@ QString AttributeSubstitutor::substitute(QString                  str,
     }
     if (filter && (outerVariableStart < 0)) {
       outerVariableStart = startPos;
-      outerVariableEnd   = str.length() - length - startPos;
+      outerVariableEnd = str.length() - length - startPos;
     }
     bool keyFound = false;
     foreach (const QString& key, keys) {
@@ -62,8 +63,8 @@ QString AttributeSubstitutor::substitute(QString                  str,
             key.length() - 2;  // do not search for variables in the value
         keyFound = true;
         break;
-      } else if ((getValueOfKey(key, value, ap)) &&
-                 (!keyBacktrace.contains(key))) {
+      } else if (
+          (getValueOfKey(key, value, ap)) && (!keyBacktrace.contains(key))) {
         // replace "{{KEY}}" with the value of KEY
         str.replace(startPos, length, value);
         keyBacktrace.insert(key);
@@ -86,21 +87,23 @@ QString AttributeSubstitutor::substitute(QString                  str,
  *  Private Methods
  ******************************************************************************/
 
-bool AttributeSubstitutor::searchVariablesInText(const QString& text,
-                                                 int startPos, int& pos,
-                                                 int&         length,
-                                                 QStringList& keys) noexcept {
-  QRegularExpression      re("\\{\\{(.*?)\\}\\}");
+bool AttributeSubstitutor::searchVariablesInText(
+    const QString& text,
+    int startPos,
+    int& pos,
+    int& length,
+    QStringList& keys) noexcept {
+  QRegularExpression re("\\{\\{(.*?)\\}\\}");
   QRegularExpressionMatch match = re.match(text, startPos);
   if (match.hasMatch() && match.capturedLength() > 0) {
     pos = match.capturedStart();
     if (text.midRef(pos).startsWith("{{ '}}' }}")) {
       // special case to escape '}}' as it doesn't work with the regex above
       length = 10;
-      keys   = QStringList{"'}}'"};
+      keys = QStringList{"'}}'"};
     } else {
       length = match.capturedLength();
-      keys   = match.captured(1).split(" or ");
+      keys = match.captured(1).split(" or ");
       for (QString& key : keys) {
         key = key.trimmed();
       }
@@ -111,16 +114,21 @@ bool AttributeSubstitutor::searchVariablesInText(const QString& text,
   }
 }
 
-void AttributeSubstitutor::applyFilter(QString& str, int& start, int& end,
-                                       FilterFunction filter) noexcept {
+void AttributeSubstitutor::applyFilter(
+    QString& str,
+    int& start,
+    int& end,
+    FilterFunction filter) noexcept {
   int length = str.length() - end - start;
   str.replace(start, length, filter(str.mid(start, length)));
   start = -1;
-  end   = -1;
+  end = -1;
 }
 
-bool AttributeSubstitutor::getValueOfKey(const QString& key, QString& value,
-                                         const AttributeProvider* ap) noexcept {
+bool AttributeSubstitutor::getValueOfKey(
+    const QString& key,
+    QString& value,
+    const AttributeProvider* ap) noexcept {
   if (ap) {
     value = ap->getAttributeValue(key);
     return !value.isEmpty();

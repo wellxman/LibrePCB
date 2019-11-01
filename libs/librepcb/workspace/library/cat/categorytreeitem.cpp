@@ -40,8 +40,10 @@ namespace workspace {
 
 template <typename ElementType>
 CategoryTreeItem<ElementType>::CategoryTreeItem(
-    const WorkspaceLibraryDb& library, const QStringList localeOrder,
-    CategoryTreeItem* parent, const tl::optional<Uuid>& uuid,
+    const WorkspaceLibraryDb& library,
+    const QStringList localeOrder,
+    CategoryTreeItem* parent,
+    const tl::optional<Uuid>& uuid,
     CategoryTreeFilter::Flags filter) noexcept
   : mParent(parent),
     mUuid(uuid),
@@ -52,32 +54,34 @@ CategoryTreeItem<ElementType>::CategoryTreeItem(
     if (mUuid) {
       FilePath fp = getLatestCategory(library);
       if (fp.isValid()) {
-        library.getElementTranslations<ElementType>(fp, localeOrder, &mName,
-                                                    &mDescription);
+        library.getElementTranslations<ElementType>(
+            fp, localeOrder, &mName, &mDescription);
       }
     }
 
     if (mUuid || (!mParent)) {
       QSet<Uuid> childs = getCategoryChilds(library);
       foreach (const Uuid& childUuid, childs) {
-        ChildType child(new CategoryTreeItem(library, localeOrder, this,
-                                             childUuid, filter));
+        ChildType child(new CategoryTreeItem(
+            library, localeOrder, this, childUuid, filter));
         if (child->isVisible()) {
           mChilds.append(child);
         }
       }
 
       // sort childs
-      std::sort(mChilds.begin(), mChilds.end(),
-                [](const ChildType& a, const ChildType& b) {
-                  return a->data(Qt::DisplayRole) < b->data(Qt::DisplayRole);
-                });
+      std::sort(
+          mChilds.begin(),
+          mChilds.end(),
+          [](const ChildType& a, const ChildType& b) {
+            return a->data(Qt::DisplayRole) < b->data(Qt::DisplayRole);
+          });
     }
 
     if (!mParent) {
       // add category for elements without category
-      ChildType child(new CategoryTreeItem(library, localeOrder, this,
-                                           tl::nullopt, filter));
+      ChildType child(new CategoryTreeItem(
+          library, localeOrder, this, tl::nullopt, filter));
       if (child->isVisible()) {
         mChilds.append(child);
       }
@@ -88,7 +92,7 @@ CategoryTreeItem<ElementType>::CategoryTreeItem(
     }
   } catch (const Exception& e) {
     mExceptionMessage = e.getMsg();
-    mIsVisible        = true;  // make sure errors are visible
+    mIsVisible = true;  // make sure errors are visible
   }
 }
 
@@ -179,13 +183,14 @@ QSet<Uuid> CategoryTreeItem<library::PackageCategory>::getCategoryChilds(
 
 template <>
 bool CategoryTreeItem<library::ComponentCategory>::matchesFilter(
-    const WorkspaceLibraryDb& lib, CategoryTreeFilter::Flags filter) const {
+    const WorkspaceLibraryDb& lib,
+    CategoryTreeFilter::Flags filter) const {
   if (filter.testFlag(CategoryTreeFilter::ALL)) {
     return true;
   }
   int categories = 0, symbols = 0, components = 0, devices = 0;
-  lib.getComponentCategoryElementCount(mUuid, &categories, &symbols,
-                                       &components, &devices);
+  lib.getComponentCategoryElementCount(
+      mUuid, &categories, &symbols, &components, &devices);
   if (filter.testFlag(CategoryTreeFilter::SYMBOLS) && (symbols > 0)) {
     return true;
   }
@@ -200,7 +205,8 @@ bool CategoryTreeItem<library::ComponentCategory>::matchesFilter(
 
 template <>
 bool CategoryTreeItem<library::PackageCategory>::matchesFilter(
-    const WorkspaceLibraryDb& lib, CategoryTreeFilter::Flags filter) const {
+    const WorkspaceLibraryDb& lib,
+    CategoryTreeFilter::Flags filter) const {
   if (filter.testFlag(CategoryTreeFilter::ALL)) {
     return true;
   }

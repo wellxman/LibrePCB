@@ -45,7 +45,7 @@ class WSI_LibraryLocaleOrder final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_LibraryLocaleOrder()                                    = delete;
+  WSI_LibraryLocaleOrder() = delete;
   WSI_LibraryLocaleOrder(const WSI_LibraryLocaleOrder& other) = delete;
   explicit WSI_LibraryLocaleOrder(const SExpression& node);
   ~WSI_LibraryLocaleOrder() noexcept;
@@ -91,9 +91,9 @@ private:  // Data
   QStringList mListTmp;
 
   // Widgets
-  QScopedPointer<QWidget>     mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QListWidget> mListWidget;
-  QScopedPointer<QComboBox>   mComboBox;
+  QScopedPointer<QComboBox> mComboBox;
   QScopedPointer<QToolButton> mBtnUp;
   QScopedPointer<QToolButton> mBtnDown;
   QScopedPointer<QToolButton> mBtnAdd;

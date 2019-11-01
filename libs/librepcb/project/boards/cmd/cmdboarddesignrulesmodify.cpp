@@ -37,7 +37,8 @@ namespace project {
  ******************************************************************************/
 
 CmdBoardDesignRulesModify::CmdBoardDesignRulesModify(
-    Board& board, const BoardDesignRules& newRules) noexcept
+    Board& board,
+    const BoardDesignRules& newRules) noexcept
   : UndoCommand(tr("Modify board design rules")),
     mBoard(board),
     mOldRules(),

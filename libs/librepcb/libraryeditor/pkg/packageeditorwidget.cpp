@@ -56,8 +56,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-PackageEditorWidget::PackageEditorWidget(const Context&  context,
-                                         const FilePath& fp, QWidget* parent)
+PackageEditorWidget::PackageEditorWidget(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : EditorWidgetBase(context, fp, parent),
     mUi(new Ui::PackageEditorWidget),
     mGraphicsScene(new GraphicsScene()) {
@@ -70,19 +72,22 @@ PackageEditorWidget::PackageEditorWidget(const Context&  context,
   mUi->graphicsView->setBackgroundBrush(Qt::black);
   mUi->graphicsView->setForegroundBrush(Qt::white);
   mUi->graphicsView->setEnabled(false);  // no footprint selected
-  connect(mUi->graphicsView, &GraphicsView::cursorScenePositionChanged, this,
-          &PackageEditorWidget::cursorPositionChanged);
+  connect(
+      mUi->graphicsView,
+      &GraphicsView::cursorScenePositionChanged,
+      this,
+      &PackageEditorWidget::cursorPositionChanged);
   setWindowIcon(QIcon(":/img/library/package.png"));
 
   // Insert category list editor widget.
   mCategoriesEditorWidget.reset(
       new PackageCategoryListEditorWidget(mContext.workspace, this));
   mCategoriesEditorWidget->setRequiresMinimumOneEntry(true);
-  int                   row;
+  int row;
   QFormLayout::ItemRole role;
   mUi->formLayout->getWidgetPosition(mUi->lblCategories, &row, &role);
-  mUi->formLayout->setWidget(row, QFormLayout::FieldRole,
-                             mCategoriesEditorWidget.data());
+  mUi->formLayout->setWidget(
+      row, QFormLayout::FieldRole, mCategoriesEditorWidget.data());
 
   // Load element.
   mPackage.reset(new Package(std::unique_ptr<TransactionalDirectory>(
@@ -90,40 +95,65 @@ PackageEditorWidget::PackageEditorWidget(const Context&  context,
   updateMetadata();
 
   // Setup footprint list editor widget.
-  mUi->footprintEditorWidget->setReferences(mPackage->getFootprints(),
-                                            *mUndoStack);
-  connect(mUi->footprintEditorWidget,
-          &FootprintListEditorWidget::currentFootprintChanged, this,
-          &PackageEditorWidget::currentFootprintChanged);
+  mUi->footprintEditorWidget->setReferences(
+      mPackage->getFootprints(), *mUndoStack);
+  connect(
+      mUi->footprintEditorWidget,
+      &FootprintListEditorWidget::currentFootprintChanged,
+      this,
+      &PackageEditorWidget::currentFootprintChanged);
 
   // Setup pad list editor widget.
-  mUi->padListEditorWidget->setReferences(mPackage->getPads(),
-                                          mUndoStack.data());
+  mUi->padListEditorWidget->setReferences(
+      mPackage->getPads(), mUndoStack.data());
 
   // Show "interface broken" warning when related properties are modified.
   memorizePackageInterface();
   setupInterfaceBrokenWarningWidget(*mUi->interfaceBrokenWarningWidget);
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &PackageEditorWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &PackageEditorWidget::updateMetadata);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &PackageEditorWidget::commitMetadata);
-  connect(mCategoriesEditorWidget.data(),
-          &ComponentCategoryListEditorWidget::edited, this,
-          &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &PackageEditorWidget::commitMetadata);
+  connect(
+      mCategoriesEditorWidget.data(),
+      &ComponentCategoryListEditorWidget::edited,
+      this,
+      &PackageEditorWidget::commitMetadata);
 
   // Load finite state machine (FSM).
   PackageEditorFsm::Context fsmContext{*this,
@@ -155,8 +185,11 @@ PackageEditorWidget::~PackageEditorWidget() noexcept {
 void PackageEditorWidget::setToolsActionGroup(
     ExclusiveActionGroup* group) noexcept {
   if (mToolsActionGroup) {
-    disconnect(mFsm.data(), &PackageEditorFsm::toolChanged, mToolsActionGroup,
-               &ExclusiveActionGroup::setCurrentAction);
+    disconnect(
+        mFsm.data(),
+        &PackageEditorFsm::toolChanged,
+        mToolsActionGroup,
+        &ExclusiveActionGroup::setCurrentAction);
   }
 
   EditorWidgetBase::setToolsActionGroup(group);
@@ -174,8 +207,11 @@ void PackageEditorWidget::setToolsActionGroup(
     mToolsActionGroup->setActionEnabled(Tool::DRAW_TEXT, true);
     mToolsActionGroup->setActionEnabled(Tool::ADD_HOLES, true);
     mToolsActionGroup->setCurrentAction(mFsm->getCurrentTool());
-    connect(mFsm.data(), &PackageEditorFsm::toolChanged, mToolsActionGroup,
-            &ExclusiveActionGroup::setCurrentAction);
+    connect(
+        mFsm.data(),
+        &PackageEditorFsm::toolChanged,
+        mToolsActionGroup,
+        &ExclusiveActionGroup::setCurrentAction);
   }
 }
 
@@ -193,7 +229,7 @@ bool PackageEditorWidget::save() noexcept {
 
   // Save element.
   try {
-    mPackage->save();     // can throw
+    mPackage->save();  // can throw
     mFileSystem->save();  // can throw
     memorizePackageInterface();
     return EditorWidgetBase::save();
@@ -248,8 +284,11 @@ bool PackageEditorWidget::abortCommand() noexcept {
 
 bool PackageEditorWidget::editGridProperties() noexcept {
   GridSettingsDialog dialog(mUi->graphicsView->getGridProperties(), this);
-  connect(&dialog, &GridSettingsDialog::gridPropertiesChanged,
-          mUi->graphicsView, &GraphicsView::setGridProperties);
+  connect(
+      &dialog,
+      &GridSettingsDialog::gridPropertiesChanged,
+      mUi->graphicsView,
+      &GraphicsView::setGridProperties);
   if (dialog.exec()) {
     mUi->graphicsView->setGridProperties(dialog.getGrid());
   }
@@ -381,7 +420,7 @@ void PackageEditorWidget::currentFootprintChanged(int index) noexcept {
 }
 
 void PackageEditorWidget::memorizePackageInterface() noexcept {
-  mOriginalPadUuids   = mPackage->getPads().getUuidSet();
+  mOriginalPadUuids = mPackage->getPads().getUuidSet();
   mOriginalFootprints = mPackage->getFootprints();
 }
 
@@ -463,7 +502,8 @@ void PackageEditorWidget::fixMsg(const MsgWrongFootprintTextLayer& msg) {
 
 template <typename MessageType>
 bool PackageEditorWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -474,7 +514,8 @@ bool PackageEditorWidget::fixMsgHelper(
 }
 
 bool PackageEditorWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingCategories>(msg, applyFix)) return true;

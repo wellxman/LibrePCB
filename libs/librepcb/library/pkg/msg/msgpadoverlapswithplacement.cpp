@@ -35,8 +35,9 @@ namespace library {
  ******************************************************************************/
 
 MsgPadOverlapsWithPlacement::MsgPadOverlapsWithPlacement(
-    std::shared_ptr<const Footprint>    footprint,
-    std::shared_ptr<const FootprintPad> pad, const QString& pkgPadName,
+    std::shared_ptr<const Footprint> footprint,
+    std::shared_ptr<const FootprintPad> pad,
+    const QString& pkgPadName,
     const Length& clearance) noexcept
   : LibraryElementCheckMessage(
         Severity::Warning,

@@ -62,13 +62,15 @@ public:
   DeviceInstancePropertiesDialog() = delete;
   DeviceInstancePropertiesDialog(const DeviceInstancePropertiesDialog& other) =
       delete;
-  DeviceInstancePropertiesDialog(Project& project, BI_Device& device,
-                                 UndoStack& undoStack,
-                                 QWidget*   parent) noexcept;
+  DeviceInstancePropertiesDialog(
+      Project& project,
+      BI_Device& device,
+      UndoStack& undoStack,
+      QWidget* parent) noexcept;
   ~DeviceInstancePropertiesDialog() noexcept;
 
   // Operator Overloadings
-  DeviceInstancePropertiesDialog& operator       =(
+  DeviceInstancePropertiesDialog& operator=(
       const DeviceInstancePropertiesDialog& rhs) = delete;
 
 private:  // Methods
@@ -78,10 +80,10 @@ private:  // Methods
   bool applyChanges() noexcept;
 
 private:  // Data
-  Project&                                           mProject;
-  BI_Device&                                         mDevice;
-  UndoStack&                                         mUndoStack;
-  AttributeList                                      mAttributes;
+  Project& mProject;
+  BI_Device& mDevice;
+  UndoStack& mUndoStack;
+  AttributeList mAttributes;
   QScopedPointer<Ui::DeviceInstancePropertiesDialog> mUi;
 };
 

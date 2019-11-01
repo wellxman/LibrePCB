@@ -40,7 +40,8 @@ namespace project {
 
 template <typename ElementType>
 CmdProjectLibraryRemoveElement<ElementType>::CmdProjectLibraryRemoveElement(
-    ProjectLibrary& library, ElementType& element) noexcept
+    ProjectLibrary& library,
+    ElementType& element) noexcept
   : UndoCommand(tr("Remove element from library")),
     mLibrary(library),
     mElement(element) {

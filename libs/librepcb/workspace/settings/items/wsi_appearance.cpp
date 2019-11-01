@@ -48,12 +48,13 @@ WSI_Appearance::WSI_Appearance(const SExpression& node)
   mUseOpenGlCheckBox.reset(
       new QCheckBox(tr("Use OpenGL Hardware Acceleration")));
   mUseOpenGlCheckBox->setChecked(mUseOpenGl);
-  openGlLayout->addWidget(mUseOpenGlCheckBox.data(), openGlLayout->rowCount(),
-                          0);
+  openGlLayout->addWidget(
+      mUseOpenGlCheckBox.data(), openGlLayout->rowCount(), 0);
   openGlLayout->addWidget(
       new QLabel(tr("This setting will be applied only to newly "
                     "opened windows.")),
-      openGlLayout->rowCount(), 0);
+      openGlLayout->rowCount(),
+      0);
 }
 
 WSI_Appearance::~WSI_Appearance() noexcept {

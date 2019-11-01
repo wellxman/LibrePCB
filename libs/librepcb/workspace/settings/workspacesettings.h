@@ -68,13 +68,13 @@ class WorkspaceSettings final : public QObject, public SerializableObject {
 
 public:
   // Constructors / Destructor
-  WorkspaceSettings()                               = delete;
+  WorkspaceSettings() = delete;
   WorkspaceSettings(const WorkspaceSettings& other) = delete;
   explicit WorkspaceSettings(const Workspace& workspace);
   ~WorkspaceSettings() noexcept;
 
   // Getters: Settings Items
-  WSI_User&      getUser() const noexcept { return *mUser; }
+  WSI_User& getUser() const noexcept { return *mUser; }
   WSI_AppLocale& getAppLocale() const noexcept { return *mAppLocale; }
   WSI_AppDefaultMeasurementUnits& getAppDefMeasUnits() const noexcept {
     return *mAppDefMeasUnits;
@@ -90,7 +90,7 @@ public:
     return *mLibraryNormOrder;
   }
   WSI_Repositories& getRepositories() const noexcept { return *mRepositories; }
-  WSI_DebugTools&   getDebugTools() const noexcept { return *mDebugTools; }
+  WSI_DebugTools& getDebugTools() const noexcept { return *mDebugTools; }
 
   // General Methods
   void restoreDefaults() noexcept;
@@ -123,16 +123,16 @@ private:  // Data
   QScopedPointer<WorkspaceSettingsDialog> mDialog;  ///< the settings dialog
 
   // Settings Items
-  QList<WSI_Base*>              mItems;  ///< contains all settings items
-  QScopedPointer<WSI_User>      mUser;
+  QList<WSI_Base*> mItems;  ///< contains all settings items
+  QScopedPointer<WSI_User> mUser;
   QScopedPointer<WSI_AppLocale> mAppLocale;
   QScopedPointer<WSI_AppDefaultMeasurementUnits> mAppDefMeasUnits;
-  QScopedPointer<WSI_ProjectAutosaveInterval>    mProjectAutosaveInterval;
-  QScopedPointer<WSI_Appearance>                 mAppearance;
-  QScopedPointer<WSI_LibraryLocaleOrder>         mLibraryLocaleOrder;
-  QScopedPointer<WSI_LibraryNormOrder>           mLibraryNormOrder;
-  QScopedPointer<WSI_Repositories>               mRepositories;
-  QScopedPointer<WSI_DebugTools>                 mDebugTools;
+  QScopedPointer<WSI_ProjectAutosaveInterval> mProjectAutosaveInterval;
+  QScopedPointer<WSI_Appearance> mAppearance;
+  QScopedPointer<WSI_LibraryLocaleOrder> mLibraryLocaleOrder;
+  QScopedPointer<WSI_LibraryNormOrder> mLibraryNormOrder;
+  QScopedPointer<WSI_Repositories> mRepositories;
+  QScopedPointer<WSI_DebugTools> mDebugTools;
 };
 
 /*******************************************************************************

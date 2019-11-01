@@ -39,11 +39,22 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Symbol::Symbol(const Uuid& uuid, const Version& version, const QString& author,
-               const ElementName& name_en_US, const QString& description_en_US,
-               const QString& keywords_en_US)
-  : LibraryElement(getShortElementName(), getLongElementName(), uuid, version,
-                   author, name_en_US, description_en_US, keywords_en_US),
+Symbol::Symbol(
+    const Uuid& uuid,
+    const Version& version,
+    const QString& author,
+    const ElementName& name_en_US,
+    const QString& description_en_US,
+    const QString& keywords_en_US)
+  : LibraryElement(
+        getShortElementName(),
+        getLongElementName(),
+        uuid,
+        version,
+        author,
+        name_en_US,
+        description_en_US,
+        keywords_en_US),
     onEdited(*this),
     mPins(),
     mPolygons(),
@@ -61,8 +72,10 @@ Symbol::Symbol(const Uuid& uuid, const Version& version, const QString& author,
 }
 
 Symbol::Symbol(std::unique_ptr<TransactionalDirectory> directory)
-  : LibraryElement(std::move(directory), getShortElementName(),
-                   getLongElementName()),
+  : LibraryElement(
+        std::move(directory),
+        getShortElementName(),
+        getLongElementName()),
     onEdited(*this),
     mPins(mLoadingFileDocument),
     mPolygons(mLoadingFileDocument),
@@ -107,9 +120,11 @@ void Symbol::unregisterGraphicsItem(SymbolGraphicsItem& item) noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void Symbol::pinsEdited(const SymbolPinList& list, int index,
-                        const std::shared_ptr<const SymbolPin>& pin,
-                        SymbolPinList::Event event) noexcept {
+void Symbol::pinsEdited(
+    const SymbolPinList& list,
+    int index,
+    const std::shared_ptr<const SymbolPin>& pin,
+    SymbolPinList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -129,9 +144,11 @@ void Symbol::pinsEdited(const SymbolPinList& list, int index,
   onEdited.notify(Event::PinsEdited);
 }
 
-void Symbol::polygonsEdited(const PolygonList& list, int index,
-                            const std::shared_ptr<const Polygon>& polygon,
-                            PolygonList::Event event) noexcept {
+void Symbol::polygonsEdited(
+    const PolygonList& list,
+    int index,
+    const std::shared_ptr<const Polygon>& polygon,
+    PolygonList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -151,9 +168,11 @@ void Symbol::polygonsEdited(const PolygonList& list, int index,
   onEdited.notify(Event::PolygonsEdited);
 }
 
-void Symbol::circlesEdited(const CircleList& list, int index,
-                           const std::shared_ptr<const Circle>& circle,
-                           CircleList::Event event) noexcept {
+void Symbol::circlesEdited(
+    const CircleList& list,
+    int index,
+    const std::shared_ptr<const Circle>& circle,
+    CircleList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -173,9 +192,11 @@ void Symbol::circlesEdited(const CircleList& list, int index,
   onEdited.notify(Event::CirclesEdited);
 }
 
-void Symbol::textsEdited(const TextList& list, int index,
-                         const std::shared_ptr<const Text>& text,
-                         TextList::Event                    event) noexcept {
+void Symbol::textsEdited(
+    const TextList& list,
+    int index,
+    const std::shared_ptr<const Text>& text,
+    TextList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {

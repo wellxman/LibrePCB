@@ -47,17 +47,19 @@ class SES_FSM final : public SES_Base {
 public:
   /// FSM States
   enum State {
-    State_NoState,      ///< no state active
-    State_Select,       ///< @see #project#SES_Select
-    State_DrawWire,     ///< @see #project#SES_DrawWire
+    State_NoState,  ///< no state active
+    State_Select,  ///< @see #project#SES_Select
+    State_DrawWire,  ///< @see #project#SES_DrawWire
     State_AddNetLabel,  ///< @see #project#SES_AddNetLabel
     State_AddComponent  ///< @see #project#SES_AddComponent
   };
 
   // Constructors / Destructor
-  explicit SES_FSM(SchematicEditor& editor, Ui::SchematicEditor& editorUi,
-                   GraphicsView& editorGraphicsView,
-                   UndoStack&    undoStack) noexcept;
+  explicit SES_FSM(
+      SchematicEditor& editor,
+      Ui::SchematicEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack) noexcept;
   ~SES_FSM() noexcept;
 
   // Getters
@@ -72,12 +74,12 @@ signals:
 private:
   // General Methods
   ProcRetVal process(SEE_Base* event) noexcept;
-  State      processEventFromChild(
-           SEE_Base* event) noexcept;  ///< returns the next state
+  State processEventFromChild(
+      SEE_Base* event) noexcept;  ///< returns the next state
 
   // Attributes
-  State                   mCurrentState;
-  State                   mPreviousState;
+  State mCurrentState;
+  State mPreviousState;
   QHash<State, SES_Base*> mSubStates;
 };
 

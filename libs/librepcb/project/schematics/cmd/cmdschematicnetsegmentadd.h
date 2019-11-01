@@ -48,8 +48,9 @@ class CmdSchematicNetSegmentAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   explicit CmdSchematicNetSegmentAdd(SI_NetSegment& segment) noexcept;
-  CmdSchematicNetSegmentAdd(Schematic& schematic,
-                            NetSignal& netsignal) noexcept;
+  CmdSchematicNetSegmentAdd(
+      Schematic& schematic,
+      NetSignal& netsignal) noexcept;
   ~CmdSchematicNetSegmentAdd() noexcept;
 
   // Getters
@@ -69,8 +70,8 @@ private:
 
   // Private Member Variables
 
-  Schematic&     mSchematic;
-  NetSignal&     mNetSignal;
+  Schematic& mSchematic;
+  NetSignal& mNetSignal;
   SI_NetSegment* mNetSegment;
 };
 

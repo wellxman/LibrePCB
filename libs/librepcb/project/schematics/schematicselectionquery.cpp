@@ -43,7 +43,8 @@ namespace project {
  ******************************************************************************/
 
 SchematicSelectionQuery::SchematicSelectionQuery(
-    const QList<SI_Symbol*>& symbols, const QList<SI_NetSegment*>& netsegments,
+    const QList<SI_Symbol*>& symbols,
+    const QList<SI_NetSegment*>& netsegments,
     QObject* parent)
   : QObject(parent), mSymbols(symbols), mNetSegments(netsegments) {
 }
@@ -57,7 +58,7 @@ SchematicSelectionQuery::~SchematicSelectionQuery() noexcept {
 
 int SchematicSelectionQuery::getResultCount() const noexcept {
   return mResultSymbols.count() + mResultNetPoints.count() +
-         mResultNetLines.count() + mResultNetLabels.count();
+      mResultNetLines.count() + mResultNetLabels.count();
 }
 
 /*******************************************************************************

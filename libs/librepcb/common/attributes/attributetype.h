@@ -47,24 +47,26 @@ class AttributeType {
 public:
   /// @brief Available Attribute Types
   enum class Type_t {
-    String = 0,   ///< @see class #AttrTypeString
-    Resistance,   ///< @see class #AttrTypeResistance
+    String = 0,  ///< @see class #AttrTypeString
+    Resistance,  ///< @see class #AttrTypeResistance
     Capacitance,  ///< @see class #AttrTypeCapacitance
-    Inductance,   ///< @see class #AttrTypeInductance
-    Voltage,      ///< @see class #AttrTypeVoltage
-    Current,      ///< @see class #AttrTypeCurrent
-    Power,        ///< @see class #AttrTypePower
-    Frequency,    ///< @see class #AttrTypeFrequency
+    Inductance,  ///< @see class #AttrTypeInductance
+    Voltage,  ///< @see class #AttrTypeVoltage
+    Current,  ///< @see class #AttrTypeCurrent
+    Power,  ///< @see class #AttrTypePower
+    Frequency,  ///< @see class #AttrTypeFrequency
     _COUNT
   };
 
   // Constructors / Destructor
-  AttributeType(Type_t type, const QString& typeName,
-                const QString& typeNameTr) noexcept;
+  AttributeType(
+      Type_t type,
+      const QString& typeName,
+      const QString& typeNameTr) noexcept;
   virtual ~AttributeType() noexcept;
 
   // Getters
-  Type_t         getType() const noexcept { return mType; }
+  Type_t getType() const noexcept { return mType; }
   const QString& getName() const noexcept { return mTypeName; }
   const QString& getNameTr() const noexcept { return mTypeNameTr; }
   const QList<const AttributeUnit*>& getAvailableUnits() const noexcept {
@@ -74,28 +76,28 @@ public:
   const AttributeUnit* getDefaultUnit() const noexcept { return mDefaultUnit; }
   bool isUnitAvailable(const AttributeUnit* unit) const noexcept;
   const AttributeUnit* tryExtractUnitFromValue(QString& value) const noexcept;
-  virtual bool         isValueValid(const QString& value) const noexcept = 0;
-  virtual QString      valueFromTr(const QString& value) const noexcept  = 0;
-  virtual QString      printableValueTr(const QString&       value,
-                                        const AttributeUnit* unit = nullptr) const
-      noexcept = 0;
+  virtual bool isValueValid(const QString& value) const noexcept = 0;
+  virtual QString valueFromTr(const QString& value) const noexcept = 0;
+  virtual QString printableValueTr(
+      const QString& value,
+      const AttributeUnit* unit = nullptr) const noexcept = 0;
 
   // Static Methods
   static QList<const AttributeType*> getAllTypes() noexcept;
-  static const AttributeType&        fromString(const QString& type);
+  static const AttributeType& fromString(const QString& type);
 
 protected:
   // make some methods inaccessible...
-  AttributeType()                           = delete;
+  AttributeType() = delete;
   AttributeType(const AttributeType& other) = delete;
   AttributeType& operator=(const AttributeType& rhs) = delete;
 
   // General Attributes
-  Type_t                      mType;
-  QString                     mTypeName;
-  QString                     mTypeNameTr;
+  Type_t mType;
+  QString mTypeName;
+  QString mTypeNameTr;
   QList<const AttributeUnit*> mAvailableUnits;
-  const AttributeUnit*        mDefaultUnit;
+  const AttributeUnit* mDefaultUnit;
 };
 
 /*******************************************************************************

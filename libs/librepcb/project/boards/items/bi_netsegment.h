@@ -59,30 +59,36 @@ class BI_NetSegment final : public BI_Base, public SerializableObject {
 
 public:
   // Constructors / Destructor
-  BI_NetSegment()                           = delete;
+  BI_NetSegment() = delete;
   BI_NetSegment(const BI_NetSegment& other) = delete;
-  BI_NetSegment(Board& board, const BI_NetSegment& other,
-                const QHash<const BI_Device*, BI_Device*>& devMap);
+  BI_NetSegment(
+      Board& board,
+      const BI_NetSegment& other,
+      const QHash<const BI_Device*, BI_Device*>& devMap);
   BI_NetSegment(Board& board, const SExpression& node);
   BI_NetSegment(Board& board, NetSignal& signal);
   ~BI_NetSegment() noexcept;
 
   // Getters
   const Uuid& getUuid() const noexcept { return mUuid; }
-  NetSignal&  getNetSignal() const noexcept { return *mNetSignal; }
-  bool        isUsed() const noexcept;
+  NetSignal& getNetSignal() const noexcept { return *mNetSignal; }
+  bool isUsed() const noexcept;
   int getViasAtScenePos(const Point& pos, QList<BI_Via*>& vias) const noexcept;
-  int getNetPointsAtScenePos(const Point& pos, const GraphicsLayer* layer,
-                             QList<BI_NetPoint*>& points) const noexcept;
-  int getNetLinesAtScenePos(const Point& pos, const GraphicsLayer* layer,
-                            QList<BI_NetLine*>& lines) const noexcept;
+  int getNetPointsAtScenePos(
+      const Point& pos,
+      const GraphicsLayer* layer,
+      QList<BI_NetPoint*>& points) const noexcept;
+  int getNetLinesAtScenePos(
+      const Point& pos,
+      const GraphicsLayer* layer,
+      QList<BI_NetLine*>& lines) const noexcept;
 
   // Setters
   void setNetSignal(NetSignal& netsignal);
 
   // Via Methods
   const QList<BI_Via*>& getVias() const noexcept { return mVias; }
-  BI_Via*               getViaByUuid(const Uuid& uuid) const noexcept;
+  BI_Via* getViaByUuid(const Uuid& uuid) const noexcept;
 
   // NetPoint Methods
   const QList<BI_NetPoint*>& getNetPoints() const noexcept {
@@ -92,15 +98,17 @@ public:
 
   // NetLine Methods
   const QList<BI_NetLine*>& getNetLines() const noexcept { return mNetLines; }
-  BI_NetLine*               getNetLineByUuid(const Uuid& uuid) const noexcept;
+  BI_NetLine* getNetLineByUuid(const Uuid& uuid) const noexcept;
 
   // NetPoint+NetLine Methods
-  void addElements(const QList<BI_Via*>&      vias,
-                   const QList<BI_NetPoint*>& netpoints,
-                   const QList<BI_NetLine*>&  netlines);
-  void removeElements(const QList<BI_Via*>&      vias,
-                      const QList<BI_NetPoint*>& netpoints,
-                      const QList<BI_NetLine*>&  netlines);
+  void addElements(
+      const QList<BI_Via*>& vias,
+      const QList<BI_NetPoint*>& netpoints,
+      const QList<BI_NetLine*>& netlines);
+  void removeElements(
+      const QList<BI_Via*>& vias,
+      const QList<BI_NetPoint*>& netpoints,
+      const QList<BI_NetLine*>& netlines);
 
   // General Methods
   void addToBoard() override;
@@ -119,11 +127,11 @@ public:
     static Point p(0, 0);
     return p;
   }
-  bool         getIsMirrored() const noexcept override { return false; }
+  bool getIsMirrored() const noexcept override { return false; }
   QPainterPath getGrabAreaScenePx() const noexcept override;
-  bool         isSelectable() const noexcept override { return false; }
-  bool         isSelected() const noexcept override;
-  void         setSelected(bool selected) noexcept override;
+  bool isSelectable() const noexcept override { return false; }
+  bool isSelected() const noexcept override;
+  void setSelected(bool selected) noexcept override;
 
   // Operator Overloadings
   BI_NetSegment& operator=(const BI_NetSegment& rhs) = delete;
@@ -133,20 +141,20 @@ public:
 private:
   bool checkAttributesValidity() const noexcept;
   bool areAllNetPointsConnectedTogether() const noexcept;
-  void findAllConnectedNetPoints(const BI_NetLineAnchor&       p,
-                                 QSet<const BI_Via*>&          vias,
-                                 QSet<const BI_FootprintPad*>& pads,
-                                 QSet<const BI_NetPoint*>&     points) const
-      noexcept;
+  void findAllConnectedNetPoints(
+      const BI_NetLineAnchor& p,
+      QSet<const BI_Via*>& vias,
+      QSet<const BI_FootprintPad*>& pads,
+      QSet<const BI_NetPoint*>& points) const noexcept;
 
   // Attributes
-  Uuid       mUuid;
+  Uuid mUuid;
   NetSignal* mNetSignal;
 
   // Items
-  QList<BI_Via*>      mVias;
+  QList<BI_Via*> mVias;
   QList<BI_NetPoint*> mNetPoints;
-  QList<BI_NetLine*>  mNetLines;
+  QList<BI_NetLine*> mNetLines;
 };
 
 /*******************************************************************************

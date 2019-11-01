@@ -60,15 +60,16 @@ std::shared_ptr<Bom> BomGenerator::generate(const Board* board) noexcept {
   std::shared_ptr<Bom> bom = std::make_shared<Bom>(
       QStringList{"Value", "Device", "Package"} + mAdditionalAttributes);
 
-  foreach (const ComponentInstance* cmpInst,
-           mProject.getCircuit().getComponentInstances()) {
+  foreach (
+      const ComponentInstance* cmpInst,
+      mProject.getCircuit().getComponentInstances()) {
     if (cmpInst->getLibComponent().isSchematicOnly()) {
       continue;  // Don't export schematic-only components (e.g. sheet frames)
     }
-    QString     designator = *cmpInst->getName();
+    QString designator = *cmpInst->getName();
     QStringList attributes;
-    QString     devName;
-    QString     pkgName;
+    QString devName;
+    QString pkgName;
     if (board) {
       const BI_Device* device =
           board->getDeviceInstanceByComponentUuid(cmpInst->getUuid());

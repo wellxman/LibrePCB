@@ -297,8 +297,9 @@ inline SExpression serializeToSExpression(const LengthUnit& obj) {
 }
 
 template <>
-inline LengthUnit deserializeFromSExpression(const SExpression& sexpr,
-                                             bool               throwIfEmpty) {
+inline LengthUnit deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   if (str == "millimeters")
     return LengthUnit::millimeters();
@@ -312,7 +313,8 @@ inline LengthUnit deserializeFromSExpression(const SExpression& sexpr,
     return LengthUnit::mils();
   else {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(LengthUnit::tr("Invalid length unit: \"%1\"")).arg(str));
   }
 }

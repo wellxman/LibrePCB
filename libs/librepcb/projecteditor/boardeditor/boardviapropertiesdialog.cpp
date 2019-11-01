@@ -43,24 +43,25 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardViaPropertiesDialog::BoardViaPropertiesDialog(Project&   project,
-                                                   BI_Via&    via,
-                                                   UndoStack& undoStack,
-                                                   QWidget*   parent) noexcept
+BoardViaPropertiesDialog::BoardViaPropertiesDialog(
+    Project& project,
+    BI_Via& via,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
     mVia(via),
     mUi(new Ui::BoardViaPropertiesDialog),
     mUndoStack(undoStack) {
   mUi->setupUi(this);
-  mUi->edtSize->setSingleStep(0.1);           // [mm]
+  mUi->edtSize->setSingleStep(0.1);  // [mm]
   mUi->edtDrillDiameter->setSingleStep(0.1);  // [mm]
 
   // shape combobox
   mUi->cbxShape->addItem(tr("Round"), static_cast<int>(BI_Via::Shape::Round));
   mUi->cbxShape->addItem(tr("Square"), static_cast<int>(BI_Via::Shape::Square));
-  mUi->cbxShape->addItem(tr("Octagon"),
-                         static_cast<int>(BI_Via::Shape::Octagon));
+  mUi->cbxShape->addItem(
+      tr("Octagon"), static_cast<int>(BI_Via::Shape::Octagon));
   mUi->cbxShape->setCurrentIndex(
       mUi->cbxShape->findData(static_cast<int>(mVia.getShape())));
 
@@ -116,8 +117,8 @@ bool BoardViaPropertiesDialog::applyChanges() noexcept {
     cmd->setShape(
         static_cast<BI_Via::Shape>(mUi->cbxShape->currentData().toInt()),
         false);
-    cmd->setPosition(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                     false);
+    cmd->setPosition(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     cmd->setSize(mUi->edtSize->getValue(), false);
     cmd->setDrillDiameter(mUi->edtDrillDiameter->getValue(), false);
     mUndoStack.execCmd(cmd.take());

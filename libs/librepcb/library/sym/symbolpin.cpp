@@ -46,9 +46,12 @@ SymbolPin::SymbolPin(const SymbolPin& other) noexcept
     mRegisteredGraphicsItem(nullptr) {
 }
 
-SymbolPin::SymbolPin(const Uuid& uuid, const CircuitIdentifier& name,
-                     const Point& position, const UnsignedLength& length,
-                     const Angle& rotation) noexcept
+SymbolPin::SymbolPin(
+    const Uuid& uuid,
+    const CircuitIdentifier& name,
+    const Point& position,
+    const UnsignedLength& length,
+    const Angle& rotation) noexcept
   : onEdited(*this),
     mUuid(uuid),
     mName(name),

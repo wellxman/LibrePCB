@@ -54,7 +54,7 @@ SI_NetLine::SI_NetLine(SI_NetSegment& segment, const SExpression& node)
     mEndPoint(nullptr),
     mWidth(node.getValueByPath<UnsignedLength>("width")) {
   mStartPoint = deserializeAnchor(node, "from");
-  mEndPoint   = deserializeAnchor(node, "to");
+  mEndPoint = deserializeAnchor(node, "to");
   if ((!mStartPoint) || (!mEndPoint)) {
     throw RuntimeError(__FILE__, __LINE__, tr("Invalid trace anchor!"));
   }
@@ -62,8 +62,11 @@ SI_NetLine::SI_NetLine(SI_NetSegment& segment, const SExpression& node)
   init();
 }
 
-SI_NetLine::SI_NetLine(SI_NetSegment& segment, SI_NetLineAnchor& startPoint,
-                       SI_NetLineAnchor& endPoint, const UnsignedLength& width)
+SI_NetLine::SI_NetLine(
+    SI_NetSegment& segment,
+    SI_NetLineAnchor& startPoint,
+    SI_NetLineAnchor& endPoint,
+    const UnsignedLength& width)
   : SI_Base(segment.getSchematic()),
     mNetSegment(segment),
     mPosition(),
@@ -77,8 +80,8 @@ SI_NetLine::SI_NetLine(SI_NetSegment& segment, SI_NetLineAnchor& startPoint,
 void SI_NetLine::init() {
   // check if both netpoints are different
   if (mStartPoint == mEndPoint) {
-    throw LogicError(__FILE__, __LINE__,
-                     tr("SI_NetLine: both endpoints are the same."));
+    throw LogicError(
+        __FILE__, __LINE__, tr("SI_NetLine: both endpoints are the same."));
   }
 
   mGraphicsItem.reset(new SGI_NetLine(*this));
@@ -132,9 +135,10 @@ void SI_NetLine::addToSchematic() {
   auto sg = scopeGuard([&]() { mStartPoint->unregisterNetLine(*this); });
   mEndPoint->registerNetLine(*this);  // can throw
 
-  mHighlightChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+  mHighlightChangedConnection = connect(
+      &getNetSignalOfNetSegment(), &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   SI_Base::addToSchematic(mGraphicsItem.data());
   sg.dismiss();
 }
@@ -165,27 +169,28 @@ void SI_NetLine::serialize(SExpression& root) const {
   serializeAnchor(root.appendList("to", true), mEndPoint);
 }
 
-SI_NetLineAnchor* SI_NetLine::deserializeAnchor(const SExpression& root,
-                                                const QString&     key) const {
+SI_NetLineAnchor* SI_NetLine::deserializeAnchor(
+    const SExpression& root,
+    const QString& key) const {
   const SExpression& node = root.getChildByPath(key);
   if (const SExpression* junctionNode = node.tryGetChildByPath("junction")) {
     return mNetSegment.getNetPointByUuid(
         junctionNode->getValueOfFirstChild<Uuid>());
   } else {
-    Uuid       symbolUuid = node.getValueByPath<Uuid>("symbol");
-    Uuid       pinUuid    = node.getValueByPath<Uuid>("pin");
-    SI_Symbol* symbol     = mSchematic.getSymbolByUuid(symbolUuid);
+    Uuid symbolUuid = node.getValueByPath<Uuid>("symbol");
+    Uuid pinUuid = node.getValueByPath<Uuid>("pin");
+    SI_Symbol* symbol = mSchematic.getSymbolByUuid(symbolUuid);
     if (symbol) return symbol->getPin(pinUuid);
   }
   return nullptr;
 }
 
-void SI_NetLine::serializeAnchor(SExpression&      root,
-                                 SI_NetLineAnchor* anchor) const {
+void SI_NetLine::serializeAnchor(SExpression& root, SI_NetLineAnchor* anchor)
+    const {
   if (const SI_NetPoint* netpoint = dynamic_cast<const SI_NetPoint*>(anchor)) {
     root.appendChild("junction", netpoint->getUuid(), false);
-  } else if (const SI_SymbolPin* pin =
-                 dynamic_cast<const SI_SymbolPin*>(anchor)) {
+  } else if (
+      const SI_SymbolPin* pin = dynamic_cast<const SI_SymbolPin*>(anchor)) {
     root.appendChild("symbol", pin->getSymbol().getUuid(), false);
     root.appendChild("pin", pin->getLibPinUuid(), false);
   } else {

@@ -57,8 +57,9 @@ public:
   void rotate(const Angle& angle, const Point& center, bool immediate) noexcept;
   void setShape(BI_Via::Shape shape, bool immediate) noexcept;
   void setSize(const PositiveLength& size, bool immediate) noexcept;
-  void setDrillDiameter(const PositiveLength& diameter,
-                        bool                  immediate) noexcept;
+  void setDrillDiameter(
+      const PositiveLength& diameter,
+      bool immediate) noexcept;
 
 private:
   // Private Methods
@@ -78,10 +79,10 @@ private:
   BI_Via& mVia;
 
   // General Attributes
-  Point          mOldPos;
-  Point          mNewPos;
-  BI_Via::Shape  mOldShape;
-  BI_Via::Shape  mNewShape;
+  Point mOldPos;
+  Point mNewPos;
+  BI_Via::Shape mOldShape;
+  BI_Via::Shape mNewShape;
   PositiveLength mOldSize;
   PositiveLength mNewSize;
   PositiveLength mOldDrillDiameter;

@@ -53,14 +53,14 @@ public:
   ~PathEditorWidget() noexcept;
 
   // General Methods
-  void        setPath(const Path& path) noexcept;
+  void setPath(const Path& path) noexcept;
   const Path& getPath() const noexcept;
 
   // Operator Overloadings
   PathEditorWidget& operator=(const PathEditorWidget& rhs) = delete;
 
 private:  // Data
-  QScopedPointer<PathModel>           mModel;
+  QScopedPointer<PathModel> mModel;
   QScopedPointer<EditableTableWidget> mView;
 };
 

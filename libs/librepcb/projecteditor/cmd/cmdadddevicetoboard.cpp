@@ -51,10 +51,14 @@ namespace editor {
  ******************************************************************************/
 
 CmdAddDeviceToBoard::CmdAddDeviceToBoard(
-    workspace::Workspace& workspace, Board& board,
-    ComponentInstance& cmpInstance, const Uuid& deviceUuid,
-    const tl::optional<Uuid>& footprintUuid, const Point& position,
-    const Angle& rotation, bool mirror) noexcept
+    workspace::Workspace& workspace,
+    Board& board,
+    ComponentInstance& cmpInstance,
+    const Uuid& deviceUuid,
+    const tl::optional<Uuid>& footprintUuid,
+    const Point& position,
+    const Angle& rotation,
+    bool mirror) noexcept
   : UndoCommandGroup(tr("Add device to board")),
     mWorkspace(workspace),
     mBoard(board),
@@ -86,7 +90,8 @@ bool CmdAddDeviceToBoard::performExecute() {
     FilePath devFp = mWorkspace.getLibraryDb().getLatestDevice(mDeviceUuid);
     if (!devFp.isValid()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("The device with the UUID \"%1\" does not exist in the "
                      "workspace library!"))
               .arg(mDeviceUuid.toStr()));
@@ -102,13 +107,14 @@ bool CmdAddDeviceToBoard::performExecute() {
 
   // if there is no such package in the project's library, copy it from the
   // workspace library to the project's library
-  Uuid              pkgUuid = dev->getPackageUuid();
+  Uuid pkgUuid = dev->getPackageUuid();
   library::Package* pkg = mBoard.getProject().getLibrary().getPackage(pkgUuid);
   if (!pkg) {
     FilePath pkgFp = mWorkspace.getLibraryDb().getLatestPackage(pkgUuid);
     if (!pkgFp.isValid()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("The package with the UUID \"%1\" does not exist in the "
                      "workspace library!"))
               .arg(pkgUuid.toStr()));
@@ -127,15 +133,22 @@ bool CmdAddDeviceToBoard::performExecute() {
     mFootprintUuid = pkg->getFootprints().first()->getUuid();
   }
   if (!mFootprintUuid) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Package does not have any footprints: %1"))
-                           .arg(pkg->getUuid().toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Package does not have any footprints: %1"))
+            .arg(pkg->getUuid().toStr()));
   }
 
   // create new device (ownership by board)
-  mDeviceInstance =
-      new BI_Device(mBoard, mComponentInstance, mDeviceUuid, *mFootprintUuid,
-                    mPosition, mRotation, mMirror);  // can throw
+  mDeviceInstance = new BI_Device(
+      mBoard,
+      mComponentInstance,
+      mDeviceUuid,
+      *mFootprintUuid,
+      mPosition,
+      mRotation,
+      mMirror);  // can throw
 
   // add a new device instance to the board
   execNewChildCmd(new CmdDeviceInstanceAdd(*mDeviceInstance));  // can throw

@@ -64,14 +64,15 @@ public:
   RepositoryLibraryListWidgetItem() = delete;
   RepositoryLibraryListWidgetItem(
       const RepositoryLibraryListWidgetItem& other) = delete;
-  RepositoryLibraryListWidgetItem(workspace::Workspace& ws,
-                                  const QJsonObject&    obj) noexcept;
+  RepositoryLibraryListWidgetItem(
+      workspace::Workspace& ws,
+      const QJsonObject& obj) noexcept;
   ~RepositoryLibraryListWidgetItem() noexcept;
 
   // Getters
   const tl::optional<Uuid>& getUuid() const noexcept { return mUuid; }
   const QSet<Uuid>& getDependencies() const noexcept { return mDependencies; }
-  bool              isChecked() const noexcept;
+  bool isChecked() const noexcept;
 
   // Setters
   void setChecked(bool checked) noexcept;
@@ -80,7 +81,7 @@ public:
   void startDownloadIfSelected() noexcept;
 
   // Operator Overloadings
-  RepositoryLibraryListWidgetItem& operator       =(
+  RepositoryLibraryListWidgetItem& operator=(
       const RepositoryLibraryListWidgetItem& rhs) = delete;
 
 signals:
@@ -92,14 +93,14 @@ private:  // Methods
   void updateInstalledStatus() noexcept;
 
 private:  // Data
-  workspace::Workspace&                               mWorkspace;
-  QJsonObject                                         mJsonObject;
-  tl::optional<Uuid>                                  mUuid;
-  tl::optional<Version>                               mVersion;
-  bool                                                mIsRecommended;
-  QSet<Uuid>                                          mDependencies;
+  workspace::Workspace& mWorkspace;
+  QJsonObject mJsonObject;
+  tl::optional<Uuid> mUuid;
+  tl::optional<Version> mVersion;
+  bool mIsRecommended;
+  QSet<Uuid> mDependencies;
   QScopedPointer<Ui::RepositoryLibraryListWidgetItem> mUi;
-  QScopedPointer<LibraryDownload>                     mLibraryDownload;
+  QScopedPointer<LibraryDownload> mLibraryDownload;
 };
 
 /*******************************************************************************

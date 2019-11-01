@@ -44,8 +44,9 @@ class CenteredCheckBox final : public QWidget {
 public:
   // Constructors / Destructor
   explicit CenteredCheckBox(QWidget* parent = nullptr) noexcept;
-  explicit CenteredCheckBox(const QString& text,
-                            QWidget*       parent = nullptr) noexcept;
+  explicit CenteredCheckBox(
+      const QString& text,
+      QWidget* parent = nullptr) noexcept;
   CenteredCheckBox(const CenteredCheckBox& other) = delete;
   ~CenteredCheckBox() noexcept;
 
@@ -62,7 +63,7 @@ signals:
   void clicked(bool checked);
   void stateChanged(int state);
 
-private:                 // Data
+private:  // Data
   QCheckBox* mCheckBox;  // ownership by Qt's parent-child-mechanism
 };
 

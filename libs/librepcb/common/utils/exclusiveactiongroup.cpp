@@ -56,21 +56,26 @@ void ExclusiveActionGroup::setEnabled(bool enabled) noexcept {
   }
 }
 
-void ExclusiveActionGroup::addAction(const QVariant& key,
-                                     QAction*        action) noexcept {
+void ExclusiveActionGroup::addAction(
+    const QVariant& key,
+    QAction* action) noexcept {
   Q_ASSERT(!key.isNull());
   Q_ASSERT(!mActions.contains(key));
   mActions.insert(key, action);
   if (action) {
-    connect(action, &QAction::triggered, this,
-            &ExclusiveActionGroup::actionTriggered);
+    connect(
+        action,
+        &QAction::triggered,
+        this,
+        &ExclusiveActionGroup::actionTriggered);
     action->setCheckable(key == mCurrentAction);
     action->setChecked(key == mCurrentAction);
   }
 }
 
-void ExclusiveActionGroup::setActionEnabled(const QVariant& key,
-                                            bool            enabled) noexcept {
+void ExclusiveActionGroup::setActionEnabled(
+    const QVariant& key,
+    bool enabled) noexcept {
   QAction* action = mActions.value(key);
   if (action) action->setEnabled(enabled);
 }

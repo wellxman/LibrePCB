@@ -42,19 +42,29 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_CopyFrom::NewElementWizardPage_CopyFrom(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_CopyFrom),
     mIsCategoryElement(false),
     mIsComplete(false) {
   mUi->setupUi(this);
-  connect(mUi->treeView, &QTreeView::doubleClicked, this,
-          &NewElementWizardPage_CopyFrom::treeView_doubleClicked);
-  connect(mUi->listWidget, &QListWidget::currentItemChanged, this,
-          &NewElementWizardPage_CopyFrom::listWidget_currentItemChanged);
-  connect(mUi->listWidget, &QListWidget::itemDoubleClicked, this,
-          &NewElementWizardPage_CopyFrom::listWidget_itemDoubleClicked);
+  connect(
+      mUi->treeView,
+      &QTreeView::doubleClicked,
+      this,
+      &NewElementWizardPage_CopyFrom::treeView_doubleClicked);
+  connect(
+      mUi->listWidget,
+      &QListWidget::currentItemChanged,
+      this,
+      &NewElementWizardPage_CopyFrom::listWidget_currentItemChanged);
+  connect(
+      mUi->listWidget,
+      &QListWidget::itemDoubleClicked,
+      this,
+      &NewElementWizardPage_CopyFrom::listWidget_itemDoubleClicked);
 }
 
 NewElementWizardPage_CopyFrom::~NewElementWizardPage_CopyFrom() noexcept {
@@ -82,7 +92,8 @@ int NewElementWizardPage_CopyFrom::nextId() const noexcept {
  ******************************************************************************/
 
 void NewElementWizardPage_CopyFrom::treeView_currentItemChanged(
-    const QModelIndex& current, const QModelIndex& previous) noexcept {
+    const QModelIndex& current,
+    const QModelIndex& previous) noexcept {
   Q_UNUSED(previous);
   setSelectedCategory(
       Uuid::tryFromString(current.data(Qt::UserRole).toString()));
@@ -95,7 +106,8 @@ void NewElementWizardPage_CopyFrom::treeView_doubleClicked(
 }
 
 void NewElementWizardPage_CopyFrom::listWidget_currentItemChanged(
-    QListWidgetItem* current, QListWidgetItem* previous) noexcept {
+    QListWidgetItem* current,
+    QListWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
   if (mIsCategoryElement) return;
   if (current) {
@@ -130,7 +142,7 @@ void NewElementWizardPage_CopyFrom::setSelectedCategory(
       foreach (const Uuid& elementUuid, elements) {
         try {
           FilePath fp;
-          QString  name;
+          QString name;
           getElementMetadata(elementUuid, fp, name);
           QListWidgetItem* item = new QListWidgetItem(name);
           item->setData(Qt::UserRole, fp.toStr());
@@ -166,8 +178,11 @@ void NewElementWizardPage_CopyFrom::setCategoryTreeModel(
   mUi->treeView->setCurrentIndex(QModelIndex());
   mUi->listWidget->clear();
   mCategoryTreeModel.reset(model);
-  connect(mUi->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
-          this, &NewElementWizardPage_CopyFrom::treeView_currentItemChanged);
+  connect(
+      mUi->treeView->selectionModel(),
+      &QItemSelectionModel::currentChanged,
+      this,
+      &NewElementWizardPage_CopyFrom::treeView_currentItemChanged);
 }
 
 FilePath NewElementWizardPage_CopyFrom::getCategoryFilePath(
@@ -209,9 +224,10 @@ QSet<Uuid> NewElementWizardPage_CopyFrom::getElementsByCategory(
   }
 }
 
-void NewElementWizardPage_CopyFrom::getElementMetadata(const Uuid& uuid,
-                                                       FilePath&   fp,
-                                                       QString&    name) const {
+void NewElementWizardPage_CopyFrom::getElementMetadata(
+    const Uuid& uuid,
+    FilePath& fp,
+    QString& name) const {
   switch (mContext.mElementType) {
     case NewElementWizardContext::ElementType::Symbol:
       fp = mContext.getWorkspace().getLibraryDb().getLatestSymbol(
@@ -250,38 +266,44 @@ void NewElementWizardPage_CopyFrom::initializePage() noexcept {
     case NewElementWizardContext::ElementType::ComponentCategory: {
       mIsCategoryElement = true;
       setCategoryTreeModel(new workspace::ComponentCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::ALL));
       break;
     }
     case NewElementWizardContext::ElementType::Symbol: {
       setCategoryTreeModel(new workspace::ComponentCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::SYMBOLS));
       break;
     }
     case NewElementWizardContext::ElementType::Component: {
       setCategoryTreeModel(new workspace::ComponentCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::COMPONENTS));
       break;
     }
     case NewElementWizardContext::ElementType::Device: {
       setCategoryTreeModel(new workspace::ComponentCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::DEVICES));
       break;
     }
     case NewElementWizardContext::ElementType::PackageCategory: {
       mIsCategoryElement = true;
       setCategoryTreeModel(new workspace::PackageCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::ALL));
       break;
     }
     case NewElementWizardContext::ElementType::Package: {
       setCategoryTreeModel(new workspace::PackageCategoryTreeModel(
-          mContext.getWorkspace().getLibraryDb(), mContext.getLibLocaleOrder(),
+          mContext.getWorkspace().getLibraryDb(),
+          mContext.getLibLocaleOrder(),
           workspace::CategoryTreeFilter::PACKAGES));
       break;
     }

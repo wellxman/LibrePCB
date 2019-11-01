@@ -43,7 +43,8 @@ namespace library {
  ******************************************************************************/
 
 FootprintPadPreviewGraphicsItem::FootprintPadPreviewGraphicsItem(
-    const IF_GraphicsLayerProvider& layerProvider, const FootprintPad& fptPad,
+    const IF_GraphicsLayerProvider& layerProvider,
+    const FootprintPad& fptPad,
     const PackagePad* pkgPad) noexcept
   : QGraphicsItem(),
     mFootprintPad(fptPad),
@@ -68,7 +69,7 @@ FootprintPadPreviewGraphicsItem::~FootprintPadPreviewGraphicsItem() noexcept {
  ******************************************************************************/
 
 void FootprintPadPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
-  mShape        = mFootprintPad.toQPainterPathPx();
+  mShape = mFootprintPad.toQPainterPathPx();
   mBoundingRect = mShape.boundingRect();
 
   update();
@@ -79,7 +80,8 @@ void FootprintPadPreviewGraphicsItem::updateCacheAndRepaint() noexcept {
  ******************************************************************************/
 
 void FootprintPadPreviewGraphicsItem::paint(
-    QPainter* painter, const QStyleOptionGraphicsItem* option,
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
     QWidget* widget) noexcept {
   Q_UNUSED(widget);
   const bool selected = option->state.testFlag(QStyle::State_Selected);

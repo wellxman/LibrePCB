@@ -62,7 +62,7 @@ class LibraryManager final : public QMainWindow {
 
 public:
   // Constructors / Destructor
-  LibraryManager()                            = delete;
+  LibraryManager() = delete;
   LibraryManager(const LibraryManager& other) = delete;
   LibraryManager(workspace::Workspace& ws, QWidget* parent = nullptr) noexcept;
   ~LibraryManager() noexcept;
@@ -77,22 +77,24 @@ private:  // Methods
   void closeEvent(QCloseEvent* event) noexcept override;
   void clearLibraryList() noexcept;
   void updateLibraryList() noexcept;
-  void currentListItemChanged(QListWidgetItem* current,
-                              QListWidgetItem* previous) noexcept;
+  void currentListItemChanged(
+      QListWidgetItem* current,
+      QListWidgetItem* previous) noexcept;
   void libraryAddedSlot(const FilePath& libDir) noexcept;
 
-  static bool widgetsLessThan(const LibraryListWidgetItem* a,
-                              const LibraryListWidgetItem* b) noexcept;
+  static bool widgetsLessThan(
+      const LibraryListWidgetItem* a,
+      const LibraryListWidgetItem* b) noexcept;
 
 signals:
   void openLibraryEditorTriggered(const FilePath& libDir);
 
 private:  // Data
-  workspace::Workspace&              mWorkspace;
+  workspace::Workspace& mWorkspace;
   QScopedPointer<Ui::LibraryManager> mUi;
-  QScopedPointer<AddLibraryWidget>   mAddLibraryWidget;
-  QWidget*                           mCurrentWidget;
-  FilePath                           mSelectedLibrary;
+  QScopedPointer<AddLibraryWidget> mAddLibraryWidget;
+  QWidget* mCurrentWidget;
+  FilePath mSelectedLibrary;
 };
 
 /*******************************************************************************

@@ -45,9 +45,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_AddDevice::BES_AddDevice(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                             GraphicsView& editorGraphicsView,
-                             UndoStack&    undoStack)
+BES_AddDevice::BES_AddDevice(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mIsUndoCmdActive(false),
     mCurrentDeviceToPlace(nullptr) {
@@ -72,8 +74,10 @@ BES_Base::ProcRetVal BES_AddDevice::process(BEE_Base* event) noexcept {
         BEE_StartAddDevice* e = dynamic_cast<BEE_StartAddDevice*>(event);
         Q_ASSERT(e);
         if (!abortCommand(true)) return PassToParentState;
-        startAddingDevice(e->getComponentInstance(), e->getDeviceUuid(),
-                          e->getFootprintUuid());
+        startAddingDevice(
+            e->getComponentInstance(),
+            e->getDeviceUuid(),
+            e->getFootprintUuid());
         return ForceStayInState;
       } catch (Exception& exc) {
         QMessageBox::critical(&mEditor, tr("Error"), exc.getMsg());
@@ -110,11 +114,12 @@ bool BES_AddDevice::entry(BEE_Base* event) noexcept {
 
   // start adding the specified device
   try {
-    startAddingDevice(e->getComponentInstance(), e->getDeviceUuid(),
-                      e->getFootprintUuid());
+    startAddingDevice(
+        e->getComponentInstance(), e->getDeviceUuid(), e->getFootprintUuid());
   } catch (Exception& exc) {
     QMessageBox::critical(
-        &mEditor, tr("Error"),
+        &mEditor,
+        tr("Error"),
         QString(tr("Could not add device:\n\n%1")).arg(exc.getMsg()));
     if (mIsUndoCmdActive) abortCommand(false);
     return false;
@@ -230,8 +235,10 @@ BES_Base::ProcRetVal BES_AddDevice::processSceneEvent(
   return PassToParentState;
 }
 
-void BES_AddDevice::startAddingDevice(ComponentInstance& cmp, const Uuid& dev,
-                                      const Uuid& fpt) {
+void BES_AddDevice::startAddingDevice(
+    ComponentInstance& cmp,
+    const Uuid& dev,
+    const Uuid& fpt) {
   Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) throw LogicError(__FILE__, __LINE__);
@@ -289,8 +296,8 @@ bool BES_AddDevice::abortCommand(bool showErrMsgBox) noexcept {
 void BES_AddDevice::rotateDevice(const Angle& angle) noexcept {
   Q_ASSERT(mCurrentDeviceToPlace);
   Q_ASSERT(!mCurrentDeviceEditCmd.isNull());
-  mCurrentDeviceEditCmd->rotate(angle, mCurrentDeviceToPlace->getPosition(),
-                                true);
+  mCurrentDeviceEditCmd->rotate(
+      angle, mCurrentDeviceToPlace->getPosition(), true);
   mCurrentDeviceToPlace->getBoard().triggerAirWiresRebuild();
 }
 
@@ -299,8 +306,8 @@ void BES_AddDevice::mirrorDevice(Qt::Orientation orientation) noexcept {
   Q_ASSERT(!mCurrentDeviceEditCmd.isNull());
 
   try {
-    mCurrentDeviceEditCmd->mirror(mCurrentDeviceToPlace->getPosition(),
-                                  orientation, true);  // can throw
+    mCurrentDeviceEditCmd->mirror(
+        mCurrentDeviceToPlace->getPosition(), orientation, true);  // can throw
     mCurrentDeviceToPlace->getBoard().triggerAirWiresRebuild();
   } catch (Exception& e) {
     QMessageBox::critical(&mEditor, tr("Error"), e.getMsg());

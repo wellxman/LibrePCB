@@ -38,23 +38,44 @@ namespace tests {
  ******************************************************************************/
 class EditableTableWidgetTest : public ::testing::Test {
 protected:
-  static void connect(EditableTableWidget&         widget,
-                      EditableTableWidgetReceiver& receiver) noexcept {
-    QObject::connect(&widget, &EditableTableWidget::btnAddClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnAddClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnRemoveClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnRemoveClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnCopyClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnCopyClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnEditClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnEditClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnMoveUpClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnMoveUpClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnMoveDownClicked,
-                     &receiver,
-                     &EditableTableWidgetReceiver::btnMoveDownClicked);
-    QObject::connect(&widget, &EditableTableWidget::btnBrowseClicked, &receiver,
-                     &EditableTableWidgetReceiver::btnBrowseClicked);
+  static void connect(
+      EditableTableWidget& widget,
+      EditableTableWidgetReceiver& receiver) noexcept {
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnAddClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnAddClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnRemoveClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnRemoveClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnCopyClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnCopyClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnEditClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnEditClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnMoveUpClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnMoveUpClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnMoveDownClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnMoveDownClicked);
+    QObject::connect(
+        &widget,
+        &EditableTableWidget::btnBrowseClicked,
+        &receiver,
+        &EditableTableWidgetReceiver::btnBrowseClicked);
   }
 
   static QToolButton* getBtnRemove(QWidget* indexWidget) {
@@ -71,7 +92,7 @@ protected:
 
 TEST_F(EditableTableWidgetTest, testIfDataGetsUpdated) {
   QStringListModel model({"a", "b", "c"});
-  QModelIndex      index = model.index(1);
+  QModelIndex index = model.index(1);
   model.setData(index, "foo", Qt::EditRole);
 
   EditableTableWidget widget;

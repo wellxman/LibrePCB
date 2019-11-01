@@ -65,25 +65,27 @@ public:
     DescriptionsChanged,
     SymbolItemsEdited,
   };
-  Signal<ComponentSymbolVariant, Event>       onEdited;
+  Signal<ComponentSymbolVariant, Event> onEdited;
   typedef Slot<ComponentSymbolVariant, Event> OnEditedSlot;
 
   // Constructors / Destructor
   ComponentSymbolVariant() = delete;
   ComponentSymbolVariant(const ComponentSymbolVariant& other) noexcept;
-  ComponentSymbolVariant(const Uuid& uuid, const QString& norm,
-                         const ElementName& name_en_US,
-                         const QString&     desc_en_US) noexcept;
+  ComponentSymbolVariant(
+      const Uuid& uuid,
+      const QString& norm,
+      const ElementName& name_en_US,
+      const QString& desc_en_US) noexcept;
   explicit ComponentSymbolVariant(const SExpression& node);
   ~ComponentSymbolVariant() noexcept;
 
   // Getters: Attributes
-  const Uuid&        getUuid() const noexcept { return mUuid; }
-  const QString&     getNorm() const noexcept { return mNorm; }
+  const Uuid& getUuid() const noexcept { return mUuid; }
+  const QString& getNorm() const noexcept { return mNorm; }
   const ElementName& getName() const noexcept {
     return mNames.getDefaultValue();  // Used for SerializableObjectList
   }
-  const LocalizedNameMap&        getNames() const noexcept { return mNames; }
+  const LocalizedNameMap& getNames() const noexcept { return mNames; }
   const LocalizedDescriptionMap& getDescriptions() const noexcept {
     return mDescriptions;
   }
@@ -121,15 +123,16 @@ public:
 
 private:  // Methods
   void itemsEdited(
-      const ComponentSymbolVariantItemList& list, int index,
+      const ComponentSymbolVariantItemList& list,
+      int index,
       const std::shared_ptr<const ComponentSymbolVariantItem>& item,
-      ComponentSymbolVariantItemList::Event                    event) noexcept;
+      ComponentSymbolVariantItemList::Event event) noexcept;
 
 private:  // Data
-  Uuid                           mUuid;
-  QString                        mNorm;
-  LocalizedNameMap               mNames;
-  LocalizedDescriptionMap        mDescriptions;
+  Uuid mUuid;
+  QString mNorm;
+  LocalizedNameMap mNames;
+  LocalizedDescriptionMap mDescriptions;
   ComponentSymbolVariantItemList mSymbolItems;
 
   // Slots
@@ -143,22 +146,22 @@ private:  // Data
 struct ComponentSymbolVariantListNameProvider {
   static constexpr const char* tagname = "variant";
 };
-using ComponentSymbolVariantList =
-    SerializableObjectList<ComponentSymbolVariant,
-                           ComponentSymbolVariantListNameProvider,
-                           ComponentSymbolVariant::Event>;
-using CmdComponentSymbolVariantInsert =
-    CmdListElementInsert<ComponentSymbolVariant,
-                         ComponentSymbolVariantListNameProvider,
-                         ComponentSymbolVariant::Event>;
-using CmdComponentSymbolVariantRemove =
-    CmdListElementRemove<ComponentSymbolVariant,
-                         ComponentSymbolVariantListNameProvider,
-                         ComponentSymbolVariant::Event>;
-using CmdComponentSymbolVariantsSwap =
-    CmdListElementsSwap<ComponentSymbolVariant,
-                        ComponentSymbolVariantListNameProvider,
-                        ComponentSymbolVariant::Event>;
+using ComponentSymbolVariantList = SerializableObjectList<
+    ComponentSymbolVariant,
+    ComponentSymbolVariantListNameProvider,
+    ComponentSymbolVariant::Event>;
+using CmdComponentSymbolVariantInsert = CmdListElementInsert<
+    ComponentSymbolVariant,
+    ComponentSymbolVariantListNameProvider,
+    ComponentSymbolVariant::Event>;
+using CmdComponentSymbolVariantRemove = CmdListElementRemove<
+    ComponentSymbolVariant,
+    ComponentSymbolVariantListNameProvider,
+    ComponentSymbolVariant::Event>;
+using CmdComponentSymbolVariantsSwap = CmdListElementsSwap<
+    ComponentSymbolVariant,
+    ComponentSymbolVariantListNameProvider,
+    ComponentSymbolVariant::Event>;
 
 /*******************************************************************************
  *  End of File

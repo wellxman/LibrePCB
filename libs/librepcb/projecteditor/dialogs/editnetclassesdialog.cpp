@@ -46,9 +46,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-EditNetClassesDialog::EditNetClassesDialog(Circuit&   circuit,
-                                           UndoStack& undoStack,
-                                           QWidget*   parent)
+EditNetClassesDialog::EditNetClassesDialog(
+    Circuit& circuit,
+    UndoStack& undoStack,
+    QWidget* parent)
   : QDialog(parent),
     mCircuit(circuit),
     mUi(new Ui::EditNetClassesDialog),
@@ -66,10 +67,10 @@ EditNetClassesDialog::EditNetClassesDialog(Circuit&   circuit,
   foreach (NetClass* netclass, mCircuit.getNetClasses()) {
     QTableWidgetItem* uuid = new QTableWidgetItem(netclass->getUuid().toStr());
     QTableWidgetItem* name = new QTableWidgetItem(*netclass->getName());
-    uuid->setData(Qt::UserRole,
-                  qVariantFromValue(static_cast<void*>(netclass)));
-    name->setData(Qt::UserRole,
-                  qVariantFromValue(static_cast<void*>(netclass)));
+    uuid->setData(
+        Qt::UserRole, qVariantFromValue(static_cast<void*>(netclass)));
+    name->setData(
+        Qt::UserRole, qVariantFromValue(static_cast<void*>(netclass)));
     mUi->tableWidget->setVerticalHeaderItem(row, uuid);
     mUi->tableWidget->setItem(row, 0, name);
     row++;
@@ -118,8 +119,8 @@ void EditNetClassesDialog::on_tableWidget_itemChanged(QTableWidgetItem* item) {
         cmd->setName(ElementName(item->text().trimmed()));  // can throw
         mUndoStack.appendToCmdGroup(cmd);
       } catch (Exception& e) {
-        QMessageBox::critical(this, tr("Could not change netclass name"),
-                              e.getMsg());
+        QMessageBox::critical(
+            this, tr("Could not change netclass name"), e.getMsg());
       }
       item->setText(*netclass->getName());
       break;

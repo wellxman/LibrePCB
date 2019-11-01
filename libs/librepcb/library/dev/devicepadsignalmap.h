@@ -50,14 +50,15 @@ public:
     PadUuidChanged,
     SignalUuidChanged,
   };
-  Signal<DevicePadSignalMapItem, Event>       onEdited;
+  Signal<DevicePadSignalMapItem, Event> onEdited;
   typedef Slot<DevicePadSignalMapItem, Event> OnEditedSlot;
 
   // Constructors / Destructor
   DevicePadSignalMapItem() = delete;
   DevicePadSignalMapItem(const DevicePadSignalMapItem& other) noexcept;
-  DevicePadSignalMapItem(const Uuid&               pad,
-                         const tl::optional<Uuid>& signal) noexcept;
+  DevicePadSignalMapItem(
+      const Uuid& pad,
+      const tl::optional<Uuid>& signal) noexcept;
   explicit DevicePadSignalMapItem(const SExpression& node);
   ~DevicePadSignalMapItem() noexcept;
 
@@ -65,7 +66,7 @@ public:
   const Uuid& getUuid() const noexcept {
     return mPadUuid;
   }  // used for UuidObjectMap
-  const Uuid&               getPadUuid() const noexcept { return mPadUuid; }
+  const Uuid& getPadUuid() const noexcept { return mPadUuid; }
   const tl::optional<Uuid>& getSignalUuid() const noexcept {
     return mSignalUuid;
   }
@@ -83,8 +84,8 @@ public:
   }
   DevicePadSignalMapItem& operator=(const DevicePadSignalMapItem& rhs) noexcept;
 
-private:                           // Data
-  Uuid               mPadUuid;     ///< must be valid
+private:  // Data
+  Uuid mPadUuid;  ///< must be valid
   tl::optional<Uuid> mSignalUuid;  ///< tl::nullopt if not connected to a signal
 };
 
@@ -95,19 +96,22 @@ private:                           // Data
 struct DevicePadSignalMapNameProvider {
   static constexpr const char* tagname = "pad";
 };
-using DevicePadSignalMap =
-    SerializableObjectList<DevicePadSignalMapItem,
-                           DevicePadSignalMapNameProvider,
-                           DevicePadSignalMapItem::Event>;
-using CmdDevicePadSignalMapItemInsert =
-    CmdListElementInsert<DevicePadSignalMapItem, DevicePadSignalMapNameProvider,
-                         DevicePadSignalMapItem::Event>;
-using CmdDevicePadSignalMapItemRemove =
-    CmdListElementRemove<DevicePadSignalMapItem, DevicePadSignalMapNameProvider,
-                         DevicePadSignalMapItem::Event>;
-using CmdDevicePadSignalMapItemsSwap =
-    CmdListElementsSwap<DevicePadSignalMapItem, DevicePadSignalMapNameProvider,
-                        DevicePadSignalMapItem::Event>;
+using DevicePadSignalMap = SerializableObjectList<
+    DevicePadSignalMapItem,
+    DevicePadSignalMapNameProvider,
+    DevicePadSignalMapItem::Event>;
+using CmdDevicePadSignalMapItemInsert = CmdListElementInsert<
+    DevicePadSignalMapItem,
+    DevicePadSignalMapNameProvider,
+    DevicePadSignalMapItem::Event>;
+using CmdDevicePadSignalMapItemRemove = CmdListElementRemove<
+    DevicePadSignalMapItem,
+    DevicePadSignalMapNameProvider,
+    DevicePadSignalMapItem::Event>;
+using CmdDevicePadSignalMapItemsSwap = CmdListElementsSwap<
+    DevicePadSignalMapItem,
+    DevicePadSignalMapNameProvider,
+    DevicePadSignalMapItem::Event>;
 
 /*******************************************************************************
  *  Class DevicePadSignalMapHelpers
@@ -117,8 +121,9 @@ class DevicePadSignalMapHelpers {
 public:
   DevicePadSignalMapHelpers() = delete;  // disable instantiation
 
-  static tl::optional<Uuid> tryGetSignalUuid(const DevicePadSignalMap& map,
-                                             const Uuid& pad) noexcept {
+  static tl::optional<Uuid> tryGetSignalUuid(
+      const DevicePadSignalMap& map,
+      const Uuid& pad) noexcept {
     std::shared_ptr<const DevicePadSignalMapItem> item = map.find(pad);
     return item ? item->getSignalUuid() : tl::nullopt;
   }

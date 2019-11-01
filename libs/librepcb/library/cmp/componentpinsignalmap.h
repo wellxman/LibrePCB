@@ -62,14 +62,16 @@ public:
     SignalUuidChanged,
     DisplayTypeChanged,
   };
-  Signal<ComponentPinSignalMapItem, Event>       onEdited;
+  Signal<ComponentPinSignalMapItem, Event> onEdited;
   typedef Slot<ComponentPinSignalMapItem, Event> OnEditedSlot;
 
   // Constructors / Destructor
   ComponentPinSignalMapItem() = delete;
   ComponentPinSignalMapItem(const ComponentPinSignalMapItem& other) noexcept;
-  ComponentPinSignalMapItem(const Uuid& pin, const tl::optional<Uuid>& signal,
-                            const CmpSigPinDisplayType& displayType) noexcept;
+  ComponentPinSignalMapItem(
+      const Uuid& pin,
+      const tl::optional<Uuid>& signal,
+      const CmpSigPinDisplayType& displayType) noexcept;
   explicit ComponentPinSignalMapItem(const SExpression& node);
   ~ComponentPinSignalMapItem() noexcept;
 
@@ -77,7 +79,7 @@ public:
   const Uuid& getUuid() const noexcept {
     return mPinUuid;
   }  // used for UuidObjectMap
-  const Uuid&               getPinUuid() const noexcept { return mPinUuid; }
+  const Uuid& getPinUuid() const noexcept { return mPinUuid; }
   const tl::optional<Uuid>& getSignalUuid() const noexcept {
     return mSignalUuid;
   }
@@ -100,8 +102,8 @@ public:
   ComponentPinSignalMapItem& operator=(
       const ComponentPinSignalMapItem& rhs) noexcept;
 
-private:                           // Data
-  Uuid               mPinUuid;     ///< must be valid
+private:  // Data
+  Uuid mPinUuid;  ///< must be valid
   tl::optional<Uuid> mSignalUuid;  ///< tl::nullopt if not connected to a signal
   CmpSigPinDisplayType mDisplayType;
 };
@@ -113,22 +115,22 @@ private:                           // Data
 struct ComponentPinSignalMapNameProvider {
   static constexpr const char* tagname = "pin";
 };
-using ComponentPinSignalMap =
-    SerializableObjectList<ComponentPinSignalMapItem,
-                           ComponentPinSignalMapNameProvider,
-                           ComponentPinSignalMapItem::Event>;
-using CmdComponentPinSignalMapItemInsert =
-    CmdListElementInsert<ComponentPinSignalMapItem,
-                         ComponentPinSignalMapNameProvider,
-                         ComponentPinSignalMapItem::Event>;
-using CmdComponentPinSignalMapItemRemove =
-    CmdListElementRemove<ComponentPinSignalMapItem,
-                         ComponentPinSignalMapNameProvider,
-                         ComponentPinSignalMapItem::Event>;
-using CmdComponentPinSignalMapItemsSwap =
-    CmdListElementsSwap<ComponentPinSignalMapItem,
-                        ComponentPinSignalMapNameProvider,
-                        ComponentPinSignalMapItem::Event>;
+using ComponentPinSignalMap = SerializableObjectList<
+    ComponentPinSignalMapItem,
+    ComponentPinSignalMapNameProvider,
+    ComponentPinSignalMapItem::Event>;
+using CmdComponentPinSignalMapItemInsert = CmdListElementInsert<
+    ComponentPinSignalMapItem,
+    ComponentPinSignalMapNameProvider,
+    ComponentPinSignalMapItem::Event>;
+using CmdComponentPinSignalMapItemRemove = CmdListElementRemove<
+    ComponentPinSignalMapItem,
+    ComponentPinSignalMapNameProvider,
+    ComponentPinSignalMapItem::Event>;
+using CmdComponentPinSignalMapItemsSwap = CmdListElementsSwap<
+    ComponentPinSignalMapItem,
+    ComponentPinSignalMapNameProvider,
+    ComponentPinSignalMapItem::Event>;
 
 /*******************************************************************************
  *  Class ComponentPinSignalMapHelpers
@@ -139,13 +141,13 @@ public:
   ComponentPinSignalMapHelpers() = delete;  // disable instantiation
 
   static ComponentPinSignalMap create(
-      const QSet<Uuid>            pins,
+      const QSet<Uuid> pins,
       const CmpSigPinDisplayType& display =
           CmpSigPinDisplayType::componentSignal()) noexcept {
     ComponentPinSignalMap map;
     foreach (const Uuid& pin, pins) {
-      map.append(std::make_shared<ComponentPinSignalMapItem>(pin, tl::nullopt,
-                                                             display));
+      map.append(std::make_shared<ComponentPinSignalMapItem>(
+          pin, tl::nullopt, display));
     }
     return map;
   }

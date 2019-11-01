@@ -50,7 +50,8 @@ PackagePadComboBox::PackagePadComboBox(QWidget* parent) noexcept
   connect(
       mComboBox,
       static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-      this, &PackagePadComboBox::currentIndexChanged);
+      this,
+      &PackagePadComboBox::currentIndexChanged);
 }
 
 PackagePadComboBox::~PackagePadComboBox() noexcept {
@@ -75,9 +76,10 @@ PackagePad* PackagePadComboBox::getCurrentPad() const noexcept {
  *  Setters
  ******************************************************************************/
 
-void PackagePadComboBox::setPackage(Package*   package,
-                                    Footprint* footprint) noexcept {
-  mPackage   = package;
+void PackagePadComboBox::setPackage(
+    Package* package,
+    Footprint* footprint) noexcept {
+  mPackage = package;
   mFootprint = footprint;
   updatePads();
 }

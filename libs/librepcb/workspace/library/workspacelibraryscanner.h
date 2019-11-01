@@ -83,44 +83,62 @@ signals:
   void scanFinished();
 
 private:  // Methods
-  void                run() noexcept override;
-  void                scan() noexcept;
+  void run() noexcept override;
+  void scan() noexcept;
   QHash<QString, int> updateLibraries(
-      SQLiteDatabase&                                          db,
+      SQLiteDatabase& db,
       const QHash<QString, std::shared_ptr<library::Library>>& libs);
   void clearAllTables(SQLiteDatabase& db);
   void getLibrariesOfDirectory(
-      std::shared_ptr<TransactionalFileSystem> fs, const QString& root,
+      std::shared_ptr<TransactionalFileSystem> fs,
+      const QString& root,
       QHash<QString, std::shared_ptr<library::Library>>& libs) noexcept;
   template <typename ElementType>
-  int addCategoriesToDb(SQLiteDatabase&                          db,
-                        std::shared_ptr<TransactionalFileSystem> fs,
-                        const QString& libPath, const QStringList& dirs,
-                        const QString& table, const QString& idColumn,
-                        int libId);
+  int addCategoriesToDb(
+      SQLiteDatabase& db,
+      std::shared_ptr<TransactionalFileSystem> fs,
+      const QString& libPath,
+      const QStringList& dirs,
+      const QString& table,
+      const QString& idColumn,
+      int libId);
   template <typename ElementType>
-  int addElementsToDb(SQLiteDatabase&                          db,
-                      std::shared_ptr<TransactionalFileSystem> fs,
-                      const QString& libPath, const QStringList& dirs,
-                      const QString& table, const QString& idColumn, int libId);
+  int addElementsToDb(
+      SQLiteDatabase& db,
+      std::shared_ptr<TransactionalFileSystem> fs,
+      const QString& libPath,
+      const QStringList& dirs,
+      const QString& table,
+      const QString& idColumn,
+      int libId);
   template <typename ElementType>
-  void addElementToDb(SQLiteDatabase& db, const QString& table,
-                      const QString& idColumn, int libId, const QString& path,
-                      const ElementType& element);
+  void addElementToDb(
+      SQLiteDatabase& db,
+      const QString& table,
+      const QString& idColumn,
+      int libId,
+      const QString& path,
+      const ElementType& element);
   template <typename ElementType>
-  void addElementTranslationsToDb(SQLiteDatabase& db, const QString& table,
-                                  const QString& idColumn, int id,
-                                  const ElementType& element);
-  void addElementCategoriesToDb(SQLiteDatabase& db, const QString& table,
-                                const QString& idColumn, int id,
-                                const QSet<Uuid>& categories);
+  void addElementTranslationsToDb(
+      SQLiteDatabase& db,
+      const QString& table,
+      const QString& idColumn,
+      int id,
+      const ElementType& element);
+  void addElementCategoriesToDb(
+      SQLiteDatabase& db,
+      const QString& table,
+      const QString& idColumn,
+      int id,
+      const QSet<Uuid>& categories);
   template <typename T>
   static QVariant optionalToVariant(const T& opt) noexcept;
 
 private:  // Data
-  Workspace&    mWorkspace;
-  FilePath      mDbFilePath;
-  QSemaphore    mSemaphore;
+  Workspace& mWorkspace;
+  FilePath mDbFilePath;
+  QSemaphore mSemaphore;
   volatile bool mAbort;
 };
 

@@ -71,9 +71,10 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-Board::Board(const Board&                            other,
-             std::unique_ptr<TransactionalDirectory> directory,
-             const ElementName&                      name)
+Board::Board(
+    const Board& other,
+    std::unique_ptr<TransactionalDirectory> directory,
+    const ElementName& name)
   : QObject(&other.getProject()),
     mProject(other.getProject()),
     mDirectory(std::move(directory)),
@@ -148,13 +149,22 @@ Board::Board(const Board&                            other,
     updateIcon();
 
     // emit the "attributesChanged" signal when the project has emited it
-    connect(&mProject, &Project::attributesChanged, this,
-            &Board::attributesChanged);
+    connect(
+        &mProject,
+        &Project::attributesChanged,
+        this,
+        &Board::attributesChanged);
 
-    connect(&mProject.getCircuit(), &Circuit::componentAdded, this,
-            &Board::updateErcMessages);
-    connect(&mProject.getCircuit(), &Circuit::componentRemoved, this,
-            &Board::updateErcMessages);
+    connect(
+        &mProject.getCircuit(),
+        &Circuit::componentAdded,
+        this,
+        &Board::updateErcMessages);
+    connect(
+        &mProject.getCircuit(),
+        &Circuit::componentRemoved,
+        this,
+        &Board::updateErcMessages);
   } catch (...) {
     // free the allocated memory in the reverse order of their allocation...
     qDeleteAll(mErcMsgListUnplacedComponentInstances);
@@ -183,9 +193,11 @@ Board::Board(const Board&                            other,
   }
 }
 
-Board::Board(Project&                                project,
-             std::unique_ptr<TransactionalDirectory> directory, bool create,
-             const QString& newName)
+Board::Board(
+    Project& project,
+    std::unique_ptr<TransactionalDirectory> directory,
+    bool create,
+    const QString& newName)
   : QObject(&project),
     mProject(project),
     mDirectory(std::move(directory)),
@@ -198,7 +210,7 @@ Board::Board(Project&                                project,
     // try to open/create the board file
     if (create) {
       // set attributes
-      mName                = ElementName(newName);  // can throw
+      mName = ElementName(newName);  // can throw
       mDefaultFontFileName = qApp->getDefaultStrokeFontName();
 
       // load default layer stack
@@ -206,9 +218,10 @@ Board::Board(Project&                                project,
 
       // load default grid properties (smaller grid than in schematics to avoid
       // grid snap issues)
-      mGridProperties.reset(new GridProperties(GridProperties::Type_t::Lines,
-                                               PositiveLength(635000),
-                                               LengthUnit::millimeters()));
+      mGridProperties.reset(new GridProperties(
+          GridProperties::Type_t::Lines,
+          PositiveLength(635000),
+          LengthUnit::millimeters()));
 
       // load default design rules
       mDesignRules.reset(new BoardDesignRules());
@@ -220,10 +233,13 @@ Board::Board(Project&                                project,
       mUserSettings.reset(new BoardUserSettings(*this));
 
       // add 100x80mm board outline (1/2 Eurocard size)
-      Polygon polygon(Uuid::createRandom(),
-                      GraphicsLayerName(GraphicsLayer::sBoardOutlines),
-                      UnsignedLength(0), false, false,
-                      Path::rect(Point(0, 0), Point(100000000, 80000000)));
+      Polygon polygon(
+          Uuid::createRandom(),
+          GraphicsLayerName(GraphicsLayer::sBoardOutlines),
+          UnsignedLength(0),
+          false,
+          false,
+          Path::rect(Point(0, 0), Point(100000000, 80000000)));
       mPolygons.append(new BI_Polygon(*this, polygon));
     } else {
       SExpression root = SExpression::parse(
@@ -257,10 +273,10 @@ Board::Board(Project&                                project,
 
       // load user settings
       try {
-        QString     userSettingsFp = "settings.user.lp";
-        SExpression userSettingsRoot =
-            SExpression::parse(mDirectory->read(userSettingsFp),
-                               mDirectory->getAbsPath(userSettingsFp));
+        QString userSettingsFp = "settings.user.lp";
+        SExpression userSettingsRoot = SExpression::parse(
+            mDirectory->read(userSettingsFp),
+            mDirectory->getAbsPath(userSettingsFp));
         mUserSettings.reset(new BoardUserSettings(*this, userSettingsRoot));
       } catch (const Exception&) {
         // Project user settings are normally not put under version control and
@@ -278,7 +294,8 @@ Board::Board(Project&                                project,
         if (getDeviceInstanceByComponentUuid(
                 device->getComponentInstanceUuid())) {
           throw RuntimeError(
-              __FILE__, __LINE__,
+              __FILE__,
+              __LINE__,
               QString(tr("There is already a device of the component instance "
                          "\"%1\"!"))
                   .arg(device->getComponentInstanceUuid().toStr()));
@@ -291,7 +308,8 @@ Board::Board(Project&                                project,
         BI_NetSegment* netsegment = new BI_NetSegment(*this, node);
         if (getNetSegmentByUuid(netsegment->getUuid())) {
           throw RuntimeError(
-              __FILE__, __LINE__,
+              __FILE__,
+              __LINE__,
               QString(tr("There is already a netsegment with the UUID \"%1\"!"))
                   .arg(netsegment->getUuid().toStr()));
         }
@@ -328,13 +346,22 @@ Board::Board(Project&                                project,
     updateIcon();
 
     // emit the "attributesChanged" signal when the project has emited it
-    connect(&mProject, &Project::attributesChanged, this,
-            &Board::attributesChanged);
+    connect(
+        &mProject,
+        &Project::attributesChanged,
+        this,
+        &Board::attributesChanged);
 
-    connect(&mProject.getCircuit(), &Circuit::componentAdded, this,
-            &Board::updateErcMessages);
-    connect(&mProject.getCircuit(), &Circuit::componentRemoved, this,
-            &Board::updateErcMessages);
+    connect(
+        &mProject.getCircuit(),
+        &Circuit::componentAdded,
+        this,
+        &Board::updateErcMessages);
+    connect(
+        &mProject.getCircuit(),
+        &Circuit::componentRemoved,
+        this,
+        &Board::updateErcMessages);
   } catch (...) {
     // free the allocated memory in the reverse order of their allocation...
     qDeleteAll(mErcMsgListUnplacedComponentInstances);
@@ -402,9 +429,10 @@ FilePath Board::getFilePath() const noexcept {
 }
 
 bool Board::isEmpty() const noexcept {
-  return (mDeviceInstances.isEmpty() && mNetSegments.isEmpty() &&
-          mPlanes.isEmpty() && mPolygons.isEmpty() && mStrokeTexts.isEmpty() &&
-          mHoles.isEmpty());
+  return (
+      mDeviceInstances.isEmpty() && mNetSegments.isEmpty() &&
+      mPlanes.isEmpty() && mPolygons.isEmpty() && mStrokeTexts.isEmpty() &&
+      mHoles.isEmpty());
 }
 
 QList<BI_Base*> Board::getItemsAtScenePos(const Point& pos) const noexcept {
@@ -415,8 +443,8 @@ QList<BI_Base*> Board::getItemsAtScenePos(const Point& pos) const noexcept {
   // vias
   foreach (BI_Via* via, getViasAtScenePos(pos, nullptr)) { list.append(via); }
   // netpoints
-  foreach (BI_NetPoint* netpoint,
-           getNetPointsAtScenePos(pos, nullptr, nullptr)) {
+  foreach (
+      BI_NetPoint* netpoint, getNetPointsAtScenePos(pos, nullptr, nullptr)) {
     list.append(netpoint);
   }
   // netlines
@@ -486,9 +514,9 @@ QList<BI_Base*> Board::getItemsAtScenePos(const Point& pos) const noexcept {
   return list;
 }
 
-QList<BI_Via*> Board::getViasAtScenePos(const Point&     pos,
-                                        const NetSignal* netsignal) const
-    noexcept {
+QList<BI_Via*> Board::getViasAtScenePos(
+    const Point& pos,
+    const NetSignal* netsignal) const noexcept {
   QList<BI_Via*> list;
   foreach (BI_NetSegment* segment, mNetSegments) {
     if ((!netsignal) || (&segment->getNetSignal() == netsignal)) {
@@ -499,7 +527,8 @@ QList<BI_Via*> Board::getViasAtScenePos(const Point&     pos,
 }
 
 QList<BI_NetPoint*> Board::getNetPointsAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
+    const Point& pos,
+    const GraphicsLayer* layer,
     const NetSignal* netsignal) const noexcept {
   QList<BI_NetPoint*> list;
   foreach (BI_NetSegment* segment, mNetSegments) {
@@ -511,7 +540,8 @@ QList<BI_NetPoint*> Board::getNetPointsAtScenePos(
 }
 
 QList<BI_NetLine*> Board::getNetLinesAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
+    const Point& pos,
+    const GraphicsLayer* layer,
     const NetSignal* netsignal) const noexcept {
   QList<BI_NetLine*> list;
   foreach (BI_NetSegment* segment, mNetSegments) {
@@ -523,7 +553,8 @@ QList<BI_NetLine*> Board::getNetLinesAtScenePos(
 }
 
 QList<BI_FootprintPad*> Board::getPadsAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
+    const Point& pos,
+    const GraphicsLayer* layer,
     const NetSignal* netsignal) const noexcept {
   QList<BI_FootprintPad*> list;
   foreach (BI_Device* device, mDeviceInstances) {
@@ -583,7 +614,8 @@ void Board::addDeviceInstance(BI_Device& instance) {
   if (getDeviceInstanceByComponentUuid(
           instance.getComponentInstance().getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(
             tr("There is already a device with the component instance \"%1\"!"))
             .arg(instance.getComponentInstance().getUuid().toStr()));
@@ -626,7 +658,8 @@ void Board::addNetSegment(BI_NetSegment& netsegment) {
   // check if there is no netsegment with the same uuid in the list
   if (getNetSegmentByUuid(netsegment.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a netsegment with the UUID \"%1\"!"))
             .arg(netsegment.getUuid().toStr()));
   }
@@ -667,10 +700,10 @@ void Board::removePlane(BI_Plane& plane) {
 
 void Board::rebuildAllPlanes() noexcept {
   QList<BI_Plane*> planes = mPlanes;
-  std::sort(planes.begin(), planes.end(),
-            [](const BI_Plane* p1, const BI_Plane* p2) {
-              return !(*p1 < *p2);
-            });  // sort by priority (highest priority first)
+  std::sort(
+      planes.begin(), planes.end(), [](const BI_Plane* p1, const BI_Plane* p2) {
+        return !(*p1 < *p2);
+      });  // sort by priority (highest priority first)
   foreach (BI_Plane* plane, planes) { plane->rebuild(); }
 }
 
@@ -756,7 +789,7 @@ void Board::triggerAirWiresRebuild() noexcept {
 
       if (netsignal && netsignal->isAddedToCircuit()) {
         // calculate new airwires
-        BoardAirWiresBuilder         builder(*this, *netsignal);
+        BoardAirWiresBuilder builder(*this, *netsignal);
         QVector<QPair<Point, Point>> airwires = builder.buildAirWires();
 
         // add new airwires
@@ -791,7 +824,7 @@ void Board::addToProject() {
     throw LogicError(__FILE__, __LINE__);
   }
   QList<BI_Base*> items = getAllItems();
-  ScopeGuardList  sgl(items.count());
+  ScopeGuardList sgl(items.count());
   for (int i = 0; i < items.count(); ++i) {
     BI_Base* item = items.at(i);
     item->addToBoard();  // can throw
@@ -808,7 +841,7 @@ void Board::removeFromProject() {
     throw LogicError(__FILE__, __LINE__);
   }
   QList<BI_Base*> items = getAllItems();
-  ScopeGuardList  sgl(items.count());
+  ScopeGuardList sgl(items.count());
   for (int i = items.count() - 1; i >= 0; --i) {
     BI_Base* item = items.at(i);
     item->removeFromBoard();  // can throw
@@ -823,12 +856,13 @@ void Board::save() {
   if (mIsAddedToProject) {
     // save board file
     SExpression brdDoc(serializeToDomElement("librepcb_board"));  // can throw
-    mDirectory->write(getFilePath().getFilename(),
-                      brdDoc.toByteArray());  // can throw
+    mDirectory->write(
+        getFilePath().getFilename(),
+        brdDoc.toByteArray());  // can throw
 
     // save user settings
     SExpression usrDoc(mUserSettings->serializeToDomElement(
-        "librepcb_board_user_settings"));                         // can throw
+        "librepcb_board_user_settings"));  // can throw
     mDirectory->write("settings.user.lp", usrDoc.toByteArray());  // can throw
   } else {
     mDirectory->removeDirRecursively();  // can throw
@@ -839,15 +873,17 @@ void Board::showInView(GraphicsView& view) noexcept {
   view.setScene(mGraphicsScene.data());
 }
 
-void Board::setSelectionRect(const Point& p1, const Point& p2,
-                             bool updateItems) noexcept {
+void Board::setSelectionRect(
+    const Point& p1,
+    const Point& p2,
+    bool updateItems) noexcept {
   mGraphicsScene->setSelectionRect(p1, p2);
   if (updateItems) {
     QRectF rectPx = QRectF(p1.toPxQPointF(), p2.toPxQPointF()).normalized();
     foreach (BI_Device* component, mDeviceInstances) {
-      BI_Footprint& footprint       = component->getFootprint();
-      bool          selectFootprint = footprint.isSelectable() &&
-                             footprint.getGrabAreaScenePx().intersects(rectPx);
+      BI_Footprint& footprint = component->getFootprint();
+      bool selectFootprint = footprint.isSelectable() &&
+          footprint.getGrabAreaScenePx().intersects(rectPx);
       footprint.setSelected(selectFootprint);
       foreach (BI_FootprintPad* pad, footprint.getPads()) {
         bool selectPad =
@@ -856,7 +892,7 @@ void Board::setSelectionRect(const Point& p1, const Point& p2,
       }
       foreach (BI_StrokeText* text, footprint.getStrokeTexts()) {
         bool selectText = text->isSelectable() &&
-                          text->getGrabAreaScenePx().intersects(rectPx);
+            text->getGrabAreaScenePx().intersects(rectPx);
         text->setSelected(selectFootprint || selectText);
       }
     }
@@ -865,12 +901,12 @@ void Board::setSelectionRect(const Point& p1, const Point& p2,
     }
     foreach (BI_Plane* plane, mPlanes) {
       bool select = plane->isSelectable() &&
-                    plane->getGrabAreaScenePx().intersects(rectPx);
+          plane->getGrabAreaScenePx().intersects(rectPx);
       plane->setSelected(select);
     }
     foreach (BI_Polygon* polygon, mPolygons) {
       bool select = polygon->isSelectable() &&
-                    polygon->getGrabAreaScenePx().intersects(rectPx);
+          polygon->getGrabAreaScenePx().intersects(rectPx);
       polygon->setSelected(select);
     }
     foreach (BI_StrokeText* text, mStrokeTexts) {
@@ -899,7 +935,12 @@ void Board::clearSelection() const noexcept {
 std::unique_ptr<BoardSelectionQuery> Board::createSelectionQuery() const
     noexcept {
   return std::unique_ptr<BoardSelectionQuery>(new BoardSelectionQuery(
-      mDeviceInstances, mNetSegments, mPlanes, mPolygons, mStrokeTexts, mHoles,
+      mDeviceInstances,
+      mNetSegments,
+      mPlanes,
+      mPolygons,
+      mStrokeTexts,
+      mHoles,
       const_cast<Board*>(this)));
 }
 
@@ -935,9 +976,10 @@ void Board::serialize(SExpression& root) const {
   root.appendChild(mGridProperties->serializeToDomElement("grid"), true);
   root.appendChild(mLayerStack->serializeToDomElement("layers"), true);
   root.appendChild(mDesignRules->serializeToDomElement("design_rules"), true);
-  root.appendChild(mFabricationOutputSettings->serializeToDomElement(
-                       "fabrication_output_settings"),
-                   true);
+  root.appendChild(
+      mFabricationOutputSettings->serializeToDomElement(
+          "fabrication_output_settings"),
+      true);
   root.appendLineBreak();
   serializePointerContainer(root, mDeviceInstances, "device");
   root.appendLineBreak();
@@ -961,18 +1003,20 @@ void Board::updateErcMessages() noexcept {
     foreach (const ComponentInstance* component, componentInstances) {
       if (component->getLibComponent().isSchematicOnly()) continue;
       BI_Device* device = mDeviceInstances.value(component->getUuid());
-      ErcMsg*    ercMsg =
+      ErcMsg* ercMsg =
           mErcMsgListUnplacedComponentInstances.value(component->getUuid());
       if ((!device) && (!ercMsg)) {
         ErcMsg* ercMsg = new ErcMsg(
-            mProject, *this,
+            mProject,
+            *this,
             QString("%1/%2").arg(mUuid.toStr(), component->getUuid().toStr()),
-            "UnplacedComponent", ErcMsg::ErcMsgType_t::BoardError,
+            "UnplacedComponent",
+            ErcMsg::ErcMsgType_t::BoardError,
             QString("Unplaced Component: %1 (Board: %2)")
                 .arg(*component->getName(), *mName));
         ercMsg->setVisible(true);
-        mErcMsgListUnplacedComponentInstances.insert(component->getUuid(),
-                                                     ercMsg);
+        mErcMsgListUnplacedComponentInstances.insert(
+            component->getUuid(), ercMsg);
       } else if ((device) && (ercMsg)) {
         delete mErcMsgListUnplacedComponentInstances.take(component->getUuid());
       }
@@ -991,9 +1035,10 @@ void Board::updateErcMessages() noexcept {
  *  Static Methods
  ******************************************************************************/
 
-Board* Board::create(Project&                                project,
-                     std::unique_ptr<TransactionalDirectory> directory,
-                     const ElementName&                      name) {
+Board* Board::create(
+    Project& project,
+    std::unique_ptr<TransactionalDirectory> directory,
+    const ElementName& name) {
   return new Board(project, std::move(directory), true, *name);
 }
 

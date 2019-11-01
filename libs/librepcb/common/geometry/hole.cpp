@@ -44,8 +44,10 @@ Hole::Hole(const Uuid& uuid, const Hole& other) noexcept : Hole(other) {
   mUuid = uuid;
 }
 
-Hole::Hole(const Uuid& uuid, const Point& position,
-           const PositiveLength& diameter) noexcept
+Hole::Hole(
+    const Uuid& uuid,
+    const Point& position,
+    const PositiveLength& diameter) noexcept
   : onEdited(*this), mUuid(uuid), mPosition(position), mDiameter(diameter) {
 }
 

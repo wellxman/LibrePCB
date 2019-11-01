@@ -37,9 +37,10 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-TextGraphicsItem::TextGraphicsItem(Text&                           text,
-                                   const IF_GraphicsLayerProvider& lp,
-                                   QGraphicsItem* parent) noexcept
+TextGraphicsItem::TextGraphicsItem(
+    Text& text,
+    const IF_GraphicsLayerProvider& lp,
+    QGraphicsItem* parent) noexcept
   : PrimitiveTextGraphicsItem(parent),
     mText(text),
     mLayerProvider(lp),
@@ -71,8 +72,9 @@ TextGraphicsItem::~TextGraphicsItem() noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void TextGraphicsItem::textEdited(const Text& text,
-                                  Text::Event event) noexcept {
+void TextGraphicsItem::textEdited(
+    const Text& text,
+    Text::Event event) noexcept {
   switch (event) {
     case Text::Event::LayerNameChanged:
       setLayer(mLayerProvider.getLayer(*text.getLayerName()));

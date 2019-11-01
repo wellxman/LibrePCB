@@ -61,15 +61,17 @@ CmdSymbolPinEdit::~CmdSymbolPinEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdSymbolPinEdit::setName(const CircuitIdentifier& name,
-                               bool                     immediate) noexcept {
+void CmdSymbolPinEdit::setName(
+    const CircuitIdentifier& name,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewName = name;
   if (immediate) mPin.setName(mNewName);
 }
 
-void CmdSymbolPinEdit::setLength(const UnsignedLength& length,
-                                 bool                  immediate) noexcept {
+void CmdSymbolPinEdit::setLength(
+    const UnsignedLength& length,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLength = length;
   if (immediate) mPin.setLength(mNewLength);
@@ -81,22 +83,26 @@ void CmdSymbolPinEdit::setPosition(const Point& pos, bool immediate) noexcept {
   if (immediate) mPin.setPosition(mNewPos);
 }
 
-void CmdSymbolPinEdit::translate(const Point& deltaPos,
-                                 bool         immediate) noexcept {
+void CmdSymbolPinEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos += deltaPos;
   if (immediate) mPin.setPosition(mNewPos);
 }
 
-void CmdSymbolPinEdit::setRotation(const Angle& angle,
-                                   bool         immediate) noexcept {
+void CmdSymbolPinEdit::setRotation(
+    const Angle& angle,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewRotation = angle;
   if (immediate) mPin.setRotation(mNewRotation);
 }
 
-void CmdSymbolPinEdit::rotate(const Angle& angle, const Point& center,
-                              bool immediate) noexcept {
+void CmdSymbolPinEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos.rotate(angle, center);
   mNewRotation += angle;

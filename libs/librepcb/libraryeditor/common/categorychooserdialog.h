@@ -56,10 +56,11 @@ template <typename ElementType>
 class CategoryChooserDialog final : public QDialog {
 public:
   // Constructors / Destructor
-  CategoryChooserDialog()                                   = delete;
+  CategoryChooserDialog() = delete;
   CategoryChooserDialog(const CategoryChooserDialog& other) = delete;
-  explicit CategoryChooserDialog(const workspace::Workspace& ws,
-                                 QWidget* parent = 0) noexcept;
+  explicit CategoryChooserDialog(
+      const workspace::Workspace& ws,
+      QWidget* parent = 0) noexcept;
   ~CategoryChooserDialog() noexcept;
 
   // Getters
@@ -69,7 +70,7 @@ public:
   CategoryChooserDialog& operator=(const CategoryChooserDialog& rhs) = delete;
 
 private:  // Data
-  QScopedPointer<Ui::CategoryChooserDialog>                 mUi;
+  QScopedPointer<Ui::CategoryChooserDialog> mUi;
   QScopedPointer<workspace::CategoryTreeModel<ElementType>> mModel;
 };
 

@@ -55,32 +55,35 @@ class BES_AddHole final : public BES_Base {
 
 public:
   // Constructors / Destructor
-  explicit BES_AddHole(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                       GraphicsView& editorGraphicsView, UndoStack& undoStack);
+  explicit BES_AddHole(
+      BoardEditor& editor,
+      Ui::BoardEditor& editorUi,
+      GraphicsView& editorGraphicsView,
+      UndoStack& undoStack);
   ~BES_AddHole();
 
   // General Methods
   ProcRetVal process(BEE_Base* event) noexcept override;
-  bool       entry(BEE_Base* event) noexcept override;
-  bool       exit(BEE_Base* event) noexcept override;
+  bool entry(BEE_Base* event) noexcept override;
+  bool exit(BEE_Base* event) noexcept override;
 
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
-  bool       addHole(Board& board, const Point& pos) noexcept;
-  void       updateHolePosition(const Point& pos) noexcept;
-  bool       fixHole(const Point& pos) noexcept;
-  void       diameterEditValueChanged(const PositiveLength& value) noexcept;
-  void       makeLayerVisible() noexcept;
+  bool addHole(Board& board, const Point& pos) noexcept;
+  void updateHolePosition(const Point& pos) noexcept;
+  bool fixHole(const Point& pos) noexcept;
+  void diameterEditValueChanged(const PositiveLength& value) noexcept;
+  void makeLayerVisible() noexcept;
 
   // State
-  bool                        mUndoCmdActive;
-  BI_Hole*                    mHole;
+  bool mUndoCmdActive;
+  BI_Hole* mHole;
   QScopedPointer<CmdHoleEdit> mEditCmd;
-  PositiveLength              mCurrentDiameter;
+  PositiveLength mCurrentDiameter;
 
   // Widgets for the command toolbar
-  QScopedPointer<QLabel>             mDiameterLabel;
+  QScopedPointer<QLabel> mDiameterLabel;
   QScopedPointer<PositiveLengthEdit> mDiameterEdit;
 };
 

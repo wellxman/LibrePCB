@@ -67,17 +67,22 @@ BI_FootprintPad::BI_FootprintPad(BI_Footprint& footprint, const Uuid& padUuid)
     mComponentSignalInstance =
         mFootprint.getDeviceInstance().getComponentInstance().getSignalInstance(
             *cmpSignalUuid);
-    connect(mComponentSignalInstance,
-            &ComponentSignalInstance::netSignalChanged, this,
-            &BI_FootprintPad::componentSignalInstanceNetSignalChanged);
+    connect(
+        mComponentSignalInstance,
+        &ComponentSignalInstance::netSignalChanged,
+        this,
+        &BI_FootprintPad::componentSignalInstanceNetSignalChanged);
   }
 
   mGraphicsItem.reset(new BGI_FootprintPad(*this));
   updatePosition();
 
   // connect to the "attributes changed" signal of the footprint
-  connect(&mFootprint, &BI_Footprint::attributesChanged, this,
-          &BI_FootprintPad::footprintAttributesChanged);
+  connect(
+      &mFootprint,
+      &BI_Footprint::attributesChanged,
+      this,
+      &BI_FootprintPad::footprintAttributesChanged);
 }
 
 BI_FootprintPad::~BI_FootprintPad() {
@@ -223,16 +228,18 @@ void BI_FootprintPad::footprintAttributesChanged() {
   mGraphicsItem->updateCacheAndRepaint();
 }
 
-void BI_FootprintPad::componentSignalInstanceNetSignalChanged(NetSignal* from,
-                                                              NetSignal* to) {
+void BI_FootprintPad::componentSignalInstanceNetSignalChanged(
+    NetSignal* from,
+    NetSignal* to) {
   Q_ASSERT(!isUsed());  // no netlines must be connected when netsignal changes!
   if (mHighlightChangedConnection) {
     disconnect(mHighlightChangedConnection);
   }
   if (to) {
     mHighlightChangedConnection =
-        connect(to, &NetSignal::highlightedChanged,
-                [this]() { mGraphicsItem->update(); });
+        connect(to, &NetSignal::highlightedChanged, [this]() {
+          mGraphicsItem->update();
+        });
   }
   mBoard.scheduleAirWiresRebuild(from);
   mBoard.scheduleAirWiresRebuild(to);

@@ -62,7 +62,7 @@ void OriginCrossGraphicsItem::setRotation(const Angle& rot) noexcept {
 }
 
 void OriginCrossGraphicsItem::setSize(const UnsignedLength& size) noexcept {
-  mSize          = size;
+  mSize = size;
   qreal lengthPx = size->toPx() / qreal(2);
   mLineH.setLine(-lengthPx, qreal(0), lengthPx, qreal(0));
   mLineV.setLine(qreal(0), -lengthPx, qreal(0), lengthPx);
@@ -88,9 +88,10 @@ void OriginCrossGraphicsItem::setLayer(const GraphicsLayer* layer) noexcept {
  *  Inherited from QGraphicsItem
  ******************************************************************************/
 
-void OriginCrossGraphicsItem::paint(QPainter*                       painter,
-                                    const QStyleOptionGraphicsItem* option,
-                                    QWidget* widget) noexcept {
+void OriginCrossGraphicsItem::paint(
+    QPainter* painter,
+    const QStyleOptionGraphicsItem* option,
+    QWidget* widget) noexcept {
   Q_UNUSED(widget);
   if (option->state.testFlag(QStyle::State_Selected)) {
     painter->setPen(mPenHighlighted);
@@ -105,8 +106,9 @@ void OriginCrossGraphicsItem::paint(QPainter*                       painter,
  *  Private Methods
  ******************************************************************************/
 
-void OriginCrossGraphicsItem::layerEdited(const GraphicsLayer& layer,
-                                          GraphicsLayer::Event event) noexcept {
+void OriginCrossGraphicsItem::layerEdited(
+    const GraphicsLayer& layer,
+    GraphicsLayer::Event event) noexcept {
   switch (event) {
     case GraphicsLayer::Event::ColorChanged:
       mPen.setColor(layer.getColor(false));
@@ -132,9 +134,9 @@ void OriginCrossGraphicsItem::layerEdited(const GraphicsLayer& layer,
 
 void OriginCrossGraphicsItem::updateBoundingRectAndShape() noexcept {
   prepareGeometryChange();
-  mBoundingRect = QRectF(-mSize->toPx() / 2, -mSize->toPx() / 2, mSize->toPx(),
-                         mSize->toPx());
-  mShape        = QPainterPath();
+  mBoundingRect = QRectF(
+      -mSize->toPx() / 2, -mSize->toPx() / 2, mSize->toPx(), mSize->toPx());
+  mShape = QPainterPath();
   mShape.addRect(mBoundingRect);
   update();
 }

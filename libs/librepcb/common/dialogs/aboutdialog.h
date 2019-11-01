@@ -50,7 +50,7 @@ class AboutDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  AboutDialog()                         = delete;
+  AboutDialog() = delete;
   AboutDialog(const AboutDialog& other) = delete;
   explicit AboutDialog(QWidget* parent = nullptr) noexcept;
   ~AboutDialog() noexcept;
@@ -60,8 +60,10 @@ public:
 
 private:  // Methods
   void formatLabelHeading(QLabel* label) noexcept;
-  void formatLabelText(QLabel* label, bool selectable,
-                       bool containsLinks) noexcept;
+  void formatLabelText(
+      QLabel* label,
+      bool selectable,
+      bool containsLinks) noexcept;
 
 private:  // Data
   QScopedPointer<Ui::AboutDialog> mUi;

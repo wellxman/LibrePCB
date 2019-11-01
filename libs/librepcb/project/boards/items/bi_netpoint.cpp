@@ -68,12 +68,15 @@ void BI_NetPoint::init() {
   mGraphicsItem->setPos(mPosition.toPxQPointF());
 
   // create ERC messages
-  mErcMsgDeadNetPoint.reset(
-      new ErcMsg(mBoard.getProject(), *this, mUuid.toStr(), "Dead",
-                 ErcMsg::ErcMsgType_t::BoardError,
-                 QString(tr("Dead net point in board page \"%1\": %2"))
-                     .arg(*mBoard.getName())
-                     .arg(mUuid.toStr())));
+  mErcMsgDeadNetPoint.reset(new ErcMsg(
+      mBoard.getProject(),
+      *this,
+      mUuid.toStr(),
+      "Dead",
+      ErcMsg::ErcMsgType_t::BoardError,
+      QString(tr("Dead net point in board page \"%1\": %2"))
+          .arg(*mBoard.getName())
+          .arg(mUuid.toStr())));
 }
 
 BI_NetPoint::~BI_NetPoint() noexcept {
@@ -115,9 +118,10 @@ void BI_NetPoint::addToBoard() {
   if (isAddedToBoard() || isUsed()) {
     throw LogicError(__FILE__, __LINE__);
   }
-  mHighlightChangedConnection =
-      connect(&getNetSignalOfNetSegment(), &NetSignal::highlightedChanged,
-              [this]() { mGraphicsItem->update(); });
+  mHighlightChangedConnection = connect(
+      &getNetSignalOfNetSegment(), &NetSignal::highlightedChanged, [this]() {
+        mGraphicsItem->update();
+      });
   mErcMsgDeadNetPoint->setVisible(true);
   BI_Base::addToBoard(mGraphicsItem.data());
   mBoard.scheduleAirWiresRebuild(&getNetSignalOfNetSegment());

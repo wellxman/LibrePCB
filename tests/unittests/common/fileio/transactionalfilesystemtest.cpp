@@ -140,7 +140,7 @@ TEST_F(TransactionalFileSystemTest, testWriteCreatesNewDirectoryAndFile) {
 }
 
 TEST_F(TransactionalFileSystemTest, testWriteIsDelayedUntilSave) {
-  FilePath                fp = mPopulatedDir.getPathTo("new dir/new file");
+  FilePath fp = mPopulatedDir.getPathTo("new dir/new file");
   TransactionalFileSystem fs(mPopulatedDir, true);
   ASSERT_FALSE(fs.fileExists(fp.toRelative(mPopulatedDir)));
   ASSERT_FALSE(fp.isExistingFile());
@@ -156,7 +156,7 @@ TEST_F(TransactionalFileSystemTest, testWriteIsDelayedUntilSave) {
 }
 
 TEST_F(TransactionalFileSystemTest, testRemoveExistingFile) {
-  FilePath                fp = mPopulatedDir.getPathTo("1/1a.txt");
+  FilePath fp = mPopulatedDir.getPathTo("1/1a.txt");
   TransactionalFileSystem fs(mPopulatedDir, true);
   ASSERT_TRUE(fs.fileExists(fp.toRelative(mPopulatedDir)));
   ASSERT_TRUE(fs.getFiles("1").contains("1a.txt"));
@@ -176,7 +176,7 @@ TEST_F(TransactionalFileSystemTest, testRemoveExistingFile) {
 }
 
 TEST_F(TransactionalFileSystemTest, testRemoveNewFile) {
-  FilePath                fp = mPopulatedDir.getPathTo("1/nonexisting.txt");
+  FilePath fp = mPopulatedDir.getPathTo("1/nonexisting.txt");
   TransactionalFileSystem fs(mPopulatedDir, true);
   ASSERT_FALSE(fs.fileExists(fp.toRelative(mPopulatedDir)));
   ASSERT_FALSE(fs.getFiles("1").contains("nonexisting.txt"));
@@ -202,8 +202,8 @@ TEST_F(TransactionalFileSystemTest, testRemoveNewFile) {
 }
 
 TEST_F(TransactionalFileSystemTest, testRemoveDirRecursively) {
-  FilePath                dp = mPopulatedDir.getPathTo(".dot");
-  FilePath                fp = mPopulatedDir.getPathTo(".dot/dir/foo.txt");
+  FilePath dp = mPopulatedDir.getPathTo(".dot");
+  FilePath fp = mPopulatedDir.getPathTo(".dot/dir/foo.txt");
   TransactionalFileSystem fs(mPopulatedDir, true);
   ASSERT_TRUE(fs.fileExists(fp.toRelative(mPopulatedDir)));
   ASSERT_TRUE(fs.getDirs().contains(".dot"));
@@ -232,9 +232,9 @@ TEST_F(TransactionalFileSystemTest, testRemoveDirRecursively) {
 }
 
 TEST_F(TransactionalFileSystemTest, testRemoveSubDirRecursively) {
-  FilePath                dp = mPopulatedDir.getPathTo(".dot");
-  FilePath                sp = mPopulatedDir.getPathTo(".dot/dir");
-  FilePath                fp = mPopulatedDir.getPathTo(".dot/dir/foo.txt");
+  FilePath dp = mPopulatedDir.getPathTo(".dot");
+  FilePath sp = mPopulatedDir.getPathTo(".dot/dir");
+  FilePath fp = mPopulatedDir.getPathTo(".dot/dir/foo.txt");
   TransactionalFileSystem fs(mPopulatedDir, true);
   ASSERT_TRUE(fs.fileExists(fp.toRelative(mPopulatedDir)));
   ASSERT_TRUE(fs.getDirs().contains(".dot"));
@@ -283,18 +283,18 @@ TEST_F(TransactionalFileSystemTest, testCombinationOfAllMethods) {
   ASSERT_FALSE(fs.fileExists("z/2.txt"));
 
   // do some file operations
-  fs.write("x/y/z", "z");                 // create new file
-  fs.write("z/y/x.txt", "x");             // create new file
-  fs.write("z/y.txt", "y");               // create new file
-  fs.write("1.txt", "new 1");             // overwrite existing file
+  fs.write("x/y/z", "z");  // create new file
+  fs.write("z/y/x.txt", "x");  // create new file
+  fs.write("z/y.txt", "y");  // create new file
+  fs.write("1.txt", "new 1");  // overwrite existing file
   fs.write(".dot/file.txt", "new file");  // overwrite existing file
-  fs.removeFile("z/y/x.txt");             // remove new file
-  fs.removeFile("1.txt");                 // remove existing file
-  fs.removeDirRecursively("z");           // remove new directory
-  fs.removeDirRecursively("a");           // remove existing directory
-  fs.write("z/1.txt", "1");               // create new file
-  fs.write("z/2.txt", "2");               // create new file
-  fs.removeFile("z/1.txt");               // remove new file
+  fs.removeFile("z/y/x.txt");  // remove new file
+  fs.removeFile("1.txt");  // remove existing file
+  fs.removeDirRecursively("z");  // remove new directory
+  fs.removeDirRecursively("a");  // remove existing directory
+  fs.write("z/1.txt", "1");  // create new file
+  fs.write("z/2.txt", "2");  // create new file
+  fs.removeFile("z/1.txt");  // remove new file
 
   // check state in memory
   EXPECT_TRUE(fs.fileExists("x/y/z"));
@@ -358,9 +358,9 @@ TEST_F(TransactionalFileSystemTest, testCombinationOfAllMethods) {
   EXPECT_EQ("new file", FileUtils::readFile(fs.getAbsPath(".dot/file.txt")));
 
   // do some more file operations
-  fs.write("foo", "foo");        // create new file
+  fs.write("foo", "foo");  // create new file
   fs.write("z/2.txt", "new 2");  // overwrite existing file
-  fs.removeFile("x/y/z");        // remove existing file
+  fs.removeFile("x/y/z");  // remove existing file
 
   // check state in memory
   EXPECT_FALSE(fs.fileExists("x/y/z"));
@@ -416,7 +416,7 @@ TEST_F(TransactionalFileSystemTest, testCombinationOfAllMethods) {
 }
 
 TEST_F(TransactionalFileSystemTest, testAutosaveIsRemovedWhenSaving) {
-  FilePath                fp = mPopulatedDir.getPathTo(".autosave");
+  FilePath fp = mPopulatedDir.getPathTo(".autosave");
   TransactionalFileSystem fs(mPopulatedDir, true);
   fs.autosave();
   ASSERT_TRUE(fp.isExistingDir());
@@ -447,18 +447,18 @@ TEST_F(TransactionalFileSystemTest, testRestoreAutosave) {
   ASSERT_FALSE(fs.fileExists("z/2.txt"));
 
   // do some file operations
-  fs.write("x/y/z", "z");                 // create new file
-  fs.write("z/y/x.txt", "x");             // create new file
-  fs.write("z/y.txt", "y");               // create new file
-  fs.write("1.txt", "new 1");             // overwrite existing file
+  fs.write("x/y/z", "z");  // create new file
+  fs.write("z/y/x.txt", "x");  // create new file
+  fs.write("z/y.txt", "y");  // create new file
+  fs.write("1.txt", "new 1");  // overwrite existing file
   fs.write(".dot/file.txt", "new file");  // overwrite existing file
-  fs.removeFile("z/y/x.txt");             // remove new file
-  fs.removeFile("1.txt");                 // remove existing file
-  fs.removeDirRecursively("z");           // remove new directory
-  fs.removeDirRecursively("a");           // remove existing directory
-  fs.write("z/1.txt", "1");               // create new file
-  fs.write("z/2.txt", "2");               // create new file
-  fs.removeFile("z/1.txt");               // remove new file
+  fs.removeFile("z/y/x.txt");  // remove new file
+  fs.removeFile("1.txt");  // remove existing file
+  fs.removeDirRecursively("z");  // remove new directory
+  fs.removeDirRecursively("a");  // remove existing directory
+  fs.write("z/1.txt", "1");  // create new file
+  fs.write("z/2.txt", "2");  // create new file
+  fs.removeFile("z/1.txt");  // remove new file
 
   // check state in memory
   EXPECT_TRUE(fs.fileExists("x/y/z"));
@@ -496,8 +496,8 @@ TEST_F(TransactionalFileSystemTest, testRestoreAutosave) {
   FileUtils::removeFile(mPopulatedDir.getPathTo(".lock"));
 
   // open another file system on the same directory to restore the autosave
-  TransactionalFileSystem fs2(mPopulatedDir, true,
-                              TransactionalFileSystem::RestoreMode::YES);
+  TransactionalFileSystem fs2(
+      mPopulatedDir, true, TransactionalFileSystem::RestoreMode::YES);
   EXPECT_TRUE(fs2.isRestoredFromAutosave());
 
   // check state in memory
@@ -550,9 +550,9 @@ TEST_F(TransactionalFileSystemTest, testRestoredBackupAfterFailedSave) {
 
   {
     TransactionalFileSystem fs(mPopulatedDir, true);
-    fs.write("x/y/z", "z");        // create new file
-    fs.write("1.txt", "new 1");    // overwrite existing file
-    fs.removeFile("2.txt");        // remove existing file
+    fs.write("x/y/z", "z");  // create new file
+    fs.write("1.txt", "new 1");  // overwrite existing file
+    fs.removeFile("2.txt");  // remove existing file
     fs.removeDirRecursively("a");  // remove existing directory
 
     // create a directory where x/y/z would be saved to -> leads to an error
@@ -603,8 +603,8 @@ TEST_F(TransactionalFileSystemTest, testExportToZip) {
  ******************************************************************************/
 
 struct TransactionalFileSystemGetSubDirsTestData {
-  QString     root;
-  QString     relPath;
+  QString root;
+  QString relPath;
   QStringList entries;
 };
 
@@ -650,17 +650,18 @@ static TransactionalFileSystemGetSubDirsTestData sGetSubDirsTestData[] = {
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(TransactionalFileSystemGetSubDirsTest,
-                         TransactionalFileSystemGetSubDirsTest,
-                         ::testing::ValuesIn(sGetSubDirsTestData));
+INSTANTIATE_TEST_SUITE_P(
+    TransactionalFileSystemGetSubDirsTest,
+    TransactionalFileSystemGetSubDirsTest,
+    ::testing::ValuesIn(sGetSubDirsTestData));
 
 /*******************************************************************************
  *  Parametrized getFilesInDir() Tests
  ******************************************************************************/
 
 struct TransactionalFileSystemGetFilesInDirTestData {
-  QString     root;
-  QString     relPath;
+  QString root;
+  QString relPath;
   QStringList entries;
 };
 
@@ -706,17 +707,18 @@ static TransactionalFileSystemGetFilesInDirTestData sGetFilesInDirTestData[] = {
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(TransactionalFileSystemGetFilesInDirTest,
-                         TransactionalFileSystemGetFilesInDirTest,
-                         ::testing::ValuesIn(sGetFilesInDirTestData));
+INSTANTIATE_TEST_SUITE_P(
+    TransactionalFileSystemGetFilesInDirTest,
+    TransactionalFileSystemGetFilesInDirTest,
+    ::testing::ValuesIn(sGetFilesInDirTestData));
 
 /*******************************************************************************
  *  Parametrized fileExists() and read() Tests
  ******************************************************************************/
 
 struct TransactionalFileSystemFileExistsTestData {
-  QString    root;
-  QString    relPath;
+  QString root;
+  QString relPath;
   QByteArray content;
 };
 
@@ -770,9 +772,10 @@ static TransactionalFileSystemFileExistsTestData sFileExistsTestData[] = {
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(TransactionalFileSystemFileExistsTest,
-                         TransactionalFileSystemFileExistsTest,
-                         ::testing::ValuesIn(sFileExistsTestData));
+INSTANTIATE_TEST_SUITE_P(
+    TransactionalFileSystemFileExistsTest,
+    TransactionalFileSystemFileExistsTest,
+    ::testing::ValuesIn(sFileExistsTestData));
 
 /*******************************************************************************
  *  Parametrized cleanPath() Tests
@@ -807,9 +810,10 @@ static TransactionalFileSystemCleanPathTestData sCleanPathTestData[] = {
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(TransactionalFileSystemCleanPathTest,
-                         TransactionalFileSystemCleanPathTest,
-                         ::testing::ValuesIn(sCleanPathTestData));
+INSTANTIATE_TEST_SUITE_P(
+    TransactionalFileSystemCleanPathTest,
+    TransactionalFileSystemCleanPathTest,
+    ::testing::ValuesIn(sCleanPathTestData));
 
 /*******************************************************************************
  *  End of File

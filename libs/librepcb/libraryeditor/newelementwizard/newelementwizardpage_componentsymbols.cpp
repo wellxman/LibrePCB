@@ -40,14 +40,17 @@ namespace editor {
  ******************************************************************************/
 
 NewElementWizardPage_ComponentSymbols::NewElementWizardPage_ComponentSymbols(
-    NewElementWizardContext& context, QWidget* parent) noexcept
+    NewElementWizardContext& context,
+    QWidget* parent) noexcept
   : QWizardPage(parent),
     mContext(context),
     mUi(new Ui::NewElementWizardPage_ComponentSymbols) {
   mUi->setupUi(this);
-  connect(mUi->symbolListEditorWidget,
-          &ComponentSymbolVariantItemListEditorWidget::edited, this,
-          &NewElementWizardPage_ComponentSymbols::completeChanged);
+  connect(
+      mUi->symbolListEditorWidget,
+      &ComponentSymbolVariantItemListEditorWidget::edited,
+      this,
+      &NewElementWizardPage_ComponentSymbols::completeChanged);
 }
 
 NewElementWizardPage_ComponentSymbols::
@@ -83,7 +86,8 @@ void NewElementWizardPage_ComponentSymbols::initializePage() noexcept {
         Uuid::createRandom(), "", ElementName("default"), ""));
   }
   mUi->symbolListEditorWidget->setReferences(
-      mContext.getWorkspace(), mContext.getLayerProvider(),
+      mContext.getWorkspace(),
+      mContext.getLayerProvider(),
       mSymbolVariantList.value(0)->getSymbolItems(),
       std::make_shared<LibraryElementCache>(
           mContext.getWorkspace().getLibraryDb()),

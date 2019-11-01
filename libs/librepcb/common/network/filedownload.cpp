@@ -51,10 +51,11 @@ FileDownload::~FileDownload() noexcept {
  *  Public Methods
  ******************************************************************************/
 
-void FileDownload::setExpectedChecksum(QCryptographicHash::Algorithm algorithm,
-                                       const QByteArray& checksum) noexcept {
+void FileDownload::setExpectedChecksum(
+    QCryptographicHash::Algorithm algorithm,
+    const QByteArray& checksum) noexcept {
   Q_ASSERT(!mStarted);
-  mHashAlgorithm    = algorithm;
+  mHashAlgorithm = algorithm;
   mExpectedChecksum = checksum;
 }
 
@@ -70,42 +71,52 @@ void FileDownload::setZipExtractionDirectory(const FilePath& dir) noexcept {
 void FileDownload::prepareRequest() {
   // check destination filepath
   if (mDestination.isExistingFile() || mDestination.isExistingDir()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString("The destination file exists already: %1")
-                           .arg(mDestination.toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString("The destination file exists already: %1")
+            .arg(mDestination.toNative()));
   }
 
   // create destination directory
   if (!mDestination.getParentDir().isEmptyDir()) {
     if (!QDir().mkpath(mDestination.getParentDir().toStr())) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString("Could not create directory \"%1\".")
-                             .arg(mDestination.getParentDir().toNative()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString("Could not create directory \"%1\".")
+              .arg(mDestination.getParentDir().toNative()));
     }
   }
 
   // open temporary destination file
   mFile.reset(new QSaveFile(mDestination.toStr(), this));
   if (!mFile->open(QIODevice::WriteOnly)) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString("Could not open file \"%1\": %2")
-                           .arg(mDestination.toNative(), mFile->errorString()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString("Could not open file \"%1\": %2")
+            .arg(mDestination.toNative(), mFile->errorString()));
   }
 }
 
 void FileDownload::finalizeRequest() {
   // check destination filepath again
   if (mDestination.isExistingFile() || mDestination.isExistingDir()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString("The destination file exists already: %1")
-                           .arg(mDestination.toNative()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString("The destination file exists already: %1")
+            .arg(mDestination.toNative()));
   }
 
   // save to destination file
   if (!mFile->commit()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("Error while writing file \"%1\": %2"))
-                           .arg(mDestination.toNative(), mFile->errorString()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("Error while writing file \"%1\": %2"))
+            .arg(mDestination.toNative(), mFile->errorString()));
   }
 
   // if an error occurs below this line, remove the downloaded file
@@ -113,21 +124,24 @@ void FileDownload::finalizeRequest() {
 
   // verify checksum of downloaded file
   if (!mExpectedChecksum.isEmpty()) {
-    emit  progressState(tr("Verify checksum..."));
+    emit progressState(tr("Verify checksum..."));
     QFile file(mDestination.toStr());
     if (!file.open(QFile::ReadOnly)) {
-      throw RuntimeError(__FILE__, __LINE__,
-                         QString(tr("Error while readback file \"%1\": %2"))
-                             .arg(mDestination.toNative(), file.errorString()));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          QString(tr("Error while readback file \"%1\": %2"))
+              .arg(mDestination.toNative(), file.errorString()));
     }
     QCryptographicHash hash(mHashAlgorithm);
     hash.addData(&file);
-    QString result   = hash.result().toHex();
+    QString result = hash.result().toHex();
     QString expected = mExpectedChecksum.toHex();
     if (result != expected) {
       qDebug() << "expected" << expected << "but got" << result;
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           tr("Checksum verification of downloaded file failed!"));
     } else {
       qDebug() << "Checksum verification of downloaded file was successful.";
@@ -136,12 +150,13 @@ void FileDownload::finalizeRequest() {
 
   // extract zip file if neccessary
   if (mExtractZipToDir.isValid()) {
-    emit        progressState(tr("Extract files..."));
+    emit progressState(tr("Extract files..."));
     QStringList files =
         JlCompress::extractDir(mDestination.toStr(), mExtractZipToDir.toStr());
     if (files.isEmpty()) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("Error while extracting the ZIP file \"%1\"."))
               .arg(mDestination.toNative()));
     }

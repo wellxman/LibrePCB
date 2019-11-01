@@ -39,10 +39,10 @@ namespace tests {
  ******************************************************************************/
 
 typedef struct {
-  QUrl       url;
+  QUrl url;
   QByteArray accept;
   QByteArray contentStart;
-  bool       success;
+  bool success;
 } NetworkRequestTestData;
 
 /*******************************************************************************
@@ -58,7 +58,7 @@ public:
 
 protected:
   NetworkRequestBaseSignalReceiver mSignalReceiver;
-  static NetworkAccessManager*     sDownloadManager;
+  static NetworkAccessManager* sDownloadManager;
 };
 
 NetworkAccessManager* NetworkRequestTest::sDownloadManager = nullptr;
@@ -82,29 +82,56 @@ TEST_P(NetworkRequestTest, testDownload) {
   if (!data.accept.isEmpty()) {
     request->setHeaderField("Accept", data.accept);
   }
-  QObject::connect(request, &NetworkRequest::progressState, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progressState);
-  QObject::connect(request, &NetworkRequest::progressPercent, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progressPercent);
-  QObject::connect(request, &NetworkRequest::progress, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::progress);
-  QObject::connect(request, &NetworkRequest::aborted, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::aborted);
-  QObject::connect(request, &NetworkRequest::succeeded, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::succeeded);
-  QObject::connect(request, &NetworkRequest::errored, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::errored);
-  QObject::connect(request, &NetworkRequest::finished, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::finished);
-  QObject::connect(request, &NetworkRequest::dataReceived, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::dataReceived);
-  QObject::connect(request, &NetworkRequest::destroyed, &mSignalReceiver,
-                   &NetworkRequestBaseSignalReceiver::destroyed);
+  QObject::connect(
+      request,
+      &NetworkRequest::progressState,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progressState);
+  QObject::connect(
+      request,
+      &NetworkRequest::progressPercent,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progressPercent);
+  QObject::connect(
+      request,
+      &NetworkRequest::progress,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::progress);
+  QObject::connect(
+      request,
+      &NetworkRequest::aborted,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::aborted);
+  QObject::connect(
+      request,
+      &NetworkRequest::succeeded,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::succeeded);
+  QObject::connect(
+      request,
+      &NetworkRequest::errored,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::errored);
+  QObject::connect(
+      request,
+      &NetworkRequest::finished,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::finished);
+  QObject::connect(
+      request,
+      &NetworkRequest::dataReceived,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::dataReceived);
+  QObject::connect(
+      request,
+      &NetworkRequest::destroyed,
+      &mSignalReceiver,
+      &NetworkRequestBaseSignalReceiver::destroyed);
   request->start();
 
   // wait until request finished (with timeout)
-  qint64 start       = QDateTime::currentDateTime().toMSecsSinceEpoch();
-  auto   currentTime = []() {
+  qint64 start = QDateTime::currentDateTime().toMSecsSinceEpoch();
+  auto currentTime = []() {
     return QDateTime::currentDateTime().toMSecsSinceEpoch();
   };
   while ((!mSignalReceiver.mDestroyed) && (currentTime() - start < 30000)) {
@@ -115,8 +142,9 @@ TEST_P(NetworkRequestTest, testDownload) {
   // check count and parameters of emited signals
   EXPECT_TRUE(mSignalReceiver.mDestroyed) << "Request timed out!";
   EXPECT_GT(mSignalReceiver.mProgressStateCallCount, 0);
-  EXPECT_EQ(mSignalReceiver.mAdvancedProgressCallCount,
-            mSignalReceiver.mSimpleProgressCallCount);
+  EXPECT_EQ(
+      mSignalReceiver.mAdvancedProgressCallCount,
+      mSignalReceiver.mSimpleProgressCallCount);
   EXPECT_EQ(0, mSignalReceiver.mAbortedCallCount);
   EXPECT_EQ(1, mSignalReceiver.mFinishedCallCount);
   EXPECT_EQ(0, mSignalReceiver.mFileDownloadedCallCount);

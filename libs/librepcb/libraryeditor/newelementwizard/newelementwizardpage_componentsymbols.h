@@ -55,16 +55,17 @@ public:
   NewElementWizardPage_ComponentSymbols(
       const NewElementWizardPage_ComponentSymbols& other) = delete;
   explicit NewElementWizardPage_ComponentSymbols(
-      NewElementWizardContext& context, QWidget* parent = 0) noexcept;
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_ComponentSymbols() noexcept;
 
   // Getters
   bool validatePage() noexcept override;
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_ComponentSymbols& operator       =(
+  NewElementWizardPage_ComponentSymbols& operator=(
       const NewElementWizardPage_ComponentSymbols& rhs) = delete;
 
 private:  // Methods
@@ -72,9 +73,9 @@ private:  // Methods
   void cleanupPage() noexcept override;
 
 private:  // Data
-  NewElementWizardContext&                                  mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_ComponentSymbols> mUi;
-  ComponentSymbolVariantList                                mSymbolVariantList;
+  ComponentSymbolVariantList mSymbolVariantList;
 };
 
 /*******************************************************************************

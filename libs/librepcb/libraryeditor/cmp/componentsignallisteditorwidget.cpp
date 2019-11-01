@@ -58,12 +58,18 @@ ComponentSignalListEditorWidget::ComponentSignalListEditorWidget(
       ComponentSignalListModel::COLUMN_FORCEDNETNAME, QHeaderView::Stretch);
   mView->horizontalHeader()->setSectionResizeMode(
       ComponentSignalListModel::COLUMN_ACTIONS, QHeaderView::ResizeToContents);
-  mView->sortByColumn(ComponentSignalListModel::COLUMN_NAME,
-                      Qt::AscendingOrder);
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &ComponentSignalListModel::addSignal);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &ComponentSignalListModel::removeSignal);
+  mView->sortByColumn(
+      ComponentSignalListModel::COLUMN_NAME, Qt::AscendingOrder);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &ComponentSignalListModel::addSignal);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &ComponentSignalListModel::removeSignal);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -78,7 +84,8 @@ ComponentSignalListEditorWidget::~ComponentSignalListEditorWidget() noexcept {
  ******************************************************************************/
 
 void ComponentSignalListEditorWidget::setReferences(
-    UndoStack* undoStack, ComponentSignalList* list) noexcept {
+    UndoStack* undoStack,
+    ComponentSignalList* list) noexcept {
   mModel->setSignalList(list);
   mModel->setUndoStack(undoStack);
 }

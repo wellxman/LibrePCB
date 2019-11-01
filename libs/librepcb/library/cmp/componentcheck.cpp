@@ -97,7 +97,8 @@ void ComponentCheck::checkMissingSymbolVariants(MsgList& msgs) const {
 
 void ComponentCheck::checkMissingSymbolVariantItems(MsgList& msgs) const {
   for (auto it = mComponent.getSymbolVariants().begin();
-       it != mComponent.getSymbolVariants().end(); ++it) {
+       it != mComponent.getSymbolVariants().end();
+       ++it) {
     std::shared_ptr<const ComponentSymbolVariant> symbVar = it.ptr();
     if (symbVar->getSymbolItems().isEmpty()) {
       msgs.append(std::make_shared<MsgMissingSymbolVariantItem>(symbVar));

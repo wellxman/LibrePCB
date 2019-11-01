@@ -59,10 +59,13 @@ class BoardPlanePropertiesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  BoardPlanePropertiesDialog()                                        = delete;
+  BoardPlanePropertiesDialog() = delete;
   BoardPlanePropertiesDialog(const BoardPlanePropertiesDialog& other) = delete;
-  BoardPlanePropertiesDialog(Project& project, BI_Plane& plane,
-                             UndoStack& undoStack, QWidget* parent) noexcept;
+  BoardPlanePropertiesDialog(
+      Project& project,
+      BI_Plane& plane,
+      UndoStack& undoStack,
+      QWidget* parent) noexcept;
   ~BoardPlanePropertiesDialog() noexcept;
 
 private:  // GUI Events
@@ -72,10 +75,10 @@ private:  // Methods
   bool applyChanges() noexcept;
 
   // General
-  Project&                                       mProject;
-  BI_Plane&                                      mPlane;
+  Project& mProject;
+  BI_Plane& mPlane;
   QScopedPointer<Ui::BoardPlanePropertiesDialog> mUi;
-  UndoStack&                                     mUndoStack;
+  UndoStack& mUndoStack;
 };
 
 /*******************************************************************************

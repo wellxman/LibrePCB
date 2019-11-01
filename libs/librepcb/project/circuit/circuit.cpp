@@ -154,14 +154,16 @@ void Circuit::addNetClass(NetClass& netclass) {
   // check if there is no netclass with the same uuid in the list
   if (getNetClassByUuid(netclass.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net class with the UUID \"%1\"!"))
             .arg(netclass.getUuid().toStr()));
   }
   // check if there is no netclass with the same name in the list
   if (getNetClassByName(netclass.getName())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net class with the name \"%1\"!"))
             .arg(*netclass.getName()));
   }
@@ -190,7 +192,8 @@ void Circuit::setNetClassName(NetClass& netclass, const ElementName& newName) {
   // check if there is no netclass with the same name in the list
   if (getNetClassByName(newName)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net class with the name \"%1\"!"))
             .arg(*newName));
   }
@@ -204,7 +207,7 @@ void Circuit::setNetClassName(NetClass& netclass, const ElementName& newName) {
 
 QString Circuit::generateAutoNetSignalName() const noexcept {
   QString name;
-  int     i = 1;
+  int i = 1;
   do {
     name = QString("N%1").arg(i++);
   } while (getNetSignalByName(name));
@@ -227,8 +230,9 @@ NetSignal* Circuit::getNetSignalByName(const QString& name) const noexcept {
 NetSignal* Circuit::getNetSignalWithMostElements() const noexcept {
   NetSignal* netsignal = nullptr;
   foreach (NetSignal* ns, mNetSignals) {
-    if ((!netsignal) || (ns->getRegisteredElementsCount() >
-                         netsignal->getRegisteredElementsCount())) {
+    if ((!netsignal) ||
+        (ns->getRegisteredElementsCount() >
+         netsignal->getRegisteredElementsCount())) {
       netsignal = ns;
     }
   }
@@ -242,14 +246,16 @@ void Circuit::addNetSignal(NetSignal& netsignal) {
   // check if there is no netsignal with the same uuid in the list
   if (getNetSignalByUuid(netsignal.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net signal with the UUID \"%1\"!"))
             .arg(netsignal.getUuid().toStr()));
   }
   // check if there is no netsignal with the same name in the list
   if (getNetSignalByName(*netsignal.getName())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net signal with the name \"%1\"!"))
             .arg(*netsignal.getName()));
   }
@@ -270,9 +276,10 @@ void Circuit::removeNetSignal(NetSignal& netsignal) {
   emit netSignalRemoved(netsignal);
 }
 
-void Circuit::setNetSignalName(NetSignal&               netsignal,
-                               const CircuitIdentifier& newName,
-                               bool                     isAutoName) {
+void Circuit::setNetSignalName(
+    NetSignal& netsignal,
+    const CircuitIdentifier& newName,
+    bool isAutoName) {
   // check if the netsignal was added to the circuit
   if (mNetSignals.value(netsignal.getUuid()) != &netsignal) {
     throw LogicError(__FILE__, __LINE__);
@@ -280,7 +287,8 @@ void Circuit::setNetSignalName(NetSignal&               netsignal,
   // check if there is no netsignal with the same name in the list
   if (getNetSignalByName(*newName)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a net signal with the name \"%1\"!"))
             .arg(*newName));
   }
@@ -301,7 +309,7 @@ void Circuit::setHighlightedNetSignal(NetSignal* signal) noexcept {
 QString Circuit::generateAutoComponentInstanceName(
     const library::ComponentPrefix& cmpPrefix) const noexcept {
   QString name;
-  int     i = 1;
+  int i = 1;
   do {
     name =
         QString("%1%2").arg(cmpPrefix->isEmpty() ? "?" : *cmpPrefix).arg(i++);
@@ -329,14 +337,16 @@ void Circuit::addComponentInstance(ComponentInstance& cmp) {
   // check if there is no component with the same uuid in the list
   if (getComponentInstanceByUuid(cmp.getUuid())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a component with the UUID \"%1\"!"))
             .arg(cmp.getUuid().toStr()));
   }
   // check if there is no component with the same name in the list
   if (getComponentInstanceByName(*cmp.getName())) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a component with the name \"%1\"!"))
             .arg(*cmp.getName()));
   }
@@ -357,8 +367,9 @@ void Circuit::removeComponentInstance(ComponentInstance& cmp) {
   emit componentRemoved(cmp);
 }
 
-void Circuit::setComponentInstanceName(ComponentInstance&       cmp,
-                                       const CircuitIdentifier& newName) {
+void Circuit::setComponentInstanceName(
+    ComponentInstance& cmp,
+    const CircuitIdentifier& newName) {
   // check if the component instance was added to the circuit
   if (mComponentInstances.value(cmp.getUuid()) != &cmp) {
     throw LogicError(__FILE__, __LINE__);
@@ -366,7 +377,8 @@ void Circuit::setComponentInstanceName(ComponentInstance&       cmp,
   // check if there is no component with the same name in the list
   if ((newName != cmp.getName()) && getComponentInstanceByName(*newName)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("There is already a component with the name \"%1\"!"))
             .arg(*newName));
   }
@@ -380,7 +392,7 @@ void Circuit::setComponentInstanceName(ComponentInstance&       cmp,
 
 void Circuit::save() {
   SExpression doc(serializeToDomElement("librepcb_circuit"));  // can throw
-  mDirectory->write("circuit.lp", doc.toByteArray());          // can throw
+  mDirectory->write("circuit.lp", doc.toByteArray());  // can throw
 }
 
 /*******************************************************************************

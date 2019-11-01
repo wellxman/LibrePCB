@@ -39,9 +39,10 @@ namespace eagleimport {
  *  Constructors / Destructor
  ******************************************************************************/
 
-DeviceConverter::DeviceConverter(const parseagle::DeviceSet& deviceSet,
-                                 const parseagle::Device&    device,
-                                 ConverterDb&                db) noexcept
+DeviceConverter::DeviceConverter(
+    const parseagle::DeviceSet& deviceSet,
+    const parseagle::Device& device,
+    ConverterDb& db) noexcept
   : mDeviceSet(deviceSet), mDevice(device), mDb(db) {
 }
 
@@ -59,22 +60,27 @@ std::unique_ptr<library::Device> DeviceConverter::generate() const {
     deviceName += "_" % mDevice.getName();
   }
   Uuid compUuid = mDb.getComponentUuid(mDeviceSet.getName());
-  Uuid pkgUuid  = mDb.getPackageUuid(mDevice.getPackage());
+  Uuid pkgUuid = mDb.getPackageUuid(mDevice.getPackage());
   std::unique_ptr<library::Device> device(new library::Device(
       mDb.getDeviceUuid(mDeviceSet.getName(), mDevice.getName()),
-      Version::fromString("0.1"), "LibrePCB", ElementName(deviceName),
-      createDescription(), "", compUuid, pkgUuid));  // can throw
+      Version::fromString("0.1"),
+      "LibrePCB",
+      ElementName(deviceName),
+      createDescription(),
+      "",
+      compUuid,
+      pkgUuid));  // can throw
 
   // connect pads
   Uuid fptUuid = mDb.getFootprintUuid(mDevice.getPackage());
   foreach (const parseagle::Connection& connection, mDevice.getConnections()) {
     QString gateName = connection.getGate();
-    QString pinName  = connection.getPin();
+    QString pinName = connection.getPin();
     QString padNames = connection.getPad();
     if (pinName.contains("@")) pinName.truncate(pinName.indexOf("@"));
     if (pinName.contains("#")) pinName.truncate(pinName.indexOf("#"));
-    foreach (const QString& padName,
-             padNames.split(" ", QString::SkipEmptyParts)) {
+    foreach (
+        const QString& padName, padNames.split(" ", QString::SkipEmptyParts)) {
       device->getPadSignalMap().append(
           std::make_shared<library::DevicePadSignalMapItem>(
               mDb.getPackagePadUuid(fptUuid, padName),

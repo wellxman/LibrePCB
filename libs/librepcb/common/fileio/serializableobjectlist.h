@@ -109,7 +109,7 @@ public:
       ++it;
       return *this;
     }
-    O&                 operator*() { return **it; }
+    O& operator*() { return **it; }
     std::shared_ptr<O> ptr() noexcept {
       return std::const_pointer_cast<O>(*it);
     }
@@ -125,39 +125,57 @@ public:
     ElementRemoved,
     ElementEdited,
   };
-  Signal<SerializableObjectList<T, P, OnEditedArgs...>, int,
-         const std::shared_ptr<const T>&, Event>
+  Signal<
+      SerializableObjectList<T, P, OnEditedArgs...>,
+      int,
+      const std::shared_ptr<const T>&,
+      Event>
       onEdited;
-  typedef Slot<SerializableObjectList<T, P, OnEditedArgs...>, int,
-               const std::shared_ptr<const T>&, Event>
+  typedef Slot<
+      SerializableObjectList<T, P, OnEditedArgs...>,
+      int,
+      const std::shared_ptr<const T>&,
+      Event>
       OnEditedSlot;
-  Signal<SerializableObjectList<T, P, OnEditedArgs...>, int,
-         const std::shared_ptr<const T>&, OnEditedArgs...>
+  Signal<
+      SerializableObjectList<T, P, OnEditedArgs...>,
+      int,
+      const std::shared_ptr<const T>&,
+      OnEditedArgs...>
       onElementEdited;
-  typedef Slot<SerializableObjectList<T, P, OnEditedArgs...>, int,
-               const std::shared_ptr<const T>&, OnEditedArgs...>
+  typedef Slot<
+      SerializableObjectList<T, P, OnEditedArgs...>,
+      int,
+      const std::shared_ptr<const T>&,
+      OnEditedArgs...>
       OnElementEditedSlot;
 
   // Constructors / Destructor
   SerializableObjectList() noexcept
     : onEdited(*this),
       onElementEdited(*this),
-      mOnEditedSlot(*this, &SerializableObjectList<
-                               T, P, OnEditedArgs...>::elementEditedHandler) {}
+      mOnEditedSlot(
+          *this,
+          &SerializableObjectList<T, P, OnEditedArgs...>::
+              elementEditedHandler) {}
   SerializableObjectList(
       const SerializableObjectList<T, P, OnEditedArgs...>& other) noexcept
     : onEdited(*this),
       onElementEdited(*this),
-      mOnEditedSlot(*this, &SerializableObjectList<
-                               T, P, OnEditedArgs...>::elementEditedHandler) {
+      mOnEditedSlot(
+          *this,
+          &SerializableObjectList<T, P, OnEditedArgs...>::
+              elementEditedHandler) {
     *this = other;  // copy all elements
   }
   SerializableObjectList(
       SerializableObjectList<T, P, OnEditedArgs...>&& other) noexcept
     : onEdited(*this),
       onElementEdited(*this),
-      mOnEditedSlot(*this, &SerializableObjectList<
-                               T, P, OnEditedArgs...>::elementEditedHandler) {
+      mOnEditedSlot(
+          *this,
+          &SerializableObjectList<T, P, OnEditedArgs...>::
+              elementEditedHandler) {
     while (!other.isEmpty()) {
       append(other.take(0));  // copy all pointers (NOT the objects!)
     }
@@ -166,22 +184,26 @@ public:
       std::initializer_list<std::shared_ptr<T>> elements) noexcept
     : onEdited(*this),
       onElementEdited(*this),
-      mOnEditedSlot(*this, &SerializableObjectList<
-                               T, P, OnEditedArgs...>::elementEditedHandler) {
+      mOnEditedSlot(
+          *this,
+          &SerializableObjectList<T, P, OnEditedArgs...>::
+              elementEditedHandler) {
     foreach (const std::shared_ptr<T>& obj, elements) { append(obj); }
   }
   explicit SerializableObjectList(const SExpression& node)
     : onEdited(*this),
       onElementEdited(*this),
-      mOnEditedSlot(*this, &SerializableObjectList<
-                               T, P, OnEditedArgs...>::elementEditedHandler) {
+      mOnEditedSlot(
+          *this,
+          &SerializableObjectList<T, P, OnEditedArgs...>::
+              elementEditedHandler) {
     loadFromSExpression(node);  // can throw
   }
   virtual ~SerializableObjectList() noexcept {}
 
   // Getters
-  bool              isEmpty() const noexcept { return mObjects.empty(); }
-  int               count() const noexcept { return mObjects.count(); }
+  bool isEmpty() const noexcept { return mObjects.empty(); }
+  int count() const noexcept { return mObjects.count(); }
   std::vector<Uuid> getUuids() const noexcept {
     std::vector<Uuid> uuids;
     uuids.reserve(mObjects.count());
@@ -256,11 +278,11 @@ public:
   std::shared_ptr<const T> at(int index) const noexcept {
     return std::const_pointer_cast<const T>(mObjects.at(index));
   }  // always read-only!
-  std::shared_ptr<T>&      first() noexcept { return mObjects.first(); }
+  std::shared_ptr<T>& first() noexcept { return mObjects.first(); }
   std::shared_ptr<const T> first() const noexcept { return mObjects.first(); }
-  std::shared_ptr<T>&      last() noexcept { return mObjects.last(); }
+  std::shared_ptr<T>& last() noexcept { return mObjects.last(); }
   std::shared_ptr<const T> last() const noexcept { return mObjects.last(); }
-  std::shared_ptr<T>       get(const T* obj) {
+  std::shared_ptr<T> get(const T* obj) {
     std::shared_ptr<T> ptr = find(obj);
     if (!ptr) throw LogicError(__FILE__, __LINE__);
     return ptr;
@@ -291,8 +313,8 @@ public:
   const_iterator end() const noexcept { return mObjects.end(); }
   const_iterator cbegin() noexcept { return mObjects.cbegin(); }
   const_iterator cend() noexcept { return mObjects.cend(); }
-  iterator       begin() noexcept { return mObjects.begin(); }
-  iterator       end() noexcept { return mObjects.end(); }
+  iterator begin() noexcept { return mObjects.begin(); }
+  iterator end() noexcept { return mObjects.end(); }
 
   // General Methods
   int loadFromSExpression(const SExpression& node) {
@@ -354,7 +376,8 @@ public:
     SerializableObjectList<T, P, OnEditedArgs...> copiedList;
     copiedList.mObjects = mObjects;  // copy only the pointers, not the objects!
     std::sort(
-        copiedList.mObjects.begin(), copiedList.mObjects.end(),
+        copiedList.mObjects.begin(),
+        copiedList.mObjects.end(),
         [](const std::shared_ptr<T>& ptr1, const std::shared_ptr<T>& ptr2) {
           return ptr1->getUuid() < ptr2->getUuid();
         });
@@ -364,7 +387,8 @@ public:
     SerializableObjectList<T, P, OnEditedArgs...> copiedList;
     copiedList.mObjects = mObjects;  // copy only the pointers, not the objects!
     std::sort(
-        copiedList.mObjects.begin(), copiedList.mObjects.end(),
+        copiedList.mObjects.begin(),
+        copiedList.mObjects.end(),
         [](const std::shared_ptr<T>& ptr1, const std::shared_ptr<T>& ptr2) {
           return ptr1->getName() < ptr2->getName();
         });
@@ -436,7 +460,8 @@ protected:  // Methods
   }
   void throwKeyNotFoundException(const Uuid& key) const {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(
             tr("There is "
                "no element of type \"%1\" with the UUID \"%2\" in the list."))
@@ -445,7 +470,8 @@ protected:  // Methods
   }
   void throwNameNotFoundException(const QString& name) const {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(
             tr("There is "
                "no element of type \"%1\" with the name \"%2\" in the list."))
@@ -455,7 +481,7 @@ protected:  // Methods
 
 protected:  // Data
   QVector<std::shared_ptr<T>> mObjects;
-  Slot<T, OnEditedArgs...>    mOnEditedSlot;
+  Slot<T, OnEditedArgs...> mOnEditedSlot;
 };
 
 }  // namespace librepcb

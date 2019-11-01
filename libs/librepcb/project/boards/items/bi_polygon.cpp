@@ -57,10 +57,14 @@ BI_Polygon::BI_Polygon(Board& board, const Polygon& polygon) : BI_Base(board) {
   init();
 }
 
-BI_Polygon::BI_Polygon(Board& board, const Uuid& uuid,
-                       const GraphicsLayerName& layerName,
-                       const UnsignedLength& lineWidth, bool fill,
-                       bool isGrabArea, const Path& path)
+BI_Polygon::BI_Polygon(
+    Board& board,
+    const Uuid& uuid,
+    const GraphicsLayerName& layerName,
+    const UnsignedLength& lineWidth,
+    bool fill,
+    bool isGrabArea,
+    const Path& path)
   : BI_Base(board) {
   mPolygon.reset(
       new Polygon(uuid, layerName, lineWidth, fill, isGrabArea, path));
@@ -73,8 +77,11 @@ void BI_Polygon::init() {
   mGraphicsItem->setZValue(Board::ZValue_Default);
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
-          &BI_Polygon::boardAttributesChanged);
+  connect(
+      &mBoard,
+      &Board::attributesChanged,
+      this,
+      &BI_Polygon::boardAttributesChanged);
 }
 
 BI_Polygon::~BI_Polygon() noexcept {

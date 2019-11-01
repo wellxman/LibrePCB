@@ -38,8 +38,9 @@ CmpSigPinDisplayType::CmpSigPinDisplayType() noexcept
   : CmpSigPinDisplayType(componentSignal()) {
 }
 
-CmpSigPinDisplayType::CmpSigPinDisplayType(const QString& type,
-                                           const QString& name) noexcept
+CmpSigPinDisplayType::CmpSigPinDisplayType(
+    const QString& type,
+    const QString& name) noexcept
   : mDisplayType(type), mName(name) {
 }
 
@@ -63,7 +64,7 @@ bool CmpSigPinDisplayType::operator==(const CmpSigPinDisplayType& rhs) const
 CmpSigPinDisplayType& CmpSigPinDisplayType::operator=(
     const CmpSigPinDisplayType& rhs) noexcept {
   mDisplayType = rhs.mDisplayType;
-  mName        = rhs.mName;
+  mName = rhs.mName;
   return *this;
 }
 
@@ -79,13 +80,14 @@ const CmpSigPinDisplayType& CmpSigPinDisplayType::fromString(
     }
   }
   throw RuntimeError(
-      __FILE__, __LINE__,
+      __FILE__,
+      __LINE__,
       QString(tr("Invalid component signal pin display type: \"%1\""))
           .arg(str));
 }
 
 const QList<CmpSigPinDisplayType>&
-CmpSigPinDisplayType::getAllTypes() noexcept {
+    CmpSigPinDisplayType::getAllTypes() noexcept {
   static QList<CmpSigPinDisplayType> list{
       none(),
       pinName(),

@@ -51,9 +51,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_DrawPlane::BES_DrawPlane(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                             GraphicsView& editorGraphicsView,
-                             UndoStack&    undoStack)
+BES_DrawPlane::BES_DrawPlane(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mSubState(SubState::Idle),
     mCurrentNetSignal(nullptr),
@@ -109,19 +111,21 @@ bool BES_DrawPlane::entry(BEE_Base* event) noexcept {
   mNetSignalComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
   mNetSignalComboBox->setInsertPolicy(QComboBox::NoInsert);
   mNetSignalComboBox->setEditable(false);
-  foreach (NetSignal* netsignal,
-           mEditor.getProject().getCircuit().getNetSignals())
-    mNetSignalComboBox->addItem(*netsignal->getName(),
-                                netsignal->getUuid().toStr());
+  foreach (
+      NetSignal* netsignal, mEditor.getProject().getCircuit().getNetSignals())
+    mNetSignalComboBox->addItem(
+        *netsignal->getName(), netsignal->getUuid().toStr());
   mNetSignalComboBox->model()->sort(0);
   mNetSignalComboBox->setCurrentText(
       mCurrentNetSignal ? *mCurrentNetSignal->getName() : "");
   mEditorUi.commandToolbar->addWidget(mNetSignalComboBox);
-  connect(mNetSignalComboBox, &QComboBox::currentTextChanged,
-          [this](const QString& value) {
-            setNetSignal(
-                mEditor.getProject().getCircuit().getNetSignalByName(value));
-          });
+  connect(
+      mNetSignalComboBox,
+      &QComboBox::currentTextChanged,
+      [this](const QString& value) {
+        setNetSignal(
+            mEditor.getProject().getCircuit().getNetSignalByName(value));
+      });
 
   // add the "Layer:" label to the toolbar
   mLayerLabel = new QLabel(tr("Layer:"));
@@ -132,8 +136,9 @@ bool BES_DrawPlane::entry(BEE_Base* event) noexcept {
   mLayerComboBox = new GraphicsLayerComboBox();
   if (mEditor.getActiveBoard()) {
     QList<GraphicsLayer*> layers;
-    foreach (GraphicsLayer* layer,
-             mEditor.getActiveBoard()->getLayerStack().getAllLayers()) {
+    foreach (
+        GraphicsLayer* layer,
+        mEditor.getActiveBoard()->getLayerStack().getAllLayers()) {
       if (layer->isCopperLayer() && layer->isEnabled()) {
         layers.append(layer);
       }
@@ -142,8 +147,11 @@ bool BES_DrawPlane::entry(BEE_Base* event) noexcept {
   }
   mLayerComboBox->setCurrentLayer(mCurrentLayerName);
   mEditorUi.commandToolbar->addWidget(mLayerComboBox);
-  connect(mLayerComboBox, &GraphicsLayerComboBox::currentLayerChanged, this,
-          &BES_DrawPlane::layerComboBoxLayerChanged);
+  connect(
+      mLayerComboBox,
+      &GraphicsLayerComboBox::currentLayerChanged,
+      this,
+      &BES_DrawPlane::layerComboBoxLayerChanged);
 
   // change the cursor
   mEditorGraphicsView.setCursor(Qt::CrossCursor);
@@ -287,13 +295,17 @@ bool BES_DrawPlane::start(Board& board, const Point& pos) noexcept {
 
     // add plane with two vertices
     Path path({Vertex(pos), Vertex(pos)});
-    mCurrentPlane = new BI_Plane(board, Uuid::createRandom(), mCurrentLayerName,
-                                 *mCurrentNetSignal, path);
+    mCurrentPlane = new BI_Plane(
+        board,
+        Uuid::createRandom(),
+        mCurrentLayerName,
+        *mCurrentNetSignal,
+        path);
     mUndoStack.appendToCmdGroup(new CmdBoardPlaneAdd(*mCurrentPlane));
 
     // start undo command
     mCmdEditCurrentPlane = new CmdBoardPlaneEdit(*mCurrentPlane, false);
-    mLastVertexPos       = pos;
+    mLastVertexPos = pos;
     makeSelectedLayerVisible();
     return true;
   } catch (const Exception& e) {
@@ -323,7 +335,7 @@ bool BES_DrawPlane::addSegment(Board& board, const Point& pos) noexcept {
 
       // start a new undo command
       mUndoStack.beginCmdGroup(tr("Draw board plane"));
-      mSubState            = SubState::Positioning;
+      mSubState = SubState::Positioning;
       mCmdEditCurrentPlane = new CmdBoardPlaneEdit(*mCurrentPlane, false);
     }
 
@@ -344,7 +356,7 @@ bool BES_DrawPlane::abort(bool showErrMsgBox) noexcept {
   try {
     delete mCmdEditCurrentPlane;
     mCmdEditCurrentPlane = nullptr;
-    mCurrentPlane        = nullptr;
+    mCurrentPlane = nullptr;
     mUndoStack.abortCmdGroup();  // can throw
     mSubState = SubState::Idle;
     return true;
@@ -373,7 +385,7 @@ void BES_DrawPlane::layerComboBoxLayerChanged(
 
 void BES_DrawPlane::makeSelectedLayerVisible() noexcept {
   if (mCurrentPlane) {
-    Board&         board = mCurrentPlane->getBoard();
+    Board& board = mCurrentPlane->getBoard();
     GraphicsLayer* layer = board.getLayerStack().getLayer(*mCurrentLayerName);
     if (layer && layer->isEnabled()) layer->setVisible(true);
   }

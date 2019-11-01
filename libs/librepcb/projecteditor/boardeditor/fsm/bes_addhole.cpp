@@ -47,8 +47,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_AddHole::BES_AddHole(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                         GraphicsView& editorGraphicsView, UndoStack& undoStack)
+BES_AddHole::BES_AddHole(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : BES_Base(editor, editorUi, editorGraphicsView, undoStack),
     mUndoCmdActive(false),
     mHole(nullptr),
@@ -95,8 +98,11 @@ bool BES_AddHole::entry(BEE_Base* event) noexcept {
   mDiameterEdit.reset(new PositiveLengthEdit());
   mDiameterEdit->setSingleStep(0.1);  // [mm]
   mDiameterEdit->setValue(mCurrentDiameter);
-  connect(mDiameterEdit.data(), &PositiveLengthEdit::valueChanged, this,
-          &BES_AddHole::diameterEditValueChanged);
+  connect(
+      mDiameterEdit.data(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &BES_AddHole::diameterEditValueChanged);
   mEditorUi.commandToolbar->addWidget(mDiameterEdit.data());
 
   // change the cursor
@@ -220,7 +226,7 @@ bool BES_AddHole::fixHole(const Point& pos) noexcept {
     mUndoStack.appendToCmdGroup(mEditCmd.take());
     mUndoStack.commitCmdGroup();
     mUndoCmdActive = false;
-    mHole          = nullptr;
+    mHole = nullptr;
     return true;
   } catch (Exception& e) {
     if (mUndoCmdActive) {
@@ -229,7 +235,7 @@ bool BES_AddHole::fixHole(const Point& pos) noexcept {
       } catch (...) {
       }
       mUndoCmdActive = false;
-      mHole          = nullptr;
+      mHole = nullptr;
     }
     QMessageBox::critical(&mEditor, tr("Error"), e.getMsg());
     return false;

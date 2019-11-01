@@ -65,14 +65,18 @@ WSI_LibraryLocaleOrder::WSI_LibraryLocaleOrder(const SExpression& node)
   mComboBox.reset(new QComboBox());
   QList<QLocale> allLocales = QLocale::matchingLocales(
       QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry);
-  std::sort(allLocales.begin(), allLocales.end(),
-            [](const QLocale& l1, const QLocale& l2) {
-              return l1.name() < l2.name();
-            });
+  std::sort(
+      allLocales.begin(),
+      allLocales.end(),
+      [](const QLocale& l1, const QLocale& l2) {
+        return l1.name() < l2.name();
+      });
   foreach (const QLocale& locale, allLocales) {
     QString str = QString("[%1] %2 (%3)")
-                      .arg(locale.name(), locale.nativeLanguageName(),
-                           locale.nativeCountryName());
+                      .arg(
+                          locale.name(),
+                          locale.nativeLanguageName(),
+                          locale.nativeCountryName());
     if (mComboBox->findData(locale.name()) < 0) {
       mComboBox->addItem(str, locale.name());
     }
@@ -88,14 +92,26 @@ WSI_LibraryLocaleOrder::WSI_LibraryLocaleOrder(const SExpression& node)
   mBtnDown->setArrowType(Qt::DownArrow);
   mBtnAdd->setIcon(QIcon(":/img/actions/plus_2.png"));
   mBtnRemove->setIcon(QIcon(":/img/actions/minus.png"));
-  connect(mBtnUp.data(), &QToolButton::clicked, this,
-          &WSI_LibraryLocaleOrder::btnUpClicked);
-  connect(mBtnDown.data(), &QToolButton::clicked, this,
-          &WSI_LibraryLocaleOrder::btnDownClicked);
-  connect(mBtnAdd.data(), &QToolButton::clicked, this,
-          &WSI_LibraryLocaleOrder::btnAddClicked);
-  connect(mBtnRemove.data(), &QToolButton::clicked, this,
-          &WSI_LibraryLocaleOrder::btnRemoveClicked);
+  connect(
+      mBtnUp.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryLocaleOrder::btnUpClicked);
+  connect(
+      mBtnDown.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryLocaleOrder::btnDownClicked);
+  connect(
+      mBtnAdd.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryLocaleOrder::btnAddClicked);
+  connect(
+      mBtnRemove.data(),
+      &QToolButton::clicked,
+      this,
+      &WSI_LibraryLocaleOrder::btnRemoveClicked);
 
   // create the QWidget
   mWidget.reset(new QWidget());
@@ -183,8 +199,10 @@ void WSI_LibraryLocaleOrder::updateListWidgetItems() noexcept {
   foreach (const QString& localeStr, mListTmp) {
     QLocale locale(localeStr);
     QString str = QString("[%1] %2 (%3)")
-                      .arg(localeStr, locale.nativeLanguageName(),
-                           locale.nativeCountryName());
+                      .arg(
+                          localeStr,
+                          locale.nativeLanguageName(),
+                          locale.nativeCountryName());
     QListWidgetItem* item = new QListWidgetItem(str, mListWidget.data());
     item->setData(Qt::UserRole, localeStr);
   }

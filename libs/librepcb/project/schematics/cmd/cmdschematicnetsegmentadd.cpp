@@ -46,7 +46,8 @@ CmdSchematicNetSegmentAdd::CmdSchematicNetSegmentAdd(
 }
 
 CmdSchematicNetSegmentAdd::CmdSchematicNetSegmentAdd(
-    Schematic& schematic, NetSignal& netsignal) noexcept
+    Schematic& schematic,
+    NetSignal& netsignal) noexcept
   : UndoCommand(tr("Add net segment")),
     mSchematic(schematic),
     mNetSignal(netsignal),

@@ -53,10 +53,16 @@ public:
 private:
   // Private Methods
   bool findLineRectangle(QList<librepcb::Polygon*>& lines) noexcept;
-  bool findHLine(const QList<Polygon*>& lines, librepcb::Point& p,
-                 UnsignedLength* width, librepcb::Polygon** line) noexcept;
-  bool findVLine(const QList<Polygon*>& lines, librepcb::Point& p,
-                 UnsignedLength* width, librepcb::Polygon** line) noexcept;
+  bool findHLine(
+      const QList<Polygon*>& lines,
+      librepcb::Point& p,
+      UnsignedLength* width,
+      librepcb::Polygon** line) noexcept;
+  bool findVLine(
+      const QList<Polygon*>& lines,
+      librepcb::Point& p,
+      UnsignedLength* width,
+      librepcb::Polygon** line) noexcept;
 
   // Attributes
   LibElemType& mLibraryElement;

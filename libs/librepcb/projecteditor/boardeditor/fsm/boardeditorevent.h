@@ -58,25 +58,25 @@ public:
   enum EventType_t {
     // Triggered Actions (SEE_Base objects, no additional parameters)
     AbortCommand,  ///< abort the currently active command (esc)
-    StartSelect,   ///< start command: select elements
+    StartSelect,  ///< start command: select elements
     // StartMove,          ///< start command: move elements
     StartAddStrokeText,  ///< start command: add stroke text
-    StartAddHole,        ///< start command: add hole
+    StartAddHole,  ///< start command: add hole
     // StartDrawRect,      ///< start command: draw rect
     StartDrawPolygon,  ///< start command: draw polygon
     // StartDrawCircle,    ///< start command: draw circle
     StartDrawPlane,  ///< start command: draw plane
     StartDrawTrace,  ///< start command: draw trace
-    StartAddVia,     ///< start command: add via
+    StartAddVia,  ///< start command: add via
     // StartAddNetLabel,   ///< start command: add netlabel
-    Edit_Copy,            ///< copy the selected elements to clipboard (ctrl+c)
-    Edit_Cut,             ///< cut the selected elements (ctrl+x)
-    Edit_Paste,           ///< paste the elements from the clipboard (ctrl+v)
-    Edit_RotateCCW,       ///< rotate the selected elements 90° CCW (r)
-    Edit_RotateCW,        ///< rotate the selected elements 90° CW (Shift+r)
+    Edit_Copy,  ///< copy the selected elements to clipboard (ctrl+c)
+    Edit_Cut,  ///< cut the selected elements (ctrl+x)
+    Edit_Paste,  ///< paste the elements from the clipboard (ctrl+v)
+    Edit_RotateCCW,  ///< rotate the selected elements 90° CCW (r)
+    Edit_RotateCW,  ///< rotate the selected elements 90° CW (Shift+r)
     Edit_FlipHorizontal,  ///< flip the selected elements horizontal (f)
-    Edit_FlipVertical,    ///< flip the selected elements vertical (Shift+f)
-    Edit_Remove,          ///< remove the selected elements
+    Edit_FlipVertical,  ///< flip the selected elements vertical (Shift+f)
+    Edit_Remove,  ///< remove the selected elements
     // Redirected QEvent's (SEE_RedirectedQEvent objects, with pointer to a
     // QEvent)
     GraphicsViewEvent,  ///< event from #GraphicsView @see
@@ -92,14 +92,14 @@ public:
 
   // Getters
   EventType_t getType() const noexcept { return mType; }
-  bool        isAccepted() const noexcept { return mAccepted; }
+  bool isAccepted() const noexcept { return mAccepted; }
 
   // Setters
   virtual void setAccepted(bool accepted) noexcept { mAccepted = accepted; }
 
 protected:
   EventType_t mType;
-  bool        mAccepted;
+  bool mAccepted;
 };
 
 /*******************************************************************************
@@ -156,7 +156,7 @@ private:
 class BEE_StartAddDevice final : public BEE_Base {
 public:
   // Constructors / Destructor
-  BEE_StartAddDevice()                                = delete;
+  BEE_StartAddDevice() = delete;
   BEE_StartAddDevice(const BEE_StartAddDevice& other) = delete;
   BEE_StartAddDevice(ComponentInstance& cmp, const Uuid& dev, const Uuid& fpt);
   ~BEE_StartAddDevice();
@@ -170,8 +170,8 @@ public:
 
 private:
   ComponentInstance& mComponentInstance;
-  Uuid               mDeviceUuid;
-  Uuid               mFootprintUuid;
+  Uuid mDeviceUuid;
+  Uuid mFootprintUuid;
 };
 
 /*******************************************************************************

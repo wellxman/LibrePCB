@@ -57,8 +57,10 @@ class EditNetClassesDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  explicit EditNetClassesDialog(Circuit& circuit, UndoStack& undoStack,
-                                QWidget* parent = 0);
+  explicit EditNetClassesDialog(
+      Circuit& circuit,
+      UndoStack& undoStack,
+      QWidget* parent = 0);
   ~EditNetClassesDialog() noexcept;
 
 private slots:
@@ -74,9 +76,9 @@ private:
   EditNetClassesDialog& operator=(const EditNetClassesDialog& rhs);
 
   // General Attributes
-  Circuit&                  mCircuit;
+  Circuit& mCircuit;
   Ui::EditNetClassesDialog* mUi;
-  UndoStack&                mUndoStack;
+  UndoStack& mUndoStack;
 };
 
 /*******************************************************************************

@@ -143,8 +143,10 @@ void ProjectLibrary::save() {
  ******************************************************************************/
 
 template <typename ElementType>
-void ProjectLibrary::loadElements(const QString& dirname, const QString& type,
-                                  QHash<Uuid, ElementType*>& elementList) {
+void ProjectLibrary::loadElements(
+    const QString& dirname,
+    const QString& type,
+    QHash<Uuid, ElementType*>& elementList) {
   // search all subdirectories which have a valid UUID as directory name
   foreach (const QString& sub, mDirectory->getDirs(dirname)) {
     std::unique_ptr<TransactionalDirectory> dir(
@@ -162,7 +164,8 @@ void ProjectLibrary::loadElements(const QString& dirname, const QString& type,
         new ElementType(std::move(dir)));  // can throw
     if (elementList.contains(element->getUuid())) {
       throw RuntimeError(
-          __FILE__, __LINE__,
+          __FILE__,
+          __LINE__,
           QString(tr("There are multiple library elements with the same "
                      "UUID in the directory \"%1\""))
               .arg(dir->getAbsPath().toNative()));
@@ -178,13 +181,16 @@ void ProjectLibrary::loadElements(const QString& dirname, const QString& type,
 }
 
 template <typename ElementType>
-void ProjectLibrary::addElement(ElementType&               element,
-                                QHash<Uuid, ElementType*>& elementList) {
+void ProjectLibrary::addElement(
+    ElementType& element,
+    QHash<Uuid, ElementType*>& elementList) {
   if (elementList.contains(element.getUuid())) {
-    throw LogicError(__FILE__, __LINE__,
-                     QString(tr("There is already an element with the same "
-                                "UUID in the project's library: %1"))
-                         .arg(element.getUuid().toStr()));
+    throw LogicError(
+        __FILE__,
+        __LINE__,
+        QString(tr("There is already an element with the same "
+                   "UUID in the project's library: %1"))
+            .arg(element.getUuid().toStr()));
   }
   TransactionalDirectory dir(*mDirectory, element.getShortElementName());
   element.saveIntoParentDirectory(dir);  // can throw
@@ -193,8 +199,9 @@ void ProjectLibrary::addElement(ElementType&               element,
 }
 
 template <typename ElementType>
-void ProjectLibrary::removeElement(ElementType&               element,
-                                   QHash<Uuid, ElementType*>& elementList) {
+void ProjectLibrary::removeElement(
+    ElementType& element,
+    QHash<Uuid, ElementType*>& elementList) {
   Q_ASSERT(elementList.value(element.getUuid()) == &element);
   Q_ASSERT(mAllElements.contains(&element));
   TransactionalDirectory dir(

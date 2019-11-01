@@ -36,7 +36,7 @@ namespace librepcb {
 LengthEdit::LengthEdit(QWidget* parent) noexcept
   : NumberEditBase(parent),
     mMinValue(-2000000000L),  // -2'000mm should be sufficient for everything
-    mMaxValue(2000000000L),   // 2'000mm should be sufficient for everything
+    mMaxValue(2000000000L),  // 2'000mm should be sufficient for everything
     mValue(0),
     mUnit(LengthUnit::millimeters()) {
   updateSpinBox();

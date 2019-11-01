@@ -44,7 +44,8 @@ struct GraphicsLayerNameVerifier {
       typename std::decay<Value>::type {
     return p(val) ? std::forward<Value>(val)
                   : (throw RuntimeError(
-                         __FILE__, __LINE__,
+                         __FILE__,
+                         __LINE__,
                          QString(QApplication::translate(
                                      "GraphicsLayerName",
                                      "Not a valid graphics layer name: '%1'"))
@@ -73,24 +74,29 @@ struct GraphicsLayerNameConstraint {
  * The constructor throws an exception if constructed from a QString which is
  * not a valid graphics layer name according these rules.
  */
-using GraphicsLayerName =
-    type_safe::constrained_type<QString, GraphicsLayerNameConstraint,
-                                GraphicsLayerNameVerifier>;
+using GraphicsLayerName = type_safe::constrained_type<
+    QString,
+    GraphicsLayerNameConstraint,
+    GraphicsLayerNameVerifier>;
 
-inline bool operator==(const GraphicsLayerName& lhs,
-                       const QString&           rhs) noexcept {
+inline bool operator==(
+    const GraphicsLayerName& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) == rhs;
 }
-inline bool operator==(const QString&           lhs,
-                       const GraphicsLayerName& rhs) noexcept {
+inline bool operator==(
+    const QString& lhs,
+    const GraphicsLayerName& rhs) noexcept {
   return lhs == (*rhs);
 }
-inline bool operator!=(const GraphicsLayerName& lhs,
-                       const QString&           rhs) noexcept {
+inline bool operator!=(
+    const GraphicsLayerName& lhs,
+    const QString& rhs) noexcept {
   return (*lhs) != rhs;
 }
-inline bool operator!=(const QString&           lhs,
-                       const GraphicsLayerName& rhs) noexcept {
+inline bool operator!=(
+    const QString& lhs,
+    const GraphicsLayerName& rhs) noexcept {
   return lhs != (*rhs);
 }
 
@@ -100,14 +106,16 @@ inline SExpression serializeToSExpression(const GraphicsLayerName& obj) {
 }
 
 template <>
-inline GraphicsLayerName deserializeFromSExpression(const SExpression& sexpr,
-                                                    bool throwIfEmpty) {
+inline GraphicsLayerName deserializeFromSExpression(
+    const SExpression& sexpr,
+    bool throwIfEmpty) {
   QString str = sexpr.getStringOrToken(throwIfEmpty);
   return GraphicsLayerName(str);  // can throw
 }
 
-inline QDataStream& operator<<(QDataStream&             stream,
-                               const GraphicsLayerName& obj) {
+inline QDataStream& operator<<(
+    QDataStream& stream,
+    const GraphicsLayerName& obj) {
   stream << *obj;
   return stream;
 }

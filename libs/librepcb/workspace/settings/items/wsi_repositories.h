@@ -46,7 +46,7 @@ class WSI_Repositories final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_Repositories()                              = delete;
+  WSI_Repositories() = delete;
   WSI_Repositories(const WSI_Repositories& other) = delete;
   explicit WSI_Repositories(const SExpression& node);
   ~WSI_Repositories() noexcept;
@@ -88,9 +88,9 @@ private:  // Data
   QList<const Repository*> mListTmp;
 
   // Widgets
-  QScopedPointer<QWidget>     mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QListWidget> mListWidget;
-  QScopedPointer<QLineEdit>   mLineEdit;
+  QScopedPointer<QLineEdit> mLineEdit;
   QScopedPointer<QToolButton> mBtnUp;
   QScopedPointer<QToolButton> mBtnDown;
   QScopedPointer<QToolButton> mBtnAdd;

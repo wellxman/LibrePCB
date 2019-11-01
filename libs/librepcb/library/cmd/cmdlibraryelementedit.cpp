@@ -34,8 +34,9 @@ namespace library {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdLibraryElementEdit::CmdLibraryElementEdit(LibraryElement& element,
-                                             const QString&  text) noexcept
+CmdLibraryElementEdit::CmdLibraryElementEdit(
+    LibraryElement& element,
+    const QString& text) noexcept
   : CmdLibraryBaseElementEdit(element, text),
     mElement(element),
     mOldCategories(element.getCategories()),

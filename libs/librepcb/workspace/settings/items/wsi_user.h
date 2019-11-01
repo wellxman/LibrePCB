@@ -44,17 +44,17 @@ class WSI_User final : public WSI_Base {
 
 public:
   // Constructors / Destructor
-  WSI_User()                      = delete;
+  WSI_User() = delete;
   WSI_User(const WSI_User& other) = delete;
   explicit WSI_User(const SExpression& node);
   ~WSI_User() noexcept;
 
   // Direct Access
-  void           setName(const QString& name) noexcept;
+  void setName(const QString& name) noexcept;
   const QString& getName() const noexcept { return mName; }
 
   // Getters: Widgets
-  QString  getLabelText() const noexcept { return tr("User Name:"); }
+  QString getLabelText() const noexcept { return tr("User Name:"); }
   QWidget* getWidget() const noexcept { return mWidget.data(); }
 
   // General Methods
@@ -72,7 +72,7 @@ private:  // Data
   QString mName;
 
   // Widgets
-  QScopedPointer<QWidget>   mWidget;
+  QScopedPointer<QWidget> mWidget;
   QScopedPointer<QLineEdit> mNameEdit;
 };
 

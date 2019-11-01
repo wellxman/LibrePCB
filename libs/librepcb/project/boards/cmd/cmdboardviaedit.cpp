@@ -68,15 +68,18 @@ void CmdBoardViaEdit::setPosition(const Point& pos, bool immediate) noexcept {
   if (immediate) mVia.setPosition(mNewPos);
 }
 
-void CmdBoardViaEdit::translate(const Point& deltaPos,
-                                bool         immediate) noexcept {
+void CmdBoardViaEdit::translate(
+    const Point& deltaPos,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos += deltaPos;
   if (immediate) mVia.setPosition(mNewPos);
 }
 
-void CmdBoardViaEdit::rotate(const Angle& angle, const Point& center,
-                             bool immediate) noexcept {
+void CmdBoardViaEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewPos.rotate(angle, center);
   if (immediate) mVia.setPosition(mNewPos);
@@ -88,15 +91,17 @@ void CmdBoardViaEdit::setShape(BI_Via::Shape shape, bool immediate) noexcept {
   if (immediate) mVia.setShape(mNewShape);
 }
 
-void CmdBoardViaEdit::setSize(const PositiveLength& size,
-                              bool                  immediate) noexcept {
+void CmdBoardViaEdit::setSize(
+    const PositiveLength& size,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewSize = size;
   if (immediate) mVia.setSize(mNewSize);
 }
 
-void CmdBoardViaEdit::setDrillDiameter(const PositiveLength& diameter,
-                                       bool immediate) noexcept {
+void CmdBoardViaEdit::setDrillDiameter(
+    const PositiveLength& diameter,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewDrillDiameter = diameter;
   if (immediate) mVia.setDrillDiameter(mNewDrillDiameter);

@@ -81,8 +81,8 @@ private:
 
   // General Attributes
   Ui::GridSettingsDialog* mUi;
-  GridProperties          mOriginalGrid;
-  GridProperties          mCurrentGrid;
+  GridProperties mOriginalGrid;
+  GridProperties mCurrentGrid;
 };
 
 /*******************************************************************************

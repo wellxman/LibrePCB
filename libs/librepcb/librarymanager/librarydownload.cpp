@@ -39,26 +39,51 @@ namespace manager {
  *  Constructors / Destructor
  ******************************************************************************/
 
-LibraryDownload::LibraryDownload(const QUrl&     urlToZip,
-                                 const FilePath& destDir) noexcept
+LibraryDownload::LibraryDownload(
+    const QUrl& urlToZip,
+    const FilePath& destDir) noexcept
   : QObject(nullptr),
     mDestDir(destDir),
     mTempDestDir(destDir.toStr() % ".tmp") {
   mFileDownload.reset(
       new FileDownload(urlToZip, FilePath(mDestDir.toStr() % ".zip")));
   mFileDownload->setZipExtractionDirectory(mTempDestDir);
-  connect(mFileDownload.data(), &FileDownload::progressState, this,
-          &LibraryDownload::progressState, Qt::QueuedConnection);
-  connect(mFileDownload.data(), &FileDownload::progressPercent, this,
-          &LibraryDownload::progressPercent, Qt::QueuedConnection);
-  connect(mFileDownload.data(), &FileDownload::errored, this,
-          &LibraryDownload::downloadErrored, Qt::QueuedConnection);
-  connect(mFileDownload.data(), &FileDownload::aborted, this,
-          &LibraryDownload::downloadAborted, Qt::QueuedConnection);
-  connect(mFileDownload.data(), &FileDownload::succeeded, this,
-          &LibraryDownload::downloadSucceeded, Qt::QueuedConnection);
-  connect(this, &LibraryDownload::abortRequested, mFileDownload.data(),
-          &FileDownload::abort, Qt::QueuedConnection);
+  connect(
+      mFileDownload.data(),
+      &FileDownload::progressState,
+      this,
+      &LibraryDownload::progressState,
+      Qt::QueuedConnection);
+  connect(
+      mFileDownload.data(),
+      &FileDownload::progressPercent,
+      this,
+      &LibraryDownload::progressPercent,
+      Qt::QueuedConnection);
+  connect(
+      mFileDownload.data(),
+      &FileDownload::errored,
+      this,
+      &LibraryDownload::downloadErrored,
+      Qt::QueuedConnection);
+  connect(
+      mFileDownload.data(),
+      &FileDownload::aborted,
+      this,
+      &LibraryDownload::downloadAborted,
+      Qt::QueuedConnection);
+  connect(
+      mFileDownload.data(),
+      &FileDownload::succeeded,
+      this,
+      &LibraryDownload::downloadSucceeded,
+      Qt::QueuedConnection);
+  connect(
+      this,
+      &LibraryDownload::abortRequested,
+      mFileDownload.data(),
+      &FileDownload::abort,
+      Qt::QueuedConnection);
 }
 
 LibraryDownload::~LibraryDownload() noexcept {
@@ -79,7 +104,7 @@ void LibraryDownload::setExpectedZipFileSize(qint64 bytes) noexcept {
 
 void LibraryDownload::setExpectedChecksum(
     QCryptographicHash::Algorithm algorithm,
-    const QByteArray&             checksum) noexcept {
+    const QByteArray& checksum) noexcept {
   if (mFileDownload) {
     mFileDownload->setExpectedChecksum(algorithm, checksum);
   } else {
@@ -172,7 +197,7 @@ void LibraryDownload::downloadSucceeded() noexcept {
   // clean up
   try {
     FileUtils::removeDirRecursively(mTempDestDir);  // can throw
-    FileUtils::removeDirRecursively(backupDir);     // can throw
+    FileUtils::removeDirRecursively(backupDir);  // can throw
   } catch (...) {
   }
 

@@ -41,7 +41,9 @@ LibraryElementCheckMessage::LibraryElementCheckMessage(
 }
 
 LibraryElementCheckMessage::LibraryElementCheckMessage(
-    Severity severity, const QString& msg, const QString& description) noexcept
+    Severity severity,
+    const QString& msg,
+    const QString& description) noexcept
   : mSeverity(severity),
     mSeverityPixmap(getSeverityPixmap(severity)),
     mMessage(msg),

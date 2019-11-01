@@ -38,18 +38,22 @@ namespace librepcb {
 namespace library {
 namespace editor {
 
-SymbolPinPropertiesDialog::SymbolPinPropertiesDialog(SymbolPin& pin,
-                                                     UndoStack& undoStack,
-                                                     QWidget*   parent) noexcept
+SymbolPinPropertiesDialog::SymbolPinPropertiesDialog(
+    SymbolPin& pin,
+    UndoStack& undoStack,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mSymbolPin(pin),
     mUndoStack(undoStack),
     mUi(new Ui::SymbolPinPropertiesDialog) {
   mUi->setupUi(this);
-  mUi->edtLength->setSingleStep(2.54);    // [mm]
+  mUi->edtLength->setSingleStep(2.54);  // [mm]
   mUi->edtRotation->setSingleStep(90.0);  // [°]
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &SymbolPinPropertiesDialog::on_buttonBox_clicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &SymbolPinPropertiesDialog::on_buttonBox_clicked);
 
   // load pin attributes
   mUi->edtName->setText(*mSymbolPin.getName());
@@ -94,8 +98,8 @@ bool SymbolPinPropertiesDialog::applyChanges() noexcept {
     QScopedPointer<CmdSymbolPinEdit> cmd(new CmdSymbolPinEdit(mSymbolPin));
     cmd->setName(name, false);
     cmd->setLength(mUi->edtLength->getValue(), false);
-    cmd->setPosition(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                     false);
+    cmd->setPosition(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     cmd->setRotation(mUi->edtRotation->getValue(), false);
     mUndoStack.execCmd(cmd.take());
     return true;

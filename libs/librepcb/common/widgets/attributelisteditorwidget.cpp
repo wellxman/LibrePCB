@@ -58,18 +58,30 @@ AttributeListEditorWidget::AttributeListEditorWidget(QWidget* parent) noexcept
       AttributeListModel::COLUMN_UNIT, QHeaderView::Stretch);
   mView->horizontalHeader()->setSectionResizeMode(
       AttributeListModel::COLUMN_ACTIONS, QHeaderView::ResizeToContents);
-  mView->setItemDelegateForColumn(AttributeListModel::COLUMN_TYPE,
-                                  new ComboBoxDelegate(this));
-  mView->setItemDelegateForColumn(AttributeListModel::COLUMN_UNIT,
-                                  new ComboBoxDelegate(this));
-  connect(mView.data(), &EditableTableWidget::btnAddClicked, mModel.data(),
-          &AttributeListModel::addAttribute);
-  connect(mView.data(), &EditableTableWidget::btnRemoveClicked, mModel.data(),
-          &AttributeListModel::removeAttribute);
-  connect(mView.data(), &EditableTableWidget::btnMoveUpClicked, mModel.data(),
-          &AttributeListModel::moveAttributeUp);
-  connect(mView.data(), &EditableTableWidget::btnMoveDownClicked, mModel.data(),
-          &AttributeListModel::moveAttributeDown);
+  mView->setItemDelegateForColumn(
+      AttributeListModel::COLUMN_TYPE, new ComboBoxDelegate(this));
+  mView->setItemDelegateForColumn(
+      AttributeListModel::COLUMN_UNIT, new ComboBoxDelegate(this));
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnAddClicked,
+      mModel.data(),
+      &AttributeListModel::addAttribute);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnRemoveClicked,
+      mModel.data(),
+      &AttributeListModel::removeAttribute);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveUpClicked,
+      mModel.data(),
+      &AttributeListModel::moveAttributeUp);
+  connect(
+      mView.data(),
+      &EditableTableWidget::btnMoveDownClicked,
+      mModel.data(),
+      &AttributeListModel::moveAttributeDown);
 
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
@@ -83,8 +95,9 @@ AttributeListEditorWidget::~AttributeListEditorWidget() noexcept {
  *  Setters
  ******************************************************************************/
 
-void AttributeListEditorWidget::setReferences(UndoStack*     undoStack,
-                                              AttributeList* list) noexcept {
+void AttributeListEditorWidget::setReferences(
+    UndoStack* undoStack,
+    AttributeList* list) noexcept {
   mModel->setAttributeList(list);
   mModel->setUndoStack(undoStack);
 }

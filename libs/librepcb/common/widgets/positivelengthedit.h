@@ -73,7 +73,7 @@ private:  // Data
   PositiveLength mMinValue;
   PositiveLength mMaxValue;
   PositiveLength mValue;
-  LengthUnit     mUnit;
+  LengthUnit mUnit;
 };
 
 /*******************************************************************************

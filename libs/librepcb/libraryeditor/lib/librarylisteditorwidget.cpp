@@ -43,15 +43,22 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-LibraryListEditorWidget::LibraryListEditorWidget(const workspace::Workspace& ws,
-                                                 QWidget* parent) noexcept
+LibraryListEditorWidget::LibraryListEditorWidget(
+    const workspace::Workspace& ws,
+    QWidget* parent) noexcept
   : QWidget(parent), mWorkspace(ws), mUi(new Ui::LibraryListEditorWidget) {
   mUi->setupUi(this);
   mUi->comboBox->addItem(tr("Choose library..."));
-  connect(mUi->btnAdd, &QPushButton::clicked, this,
-          &LibraryListEditorWidget::btnAddClicked);
-  connect(mUi->btnRemove, &QPushButton::clicked, this,
-          &LibraryListEditorWidget::btnRemoveClicked);
+  connect(
+      mUi->btnAdd,
+      &QPushButton::clicked,
+      this,
+      &LibraryListEditorWidget::btnAddClicked);
+  connect(
+      mUi->btnRemove,
+      &QPushButton::clicked,
+      this,
+      &LibraryListEditorWidget::btnRemoveClicked);
 
   try {
     QMultiMap<Version, FilePath> libs =
@@ -62,7 +69,8 @@ LibraryListEditorWidget::LibraryListEditorWidget(const workspace::Workspace& ws,
           fp, &uuid);  // can throw
       QString name;
       mWorkspace.getLibraryDb().getElementTranslations<Library>(
-          fp, mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
+          fp,
+          mWorkspace.getSettings().getLibLocaleOrder().getLocaleOrder(),
           &name);  // can throw
       QPixmap icon;
       mWorkspace.getLibraryDb().getLibraryMetadata(fp, &icon);  // can throw
@@ -111,10 +119,10 @@ void LibraryListEditorWidget::btnAddClicked() noexcept {
 }
 
 void LibraryListEditorWidget::btnRemoveClicked() noexcept {
-  QListWidgetItem*   item = mUi->listWidget->currentItem();
-  tl::optional<Uuid> uuid =
-      item ? Uuid::tryFromString(item->data(Qt::UserRole).toString())
-           : tl::nullopt;
+  QListWidgetItem* item = mUi->listWidget->currentItem();
+  tl::optional<Uuid> uuid = item
+      ? Uuid::tryFromString(item->data(Qt::UserRole).toString())
+      : tl::nullopt;
   if (item && uuid) {
     mUuids.remove(*uuid);
     delete item;
@@ -126,7 +134,7 @@ void LibraryListEditorWidget::btnRemoveClicked() noexcept {
 }
 
 void LibraryListEditorWidget::addItem(const Uuid& library) noexcept {
-  QString          name = mLibNames.value(library, library.toStr());
+  QString name = mLibNames.value(library, library.toStr());
   QListWidgetItem* item = new QListWidgetItem(name, mUi->listWidget);
   item->setData(Qt::UserRole, library.toStr());
 }

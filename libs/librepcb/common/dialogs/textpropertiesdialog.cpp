@@ -36,23 +36,28 @@
  ******************************************************************************/
 namespace librepcb {
 
-TextPropertiesDialog::TextPropertiesDialog(Text& text, UndoStack& undoStack,
-                                           QList<GraphicsLayer*> layers,
-                                           QWidget* parent) noexcept
+TextPropertiesDialog::TextPropertiesDialog(
+    Text& text,
+    UndoStack& undoStack,
+    QList<GraphicsLayer*> layers,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mText(text),
     mUndoStack(undoStack),
     mUi(new Ui::TextPropertiesDialog) {
   mUi->setupUi(this);
-  mUi->edtHeight->setSingleStep(0.5);     // [mm]
+  mUi->edtHeight->setSingleStep(0.5);  // [mm]
   mUi->edtRotation->setSingleStep(90.0);  // [°]
 
   foreach (const GraphicsLayer* layer, layers) {
     mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());
   }
 
-  connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
-          &TextPropertiesDialog::on_buttonBox_clicked);
+  connect(
+      mUi->buttonBox,
+      &QDialogButtonBox::clicked,
+      this,
+      &TextPropertiesDialog::on_buttonBox_clicked);
 
   // load text attributes
   selectLayerNameInCombobox(*mText.getLayerName());
@@ -102,8 +107,8 @@ bool TextPropertiesDialog::applyChanges() noexcept {
     cmd->setText(mUi->edtText->toPlainText().trimmed(), false);
     cmd->setAlignment(mUi->alignmentSelector->getAlignment(), false);
     cmd->setHeight(mUi->edtHeight->getValue(), false);
-    cmd->setPosition(Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()),
-                     false);
+    cmd->setPosition(
+        Point(mUi->edtPosX->getValue(), mUi->edtPosY->getValue()), false);
     cmd->setRotation(mUi->edtRotation->getValue(), false);
     mUndoStack.execCmd(cmd.take());
     return true;

@@ -41,8 +41,11 @@ LibraryElementCheckListWidget::LibraryElementCheckListWidget(
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(mListWidget.data());
-  connect(mListWidget.data(), &QListWidget::itemDoubleClicked, this,
-          &LibraryElementCheckListWidget::itemDoubleClicked);
+  connect(
+      mListWidget.data(),
+      &QListWidget::itemDoubleClicked,
+      this,
+      &LibraryElementCheckListWidget::itemDoubleClicked);
   updateList();  // adds the "looks good" message
 }
 
@@ -61,11 +64,13 @@ void LibraryElementCheckListWidget::setHandler(
 void LibraryElementCheckListWidget::setMessages(
     LibraryElementCheckMessageList messages) noexcept {
   // Sort by severity and message.
-  std::sort(messages.begin(), messages.end(),
-            [](std::shared_ptr<const LibraryElementCheckMessage> a,
-               std::shared_ptr<const LibraryElementCheckMessage> b) {
-              return (a && b) ? (*b) < (*a) : false;
-            });
+  std::sort(
+      messages.begin(),
+      messages.end(),
+      [](std::shared_ptr<const LibraryElementCheckMessage> a,
+         std::shared_ptr<const LibraryElementCheckMessage> b) {
+        return (a && b) ? (*b) < (*a) : false;
+      });
 
   // Detect if messages have changed.
   bool isSame = (mMessages.count() == messages.count());

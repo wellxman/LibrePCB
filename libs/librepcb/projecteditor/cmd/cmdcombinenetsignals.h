@@ -48,8 +48,10 @@ namespace editor {
 class CmdCombineNetSignals final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdCombineNetSignals(Circuit& circuit, NetSignal& toBeRemoved,
-                       NetSignal& result) noexcept;
+  CmdCombineNetSignals(
+      Circuit& circuit,
+      NetSignal& toBeRemoved,
+      NetSignal& result) noexcept;
   ~CmdCombineNetSignals() noexcept;
 
 private:
@@ -59,7 +61,7 @@ private:
   bool performExecute() override;
 
   // Attributes from the constructor
-  Circuit&   mCircuit;
+  Circuit& mCircuit;
   NetSignal& mNetSignalToRemove;
   NetSignal& mResultingNetSignal;
 };

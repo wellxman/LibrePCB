@@ -47,22 +47,24 @@ ProjectSettings::ProjectSettings(Project& project, bool create)
 
   // load settings from file
   if (!create) {
-    QString     fp = "project/settings.lp";
-    SExpression root =
-        SExpression::parse(mProject.getDirectory().read(fp),
-                           mProject.getDirectory().getAbsPath(fp));
+    QString fp = "project/settings.lp";
+    SExpression root = SExpression::parse(
+        mProject.getDirectory().read(fp),
+        mProject.getDirectory().getAbsPath(fp));
 
     // OK - file is open --> now load all settings
 
     // locale order
-    foreach (const SExpression& node,
-             root.getChildByPath("library_locale_order").getChildren()) {
+    foreach (
+        const SExpression& node,
+        root.getChildByPath("library_locale_order").getChildren()) {
       mLocaleOrder.append(node.getValueOfFirstChild<QString>(true));
     }
 
     // norm order
-    foreach (const SExpression& node,
-             root.getChildByPath("library_norm_order").getChildren()) {
+    foreach (
+        const SExpression& node,
+        root.getChildByPath("library_norm_order").getChildren()) {
       mNormOrder.append(node.getValueOfFirstChild<QString>(true));
     }
   }
@@ -91,8 +93,9 @@ void ProjectSettings::triggerSettingsChanged() noexcept {
 void ProjectSettings::save() {
   SExpression doc(
       serializeToDomElement("librepcb_project_settings"));  // can throw
-  mProject.getDirectory().write("project/settings.lp",
-                                doc.toByteArray());  // can throw
+  mProject.getDirectory().write(
+      "project/settings.lp",
+      doc.toByteArray());  // can throw
 }
 
 /*******************************************************************************

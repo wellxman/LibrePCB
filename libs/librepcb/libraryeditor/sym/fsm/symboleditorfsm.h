@@ -77,19 +77,19 @@ private:  // Types
 
 public:  // Types
   struct Context {
-    SymbolEditorWidget&             editorWidget;
-    UndoStack&                      undoStack;
+    SymbolEditorWidget& editorWidget;
+    UndoStack& undoStack;
     const IF_GraphicsLayerProvider& layerProvider;
-    GraphicsScene&                  graphicsScene;
-    GraphicsView&                   graphicsView;
-    Symbol&                         symbol;
-    SymbolGraphicsItem&             symbolGraphicsItem;
-    ToolBarProxy&                   commandToolBar;
+    GraphicsScene& graphicsScene;
+    GraphicsView& graphicsView;
+    Symbol& symbol;
+    SymbolGraphicsItem& symbolGraphicsItem;
+    ToolBarProxy& commandToolBar;
   };
 
 public:
   // Constructors / Destructor
-  SymbolEditorFsm()                             = delete;
+  SymbolEditorFsm() = delete;
   SymbolEditorFsm(const SymbolEditorFsm& other) = delete;
   explicit SymbolEditorFsm(const Context& context) noexcept;
   virtual ~SymbolEditorFsm() noexcept;
@@ -132,13 +132,13 @@ signals:
 
 private:  // Methods
   SymbolEditorState* getCurrentState() const noexcept;
-  bool               setNextState(State state) noexcept;
-  bool               leaveCurrentState() noexcept;
-  bool               enterNextState(State state) noexcept;
+  bool setNextState(State state) noexcept;
+  bool leaveCurrentState() noexcept;
+  bool enterNextState(State state) noexcept;
 
 private:  // Data
   QMap<State, SymbolEditorState*> mStates;
-  State                           mCurrentState;
+  State mCurrentState;
 };
 
 /*******************************************************************************

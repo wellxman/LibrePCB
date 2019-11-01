@@ -46,10 +46,12 @@ class IF_GraphicsLayerProvider;
 class CircleGraphicsItem final : public PrimitiveCircleGraphicsItem {
 public:
   // Constructors / Destructor
-  CircleGraphicsItem()                                = delete;
+  CircleGraphicsItem() = delete;
   CircleGraphicsItem(const CircleGraphicsItem& other) = delete;
-  CircleGraphicsItem(Circle& circle, const IF_GraphicsLayerProvider& lp,
-                     QGraphicsItem* parent = nullptr) noexcept;
+  CircleGraphicsItem(
+      Circle& circle,
+      const IF_GraphicsLayerProvider& lp,
+      QGraphicsItem* parent = nullptr) noexcept;
   ~CircleGraphicsItem() noexcept;
 
   // Getters
@@ -63,7 +65,7 @@ private:  // Methods
   void updateFillLayer() noexcept;
 
 private:  // Data
-  Circle&                         mCircle;
+  Circle& mCircle;
   const IF_GraphicsLayerProvider& mLayerProvider;
 
   // Slots

@@ -56,15 +56,17 @@ void LengthDelegate::setUnit(const LengthUnit& unit) noexcept {
  *  Inherited from QStyledItemDelegate
  ******************************************************************************/
 
-QString LengthDelegate::displayText(const QVariant& value,
-                                    const QLocale&  locale) const {
+QString LengthDelegate::displayText(
+    const QVariant& value,
+    const QLocale& locale) const {
   return Toolbox::floatToString(value.value<Length>().toMm(), 10, locale) %
-         " " % mUnit.toShortStringTr();
+      " " % mUnit.toShortStringTr();
 }
 
-QWidget* LengthDelegate::createEditor(QWidget*                    parent,
-                                      const QStyleOptionViewItem& option,
-                                      const QModelIndex&          index) const {
+QWidget* LengthDelegate::createEditor(
+    QWidget* parent,
+    const QStyleOptionViewItem& option,
+    const QModelIndex& index) const {
   Q_UNUSED(option);
   LengthEdit* edt = new LengthEdit(parent);
   edt->setFrame(false);
@@ -74,21 +76,24 @@ QWidget* LengthDelegate::createEditor(QWidget*                    parent,
   return edt;
 }
 
-void LengthDelegate::setEditorData(QWidget*           editor,
-                                   const QModelIndex& index) const {
+void LengthDelegate::setEditorData(QWidget* editor, const QModelIndex& index)
+    const {
   LengthEdit* edt = static_cast<LengthEdit*>(editor);
   edt->setValue(index.data(Qt::EditRole).value<Length>());
 }
 
-void LengthDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
-                                  const QModelIndex& index) const {
+void LengthDelegate::setModelData(
+    QWidget* editor,
+    QAbstractItemModel* model,
+    const QModelIndex& index) const {
   LengthEdit* edt = static_cast<LengthEdit*>(editor);
   model->setData(index, QVariant::fromValue(edt->getValue()), Qt::EditRole);
 }
 
-void LengthDelegate::updateEditorGeometry(QWidget*                    editor,
-                                          const QStyleOptionViewItem& option,
-                                          const QModelIndex& index) const {
+void LengthDelegate::updateEditorGeometry(
+    QWidget* editor,
+    const QStyleOptionViewItem& option,
+    const QModelIndex& index) const {
   Q_UNUSED(index);
   editor->setGeometry(option.rect);
 }

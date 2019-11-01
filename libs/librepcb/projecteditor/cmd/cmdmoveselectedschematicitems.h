@@ -51,8 +51,9 @@ namespace editor {
 class CmdMoveSelectedSchematicItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdMoveSelectedSchematicItems(Schematic&   schematic,
-                                const Point& startPos) noexcept;
+  CmdMoveSelectedSchematicItems(
+      Schematic& schematic,
+      const Point& startPos) noexcept;
   ~CmdMoveSelectedSchematicItems() noexcept;
 
   // General Methods
@@ -66,11 +67,11 @@ private:
 
   // Private Member Variables
   Schematic& mSchematic;
-  Point      mStartPos;
-  Point      mDeltaPos;
+  Point mStartPos;
+  Point mDeltaPos;
 
   // Move commands
-  QList<CmdSymbolInstanceEdit*>    mSymbolEditCmds;
+  QList<CmdSymbolInstanceEdit*> mSymbolEditCmds;
   QList<CmdSchematicNetPointEdit*> mNetPointEditCmds;
   QList<CmdSchematicNetLabelEdit*> mNetLabelEditCmds;
 };

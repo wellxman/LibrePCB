@@ -62,14 +62,15 @@ class BoardGerberExport final : public QObject, public AttributeProvider {
 
 public:
   // Constructors / Destructor
-  BoardGerberExport()                               = delete;
+  BoardGerberExport() = delete;
   BoardGerberExport(const BoardGerberExport& other) = delete;
-  BoardGerberExport(const Board&                          board,
-                    const BoardFabricationOutputSettings& settings) noexcept;
+  BoardGerberExport(
+      const Board& board,
+      const BoardFabricationOutputSettings& settings) noexcept;
   ~BoardGerberExport() noexcept;
 
   // Getters
-  FilePath                 getOutputDirectory() const noexcept;
+  FilePath getOutputDirectory() const noexcept;
   const QVector<FilePath>& getWrittenFiles() const noexcept {
     return mWrittenFiles;
   }
@@ -106,21 +107,28 @@ private:
   void exportLayerTopSolderPaste() const;
   void exportLayerBottomSolderPaste() const;
 
-  int  drawNpthDrills(ExcellonGenerator& gen) const;
-  int  drawPthDrills(ExcellonGenerator& gen) const;
+  int drawNpthDrills(ExcellonGenerator& gen) const;
+  int drawPthDrills(ExcellonGenerator& gen) const;
   void drawLayer(GerberGenerator& gen, const QString& layerName) const;
-  void drawVia(GerberGenerator& gen, const BI_Via& via,
-               const QString& layerName) const;
-  void drawFootprint(GerberGenerator& gen, const BI_Footprint& footprint,
-                     const QString& layerName) const;
-  void drawFootprintPad(GerberGenerator& gen, const BI_FootprintPad& pad,
-                        const QString& layerName) const;
+  void drawVia(
+      GerberGenerator& gen,
+      const BI_Via& via,
+      const QString& layerName) const;
+  void drawFootprint(
+      GerberGenerator& gen,
+      const BI_Footprint& footprint,
+      const QString& layerName) const;
+  void drawFootprintPad(
+      GerberGenerator& gen,
+      const BI_FootprintPad& pad,
+      const QString& layerName) const;
 
   FilePath getOutputFilePath(const QString& suffix) const noexcept;
 
   // Static Methods
-  static UnsignedLength calcWidthOfLayer(const UnsignedLength& width,
-                                         const QString&        name) noexcept;
+  static UnsignedLength calcWidthOfLayer(
+      const UnsignedLength& width,
+      const QString& name) noexcept;
   template <typename T>
   static QList<T*> sortedByUuid(const QList<T*>& list) noexcept {
     // sort a list of objects by their UUID to get reproducable gerber files
@@ -132,11 +140,11 @@ private:
   }
 
   // Private Member Variables
-  const Project&                                       mProject;
-  const Board&                                         mBoard;
+  const Project& mProject;
+  const Board& mBoard;
   QScopedPointer<const BoardFabricationOutputSettings> mSettings;
-  mutable int                                          mCurrentInnerCopperLayer;
-  mutable QVector<FilePath>                            mWrittenFiles;
+  mutable int mCurrentInnerCopperLayer;
+  mutable QVector<FilePath> mWrittenFiles;
 };
 
 /*******************************************************************************

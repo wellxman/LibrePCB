@@ -43,22 +43,31 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-EditorWidgetBase::EditorWidgetBase(const Context& context, const FilePath& fp,
-                                   QWidget* parent)
+EditorWidgetBase::EditorWidgetBase(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : QWidget(parent),
     mContext(context),
     mFilePath(fp),
     mFileSystem(TransactionalFileSystem::open(
-        fp, !context.readOnly,
+        fp,
+        !context.readOnly,
         TransactionalFileSystem::RestoreMode::ASK)),  // can throw
     mUndoStackActionGroup(nullptr),
     mToolsActionGroup(nullptr),
     mIsInterfaceBroken(false) {
   mUndoStack.reset(new UndoStack());
-  connect(mUndoStack.data(), &UndoStack::cleanChanged, this,
-          &EditorWidgetBase::undoStackCleanChanged);
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &EditorWidgetBase::undoStackStateModified);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::cleanChanged,
+      this,
+      &EditorWidgetBase::undoStackCleanChanged);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &EditorWidgetBase::undoStackStateModified);
 
   mCommandToolBarProxy.reset(new ToolBarProxy());
 
@@ -89,8 +98,11 @@ void EditorWidgetBase::setToolsActionGroup(
   }
 
   if (mToolsActionGroup) {
-    disconnect(mToolsActionGroup, &ExclusiveActionGroup::changeRequestTriggered,
-               this, &EditorWidgetBase::toolActionGroupChangeTriggered);
+    disconnect(
+        mToolsActionGroup,
+        &ExclusiveActionGroup::changeRequestTriggered,
+        this,
+        &EditorWidgetBase::toolActionGroupChangeTriggered);
     mToolsActionGroup->reset();
   }
 
@@ -98,8 +110,11 @@ void EditorWidgetBase::setToolsActionGroup(
 
   if (mToolsActionGroup) {
     mToolsActionGroup->reset();
-    connect(mToolsActionGroup, &ExclusiveActionGroup::changeRequestTriggered,
-            this, &EditorWidgetBase::toolActionGroupChangeTriggered);
+    connect(
+        mToolsActionGroup,
+        &ExclusiveActionGroup::changeRequestTriggered,
+        this,
+        &EditorWidgetBase::toolActionGroupChangeTriggered);
   }
 }
 
@@ -131,7 +146,7 @@ void EditorWidgetBase::setupInterfaceBrokenWarningWidget(
       "background-color: rgb(255, 255, 127); "
       "color: rgb(170, 0, 0);");
   QLabel* label = new QLabel(&widget);
-  QFont   font  = label->font();
+  QFont font = label->font();
   font.setBold(true);
   label->setFont(font);
   label->setWordWrap(true);
@@ -142,8 +157,11 @@ void EditorWidgetBase::setupInterfaceBrokenWarningWidget(
          "of modifying this one?"));
   QHBoxLayout* layout = new QHBoxLayout(&widget);
   layout->addWidget(label);
-  connect(this, &EditorWidgetBase::interfaceBrokenChanged, &widget,
-          &QWidget::setVisible);
+  connect(
+      this,
+      &EditorWidgetBase::interfaceBrokenChanged,
+      &widget,
+      &QWidget::setVisible);
 }
 
 void EditorWidgetBase::setupErrorNotificationWidget(QWidget& widget) noexcept {
@@ -152,7 +170,7 @@ void EditorWidgetBase::setupErrorNotificationWidget(QWidget& widget) noexcept {
       "background-color: rgb(255, 255, 127); "
       "color: rgb(170, 0, 0);");
   QLabel* label = new QLabel(&widget);
-  QFont   font  = label->font();
+  QFont font = label->font();
   font.setBold(true);
   label->setFont(font);
   label->setWordWrap(true);
@@ -162,8 +180,11 @@ void EditorWidgetBase::setupErrorNotificationWidget(QWidget& widget) noexcept {
          "library element may not work as expected."));
   QHBoxLayout* layout = new QHBoxLayout(&widget);
   layout->addWidget(label);
-  connect(this, &EditorWidgetBase::errorsAvailableChanged, &widget,
-          &QWidget::setVisible);
+  connect(
+      this,
+      &EditorWidgetBase::errorsAvailableChanged,
+      &widget,
+      &QWidget::setVisible);
 }
 
 void EditorWidgetBase::undoStackStateModified() noexcept {
@@ -185,7 +206,8 @@ QString EditorWidgetBase::getWorkspaceSettingsUserName() noexcept {
   QString u = mContext.workspace.getSettings().getUser().getName().trimmed();
   if (u.isEmpty()) {
     QMessageBox::warning(
-        this, tr("User name not set"),
+        this,
+        tr("User name not set"),
         tr("No user name defined in workspace settings. Please open "
            "workspace settings to set the default user name."));
   }

@@ -50,25 +50,28 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-PackageEditorState_AddPads::PackageEditorState_AddPads(Context& context,
-                                                       PadType  type) noexcept
+PackageEditorState_AddPads::PackageEditorState_AddPads(
+    Context& context,
+    PadType type) noexcept
   : PackageEditorState(context),
     mPadType(type),
     mCurrentPad(nullptr),
     mCurrentGraphicsItem(nullptr),
     mPackagePadComboBox(nullptr),
     mLastPad(
-        Uuid::createRandom(), Point(0, 0), Angle::deg0(),
+        Uuid::createRandom(),
+        Point(0, 0),
+        Angle::deg0(),
         FootprintPad::Shape::ROUND,  // Commonly used pad shape
-        PositiveLength(2500000),     // There is no default/recommended pad size
-        PositiveLength(1300000),     // -> choose reasonable multiple of 0.1mm
-        UnsignedLength(800000),      // Commonly used drill diameter
+        PositiveLength(2500000),  // There is no default/recommended pad size
+        PositiveLength(1300000),  // -> choose reasonable multiple of 0.1mm
+        UnsignedLength(800000),  // Commonly used drill diameter
         FootprintPad::BoardSide::THT) {
   if (mPadType == PadType::SMT) {
     mLastPad.setBoardSide(FootprintPad::BoardSide::TOP);  // Default side
     mLastPad.setShape(FootprintPad::Shape::RECT);  // Commonly used SMT shape
     mLastPad.setDrillDiameter(UnsignedLength(0));  // Disable drill
-    mLastPad.setWidth(PositiveLength(1500000));    // Same as for THT pads ->
+    mLastPad.setWidth(PositiveLength(1500000));  // Same as for THT pads ->
     mLastPad.setHeight(PositiveLength(700000));  // reasonable multiple of 0.1mm
   }
 }
@@ -93,11 +96,13 @@ bool PackageEditorState_AddPads::entry() noexcept {
   mContext.commandToolBar.addLabel(tr("Package Pad:"));
   mPackagePadComboBox = new PackagePadComboBox();
   std::unique_ptr<PackagePadComboBox> packagePadComboBox(mPackagePadComboBox);
-  connect(packagePadComboBox.get(), &PackagePadComboBox::currentPadChanged,
-          this,
-          &PackageEditorState_AddPads::packagePadComboBoxCurrentPadChanged);
-  packagePadComboBox->setPackage(&mContext.package,
-                                 mContext.currentFootprint.get());
+  connect(
+      packagePadComboBox.get(),
+      &PackagePadComboBox::currentPadChanged,
+      this,
+      &PackageEditorState_AddPads::packagePadComboBoxCurrentPadChanged);
+  packagePadComboBox->setPackage(
+      &mContext.package, mContext.currentFootprint.get());
   mContext.commandToolBar.addWidget(std::move(packagePadComboBox));
   mContext.commandToolBar.addSeparator();
 
@@ -106,9 +111,11 @@ bool PackageEditorState_AddPads::entry() noexcept {
     std::unique_ptr<BoardSideSelectorWidget> boardSideSelector(
         new BoardSideSelectorWidget());
     boardSideSelector->setCurrentBoardSide(mLastPad.getBoardSide());
-    connect(boardSideSelector.get(),
-            &BoardSideSelectorWidget::currentBoardSideChanged, this,
-            &PackageEditorState_AddPads::boardSideSelectorCurrentSideChanged);
+    connect(
+        boardSideSelector.get(),
+        &BoardSideSelectorWidget::currentBoardSideChanged,
+        this,
+        &PackageEditorState_AddPads::boardSideSelectorCurrentSideChanged);
     mContext.commandToolBar.addWidget(std::move(boardSideSelector));
     mContext.commandToolBar.addSeparator();
   }
@@ -116,9 +123,11 @@ bool PackageEditorState_AddPads::entry() noexcept {
   // shape
   std::unique_ptr<FootprintPadShapeSelectorWidget> shapeSelector(
       new FootprintPadShapeSelectorWidget());
-  connect(shapeSelector.get(),
-          &FootprintPadShapeSelectorWidget::currentShapeChanged, this,
-          &PackageEditorState_AddPads::shapeSelectorCurrentShapeChanged);
+  connect(
+      shapeSelector.get(),
+      &FootprintPadShapeSelectorWidget::currentShapeChanged,
+      this,
+      &PackageEditorState_AddPads::shapeSelectorCurrentShapeChanged);
   shapeSelector->setCurrentShape(mLastPad.getShape());
   mContext.commandToolBar.addWidget(std::move(shapeSelector));
   mContext.commandToolBar.addSeparator();
@@ -128,8 +137,11 @@ bool PackageEditorState_AddPads::entry() noexcept {
   std::unique_ptr<PositiveLengthEdit> edtWidth(new PositiveLengthEdit());
   edtWidth->setSingleStep(0.1);  // [mm]
   edtWidth->setValue(mLastPad.getWidth());
-  connect(edtWidth.get(), &PositiveLengthEdit::valueChanged, this,
-          &PackageEditorState_AddPads::widthEditValueChanged);
+  connect(
+      edtWidth.get(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &PackageEditorState_AddPads::widthEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtWidth));
 
   // height
@@ -137,8 +149,11 @@ bool PackageEditorState_AddPads::entry() noexcept {
   std::unique_ptr<PositiveLengthEdit> edtHeight(new PositiveLengthEdit());
   edtHeight->setSingleStep(0.1);  // [mm]
   edtHeight->setValue(mLastPad.getHeight());
-  connect(edtHeight.get(), &PositiveLengthEdit::valueChanged, this,
-          &PackageEditorState_AddPads::heightEditValueChanged);
+  connect(
+      edtHeight.get(),
+      &PositiveLengthEdit::valueChanged,
+      this,
+      &PackageEditorState_AddPads::heightEditValueChanged);
   mContext.commandToolBar.addWidget(std::move(edtHeight));
 
   // drill diameter
@@ -148,8 +163,11 @@ bool PackageEditorState_AddPads::entry() noexcept {
         new UnsignedLengthEdit());
     edtDrillDiameter->setSingleStep(0.1);  // [mm]
     edtDrillDiameter->setValue(mLastPad.getDrillDiameter());
-    connect(edtDrillDiameter.get(), &UnsignedLengthEdit::valueChanged, this,
-            &PackageEditorState_AddPads::drillDiameterEditValueChanged);
+    connect(
+        edtDrillDiameter.get(),
+        &UnsignedLengthEdit::valueChanged,
+        this,
+        &PackageEditorState_AddPads::drillDiameterEditValueChanged);
     mContext.commandToolBar.addWidget(std::move(edtDrillDiameter));
   }
 
@@ -230,9 +248,14 @@ bool PackageEditorState_AddPads::startAddPad(const Point& pos) noexcept {
     mStartPos = pos;
     mContext.undoStack.beginCmdGroup(tr("Add footprint pad"));
     mCurrentPad.reset(new FootprintPad(
-        mLastPad.getPackagePadUuid(), pos, mLastPad.getRotation(),
-        mLastPad.getShape(), mLastPad.getWidth(), mLastPad.getHeight(),
-        mLastPad.getDrillDiameter(), mLastPad.getBoardSide()));
+        mLastPad.getPackagePadUuid(),
+        pos,
+        mLastPad.getRotation(),
+        mLastPad.getShape(),
+        mLastPad.getWidth(),
+        mLastPad.getHeight(),
+        mLastPad.getDrillDiameter(),
+        mLastPad.getBoardSide()));
     mContext.undoStack.appendToCmdGroup(new CmdFootprintPadInsert(
         mContext.currentFootprint->getPads(), mCurrentPad));
     mEditCmd.reset(new CmdFootprintPadEdit(*mCurrentPad));
@@ -244,7 +267,7 @@ bool PackageEditorState_AddPads::startAddPad(const Point& pos) noexcept {
   } catch (const Exception& e) {
     QMessageBox::critical(&mContext.editorWidget, tr("Error"), e.getMsg());
     mCurrentGraphicsItem = nullptr;
-    mCurrentPad          = nullptr;
+    mCurrentPad = nullptr;
     mEditCmd.reset();
     return false;
   }
@@ -259,7 +282,7 @@ bool PackageEditorState_AddPads::finishAddPad(const Point& pos) noexcept {
     mEditCmd->setPosition(pos, true);
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mLastPad             = *mCurrentPad;
+    mLastPad = *mCurrentPad;
     mCurrentPad.reset();
     mContext.undoStack.appendToCmdGroup(mEditCmd.take());
     mContext.undoStack.commitCmdGroup();
@@ -275,7 +298,7 @@ bool PackageEditorState_AddPads::abortAddPad() noexcept {
   try {
     mCurrentGraphicsItem->setSelected(false);
     mCurrentGraphicsItem = nullptr;
-    mLastPad             = *mCurrentPad;
+    mLastPad = *mCurrentPad;
     mCurrentPad.reset();
     mEditCmd.reset();
     mContext.undoStack.abortCmdGroup();

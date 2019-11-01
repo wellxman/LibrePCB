@@ -58,9 +58,10 @@ class ProjectSettingsDialog final : public QDialog {
 
 public:
   // Constructors / Destructor
-  explicit ProjectSettingsDialog(ProjectSettings& settings,
-                                 UndoStack&       undoStack,
-                                 QWidget*         parent = 0) noexcept;
+  explicit ProjectSettingsDialog(
+      ProjectSettings& settings,
+      UndoStack& undoStack,
+      QWidget* parent = 0) noexcept;
   ~ProjectSettingsDialog() noexcept;
 
 private slots:
@@ -90,9 +91,9 @@ private:
   void updateGuiFromSettings() noexcept;
 
   // General
-  ProjectSettings&           mSettings;
+  ProjectSettings& mSettings;
   Ui::ProjectSettingsDialog* mUi;
-  UndoStack&                 mUndoStack;
+  UndoStack& mUndoStack;
 };
 
 /*******************************************************************************

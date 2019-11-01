@@ -58,9 +58,9 @@ MainWindow::~MainWindow() {
 void MainWindow::on_addDirectoryBtn_clicked() {
   QFileDialog dialog(this, "Select Directories", lastDir);
   dialog.setFileMode(QFileDialog::Directory);
-  dialog.setOptions(QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly |
-                    QFileDialog::HideNameFilterDetails |
-                    QFileDialog::DontUseNativeDialog);
+  dialog.setOptions(
+      QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly |
+      QFileDialog::HideNameFilterDetails | QFileDialog::DontUseNativeDialog);
   QListView* l = dialog.findChild<QListView*>("listView");
   if (l) l->setSelectionMode(QAbstractItemView::MultiSelection);
   QTreeView* t = dialog.findChild<QTreeView*>();
@@ -84,8 +84,8 @@ void MainWindow::on_updateBtn_clicked() {
   ui->log->clear();
 
   elementCount = 0;
-  ignoreCount  = 0;
-  errorCount   = 0;
+  ignoreCount = 0;
+  errorCount = 0;
   for (int i = 0; i < ui->libDirs->count(); i++) {
     QString dirStr = ui->libDirs->item(i)->text();
 
@@ -122,8 +122,9 @@ void MainWindow::on_updateBtn_clicked() {
 }
 
 template <typename ElementType>
-void MainWindow::updateElements(std::shared_ptr<TransactionalFileSystem> fs,
-                                const library::Library& lib) noexcept {
+void MainWindow::updateElements(
+    std::shared_ptr<TransactionalFileSystem> fs,
+    const library::Library& lib) noexcept {
   foreach (const QString& path, lib.searchForElements<ElementType>()) {
     if (path.contains("00000000-0000-4001-8000-000000000000")) {
       // ignore demo files as they contain documentation which would be removed

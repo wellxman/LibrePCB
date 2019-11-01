@@ -49,7 +49,7 @@ RecentProjectsModel::RecentProjectsModel(const Workspace& workspace) noexcept
           SExpression::parse(FileUtils::readFile(mFilePath), mFilePath);
       const QList<SExpression>& childs = root.getChildren("project");
       foreach (const SExpression& child, childs) {
-        QString  path    = child.getValueOfFirstChild<QString>(true);
+        QString path = child.getValueOfFirstChild<QString>(true);
         FilePath absPath = FilePath::fromRelative(mWorkspace.getPath(), path);
         mAllProjects.append(absPath);
       }
@@ -103,8 +103,8 @@ void RecentProjectsModel::save() noexcept {
     // save the new list in the workspace
     SExpression root = SExpression::createList("librepcb_recent_projects");
     foreach (const FilePath& filepath, mAllProjects) {
-      root.appendChild("project", filepath.toRelative(mWorkspace.getPath()),
-                       true);
+      root.appendChild(
+          "project", filepath.toRelative(mWorkspace.getPath()), true);
     }
     FileUtils::writeFile(mFilePath, root.toByteArray());  // can throw
   } catch (Exception& e) {

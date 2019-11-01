@@ -58,8 +58,10 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-DeviceEditorWidget::DeviceEditorWidget(const Context&  context,
-                                       const FilePath& fp, QWidget* parent)
+DeviceEditorWidget::DeviceEditorWidget(
+    const Context& context,
+    const FilePath& fp,
+    QWidget* parent)
   : EditorWidgetBase(context, fp, parent), mUi(new Ui::DeviceEditorWidget) {
   mUi->setupUi(this);
   mUi->lstMessages->setHandler(this);
@@ -78,17 +80,17 @@ DeviceEditorWidget::DeviceEditorWidget(const Context&  context,
   mCategoriesEditorWidget.reset(
       new ComponentCategoryListEditorWidget(mContext.workspace, this));
   mCategoriesEditorWidget->setRequiresMinimumOneEntry(true);
-  int                   row;
+  int row;
   QFormLayout::ItemRole role;
   mUi->formLayout->getWidgetPosition(mUi->lblCategories, &row, &role);
-  mUi->formLayout->setWidget(row, QFormLayout::FieldRole,
-                             mCategoriesEditorWidget.data());
+  mUi->formLayout->setWidget(
+      row, QFormLayout::FieldRole, mCategoriesEditorWidget.data());
 
   // Load element.
   mDevice.reset(new Device(std::unique_ptr<TransactionalDirectory>(
       new TransactionalDirectory(mFileSystem))));  // can throw
-  mUi->padSignalMapEditorWidget->setReferences(mUndoStack.data(),
-                                               &mDevice->getPadSignalMap());
+  mUi->padSignalMapEditorWidget->setReferences(
+      mUndoStack.data(), &mDevice->getPadSignalMap());
   updateDeviceComponentUuid(mDevice->getComponentUuid());
   updateDevicePackageUuid(mDevice->getPackageUuid());
   updateMetadata();
@@ -98,35 +100,70 @@ DeviceEditorWidget::DeviceEditorWidget(const Context&  context,
   setupInterfaceBrokenWarningWidget(*mUi->interfaceBrokenWarningWidget);
 
   // Reload metadata on undo stack state changes.
-  connect(mUndoStack.data(), &UndoStack::stateModified, this,
-          &DeviceEditorWidget::updateMetadata);
+  connect(
+      mUndoStack.data(),
+      &UndoStack::stateModified,
+      this,
+      &DeviceEditorWidget::updateMetadata);
 
   // Reload data on device object changes.
-  connect(mDevice.data(), &Device::componentUuidChanged, this,
-          &DeviceEditorWidget::updateDeviceComponentUuid);
-  connect(mDevice.data(), &Device::packageUuidChanged, this,
-          &DeviceEditorWidget::updateDevicePackageUuid);
-  connect(mUi->btnChooseComponent, &QToolButton::clicked, this,
-          &DeviceEditorWidget::btnChooseComponentClicked);
-  connect(mUi->btnChoosePackage, &QToolButton::clicked, this,
-          &DeviceEditorWidget::btnChoosePackageClicked);
+  connect(
+      mDevice.data(),
+      &Device::componentUuidChanged,
+      this,
+      &DeviceEditorWidget::updateDeviceComponentUuid);
+  connect(
+      mDevice.data(),
+      &Device::packageUuidChanged,
+      this,
+      &DeviceEditorWidget::updateDevicePackageUuid);
+  connect(
+      mUi->btnChooseComponent,
+      &QToolButton::clicked,
+      this,
+      &DeviceEditorWidget::btnChooseComponentClicked);
+  connect(
+      mUi->btnChoosePackage,
+      &QToolButton::clicked,
+      this,
+      &DeviceEditorWidget::btnChoosePackageClicked);
 
   // Handle changes of metadata.
-  connect(mUi->edtName, &QLineEdit::editingFinished, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mUi->edtDescription, &PlainTextEdit::editingFinished, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mUi->edtKeywords, &QLineEdit::editingFinished, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mUi->edtAuthor, &QLineEdit::editingFinished, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mUi->edtVersion, &QLineEdit::editingFinished, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mUi->cbxDeprecated, &QCheckBox::clicked, this,
-          &DeviceEditorWidget::commitMetadata);
-  connect(mCategoriesEditorWidget.data(),
-          &ComponentCategoryListEditorWidget::edited, this,
-          &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->edtName,
+      &QLineEdit::editingFinished,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->edtDescription,
+      &PlainTextEdit::editingFinished,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->edtKeywords,
+      &QLineEdit::editingFinished,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->edtAuthor,
+      &QLineEdit::editingFinished,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->edtVersion,
+      &QLineEdit::editingFinished,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mUi->cbxDeprecated,
+      &QCheckBox::clicked,
+      this,
+      &DeviceEditorWidget::commitMetadata);
+  connect(
+      mCategoriesEditorWidget.data(),
+      &ComponentCategoryListEditorWidget::edited,
+      this,
+      &DeviceEditorWidget::commitMetadata);
 }
 
 DeviceEditorWidget::~DeviceEditorWidget() noexcept {
@@ -147,7 +184,7 @@ bool DeviceEditorWidget::save() noexcept {
 
   // Save element.
   try {
-    mDevice->save();      // can throw
+    mDevice->save();  // can throw
     mFileSystem->save();  // can throw
     memorizeDeviceInterface();
     return EditorWidgetBase::save();
@@ -223,8 +260,8 @@ QString DeviceEditorWidget::commitMetadata() noexcept {
 }
 
 void DeviceEditorWidget::btnChooseComponentClicked() noexcept {
-  ComponentChooserDialog dialog(mContext.workspace,
-                                mGraphicsLayerProvider.data(), this);
+  ComponentChooserDialog dialog(
+      mContext.workspace, mGraphicsLayerProvider.data(), this);
   if (dialog.exec() == QDialog::Accepted) {
     tl::optional<Uuid> cmpUuid = dialog.getSelectedComponentUuid();
     if (cmpUuid && (*cmpUuid != mDevice->getComponentUuid())) {
@@ -263,8 +300,8 @@ void DeviceEditorWidget::btnChooseComponentClicked() noexcept {
 }
 
 void DeviceEditorWidget::btnChoosePackageClicked() noexcept {
-  PackageChooserDialog dialog(mContext.workspace, mGraphicsLayerProvider.data(),
-                              this);
+  PackageChooserDialog dialog(
+      mContext.workspace, mGraphicsLayerProvider.data(), this);
   if (dialog.exec() == QDialog::Accepted) {
     tl::optional<Uuid> pkgUuid = dialog.getSelectedPackageUuid();
     if (pkgUuid && (*pkgUuid != mDevice->getPackageUuid())) {
@@ -292,8 +329,8 @@ void DeviceEditorWidget::btnChoosePackageClicked() noexcept {
                 mDevice->getPadSignalMap(), &item));
           }
         }
-        foreach (const Uuid& pad,
-                 pads - mDevice->getPadSignalMap().getUuidSet()) {
+        foreach (
+            const Uuid& pad, pads - mDevice->getPadSignalMap().getUuidSet()) {
           cmdGroup->appendChild(new CmdDevicePadSignalMapItemInsert(
               mDevice->getPadSignalMap(),
               std::make_shared<DevicePadSignalMapItem>(pad, tl::nullopt)));
@@ -348,8 +385,12 @@ void DeviceEditorWidget::updateComponentPreview() noexcept {
         mSymbols.append(sym);
         std::shared_ptr<SymbolPreviewGraphicsItem> graphicsItem =
             std::make_shared<SymbolPreviewGraphicsItem>(
-                *mGraphicsLayerProvider, QStringList(), *sym, mComponent.data(),
-                symbVar.getUuid(), item.getUuid());
+                *mGraphicsLayerProvider,
+                QStringList(),
+                *sym,
+                mComponent.data(),
+                symbVar.getUuid(),
+                item.getUuid());
         graphicsItem->setPos(item.getSymbolPosition().toPxQPointF());
         graphicsItem->setRotation(-item.getSymbolRotation().toDeg());
         mComponentGraphicsScene->addItem(*graphicsItem);
@@ -390,10 +431,12 @@ void DeviceEditorWidget::updateDevicePackageUuid(const Uuid& uuid) noexcept {
 
 void DeviceEditorWidget::updatePackagePreview() noexcept {
   if (mPackage && mPackage->getFootprints().count() > 0) {
-    mFootprintGraphicsItem.reset(
-        new FootprintPreviewGraphicsItem(*mGraphicsLayerProvider, QStringList(),
-                                         *mPackage->getFootprints().first(),
-                                         mPackage.data(), mComponent.data()));
+    mFootprintGraphicsItem.reset(new FootprintPreviewGraphicsItem(
+        *mGraphicsLayerProvider,
+        QStringList(),
+        *mPackage->getFootprints().first(),
+        mPackage.data(),
+        mComponent.data()));
     mPackageGraphicsScene->addItem(*mFootprintGraphicsItem);
     mUi->viewPackage->zoomAll();
   }
@@ -401,8 +444,8 @@ void DeviceEditorWidget::updatePackagePreview() noexcept {
 
 void DeviceEditorWidget::memorizeDeviceInterface() noexcept {
   mOriginalComponentUuid = mDevice->getComponentUuid();
-  mOriginalPackageUuid   = mDevice->getPackageUuid();
-  mOriginalPadSignalMap  = mDevice->getPadSignalMap();
+  mOriginalPackageUuid = mDevice->getPackageUuid();
+  mOriginalPadSignalMap = mDevice->getPadSignalMap();
 }
 
 bool DeviceEditorWidget::isInterfaceBroken() const noexcept {
@@ -439,7 +482,8 @@ void DeviceEditorWidget::fixMsg(const MsgMissingCategories& msg) {
 
 template <typename MessageType>
 bool DeviceEditorWidget::fixMsgHelper(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (msg) {
     if (auto m = msg->as<MessageType>()) {
       if (applyFix) fixMsg(*m);  // can throw
@@ -450,7 +494,8 @@ bool DeviceEditorWidget::fixMsgHelper(
 }
 
 bool DeviceEditorWidget::processCheckMessage(
-    std::shared_ptr<const LibraryElementCheckMessage> msg, bool applyFix) {
+    std::shared_ptr<const LibraryElementCheckMessage> msg,
+    bool applyFix) {
   if (fixMsgHelper<MsgNameNotTitleCase>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingAuthor>(msg, applyFix)) return true;
   if (fixMsgHelper<MsgMissingCategories>(msg, applyFix)) return true;

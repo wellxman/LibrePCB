@@ -66,23 +66,26 @@ Workspace::Workspace(const FilePath& wsPath)
   // check if the workspace is valid
   if (!isValidWorkspacePath(mPath)) {
     throw RuntimeError(
-        __FILE__, __LINE__,
+        __FILE__,
+        __LINE__,
         QString(tr("Invalid workspace path: \"%1\"")).arg(mPath.toNative()));
   }
-  FilePath    versionFp = mPath.getPathTo(".librepcb-workspace");
-  QByteArray  versionRaw(FileUtils::readFile(versionFp));  // can throw
+  FilePath versionFp = mPath.getPathTo(".librepcb-workspace");
+  QByteArray versionRaw(FileUtils::readFile(versionFp));  // can throw
   VersionFile wsVersionFile =
       VersionFile::fromByteArray(versionRaw);  // can throw
   if (wsVersionFile.getVersion() != FILE_FORMAT_VERSION()) {
-    throw RuntimeError(__FILE__, __LINE__,
-                       QString(tr("The workspace version %1 is not compatible "
-                                  "with this application version."))
-                           .arg(wsVersionFile.getVersion().toStr()));
+    throw RuntimeError(
+        __FILE__,
+        __LINE__,
+        QString(tr("The workspace version %1 is not compatible "
+                   "with this application version."))
+            .arg(wsVersionFile.getVersion().toStr()));
   }
 
   // create directories which do not exist already
-  FileUtils::makePath(mProjectsPath);   // can throw
-  FileUtils::makePath(mMetadataPath);   // can throw
+  FileUtils::makePath(mProjectsPath);  // can throw
+  FileUtils::makePath(mMetadataPath);  // can throw
   FileUtils::makePath(mLibrariesPath);  // can throw
 
   // Check if the workspace is locked (already open or application was crashed).
@@ -94,9 +97,11 @@ Workspace::Workspace(const FilePath& wsPath)
     }
     case DirectoryLock::LockStatus::Locked: {
       // the workspace is locked by another application instance
-      throw RuntimeError(__FILE__, __LINE__,
-                         tr("The workspace is already "
-                            "opened by another application instance or user!"));
+      throw RuntimeError(
+          __FILE__,
+          __LINE__,
+          tr("The workspace is already "
+             "opened by another application instance or user!"));
     }
     case DirectoryLock::LockStatus::StaleLock: {
       // ignore stale lock as there is nothing to restore
@@ -176,7 +181,7 @@ QList<Version> Workspace::getFileFormatVersionsOfWorkspace(
     const FilePath& path) noexcept {
   QList<Version> list;
   if (isValidWorkspacePath(path)) {
-    QDir        dir(path.toStr());
+    QDir dir(path.toStr());
     QStringList subdirs = dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
     foreach (const QString& subdir, subdirs) {
       if (subdir.startsWith('v')) {
@@ -225,17 +230,18 @@ FilePath Workspace::chooseWorkspacePath() noexcept {
       FileDialog::getExistingDirectory(0, tr("Select Workspace Path")));
 
   if ((path.isValid()) && (!isValidWorkspacePath(path))) {
-    int answer =
-        QMessageBox::question(0, tr("Create new workspace?"),
-                              tr("The specified workspace does not exist. "
-                                 "Do you want to create a new workspace?"));
+    int answer = QMessageBox::question(
+        0,
+        tr("Create new workspace?"),
+        tr("The specified workspace does not exist. "
+           "Do you want to create a new workspace?"));
 
     if (answer == QMessageBox::Yes) {
       try {
         createNewWorkspace(path);  // can throw
       } catch (const Exception& e) {
-        QMessageBox::critical(0, tr("Error"),
-                              tr("Could not create the workspace!"));
+        QMessageBox::critical(
+            0, tr("Error"), tr("Could not create the workspace!"));
         return FilePath();
       }
     } else {

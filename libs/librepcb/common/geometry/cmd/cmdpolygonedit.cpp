@@ -60,15 +60,17 @@ CmdPolygonEdit::~CmdPolygonEdit() noexcept {
  *  Setters
  ******************************************************************************/
 
-void CmdPolygonEdit::setLayerName(const GraphicsLayerName& name,
-                                  bool                     immediate) noexcept {
+void CmdPolygonEdit::setLayerName(
+    const GraphicsLayerName& name,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLayerName = name;
   if (immediate) mPolygon.setLayerName(mNewLayerName);
 }
 
-void CmdPolygonEdit::setLineWidth(const UnsignedLength& width,
-                                  bool                  immediate) noexcept {
+void CmdPolygonEdit::setLineWidth(
+    const UnsignedLength& width,
+    bool immediate) noexcept {
   Q_ASSERT(!wasEverExecuted());
   mNewLineWidth = width;
   if (immediate) mPolygon.setLineWidth(mNewLineWidth);
@@ -96,13 +98,17 @@ void CmdPolygonEdit::translate(const Point& deltaPos, bool immediate) noexcept {
   setPath(mNewPath.translated(deltaPos), immediate);
 }
 
-void CmdPolygonEdit::rotate(const Angle& angle, const Point& center,
-                            bool immediate) noexcept {
+void CmdPolygonEdit::rotate(
+    const Angle& angle,
+    const Point& center,
+    bool immediate) noexcept {
   setPath(mNewPath.rotated(angle, center), immediate);
 }
 
-void CmdPolygonEdit::mirror(const Point& center, Qt::Orientation orientation,
-                            bool immediate) noexcept {
+void CmdPolygonEdit::mirror(
+    const Point& center,
+    Qt::Orientation orientation,
+    bool immediate) noexcept {
   setLayerName(
       GraphicsLayerName(GraphicsLayer::getMirroredLayerName(*mNewLayerName)),
       immediate);

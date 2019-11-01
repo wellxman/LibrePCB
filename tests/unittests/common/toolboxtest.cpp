@@ -72,8 +72,10 @@ static ToolboxArcCenterTestData sToolboxArcCenterTestData[] = {
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(ToolboxArcCenterTest, ToolboxArcCenterTest,
-                         ::testing::ValuesIn(sToolboxArcCenterTestData));
+INSTANTIATE_TEST_SUITE_P(
+    ToolboxArcCenterTest,
+    ToolboxArcCenterTest,
+    ::testing::ValuesIn(sToolboxArcCenterTestData));
 
 /*******************************************************************************
  *  Parametrized incrementNumberInString() Tests
@@ -115,7 +117,8 @@ static ToolboxIncrementNumberInStringTestData
 // clang-format on
 
 INSTANTIATE_TEST_SUITE_P(
-    ToolboxIncrementNumberInStringTest, ToolboxIncrementNumberInStringTest,
+    ToolboxIncrementNumberInStringTest,
+    ToolboxIncrementNumberInStringTest,
     ::testing::ValuesIn(sToolboxIncrementNumberInStringTestData));
 
 /*******************************************************************************
@@ -123,7 +126,7 @@ INSTANTIATE_TEST_SUITE_P(
  ******************************************************************************/
 
 struct ToolboxExpandRangesInStringTestData {
-  QString     input;
+  QString input;
   QStringList output;
 };
 
@@ -138,7 +141,7 @@ TEST_P(ToolboxExpandRangesInStringTest, test) {
   QStringList actual = Toolbox::expandRangesInString(data.input);
 
   QString msg;
-  QDebug  dbg(&msg);
+  QDebug dbg(&msg);
   dbg << data.input << "->" << actual << "!=" << data.output;
   EXPECT_EQ(data.output, actual) << msg.toStdString();
 }
@@ -163,7 +166,8 @@ static ToolboxExpandRangesInStringTestData
 // clang-format on
 
 INSTANTIATE_TEST_SUITE_P(
-    ToolboxExpandRangesInStringTest, ToolboxExpandRangesInStringTest,
+    ToolboxExpandRangesInStringTest,
+    ToolboxExpandRangesInStringTest,
     ::testing::ValuesIn(sToolboxExpandRangesInStringTestData));
 
 /*******************************************************************************
@@ -171,8 +175,8 @@ INSTANTIATE_TEST_SUITE_P(
  ******************************************************************************/
 
 struct ToolboxFloatToStringTestData {
-  double  number;
-  int     decimals;
+  double number;
+  int decimals;
   QLocale locale;
   QString output;
 };
@@ -203,8 +207,10 @@ static ToolboxFloatToStringTestData
 };
 // clang-format on
 
-INSTANTIATE_TEST_SUITE_P(ToolboxFloatToStringTest, ToolboxFloatToStringTest,
-                         ::testing::ValuesIn(sToolboxFloatToStringTestData));
+INSTANTIATE_TEST_SUITE_P(
+    ToolboxFloatToStringTest,
+    ToolboxFloatToStringTest,
+    ::testing::ValuesIn(sToolboxFloatToStringTestData));
 
 /*******************************************************************************
  *  End of File

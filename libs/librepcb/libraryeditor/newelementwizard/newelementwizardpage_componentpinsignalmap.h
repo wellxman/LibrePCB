@@ -55,16 +55,17 @@ public:
   NewElementWizardPage_ComponentPinSignalMap(
       const NewElementWizardPage_ComponentPinSignalMap& other) = delete;
   explicit NewElementWizardPage_ComponentPinSignalMap(
-      NewElementWizardContext& context, QWidget* parent = 0) noexcept;
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_ComponentPinSignalMap() noexcept;
 
   // Getters
   bool validatePage() noexcept override;
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_ComponentPinSignalMap& operator       =(
+  NewElementWizardPage_ComponentPinSignalMap& operator=(
       const NewElementWizardPage_ComponentPinSignalMap& rhs) = delete;
 
 private:  // Methods
@@ -72,7 +73,7 @@ private:  // Methods
   void cleanupPage() noexcept override;
 
 private:  // Data
-  NewElementWizardContext&                                       mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_ComponentPinSignalMap> mUi;
   ComponentSymbolVariantList mSymbolVariantList;
 };

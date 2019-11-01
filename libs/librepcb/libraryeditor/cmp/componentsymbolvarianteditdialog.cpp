@@ -51,8 +51,10 @@ namespace editor {
  ******************************************************************************/
 
 ComponentSymbolVariantEditDialog::ComponentSymbolVariantEditDialog(
-    const workspace::Workspace& ws, const Component& cmp,
-    ComponentSymbolVariant& symbVar, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    const Component& cmp,
+    ComponentSymbolVariant& symbVar,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mComponent(cmp),
@@ -73,13 +75,17 @@ ComponentSymbolVariantEditDialog::ComponentSymbolVariantEditDialog(
   mUi->cbxNorm->setCurrentText(mSymbVar.getNorm());
 
   // load symbol items
-  mUi->symbolListWidget->setReferences(mWorkspace, *mGraphicsLayerProvider,
-                                       mSymbVar.getSymbolItems(),
-                                       mLibraryElementCache, nullptr);
+  mUi->symbolListWidget->setReferences(
+      mWorkspace,
+      *mGraphicsLayerProvider,
+      mSymbVar.getSymbolItems(),
+      mLibraryElementCache,
+      nullptr);
   connect(
       mUi->symbolListWidget,
       &ComponentSymbolVariantItemListEditorWidget::triggerGraphicsItemsUpdate,
-      this, &ComponentSymbolVariantEditDialog::updateGraphicsItems);
+      this,
+      &ComponentSymbolVariantEditDialog::updateGraphicsItems);
   mUi->pinSignalMapEditorWidget->setReferences(
       &mSymbVar, mLibraryElementCache, &mComponent.getSignals(), nullptr);
 

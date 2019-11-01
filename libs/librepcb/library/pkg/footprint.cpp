@@ -65,8 +65,10 @@ Footprint::Footprint(const Footprint& other) noexcept
   mHoles.onEdited.attach(mHolesEditedSlot);
 }
 
-Footprint::Footprint(const Uuid& uuid, const ElementName& name_en_US,
-                     const QString& description_en_US)
+Footprint::Footprint(
+    const Uuid& uuid,
+    const ElementName& name_en_US,
+    const QString& description_en_US)
   : onEdited(*this),
     mUuid(uuid),
     mNames(name_en_US),
@@ -179,13 +181,13 @@ Footprint& Footprint::operator=(const Footprint& rhs) noexcept {
     mUuid = rhs.mUuid;
     onEdited.notify(Event::UuidChanged);
   }
-  mNames        = rhs.mNames;
+  mNames = rhs.mNames;
   mDescriptions = rhs.mDescriptions;
-  mPads         = rhs.mPads;
-  mPolygons     = rhs.mPolygons;
-  mCircles      = rhs.mCircles;
-  mStrokeTexts  = rhs.mStrokeTexts;
-  mHoles        = rhs.mHoles;
+  mPads = rhs.mPads;
+  mPolygons = rhs.mPolygons;
+  mCircles = rhs.mCircles;
+  mStrokeTexts = rhs.mStrokeTexts;
+  mHoles = rhs.mHoles;
   return *this;
 }
 
@@ -193,8 +195,10 @@ Footprint& Footprint::operator=(const Footprint& rhs) noexcept {
  *  Private Methods
  ******************************************************************************/
 
-void Footprint::namesEdited(const LocalizedNameMap& names, const QString& key,
-                            LocalizedNameMap::Event event) noexcept {
+void Footprint::namesEdited(
+    const LocalizedNameMap& names,
+    const QString& key,
+    LocalizedNameMap::Event event) noexcept {
   Q_UNUSED(names);
   Q_UNUSED(key);
   Q_UNUSED(event);
@@ -202,7 +206,8 @@ void Footprint::namesEdited(const LocalizedNameMap& names, const QString& key,
 }
 
 void Footprint::descriptionsEdited(
-    const LocalizedDescriptionMap& names, const QString& key,
+    const LocalizedDescriptionMap& names,
+    const QString& key,
     LocalizedDescriptionMap::Event event) noexcept {
   Q_UNUSED(names);
   Q_UNUSED(key);
@@ -210,9 +215,11 @@ void Footprint::descriptionsEdited(
   onEdited.notify(Event::DescriptionsEdited);
 }
 
-void Footprint::padsEdited(const FootprintPadList& list, int index,
-                           const std::shared_ptr<const FootprintPad>& pad,
-                           FootprintPadList::Event event) noexcept {
+void Footprint::padsEdited(
+    const FootprintPadList& list,
+    int index,
+    const std::shared_ptr<const FootprintPad>& pad,
+    FootprintPadList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -232,9 +239,11 @@ void Footprint::padsEdited(const FootprintPadList& list, int index,
   onEdited.notify(Event::PadsEdited);
 }
 
-void Footprint::polygonsEdited(const PolygonList& list, int index,
-                               const std::shared_ptr<const Polygon>& polygon,
-                               PolygonList::Event event) noexcept {
+void Footprint::polygonsEdited(
+    const PolygonList& list,
+    int index,
+    const std::shared_ptr<const Polygon>& polygon,
+    PolygonList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -254,9 +263,11 @@ void Footprint::polygonsEdited(const PolygonList& list, int index,
   onEdited.notify(Event::PolygonsEdited);
 }
 
-void Footprint::circlesEdited(const CircleList& list, int index,
-                              const std::shared_ptr<const Circle>& circle,
-                              CircleList::Event event) noexcept {
+void Footprint::circlesEdited(
+    const CircleList& list,
+    int index,
+    const std::shared_ptr<const Circle>& circle,
+    CircleList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -276,9 +287,11 @@ void Footprint::circlesEdited(const CircleList& list, int index,
   onEdited.notify(Event::CirclesEdited);
 }
 
-void Footprint::strokeTextsEdited(const StrokeTextList& list, int index,
-                                  const std::shared_ptr<const StrokeText>& text,
-                                  StrokeTextList::Event event) noexcept {
+void Footprint::strokeTextsEdited(
+    const StrokeTextList& list,
+    int index,
+    const std::shared_ptr<const StrokeText>& text,
+    StrokeTextList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {
@@ -300,9 +313,11 @@ void Footprint::strokeTextsEdited(const StrokeTextList& list, int index,
   onEdited.notify(Event::StrokeTextsEdited);
 }
 
-void Footprint::holesEdited(const HoleList& list, int index,
-                            const std::shared_ptr<const Hole>& hole,
-                            HoleList::Event                    event) noexcept {
+void Footprint::holesEdited(
+    const HoleList& list,
+    int index,
+    const std::shared_ptr<const Hole>& hole,
+    HoleList::Event event) noexcept {
   Q_UNUSED(list);
   Q_UNUSED(index);
   switch (event) {

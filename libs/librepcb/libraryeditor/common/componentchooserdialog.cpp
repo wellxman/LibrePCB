@@ -49,8 +49,9 @@ namespace editor {
  ******************************************************************************/
 
 ComponentChooserDialog::ComponentChooserDialog(
-    const workspace::Workspace&     ws,
-    const IF_GraphicsLayerProvider* layerProvider, QWidget* parent) noexcept
+    const workspace::Workspace& ws,
+    const IF_GraphicsLayerProvider* layerProvider,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mLayerProvider(layerProvider),
@@ -60,18 +61,30 @@ ComponentChooserDialog::ComponentChooserDialog(
   mUi->graphicsView->setScene(mGraphicsScene.data());
 
   mCategoryTreeModel.reset(new workspace::ComponentCategoryTreeModel(
-      mWorkspace.getLibraryDb(), localeOrder(),
+      mWorkspace.getLibraryDb(),
+      localeOrder(),
       workspace::CategoryTreeFilter::COMPONENTS));
   mUi->treeCategories->setModel(mCategoryTreeModel.data());
-  connect(mUi->treeCategories->selectionModel(),
-          &QItemSelectionModel::currentChanged, this,
-          &ComponentChooserDialog::treeCategories_currentItemChanged);
-  connect(mUi->listComponents, &QListWidget::currentItemChanged, this,
-          &ComponentChooserDialog::listComponents_currentItemChanged);
-  connect(mUi->listComponents, &QListWidget::itemDoubleClicked, this,
-          &ComponentChooserDialog::listComponents_itemDoubleClicked);
-  connect(mUi->edtSearch, &QLineEdit::textChanged, this,
-          &ComponentChooserDialog::searchEditTextChanged);
+  connect(
+      mUi->treeCategories->selectionModel(),
+      &QItemSelectionModel::currentChanged,
+      this,
+      &ComponentChooserDialog::treeCategories_currentItemChanged);
+  connect(
+      mUi->listComponents,
+      &QListWidget::currentItemChanged,
+      this,
+      &ComponentChooserDialog::listComponents_currentItemChanged);
+  connect(
+      mUi->listComponents,
+      &QListWidget::itemDoubleClicked,
+      this,
+      &ComponentChooserDialog::listComponents_itemDoubleClicked);
+  connect(
+      mUi->edtSearch,
+      &QLineEdit::textChanged,
+      this,
+      &ComponentChooserDialog::searchEditTextChanged);
 
   setSelectedComponent(tl::nullopt);
 }
@@ -100,14 +113,16 @@ void ComponentChooserDialog::searchEditTextChanged(
 }
 
 void ComponentChooserDialog::treeCategories_currentItemChanged(
-    const QModelIndex& current, const QModelIndex& previous) noexcept {
+    const QModelIndex& current,
+    const QModelIndex& previous) noexcept {
   Q_UNUSED(previous);
   setSelectedCategory(
       Uuid::tryFromString(current.data(Qt::UserRole).toString()));
 }
 
 void ComponentChooserDialog::listComponents_currentItemChanged(
-    QListWidgetItem* current, QListWidgetItem* previous) noexcept {
+    QListWidgetItem* current,
+    QListWidgetItem* previous) noexcept {
   Q_UNUSED(previous);
   if (current) {
     setSelectedComponent(
@@ -138,7 +153,8 @@ void ComponentChooserDialog::searchComponents(const QString& input) {
           mWorkspace.getLibraryDb().getLatestComponent(uuid);  // can throw
       QString name;
       mWorkspace.getLibraryDb().getElementTranslations<Component>(
-          fp, localeOrder(),
+          fp,
+          localeOrder(),
           &name);  // can throw
       QListWidgetItem* item = new QListWidgetItem(name);
       item->setData(Qt::UserRole, uuid.toStr());
@@ -164,7 +180,8 @@ void ComponentChooserDialog::setSelectedCategory(
             mWorkspace.getLibraryDb().getLatestComponent(uuid);  // can throw
         QString name;
         mWorkspace.getLibraryDb().getElementTranslations<Component>(
-            fp, localeOrder(),
+            fp,
+            localeOrder(),
             &name);  // can throw
         QListWidgetItem* item = new QListWidgetItem(name);
         item->setData(Qt::UserRole, uuid.toStr());
@@ -181,8 +198,8 @@ void ComponentChooserDialog::setSelectedCategory(
 void ComponentChooserDialog::setSelectedComponent(
     const tl::optional<Uuid>& uuid) noexcept {
   FilePath fp;
-  QString  name = tr("No component selected");
-  QString  desc;
+  QString name = tr("No component selected");
+  QString desc;
   mSelectedComponentUuid = uuid;
 
   if (uuid) {
@@ -191,8 +208,8 @@ void ComponentChooserDialog::setSelectedComponent(
       mWorkspace.getLibraryDb().getElementTranslations<Component>(
           fp, localeOrder(), &name, &desc);  // can throw
     } catch (const Exception& e) {
-      QMessageBox::critical(this, tr("Could not load component metadata"),
-                            e.getMsg());
+      QMessageBox::critical(
+          this, tr("Could not load component metadata"), e.getMsg());
     }
   }
 
@@ -226,8 +243,12 @@ void ComponentChooserDialog::updatePreview(const FilePath& fp) noexcept {
             mSymbols.append(sym);
             std::shared_ptr<SymbolPreviewGraphicsItem> graphicsItem =
                 std::make_shared<SymbolPreviewGraphicsItem>(
-                    *mLayerProvider, QStringList(), *sym, mComponent.data(),
-                    symbVar.getUuid(), item.getUuid());
+                    *mLayerProvider,
+                    QStringList(),
+                    *sym,
+                    mComponent.data(),
+                    symbVar.getUuid(),
+                    item.getUuid());
             graphicsItem->setPos(item.getSymbolPosition().toPxQPointF());
             graphicsItem->setRotation(-item.getSymbolRotation().toDeg());
             mGraphicsScene->addItem(*graphicsItem);
@@ -246,8 +267,8 @@ void ComponentChooserDialog::updatePreview(const FilePath& fp) noexcept {
 
 void ComponentChooserDialog::accept() noexcept {
   if (!mSelectedComponentUuid) {
-    QMessageBox::information(this, tr("Invalid Selection"),
-                             tr("Please select a component."));
+    QMessageBox::information(
+        this, tr("Invalid Selection"), tr("Please select a component."));
     return;
   }
   QDialog::accept();

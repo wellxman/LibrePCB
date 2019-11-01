@@ -40,8 +40,11 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BES_Base::BES_Base(BoardEditor& editor, Ui::BoardEditor& editorUi,
-                   GraphicsView& editorGraphicsView, UndoStack& undoStack)
+BES_Base::BES_Base(
+    BoardEditor& editor,
+    Ui::BoardEditor& editorUi,
+    GraphicsView& editorGraphicsView,
+    UndoStack& undoStack)
   : QObject(0),
     mWorkspace(editor.getProjectEditor().getWorkspace()),
     mProject(editor.getProject()),

@@ -54,17 +54,18 @@ public:
   NewElementWizardPage_PackagePads() = delete;
   NewElementWizardPage_PackagePads(
       const NewElementWizardPage_PackagePads& other) = delete;
-  explicit NewElementWizardPage_PackagePads(NewElementWizardContext& context,
-                                            QWidget* parent = 0) noexcept;
+  explicit NewElementWizardPage_PackagePads(
+      NewElementWizardContext& context,
+      QWidget* parent = 0) noexcept;
   ~NewElementWizardPage_PackagePads() noexcept;
 
   // Getters
   bool validatePage() noexcept override;
   bool isComplete() const noexcept override;
-  int  nextId() const noexcept override;
+  int nextId() const noexcept override;
 
   // Operator Overloadings
-  NewElementWizardPage_PackagePads& operator       =(
+  NewElementWizardPage_PackagePads& operator=(
       const NewElementWizardPage_PackagePads& rhs) = delete;
 
 private:  // Methods
@@ -72,7 +73,7 @@ private:  // Methods
   void cleanupPage() noexcept override;
 
 private:  // Data
-  NewElementWizardContext&                             mContext;
+  NewElementWizardContext& mContext;
   QScopedPointer<Ui::NewElementWizardPage_PackagePads> mUi;
 };
 

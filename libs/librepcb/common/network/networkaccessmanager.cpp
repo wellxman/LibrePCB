@@ -50,8 +50,12 @@ NetworkAccessManager::NetworkAccessManager() noexcept
   sInstance = this;
 
   // ensure that this thread gets stopped *before* the main thread stops
-  connect(qApp, &QCoreApplication::aboutToQuit, this,
-          &NetworkAccessManager::stop, Qt::DirectConnection);
+  connect(
+      qApp,
+      &QCoreApplication::aboutToQuit,
+      this,
+      &NetworkAccessManager::stop,
+      Qt::DirectConnection);
 
   // start the thread and wait until the thread is started successfully
   start();

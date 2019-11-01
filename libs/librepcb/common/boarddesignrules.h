@@ -54,7 +54,7 @@ public:
 
   // Getters : General Attributes
   const ElementName& getName() const noexcept { return mName; }
-  const QString&     getDescription() const noexcept { return mDescription; }
+  const QString& getDescription() const noexcept { return mDescription; }
 
   // Getters: Stop Mask
   const UnsignedRatio& getStopMaskClearanceRatio() const noexcept {
@@ -109,8 +109,9 @@ public:
   void setStopMaskClearanceRatio(const UnsignedRatio& ratio) noexcept {
     mStopMaskClearanceRatio = ratio;
   }
-  void setStopMaskClearanceBounds(const UnsignedLength& min,
-                                  const UnsignedLength& max);
+  void setStopMaskClearanceBounds(
+      const UnsignedLength& min,
+      const UnsignedLength& max);
   void setStopMaskMaxViaDiameter(const UnsignedLength& dia) noexcept {
     mStopMaskMaxViaDrillDiameter = dia;
   }
@@ -119,20 +120,23 @@ public:
   void setCreamMaskClearanceRatio(const UnsignedRatio& ratio) noexcept {
     mCreamMaskClearanceRatio = ratio;
   }
-  void setCreamMaskClearanceBounds(const UnsignedLength& min,
-                                   const UnsignedLength& max);
+  void setCreamMaskClearanceBounds(
+      const UnsignedLength& min,
+      const UnsignedLength& max);
 
   // Setters: Restring
   void setRestringPadRatio(const UnsignedRatio& ratio) noexcept {
     mRestringPadRatio = ratio;
   }
-  void setRestringPadBounds(const UnsignedLength& min,
-                            const UnsignedLength& max);
+  void setRestringPadBounds(
+      const UnsignedLength& min,
+      const UnsignedLength& max);
   void setRestringViaRatio(const UnsignedRatio& ratio) noexcept {
     mRestringViaRatio = ratio;
   }
-  void setRestringViaBounds(const UnsignedLength& min,
-                            const UnsignedLength& max);
+  void setRestringViaBounds(
+      const UnsignedLength& min,
+      const UnsignedLength& max);
 
   // General Methods
   void restoreDefaults() noexcept;
@@ -141,7 +145,7 @@ public:
   void serialize(SExpression& root) const override;
 
   // Helper Methods
-  bool           doesViaRequireStopMask(const Length& drillDia) const noexcept;
+  bool doesViaRequireStopMask(const Length& drillDia) const noexcept;
   UnsignedLength calcStopMaskClearance(const Length& padSize) const noexcept;
   UnsignedLength calcCreamMaskClearance(const Length& padSize) const noexcept;
   UnsignedLength calcPadRestring(const Length& drillDia) const noexcept;
@@ -153,24 +157,24 @@ public:
 private:
   // General Attributes
   ElementName mName;
-  QString     mDescription;
+  QString mDescription;
 
   // Stop Mask
-  UnsignedRatio  mStopMaskClearanceRatio;
+  UnsignedRatio mStopMaskClearanceRatio;
   UnsignedLength mStopMaskClearanceMin;
   UnsignedLength mStopMaskClearanceMax;
   UnsignedLength mStopMaskMaxViaDrillDiameter;
 
   // Cream Mask
-  UnsignedRatio  mCreamMaskClearanceRatio;
+  UnsignedRatio mCreamMaskClearanceRatio;
   UnsignedLength mCreamMaskClearanceMin;
   UnsignedLength mCreamMaskClearanceMax;
 
   // Restring
-  UnsignedRatio  mRestringPadRatio;
+  UnsignedRatio mRestringPadRatio;
   UnsignedLength mRestringPadMin;
   UnsignedLength mRestringPadMax;
-  UnsignedRatio  mRestringViaRatio;
+  UnsignedRatio mRestringViaRatio;
   UnsignedLength mRestringViaMin;
   UnsignedLength mRestringViaMax;
 };
