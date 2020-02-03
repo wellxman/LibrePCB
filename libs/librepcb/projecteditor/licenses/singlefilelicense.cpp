@@ -40,9 +40,6 @@ SingleFileLicense::SingleFileLicense(const QString sourceFilename,
   mFiles.append(std::make_pair(sourceFilename, "LICENSE.txt"));
 }
 
-SingleFileLicense::~SingleFileLicense() noexcept {
-}
-
 /*******************************************************************************
  *  End of File
  ******************************************************************************/

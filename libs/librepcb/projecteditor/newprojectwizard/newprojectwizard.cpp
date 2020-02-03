@@ -118,7 +118,7 @@ Project* NewProjectWizard::createProject() const {
       const QList<std::pair<QString, QString>>& files = license->getFiles();
       for (int i = 0; i < files.length(); i++) {
         FilePath sourcePath =
-            qApp->getResourcesDir().getPathTo(files.at(i).first);
+            qApp->getResourcesDir().getPathTo("licenses/").getPathTo(files.at(i).first);
         const QString& destFilename = files.at(i).second;
         try {
           dir.write(destFilename,

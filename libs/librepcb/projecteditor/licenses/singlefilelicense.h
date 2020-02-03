@@ -47,7 +47,6 @@ public:
   // Constructors / Destructor
   SingleFileLicense(const QString sourceFilename,
                     const QString description) noexcept;
-  ~SingleFileLicense() noexcept;
 
   // Getters
   const QList<std::pair<QString, QString>>& getFiles() noexcept {

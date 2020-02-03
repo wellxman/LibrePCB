@@ -41,7 +41,7 @@ namespace editor {
  */
 class LicenseBase {
 public:
-  virtual ~LicenseBase() noexcept;
+  virtual ~LicenseBase() noexcept {}
 
   /**
    * @brief Return reference to a list of (source-filename, target-filename)
