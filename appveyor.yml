@@ -1,5 +1,5 @@
 version: '{build}'
-os: Windows Server 2012
+os: Visual Studio 2019
 configuration: Debug
 build: off
 test: off
@@ -11,10 +11,10 @@ environment:
     ARCH: "x86"
     CC: "ccache gcc"
     CXX: "ccache g++"
-    MINGW: C:/Qt/Tools/mingw530_32
-    QTDIR: C:/Qt/5.11/mingw53_32
-    QTIFWDIR: C:/Qt/QtIFW-3.0.1
-    VCRT_DIR: 'C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/Redist/x86/Microsoft.VC120.CRT'
+    MINGW: C:/Qt/Tools/mingw730_32
+    QTDIR: C:/Qt/5.14/mingw73_32
+    QTIFWDIR: C:/Qt/Tools/QtInstallerFramework/3.2
+    VCRT_DIR: 'C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/Redist/x86/Microsoft.VC140.CRT'
     DEPLOY_INSTALLER: true
 
 cache:
