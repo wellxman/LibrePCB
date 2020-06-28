@@ -72,6 +72,7 @@ SOURCES += \
     dialogs/projectpropertieseditordialog.cpp \
     dialogs/projectsettingsdialog.cpp \
     docks/ercmsgdock.cpp \
+    netsegmentsplitter.cpp \
     newprojectwizard/newprojectwizard.cpp \
     newprojectwizard/newprojectwizardpage_initialization.cpp \
     newprojectwizard/newprojectwizardpage_metadata.cpp \
@@ -136,6 +137,7 @@ HEADERS += \
     dialogs/projectpropertieseditordialog.h \
     dialogs/projectsettingsdialog.h \
     docks/ercmsgdock.h \
+    netsegmentsplitter.h \
     newprojectwizard/newprojectwizard.h \
     newprojectwizard/newprojectwizardpage_initialization.h \
     newprojectwizard/newprojectwizardpage_metadata.h \

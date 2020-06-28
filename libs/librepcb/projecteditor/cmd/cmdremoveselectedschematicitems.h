@@ -85,16 +85,6 @@ private:
   void disconnectComponentSignalInstance(ComponentSignalInstance& signal);
   QList<NetSegmentItems> getNonCohesiveNetSegmentSubSegments(
       SI_NetSegment& segment, const NetSegmentItems& removedItems) noexcept;
-  void findAllConnectedNetPointsAndNetLines(
-      SI_NetLineAnchor& anchor, QSet<SI_NetLineAnchor*>& processedAnchors,
-      QSet<SI_NetPoint*>& netpoints, QSet<SI_NetLine*>& netlines,
-      QSet<SI_NetLine*>& availableNetLines) const noexcept;
-  int getNearestNetSegmentOfNetLabel(
-      const SI_NetLabel& netlabel, const QList<NetSegmentItems>& segments) const
-      noexcept;
-  Length getDistanceBetweenNetLabelAndNetSegment(
-      const SI_NetLabel& netlabel, const NetSegmentItems& netsegment) const
-      noexcept;
 
   // Attributes from the constructor
   Schematic& mSchematic;

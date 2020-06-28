@@ -22,6 +22,7 @@
  ******************************************************************************/
 #include "cmdremoveselectedschematicitems.h"
 
+#include "../netsegmentsplitter.h"
 #include "cmdchangenetsignalofschematicnetsegment.h"
 #include "cmdremoveboarditems.h"
 #include "cmdremoveunusedlibraryelements.h"
@@ -383,100 +384,52 @@ void CmdRemoveSelectedSchematicItems::disconnectComponentSignalInstance(
 QList<CmdRemoveSelectedSchematicItems::NetSegmentItems>
 CmdRemoveSelectedSchematicItems::getNonCohesiveNetSegmentSubSegments(
     SI_NetSegment& segment, const NetSegmentItems& removedItems) noexcept {
-  // get all netpoints, netlines and netlabels of the segment
-  QSet<SI_NetLine*> netlines =
-      Toolbox::toSet(segment.getNetLines()) - removedItems.netlines;
-  QSet<SI_NetLabel*> netlabels =
-      Toolbox::toSet(segment.getNetLabels()) - removedItems.netlabels;
+  // Populate net segment splitter
+  NetSegmentSplitter splitter;
+  foreach (SI_NetLine* netline, segment.getNetLines()) {
+    if (removedItems.netlines.contains(netline)) {
+      continue;
+    }
+    splitter.addAnchor(
+        QVariant::fromValue(static_cast<void*>(&netline->getStartPoint())),
+        netline->getStartPoint().getPosition());
+    splitter.addAnchor(
+        QVariant::fromValue(static_cast<void*>(&netline->getEndPoint())),
+        netline->getEndPoint().getPosition());
+    splitter.addNetLine(
+        QVariant::fromValue(static_cast<void*>(netline)),
+        QVariant::fromValue(static_cast<void*>(&netline->getStartPoint())),
+        QVariant::fromValue(static_cast<void*>(&netline->getEndPoint())));
+  }
+  foreach (SI_NetLabel* netlabel, segment.getNetLabels()) {
+    if (removedItems.netlabels.contains(netlabel)) {
+      continue;
+    }
+    splitter.addNetLabel(QVariant::fromValue(static_cast<void*>(netlabel)),
+                         netlabel->getPosition());
+  }
 
-  // find all separate segments of the netsegment
+  // Get the splitted net segments
   QList<NetSegmentItems> segments;
-  while (netlines.count() > 0) {
-    NetSegmentItems         seg;
-    QSet<SI_NetLineAnchor*> processedAnchors;
-    findAllConnectedNetPointsAndNetLines(
-        netlines.values().first()->getStartPoint(), processedAnchors,
-        seg.netpoints, seg.netlines, netlines);
-    netlines -= seg.netlines;
-    segments.append(seg);
-  }
-  Q_ASSERT(netlines.isEmpty());
-
-  // re-assign all netlabels to the resulting netsegments
-  foreach (SI_NetLabel* netlabel, netlabels) {
-    int index = getNearestNetSegmentOfNetLabel(*netlabel, segments);
-    segments[index].netlabels.insert(netlabel);
-  }
-
-  return segments;
-}
-
-void CmdRemoveSelectedSchematicItems::findAllConnectedNetPointsAndNetLines(
-    SI_NetLineAnchor& anchor, QSet<SI_NetLineAnchor*>& processedAnchors,
-    QSet<SI_NetPoint*>& netpoints, QSet<SI_NetLine*>& netlines,
-    QSet<SI_NetLine*>& availableNetLines) const noexcept {
-  Q_ASSERT(!processedAnchors.contains(&anchor));
-  processedAnchors.insert(&anchor);
-
-  if (SI_NetPoint* anchorPoint = dynamic_cast<SI_NetPoint*>(&anchor)) {
-    Q_ASSERT(!netpoints.contains(anchorPoint));
-    netpoints.insert(anchorPoint);
-  }
-
-  foreach (SI_NetLine* line, anchor.getNetLines()) {
-    if (availableNetLines.contains(line) && (!netlines.contains(line))) {
-      netlines.insert(line);
-      availableNetLines.remove(line);
-      SI_NetLineAnchor* p2 = line->getOtherPoint(anchor);
-      Q_ASSERT(p2);
-      if (!processedAnchors.contains(p2)) {
-        findAllConnectedNetPointsAndNetLines(*p2, processedAnchors, netpoints,
-                                             netlines, availableNetLines);
+  foreach (const NetSegmentSplitter::Segment& segment, splitter.split()) {
+    NetSegmentItems items;
+    foreach (const NetSegmentSplitter::Anchor& anchor, segment.anchors) {
+      SI_NetPoint* np = dynamic_cast<SI_NetPoint*>(
+          static_cast<SI_NetLineAnchor*>(anchor.id.value<void*>()));
+      if (np) {
+        items.netpoints.insert(np);
       }
     }
-  }
-}
-
-int CmdRemoveSelectedSchematicItems::getNearestNetSegmentOfNetLabel(
-    const SI_NetLabel& netlabel, const QList<NetSegmentItems>& segments) const
-    noexcept {
-  int    nearestIndex = -1;
-  Length nearestDistance;
-  for (int i = 0; i < segments.count(); ++i) {
-    Length distance =
-        getDistanceBetweenNetLabelAndNetSegment(netlabel, segments.at(i));
-    if ((distance < nearestDistance) || (nearestIndex < 0)) {
-      nearestIndex    = i;
-      nearestDistance = distance;
+    foreach (const NetSegmentSplitter::NetLine& line, segment.lines) {
+      items.netlines.insert(static_cast<SI_NetLine*>(line.id.value<void*>()));
     }
-  }
-  return nearestIndex;
-}
-
-Length CmdRemoveSelectedSchematicItems::getDistanceBetweenNetLabelAndNetSegment(
-    const SI_NetLabel& netlabel, const NetSegmentItems& netsegment) const
-    noexcept {
-  bool   firstRun = true;
-  Length nearestDistance;
-  foreach (const SI_NetPoint* netpoint, netsegment.netpoints) {
-    UnsignedLength distance =
-        (netpoint->getPosition() - netlabel.getPosition()).getLength();
-    if ((distance < nearestDistance) || firstRun) {
-      nearestDistance = *distance;
-      firstRun        = false;
+    foreach (const NetSegmentSplitter::NetLabel& label, segment.labels) {
+      items.netlabels.insert(
+          static_cast<SI_NetLabel*>(label.id.value<void*>()));
     }
+    segments.append(items);
   }
-  foreach (const SI_NetLine* netline, netsegment.netlines) {
-    UnsignedLength distance = Toolbox::shortestDistanceBetweenPointAndLine(
-        netlabel.getPosition(), netline->getStartPoint().getPosition(),
-        netline->getEndPoint().getPosition());
-    if ((distance < nearestDistance) || firstRun) {
-      nearestDistance = *distance;
-      firstRun        = false;
-    }
-  }
-  Q_ASSERT(firstRun == false);
-  return nearestDistance;
+  return segments;
 }
 
 /*******************************************************************************
